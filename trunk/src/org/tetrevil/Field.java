@@ -10,7 +10,7 @@ public class Field {
 	public static final int BUFFER = 3;
 	
 	protected Block[][] field = new Block[HEIGHT + BUFFER][WIDTH + 2 * BUFFER];
-	protected ShapeProvider provider = new EvilShapeProvider();
+	protected ShapeProvider provider = new RandomShapeProvider();
 	protected Shape shape;
 	protected int shapeX;
 	protected int shapeY;
