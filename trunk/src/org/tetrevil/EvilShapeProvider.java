@@ -42,6 +42,9 @@ public class EvilShapeProvider implements ShapeProvider {
 	
 	public EvilShapeProvider(int depth) {
 		stack = new Field[depth];
+		bestPath = new ScoredPath[depth];
+		typeBestPath = new ScoredPath[depth];
+		testPath = new ScoredPath[depth];
 		for(int i = 0; i < depth; i++) {
 			stack[i] = new Field();
 			bestPath[i] = new ScoredPath(0);
