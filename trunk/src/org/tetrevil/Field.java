@@ -37,7 +37,7 @@ public class Field {
 			for(int y = 0; y < s.length; y++) {
 				for(int x = 0; x < s[y].length; x++) {
 					if(s[y][x] != null)
-						field[y + shapeY][x + shapeX] = s[y][x];
+						field[y + shapeY][x + shapeX] = s[y][x].inactive();
 				}
 			}
 			shape = null;

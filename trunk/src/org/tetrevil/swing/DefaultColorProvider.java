@@ -10,12 +10,33 @@ public class DefaultColorProvider implements ColorProvider {
 	public Color provideColor(Block block) {
 		if(block == null)
 			return null;
-		if(block == Block.X)
-			return Color.BLACK;
+		Color ret = Color.BLACK;
+		switch(block) {
+		case I: case IA:
+			ret = Color.RED;
+			break;
+		case J: case JA:
+			ret = Color.GREEN;
+			break;
+		case L: case LA:
+			ret = Color.BLUE;
+			break;
+		case O: case OA:
+			ret = Color.ORANGE;
+			break;
+		case S: case SA:
+			ret = Color.CYAN;
+			break;
+		case T: case TA:
+			ret = Color.MAGENTA;
+			break;
+		case Z: case ZA:
+			ret = Color.YELLOW;
+			break;
+		}
 		if(!block.isActive())
-			return Color.GRAY;
-		else
-			return Color.RED.darker();
+			ret = ret.darker();
+		return ret;
 	}
 
 }
