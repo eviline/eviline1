@@ -6,11 +6,15 @@ public enum Block {
 	S,
 	Z,
 	O,
+	J,
+	L,
 	IA,
 	TA,
 	SA,
 	ZA,
-	OA
+	OA,
+	JA,
+	LA,
 	;
 
 }

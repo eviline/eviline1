@@ -23,6 +23,14 @@ public enum Shape {
 	T_RIGHT,
 	T_DOWN,
 	T_LEFT,
+	J_UP,
+	J_RIGHT,
+	J_DOWN,
+	J_LEFT,
+	L_UP,
+	L_RIGHT,
+	L_DOWN,
+	L_LEFT,
 	;
 
 	public Block[][] shape() {
@@ -101,26 +109,65 @@ public enum Shape {
 		case Z_RIGHT:
 			return new Block[][] {
 					{null,	null,	null},
-					{SA,	SA,		null},
-					{null,	SA,		SA	}};
+					{ZA,	ZA,		null},
+					{null,	ZA,		ZA	}};
 		case Z_LEFT:
 			return new Block[][] {
-					{SA,	SA,		null},
-					{null,	SA,		SA	},
+					{ZA,	ZA,		null},
+					{null,	ZA,		ZA	},
 					{null,	null,	null}};
 		case Z_UP:
 			return new Block[][] {
-					{null,	null,	SA},
-					{null,	SA,		SA},
-					{null,	SA,		null}};
+					{null,	null,	ZA},
+					{null,	ZA,		ZA},
+					{null,	ZA,		null}};
 		case Z_DOWN:
 			return new Block[][] {
-					{null,	SA,		null},
-					{SA,	SA,		null},
-					{SA,	null,	null}};
-		default:
-			throw new InternalError("Fell through to default when all enum cases were covered");
+					{null,	ZA,		null},
+					{ZA,	ZA,		null},
+					{ZA,	null,	null}};
+		case J_UP:
+			return new Block[][] {
+					{null,	JA,		null},
+					{null,	JA,		null},
+					{JA,	JA,		null}};
+		case L_DOWN:
+			return new Block[][] {
+					{LA,	LA,		null},
+					{null,	LA,		null},
+					{null,	LA,		null}};
+		case J_DOWN:
+			return new Block[][] {
+					{null,	JA,		JA},
+					{null,	JA,		null},
+					{null,	JA,		null}};
+		case L_UP:
+			return new Block[][] {
+					{null,	LA,		null},
+					{null,	LA,		null},
+					{null,	LA,		LA}};
+		case J_LEFT:
+			return new Block[][] {
+					{null,	null,	null},
+					{JA,	JA,		JA},
+					{null,	null,	JA}};
+		case L_LEFT:
+			return new Block[][] {
+					{null,	null,	LA},
+					{LA,	LA,		LA},
+					{null,	null,	null}};
+		case J_RIGHT:
+			return new Block[][] {
+					{JA,	null,	null},
+					{JA,	JA,		JA},
+					{null,	null,	null}};
+		case L_RIGHT:
+			return new Block[][] {
+					{null,	null,	null},
+					{LA,	LA,		LA},
+					{LA,	null,	null}};
 		}
+		throw new InternalError("Fell through to default when all enum cases were covered");
 	}
 	
 	public Shape right() {
@@ -145,9 +192,17 @@ public enum Shape {
 		case Z_RIGHT: return Z_DOWN;
 		case Z_DOWN: return  Z_LEFT;
 		case Z_LEFT: return  Z_UP;
-		default:
-			throw new InternalError("Fell through to default when all enum cases were covered");
+		case J_UP: return    J_RIGHT;
+		case J_RIGHT: return J_DOWN;
+		case J_DOWN: return  J_LEFT;
+		case J_LEFT: return  J_UP;
+		case L_UP: return    L_RIGHT;
+		case L_RIGHT: return L_DOWN;
+		case L_DOWN: return  L_LEFT;
+		case L_LEFT: return  L_UP;
+
 		}
+		throw new InternalError("Fell through to default when all enum cases were covered");
 	}
 	
 	public Shape left() {
@@ -172,8 +227,26 @@ public enum Shape {
 		case Z_LEFT: return  Z_DOWN;
 		case Z_DOWN: return  Z_RIGHT;
 		case Z_RIGHT: return Z_UP;
-		default:
-			throw new InternalError("Fell through to default when all enum cases were covered");
+		case J_UP: return    J_LEFT;
+		case J_LEFT: return  J_DOWN;
+		case J_DOWN: return  J_RIGHT;
+		case J_RIGHT: return J_UP;
+		case L_UP: return    L_LEFT;
+		case L_LEFT: return  L_DOWN;
+		case L_DOWN: return  L_RIGHT;
+		case L_RIGHT: return L_UP;
 		}
+		throw new InternalError("Fell through to default when all enum cases were covered");
+	}
+	
+	public boolean intersects(Block[][] field, int x, int y) {
+		Block[][] shape = this.shape();
+		for(int iy = 0; iy < shape.length; iy++) {
+			for(int ix = 0; ix < shape[iy].length; ix++) {
+				if(shape[iy][ix] != null && field[y + iy][x + ix] != null)
+					return true;
+			}
+		}
+		return false;
 	}
 }
