@@ -170,7 +170,7 @@ public enum Shape {
 		throw new InternalError("Fell through to default when all enum cases were covered");
 	}
 	
-	public Shape right() {
+	public Shape rotateRight() {
 		switch(this) {
 		case O_UP: return    O_RIGHT;
 		case O_RIGHT: return O_DOWN;
@@ -205,7 +205,7 @@ public enum Shape {
 		throw new InternalError("Fell through to default when all enum cases were covered");
 	}
 	
-	public Shape left() {
+	public Shape rotateLeft() {
 		switch(this) {
 		case O_UP: return    O_LEFT;
 		case O_LEFT: return  O_DOWN;
