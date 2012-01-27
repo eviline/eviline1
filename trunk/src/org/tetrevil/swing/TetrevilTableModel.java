@@ -23,12 +23,12 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	
 	@Override
 	public int getRowCount() {
-		return Field.HEIGHT + 3;
+		return Field.HEIGHT + Field.BUFFER;
 	}
 
 	@Override
 	public int getColumnCount() {
-		return Field.WIDTH + 6;
+		return Field.WIDTH + 2 * Field.BUFFER;
 	}
 	
 	@Override
