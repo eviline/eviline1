@@ -15,6 +15,8 @@ public enum Block {
 	OA,
 	JA,
 	LA,
+	
+	X,
 	;
 	
 	public boolean isActive() {
@@ -23,6 +25,7 @@ public enum Block {
 			return false;
 		case IA: case TA: case SA: case ZA: case OA: case JA: case LA:
 			return true;
+		case X: return false;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -36,6 +39,7 @@ public enum Block {
 		case O: case OA: return OA;
 		case J: case JA: return JA;
 		case L: case LA: return LA;
+		case X: return X;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -49,6 +53,7 @@ public enum Block {
 		case O: case OA: return O;
 		case J: case JA: return J;
 		case L: case LA: return L;
+		case X: return X;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
