@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class EvilShapeProvider implements ShapeProvider {
-	public static final int DEFAULT_DEPTH = 5;
+	public static final int DEFAULT_DEPTH = 3;
 	
 	protected static double score(Field field) {
 		double score = 0;
