@@ -1,5 +1,5 @@
 package org.tetrevil;
 
 public interface ShapeProvider {
-	public Shape provideShape(Block[][] field);
+	public Shape provideShape(Field field);
 }

@@ -10,7 +10,7 @@ public class Field {
 	public static final int BUFFER = 3;
 	
 	protected Block[][] field = new Block[HEIGHT + BUFFER][WIDTH + 2 * BUFFER];
-	protected ShapeProvider provider = new RandomShapeProvider();
+	protected ShapeProvider provider = new EvilShapeProvider();
 	protected Shape shape;
 	protected int shapeX;
 	protected int shapeY;
@@ -26,6 +26,18 @@ public class Field {
 		for(int y = field.length - BUFFER; y < field.length; y++) {
 			Arrays.fill(field[y], Block.X);
 		}
+	}
+	
+	public Field copyInto(Field target) {
+		for(int y = 0; y < field.length; y++) {
+			System.arraycopy(field[y], 0, target.field[y], 0, field[y].length);
+		}
+		target.provider = provider;
+		target.shape = shape;
+		target.shapeX = shapeX;
+		target.shapeY = shapeY;
+		target.gameOver = gameOver;
+		return target;
 	}
 	
 	public void reset() {
@@ -45,7 +57,7 @@ public class Field {
 		if(gameOver)
 			return;
 		if(shape == null) {
-			shape = provider.provideShape(field);
+			shape = provider.provideShape(this);
 			shapeY = 0;
 			shapeX = WIDTH / 2 + 1;
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
@@ -221,5 +233,21 @@ public class Field {
 
 	public boolean isGameOver() {
 		return gameOver;
+	}
+
+	public void setShape(Shape shape) {
+		this.shape = shape;
+	}
+
+	public void setShapeX(int shapeX) {
+		this.shapeX = shapeX;
+	}
+
+	public void setShapeY(int shapeY) {
+		this.shapeY = shapeY;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
 	}
 }
