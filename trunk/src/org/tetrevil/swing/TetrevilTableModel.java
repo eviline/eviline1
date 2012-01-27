@@ -10,6 +10,10 @@ import org.tetrevil.event.TetrevilListener;
 
 public class TetrevilTableModel extends AbstractTableModel implements TetrevilListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected Field field;
 	
 	public TetrevilTableModel(Field field) {
@@ -78,6 +82,14 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	@Override
 	public void rotatedRight(TetrevilEvent e) {
 		changed();
+	}
+
+	public Field getField() {
+		return field;
+	}
+
+	public void setField(Field field) {
+		this.field = field;
 	}
 
 }

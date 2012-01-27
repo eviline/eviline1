@@ -9,6 +9,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.tetrevil.Block;
 
 public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected ColorProvider colors = new DefaultColorProvider();
 	
 	@Override

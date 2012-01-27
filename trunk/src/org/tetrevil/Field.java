@@ -1,9 +1,6 @@
 package org.tetrevil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.event.TetrevilListener;
 
