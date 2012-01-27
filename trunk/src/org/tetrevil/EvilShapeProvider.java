@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class EvilShapeProvider implements ShapeProvider {
-	public static final int DEFAULT_DEPTH = 3;
+	public static final int DEFAULT_DEPTH = 2;
 	
 	protected static double score(Field field) {
 		double score = 0;
@@ -87,7 +87,7 @@ public class EvilShapeProvider implements ShapeProvider {
 						f.shiftRight();
 					while(f.getShape() != null && !f.isGameOver())
 						f.clockTick();
-					decide(f, depth+1, testPath[depth]);
+					decideNice(f, depth+1, testPath[depth]);
 					if(testPath[depth].score < typeBestPath[depth].score) {
 						typeBestPath[depth].score = testPath[depth].score;
 						typeBestPath[depth].path.clear();
@@ -96,7 +96,8 @@ public class EvilShapeProvider implements ShapeProvider {
 					}
 				}
 			}
-			if(bestPath[depth].score < typeBestPath[depth].score) {
+			double score = typeBestPath[depth].score * (1.25 - Math.random() / 2);
+			if(bestPath[depth].score < score) {
 				bestPath[depth].score = typeBestPath[depth].score;
 				bestPath[depth].path.clear();
 				bestPath[depth].path.addAll(typeBestPath[depth].path);
@@ -105,4 +106,45 @@ public class EvilShapeProvider implements ShapeProvider {
 		dest.score = bestPath[depth].score;
 		dest.path = new ArrayList<Shape>(bestPath[depth].path);
 	}
+
+	protected void decideNice(Field field, int depth, ScoredPath dest) {
+		if(depth == stack.length) {
+			dest.score = score(field);
+			dest.path = Collections.emptyList();
+			return;
+		}
+		bestPath[depth].score = Double.POSITIVE_INFINITY;
+		for(ShapeType type : ShapeType.values()) {
+			typeBestPath[depth].score = Double.POSITIVE_INFINITY;
+			for(Shape shape : type.shapes()) {
+				for(int x = 0; x < Field.WIDTH; x++) {
+					Field f = field.copyInto(stack[depth]);
+					f.setShape(shape);
+					f.setShapeX(Field.WIDTH / 2 + 1);
+					f.setShapeY(0);
+					for(int i = 0; i < Field.WIDTH; i++)
+						f.shiftLeft();
+					for(int i = 0; i < x; i++)
+						f.shiftRight();
+					while(f.getShape() != null && !f.isGameOver())
+						f.clockTick();
+					decideNice(f, depth+1, testPath[depth]);
+					if(testPath[depth].score < typeBestPath[depth].score) {
+						typeBestPath[depth].score = testPath[depth].score;
+						typeBestPath[depth].path.clear();
+						typeBestPath[depth].path.add(shape);
+						typeBestPath[depth].path.addAll(testPath[depth].path);
+					}
+				}
+			}
+			if(bestPath[depth].score > typeBestPath[depth].score) {
+				bestPath[depth].score = typeBestPath[depth].score;
+				bestPath[depth].path.clear();
+				bestPath[depth].path.addAll(typeBestPath[depth].path);
+			}
+		}
+		dest.score = bestPath[depth].score;
+		dest.path = new ArrayList<Shape>(bestPath[depth].path);
+	}
+
 }
