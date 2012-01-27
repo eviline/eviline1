@@ -14,6 +14,7 @@ public class Field {
 	protected Shape shape;
 	protected int shapeX;
 	protected int shapeY;
+	protected boolean gameOver;
 	
 	protected TetrevilListener[] listeners = new TetrevilListener[0];
 	
@@ -27,7 +28,22 @@ public class Field {
 		}
 	}
 	
+	public void reset() {
+		for(int y = 0; y < field.length - BUFFER; y++) {
+			Arrays.fill(field[y], 0, BUFFER, Block.X);
+			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
+			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
+		}
+		for(int y = field.length - BUFFER; y < field.length; y++) {
+			Arrays.fill(field[y], Block.X);
+		}
+		shape = null;
+		gameOver = false;
+	}
+	
 	public void clockTick() {
+		if(gameOver)
+			return;
 		if(shape == null) {
 			shape = provider.provideShape(field);
 			shapeY = 0;
@@ -45,8 +61,10 @@ public class Field {
 			shapeY++;
 		}
 		fireClockTicked();
-		if(shape != null && shape.intersects(field, shapeX, shapeY))
+		if(shape != null && shape.intersects(field, shapeX, shapeY)) {
+			gameOver = true;
 			fireGameOver();
+		}
 		
 		for(int y = field.length - 1 - BUFFER; y >= 0; y--) {
 			boolean tetris = true;
@@ -179,5 +197,29 @@ public class Field {
 				e = new TetrevilEvent(this, this);
 			ll[i].rotatedRight(e);
 		}
+	}
+
+	public ShapeProvider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(ShapeProvider provider) {
+		this.provider = provider;
+	}
+
+	public Shape getShape() {
+		return shape;
+	}
+
+	public int getShapeX() {
+		return shapeX;
+	}
+
+	public int getShapeY() {
+		return shapeY;
+	}
+
+	public boolean isGameOver() {
+		return gameOver;
 	}
 }
