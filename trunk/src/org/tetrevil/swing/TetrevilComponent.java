@@ -26,4 +26,15 @@ public class TetrevilComponent extends JScrollPane {
 			}
 		});
 	}
+
+	public Field getField() {
+		return field;
+	}
+
+	public void setField(Field field) {
+		this.field = field;
+		table.setField(field);
+	}
+	
+	
 }
