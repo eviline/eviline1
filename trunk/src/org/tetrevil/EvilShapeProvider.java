@@ -11,7 +11,8 @@ public class EvilShapeProvider implements ShapeProvider {
 		double score = 0;
 		for(int y = 0; y < Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
-				score += Field.HEIGHT + Field.BUFFER - y;
+				if(field.getBlock(x, y) != null)
+					score += Field.HEIGHT + Field.BUFFER - y;
 			}
 		}
 		return score;
@@ -28,6 +29,11 @@ public class EvilShapeProvider implements ShapeProvider {
 		public ScoredPath(double score, List<Shape> path) {
 			this.path.addAll(path);
 			this.score = score;
+		}
+		
+		@Override
+		public String toString() {
+			return String.valueOf(score) + String.valueOf(path);
 		}
 	}
 	
@@ -62,13 +68,13 @@ public class EvilShapeProvider implements ShapeProvider {
 	
 	protected void decide(Field field, int depth, ScoredPath dest) {
 		if(depth == stack.length) {
-			dest.score = score(field);
+			dest.score = score(field) * (1.25 - Math.random() / 2);
 			dest.path = Collections.emptyList();
 			return;
 		}
 		bestPath[depth].score = Double.NEGATIVE_INFINITY;
 		for(ShapeType type : ShapeType.values()) {
-			typeBestPath[depth].score = Double.NEGATIVE_INFINITY;
+			typeBestPath[depth].score = Double.POSITIVE_INFINITY;
 			for(Shape shape : type.shapes()) {
 				for(int x = 0; x < Field.WIDTH; x++) {
 					Field f = field.copyInto(stack[depth]);
