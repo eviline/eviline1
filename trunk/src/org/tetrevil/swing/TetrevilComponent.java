@@ -17,6 +17,7 @@ public class TetrevilComponent extends JScrollPane {
 	
 	public TetrevilComponent(Field field) {
 		super(new TetrevilTable(field), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.field = field;
 		table = (TetrevilTable) getViewport().getView();
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -35,6 +36,8 @@ public class TetrevilComponent extends JScrollPane {
 		this.field = field;
 		table.setField(field);
 	}
-	
-	
+
+	public TetrevilTable getTable() {
+		return table;
+	}
 }

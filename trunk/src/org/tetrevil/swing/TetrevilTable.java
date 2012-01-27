@@ -18,17 +18,28 @@ public class TetrevilTable extends JTable {
 		this.field = field;
 		
 		setTableHeader(null);
+		setFillsViewportHeight(true);
 		
 		TetrevilTableCellRenderer ttcr = new TetrevilTableCellRenderer();
 		for(int i = 0; i < getColumnCount(); i++) {
 			getColumnModel().getColumn(i).setCellRenderer(ttcr);
 		}
 		
+		setShowGrid(false);
+		
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				TetrevilTable table = (TetrevilTable) e.getComponent();
-				table.setRowHeight(table.getHeight() / table.getModel().getRowCount());
+				int height = table.getHeight() / table.getModel().getRowCount();
+				if(height > 0)
+					table.setRowHeight(height);
+				int width = table.getWidth() / table.getColumnCount();
+				if(width > 0) {
+					for(int i = 0; i < table.getColumnCount(); i++) {
+						table.getColumnModel().getColumn(i).setWidth(width);
+					}
+				}
 			}
 		});
 	}
