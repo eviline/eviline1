@@ -6,6 +6,7 @@ import java.util.List;
 
 public class EvilShapeProvider implements ShapeProvider {
 	public static final int DEFAULT_DEPTH = 2;
+	public static final int HISTORY_SIZE = 3;
 	
 	protected static double score(Field field) {
 		double score = 0;
@@ -45,6 +46,8 @@ public class EvilShapeProvider implements ShapeProvider {
 	protected ScoredPath[] typeBestPath;
 	protected ScoredPath[] testPath;
 	
+	protected List<ShapeType> recent = new ArrayList<ShapeType>();
+	
 	public EvilShapeProvider() {
 		this(DEFAULT_DEPTH);
 	}
@@ -66,10 +69,21 @@ public class EvilShapeProvider implements ShapeProvider {
 	public Shape provideShape(Field field) {
 		ScoredPath dest = new ScoredPath(0);
 		decide(field, 0, dest);
+		recent.add(dest.path.get(0).type());
+		while(recent.size() > HISTORY_SIZE)
+			recent.remove(0);
 		return dest.path.get(0);
 	}
 	
 	protected void decide(Field field, int depth, ScoredPath dest) {
+		ShapeType omit = null;
+		if(recent.size() > 0) {
+			omit = recent.get(0);
+			for(ShapeType t : recent) {
+				if(omit != t)
+					omit = null;
+			}
+		}
 		if(depth == stack.length) {
 			dest.score = score(field) * (1.25 - Math.random() / 2);
 			dest.path = Collections.emptyList();
@@ -100,7 +114,7 @@ public class EvilShapeProvider implements ShapeProvider {
 				}
 			}
 			double score = typeBestPath[depth].score * (1.25 - Math.random() / 2);
-			if(bestPath[depth].score < score) {
+			if(bestPath[depth].score < score && omit != type) {
 				bestPath[depth].score = typeBestPath[depth].score;
 				bestPath[depth].path.clear();
 				bestPath[depth].path.addAll(typeBestPath[depth].path);
