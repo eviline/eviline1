@@ -9,10 +9,13 @@ public class EvilShapeProvider implements ShapeProvider {
 	
 	protected static double score(Field field) {
 		double score = 0;
-		for(int y = 0; y < Field.HEIGHT; y++) {
-			for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
+		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
+			int bonus = 0;
+			for(int y = Field.HEIGHT - 1; y >= 0; y--) {
 				if(field.getBlock(x, y) != null)
-					score += Field.HEIGHT + Field.BUFFER - y;
+					score += Field.HEIGHT + Field.BUFFER - y + bonus * 10;
+				else
+					bonus++;
 			}
 		}
 		return score;

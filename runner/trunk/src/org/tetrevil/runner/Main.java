@@ -5,6 +5,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.tetrevil.EvilShapeProvider;
 import org.tetrevil.Field;
@@ -39,7 +40,7 @@ public class Main {
 				else if(e.getKeyCode() == KeyEvent.VK_UP)
 					f.rotateLeft();
 				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-					f.rotateRight();
+					f.clockTick();
 				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					while(f.getShape() != null) {
 						f.clockTick();
@@ -59,6 +60,14 @@ public class Main {
 		frame.add(c, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+		
+		JOptionPane.showMessageDialog(frame, "Controls:\n\n" +
+				"LEFT: Shift left 1\n" +
+				"RIGHT: Shift right 1\n" +
+				"UP: Rotate left\n" +
+				"DOWN: Shift down 1\n" +
+				"ENTER: Drop\n" +
+				"R: Reset");
 		
 		while(true) {
 			field.clockTick();
