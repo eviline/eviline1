@@ -45,11 +45,13 @@ public class Main {
 				else if(e.getKeyCode() == KeyEvent.VK_UP)
 					f.rotateLeft();
 				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-					f.clockTick();
+					f.rotateRight();
 				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					while(f.getShape() != null) {
 						f.clockTick();
 					}
+				} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+					f.clockTick();
 				} else if(e.getKeyCode() == KeyEvent.VK_R)
 					f.reset();
 				else if(e.getKeyCode() == KeyEvent.VK_P)
@@ -77,7 +79,8 @@ public class Main {
 				"LEFT: Shift left 1\n" +
 				"RIGHT: Shift right 1\n" +
 				"UP: Rotate left\n" +
-				"DOWN: Shift down 1\n" +
+				"DOWN: Rotate right 1\n" +
+				"SPACE: Shift down 1\n" +
 				"ENTER: Drop\n" +
 				"P: Pause\n" +
 				"R: Reset");
