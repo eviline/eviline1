@@ -14,7 +14,7 @@ public enum ShapeType {
 	
 	public Shape[] shapes() {
 		switch(this) {
-		case O: return new Shape[] { O_DOWN, O_LEFT, O_RIGHT, O_UP };
+		case O: return new Shape[] { O_DOWN };
 		case S: return new Shape[] { S_DOWN, S_LEFT, S_RIGHT, S_UP };
 		case Z: return new Shape[] { Z_DOWN, Z_LEFT, Z_RIGHT, Z_UP };
 		case J: return new Shape[] { J_DOWN, J_LEFT, J_RIGHT, J_UP };

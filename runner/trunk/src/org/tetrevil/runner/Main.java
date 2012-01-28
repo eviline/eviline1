@@ -24,7 +24,7 @@ public class Main {
 		frame.setLayout(new BorderLayout());
 		
 		Field field = new Field();
-		field.setProvider(new EvilShapeProvider(1));
+		field.setProvider(new EvilShapeProvider(2));
 		
 		TetrevilComponent c = new TetrevilComponent(field);
 		c.getTable().setFocusable(true);

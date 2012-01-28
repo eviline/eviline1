@@ -3,171 +3,128 @@ package org.tetrevil;
 import static org.tetrevil.Block.*;
 
 public enum Shape {
-	O_UP,
-	O_RIGHT,
-	O_DOWN,
-	O_LEFT,
-	I_UP,
-	I_RIGHT,
-	I_DOWN,
-	I_LEFT,
-	S_UP,
-	S_RIGHT,
-	S_DOWN,
-	S_LEFT,
-	Z_UP,
-	Z_RIGHT,
-	Z_DOWN,
-	Z_LEFT,
-	T_UP,
-	T_RIGHT,
-	T_DOWN,
-	T_LEFT,
-	J_UP,
-	J_RIGHT,
-	J_DOWN,
-	J_LEFT,
-	L_UP,
-	L_RIGHT,
-	L_DOWN,
-	L_LEFT,
-	;
-
-	public Block[][] shape() {
-		switch(this) {
-		case O_DOWN:
-		case O_LEFT:
-		case O_UP:
-		case O_RIGHT:
-			return new Block[][] {
+	O_UP(new Block[][] {
 					{OA,	 OA},
-					{OA,	 OA}};
-		case I_LEFT:
-			return new Block[][] {
-					{null, IA,	 null,	null},
-					{null, IA,	 null,	null},
-					{null, IA,	 null,	null},
-					{null, IA,	 null,	null}};
-		case I_UP:
-			return new Block[][] {
+					{OA,	 OA}}),
+	O_RIGHT(new Block[][] {
+					{OA,	 OA},
+					{OA,	 OA}}),
+	O_DOWN(new Block[][] {
+					{OA,	 OA},
+					{OA,	 OA}}),
+	O_LEFT(new Block[][] {
+					{OA,	 OA},
+					{OA,	 OA}}),
+	I_UP(new Block[][] {
 					{null,	null,	null,	null},
 					{IA,	IA,		IA,		IA	},
 					{null,	null,	null,	null},
-					{null,	null,	null,	null}};
-		case I_RIGHT:
-			return new Block[][] {
+					{null,	null,	null,	null}}),
+	I_RIGHT(new Block[][] {
 					{null,	null, IA,	 null},
 					{null,	null, IA,	 null},
 					{null,	null, IA,	 null},
-					{null,	null, IA,	 null}};
-		case I_DOWN:
-			return new Block[][] {
+					{null,	null, IA,	 null}}),
+	I_DOWN(new Block[][] {
 					{null,	null,	null,	null},
 					{null,	null,	null,	null},
 					{IA,	IA,		IA,		IA	},
-					{null,	null,	null,	null}};
-		case T_UP:
-			return new Block[][] {
-					{null,	TA,		null},
-					{TA,	TA,		TA	},
-					{null,	null,	null}};
-		case T_DOWN:
-			return new Block[][] {
-					{null,	null,	null},
-					{TA,	TA,		TA	},
-					{null,	TA,		null}};
-		case T_LEFT:
-			return new Block[][] {
-					{null,	TA,		null},
-					{TA,	TA,		null},
-					{null,	TA,		null}};
-		case T_RIGHT:
-			return new Block[][] {
-					{null,	TA,		null},
-					{null,	TA,		TA	},
-					{null,	TA,		null}};
-		case S_RIGHT:
-			return new Block[][] {
-					{null,	SA,		SA	},
-					{SA,	SA,		null},
-					{null,	null,	null}};
-		case S_DOWN:
-			return new Block[][] {
-					{null,	SA,		null},
-					{null,	SA,		SA},
-					{null,	null,	SA}};
-		case S_LEFT:
-			return new Block[][] {
-					{null,	null,	null},
-					{null,	SA,		SA	},
-					{SA,	SA,		null}};
-		case S_UP:
-			return new Block[][] {
+					{null,	null,	null,	null}}),
+	I_LEFT(new Block[][] {
+					{null, IA,	 null,	null},
+					{null, IA,	 null,	null},
+					{null, IA,	 null,	null},
+					{null, IA,	 null,	null}}),
+	S_UP(new Block[][] {
 					{SA,	null,	null},
 					{SA,	SA,		null},
-					{null,	SA,		null}};
-		case Z_RIGHT:
-			return new Block[][] {
+					{null,	SA,		null}}),
+	S_RIGHT(new Block[][] {
+					{null,	SA,		SA	},
+					{SA,	SA,		null},
+					{null,	null,	null}}),
+	S_DOWN(new Block[][] {
+					{null,	SA,		null},
+					{null,	SA,		SA},
+					{null,	null,	SA}}),
+	S_LEFT(new Block[][] {
 					{null,	null,	null},
-					{ZA,	ZA,		null},
-					{null,	ZA,		ZA	}};
-		case Z_LEFT:
-			return new Block[][] {
-					{ZA,	ZA,		null},
-					{null,	ZA,		ZA	},
-					{null,	null,	null}};
-		case Z_UP:
-			return new Block[][] {
+					{null,	SA,		SA	},
+					{SA,	SA,		null}}),
+	Z_UP(new Block[][] {
 					{null,	null,	ZA},
 					{null,	ZA,		ZA},
-					{null,	ZA,		null}};
-		case Z_DOWN:
-			return new Block[][] {
+					{null,	ZA,		null}}),
+	Z_RIGHT(new Block[][] {
+					{null,	null,	null},
+					{ZA,	ZA,		null},
+					{null,	ZA,		ZA	}}),
+	Z_DOWN(new Block[][] {
 					{null,	ZA,		null},
 					{ZA,	ZA,		null},
-					{ZA,	null,	null}};
-		case J_UP:
-			return new Block[][] {
-					{null,	JA,		null},
-					{null,	JA,		null},
-					{JA,	JA,		null}};
-		case L_DOWN:
-			return new Block[][] {
-					{LA,	LA,		null},
-					{null,	LA,		null},
-					{null,	LA,		null}};
-		case J_DOWN:
-			return new Block[][] {
-					{null,	JA,		JA},
-					{null,	JA,		null},
-					{null,	JA,		null}};
-		case L_UP:
-			return new Block[][] {
-					{null,	LA,		null},
-					{null,	LA,		null},
-					{null,	LA,		LA}};
-		case J_LEFT:
-			return new Block[][] {
+					{ZA,	null,	null}}),
+	Z_LEFT(new Block[][] {
+					{ZA,	ZA,		null},
+					{null,	ZA,		ZA	},
+					{null,	null,	null}}),
+	T_UP(new Block[][] {
+					{null,	TA,		null},
+					{TA,	TA,		TA	},
+					{null,	null,	null}}),
+	T_RIGHT(new Block[][] {
+					{null,	TA,		null},
+					{null,	TA,		TA	},
+					{null,	TA,		null}}),
+	T_DOWN(new Block[][] {
 					{null,	null,	null},
-					{JA,	JA,		JA},
-					{null,	null,	JA}};
-		case L_LEFT:
-			return new Block[][] {
-					{null,	null,	LA},
-					{LA,	LA,		LA},
-					{null,	null,	null}};
-		case J_RIGHT:
-			return new Block[][] {
+					{TA,	TA,		TA	},
+					{null,	TA,		null}}),
+	T_LEFT(new Block[][] {
+					{null,	TA,		null},
+					{TA,	TA,		null},
+					{null,	TA,		null}}),
+	J_UP(new Block[][] {
+					{null,	JA,		null},
+					{null,	JA,		null},
+					{JA,	JA,		null}}),
+	J_RIGHT(new Block[][] {
 					{JA,	null,	null},
 					{JA,	JA,		JA},
-					{null,	null,	null}};
-		case L_RIGHT:
-			return new Block[][] {
+					{null,	null,	null}}),
+	J_DOWN(new Block[][] {
+					{null,	JA,		JA},
+					{null,	JA,		null},
+					{null,	JA,		null}}),
+	J_LEFT(new Block[][] {
+					{null,	null,	null},
+					{JA,	JA,		JA},
+					{null,	null,	JA}}),
+	L_UP(new Block[][] {
+					{null,	LA,		null},
+					{null,	LA,		null},
+					{null,	LA,		LA}}),
+	L_RIGHT(new Block[][] {
 					{null,	null,	null},
 					{LA,	LA,		LA},
-					{LA,	null,	null}};
-		}
-		throw new InternalError("Fell through to default when all enum cases were covered");
+					{LA,	null,	null}}),
+	L_DOWN(new Block[][] {
+					{LA,	LA,		null},
+					{null,	LA,		null},
+					{null,	LA,		null}}),
+	L_LEFT(new Block[][] {
+					{null,	null,	LA},
+					{LA,	LA,		LA},
+					{null,	null,	null}}),
+	;
+
+	private Block[][] shape;
+	
+	private Shape(Block[][] shape) {
+		this.shape = shape;
+	}
+	
+	public Block[][] shape() {
+		return shape;
 	}
 	
 	public Shape rotateRight() {

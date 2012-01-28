@@ -113,6 +113,19 @@ public class EvilShapeProvider implements ShapeProvider {
 			dest.path = Collections.emptyList();
 			return;
 		}
+		
+		int tallest = 0;
+		for(;;tallest++) {
+			boolean found = false;
+			for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
+				if(field.getBlock(x, tallest) != null)
+					found = true;
+			}
+			if(found)
+				break;
+		}
+		
+		double parentScore = score(field);
 		bestPath[depth].score = Double.POSITIVE_INFINITY;
 		for(ShapeType type : ShapeType.values()) {
 			typeBestPath[depth].score = Double.POSITIVE_INFINITY;
@@ -121,13 +134,20 @@ public class EvilShapeProvider implements ShapeProvider {
 					Field f = field.copyInto(stack[depth]);
 					f.setShape(shape);
 					f.setShapeX(Field.WIDTH / 2 + 1);
-					f.setShapeY(0);
+					f.setShapeY(Math.max(0, tallest - 4));
 					for(int i = 0; i < Field.WIDTH; i++)
 						f.shiftLeft();
 					for(int i = 0; i < x; i++)
 						f.shiftRight();
 					while(f.getShape() != null && !f.isGameOver())
 						f.clockTick();
+					double fscore = score(f);
+					if(fscore < parentScore) {
+						dest.score = fscore;
+						dest.path.clear();
+						dest.path.add(shape);
+						return;
+					}
 					decideNice(f, depth+1, testPath[depth]);
 					if(testPath[depth].score < typeBestPath[depth].score) {
 						typeBestPath[depth].score = testPath[depth].score;
@@ -144,7 +164,8 @@ public class EvilShapeProvider implements ShapeProvider {
 			}
 		}
 		dest.score = bestPath[depth].score;
-		dest.path = new ArrayList<Shape>(bestPath[depth].path);
+		dest.path.clear();
+		dest.path.addAll(bestPath[depth].path);
 	}
 
 }

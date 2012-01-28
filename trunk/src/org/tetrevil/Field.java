@@ -80,19 +80,21 @@ public class Field {
 			gameOver = true;
 			fireGameOver();
 		}
-		
-		for(int y = field.length - 1 - BUFFER; y >= 0; y--) {
-			boolean tetris = true;
-			for(int x = BUFFER; x < field[y].length - BUFFER; x++) {
-				if(field[y][x] == null)
-					tetris = false;
-			}
-			if(tetris) {
-				lines++;
-				for(int z = y - 1; z >= 0; z--) {
-					System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
+		if(shape == null) {
+			for(int y = field.length - 1 - BUFFER; y >= 0; y--) {
+				boolean tetris = true;
+				for(int x = BUFFER; x < field[y].length - BUFFER; x++) {
+					if(field[y][x] == null)
+						tetris = false;
 				}
-				Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
+				if(tetris) {
+					lines++;
+					for(int z = y - 1; z >= 0; z--) {
+						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
+					}
+					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
+					y--;
+				}
 			}
 		}
 	}
