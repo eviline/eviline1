@@ -15,6 +15,7 @@ public class Field {
 	protected int shapeX;
 	protected int shapeY;
 	protected boolean gameOver;
+	protected boolean paused;
 	protected int lines;
 	
 	protected TetrevilListener[] listeners = new TetrevilListener[0];
@@ -54,9 +55,12 @@ public class Field {
 		shape = null;
 		gameOver = false;
 		lines = 0;
+		fireGameReset();
 	}
 	
 	public void clockTick() {
+		if(paused)
+			return;
 		if(gameOver)
 			return;
 		if(shape == null) {
@@ -100,6 +104,8 @@ public class Field {
 	}
 	
 	public void shiftLeft() {
+		if(paused)
+			return;
 		if(shape == null || shape.intersects(field, shapeX-1, shapeY))
 			return;
 		shapeX--;
@@ -107,6 +113,8 @@ public class Field {
 	}
 	
 	public void shiftRight() {
+		if(paused)
+			return;
 		if(shape == null || shape.intersects(field, shapeX+1, shapeY))
 			return;
 		shapeX++;
@@ -114,6 +122,8 @@ public class Field {
 	}
 	
 	public void rotateLeft() {
+		if(paused)
+			return;
 		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
 			return;
 		shape = shape.rotateLeft();
@@ -121,6 +131,8 @@ public class Field {
 	}
 	
 	public void rotateRight() {
+		if(paused)
+			return;
 		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
 			return;
 		shape = shape.rotateRight();
@@ -174,6 +186,26 @@ public class Field {
 			if(e == null)
 				e = new TetrevilEvent(this, this);
 			ll[i].gameOver(e);
+		}
+	}
+
+	protected void fireGamePaused() {
+		TetrevilEvent e = null;
+		TetrevilListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(e == null)
+				e = new TetrevilEvent(this, this);
+			ll[i].gamePaused(e);
+		}
+	}
+
+	protected void fireGameReset() {
+		TetrevilEvent e = null;
+		TetrevilListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(e == null)
+				e = new TetrevilEvent(this, this);
+			ll[i].gameReset(e);
 		}
 	}
 
@@ -263,5 +295,14 @@ public class Field {
 
 	public void setLines(int lines) {
 		this.lines = lines;
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+		fireGamePaused();
 	}
 }

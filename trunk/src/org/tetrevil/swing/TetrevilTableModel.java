@@ -92,4 +92,14 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 		this.field = field;
 	}
 
+	@Override
+	public void gameReset(TetrevilEvent e) {
+		changed();
+	}
+
+	@Override
+	public void gamePaused(TetrevilEvent e) {
+		changed();
+	}
+
 }

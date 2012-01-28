@@ -26,4 +26,11 @@ public abstract class TetrevilAdapter implements TetrevilListener {
 	public void rotatedRight(TetrevilEvent e) {
 	}
 
+	@Override
+	public void gameReset(TetrevilEvent e) {
+	}
+	
+	@Override
+	public void gamePaused(TetrevilEvent e) {
+	}
 }

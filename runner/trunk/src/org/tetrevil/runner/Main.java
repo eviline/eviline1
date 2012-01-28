@@ -52,6 +52,8 @@ public class Main {
 					}
 				} else if(e.getKeyCode() == KeyEvent.VK_R)
 					f.reset();
+				else if(e.getKeyCode() == KeyEvent.VK_P)
+					f.setPaused(!f.isPaused());
 				else
 					return;
 				e.consume();
@@ -69,6 +71,7 @@ public class Main {
 		frame.add(c, BorderLayout.CENTER);
 		frame.pack();
 		frame.setVisible(true);
+		frame.setSize(500, 500);
 		
 		JOptionPane.showMessageDialog(frame, "Controls:\n\n" +
 				"LEFT: Shift left 1\n" +
@@ -76,6 +79,7 @@ public class Main {
 				"UP: Rotate left\n" +
 				"DOWN: Shift down 1\n" +
 				"ENTER: Drop\n" +
+				"P: Pause\n" +
 				"R: Reset");
 		
 		while(true) {

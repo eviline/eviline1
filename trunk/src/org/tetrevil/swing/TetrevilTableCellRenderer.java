@@ -25,9 +25,16 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		c.setText(value != null && ((Block) value).isActive() ? String.valueOf(field.getLines()) : " ");
-		c.setBackground(colors.provideColor((Block) value));
+		Block b = (Block) value;
+		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
+		c.setText(value != null && b.isActive() ? String.valueOf(field.getLines()) : " ");
+		c.setBackground(colors.provideColor(b));
+		if(field.isPaused() && b != null) {
+			if(!b.isActive() && b != Block.X)
+				c.setBackground(null);
+			else
+				c.setText("P");
+		}
 		return c;
 	}
 	

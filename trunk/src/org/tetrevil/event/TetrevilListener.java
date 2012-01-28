@@ -7,4 +7,6 @@ public interface TetrevilListener {
 	public void shiftedRight(TetrevilEvent e);
 	public void rotatedLeft(TetrevilEvent e);
 	public void rotatedRight(TetrevilEvent e);
+	public void gameReset(TetrevilEvent e);
+	public void gamePaused(TetrevilEvent e);
 }
