@@ -93,7 +93,7 @@ public class Field {
 						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
 					}
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
-					y--;
+					y++;
 				}
 			}
 		}
