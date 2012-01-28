@@ -14,6 +14,8 @@ import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilTable;
 
+import com.sun.corba.se.impl.protocol.giopmsgheaders.KeyAddr;
+
 public class Main {
 
 	/**
@@ -29,9 +31,12 @@ public class Main {
 		
 		TetrevilComponent c = new TetrevilComponent(field);
 		c.getTable().setFocusable(true);
-		c.getTable().addKeyListener(new KeyAdapter() {
+		KeyAdapter k;
+		c.getTable().addKeyListener(k = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				if(e.isConsumed())
+					return;
 				Field f = ((TetrevilTable) e.getComponent()).getField();
 				if(e.getKeyCode() == KeyEvent.VK_LEFT)
 					f.shiftLeft();
@@ -47,8 +52,12 @@ public class Main {
 					}
 				} else if(e.getKeyCode() == KeyEvent.VK_R)
 					f.reset();
+				else
+					return;
+				e.consume();
 			}
 		});
+		frame.addKeyListener(k);
 		
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
