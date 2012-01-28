@@ -6,7 +6,7 @@ import org.tetrevil.event.TetrevilListener;
 
 public class Field {
 	public static final int HEIGHT = 20;
-	public static final int WIDTH = 10;
+	public static final int WIDTH = 8;
 	public static final int BUFFER = 3;
 	
 	protected Block[][] field = new Block[HEIGHT + BUFFER][WIDTH + 2 * BUFFER];
@@ -15,6 +15,7 @@ public class Field {
 	protected int shapeX;
 	protected int shapeY;
 	protected boolean gameOver;
+	protected int lines;
 	
 	protected TetrevilListener[] listeners = new TetrevilListener[0];
 	
@@ -37,6 +38,7 @@ public class Field {
 		target.shapeX = shapeX;
 		target.shapeY = shapeY;
 		target.gameOver = gameOver;
+		target.lines = lines;
 		return target;
 	}
 	
@@ -51,6 +53,7 @@ public class Field {
 		}
 		shape = null;
 		gameOver = false;
+		lines = 0;
 	}
 	
 	public void clockTick() {
@@ -85,6 +88,7 @@ public class Field {
 					tetris = false;
 			}
 			if(tetris) {
+				lines++;
 				for(int z = y - 1; z >= 0; z--) {
 					System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
 				}
@@ -249,5 +253,13 @@ public class Field {
 
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
+	}
+
+	public int getLines() {
+		return lines;
+	}
+
+	public void setLines(int lines) {
+		this.lines = lines;
 	}
 }

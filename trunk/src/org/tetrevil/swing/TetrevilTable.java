@@ -20,7 +20,7 @@ public class TetrevilTable extends JTable {
 		setTableHeader(null);
 		setFillsViewportHeight(true);
 		
-		TetrevilTableCellRenderer ttcr = new TetrevilTableCellRenderer();
+		TetrevilTableCellRenderer ttcr = new TetrevilTableCellRenderer(field);
 		for(int i = 0; i < getColumnCount(); i++) {
 			getColumnModel().getColumn(i).setCellRenderer(ttcr);
 		}
