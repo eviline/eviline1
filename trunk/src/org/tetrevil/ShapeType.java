@@ -14,7 +14,7 @@ public enum ShapeType {
 	
 	public Shape[] shapes() {
 		switch(this) {
-		case O: return new Shape[] { O_DOWN };
+		case O: return new Shape[] { O_UP };
 		case S: return new Shape[] { S_DOWN, S_LEFT};
 		case Z: return new Shape[] { Z_DOWN, Z_LEFT};
 		case J: return new Shape[] { J_DOWN, J_LEFT, J_RIGHT, J_UP };
@@ -27,13 +27,13 @@ public enum ShapeType {
 	
 	public Shape starter() {
 		switch(this) {
-		case O: return O_DOWN;
-		case S: return S_RIGHT;
-		case Z: return Z_LEFT;
+		case O: return O_UP;
+		case S: return S_UP;
+		case Z: return Z_UP;
 		case T: return T_UP;
 		case I: return I_UP;
-		case J: return J_RIGHT;
-		case L: return L_LEFT;
+		case J: return J_UP;
+		case L: return L_UP;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}

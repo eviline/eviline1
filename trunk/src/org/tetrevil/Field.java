@@ -140,23 +140,49 @@ public class Field {
 	}
 	
 	public void rotateLeft() {
-		if(paused)
+		if(paused || shape == null)
 			return;
-		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
-			return;
-		shape = shape.rotateLeft();
-		reghost();
-		fireRotatedLeft();
+//		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
+//			return;
+//		shape = shape.rotateLeft();
+		Shape rotated = shape.rotateLeft();
+		int[][] table = KickTable.forShape(shape.type(), shape.direction(), rotated.direction()).table();
+		
+		for(int[] kick : table) {
+			int x = shapeX + kick[0];
+			int y = shapeY + kick[0];
+			if(!rotated.intersects(field, x, y)) {
+				shapeX = x;
+				shapeY = y;
+				shape = rotated;
+				reghost();
+				fireRotatedLeft();
+				return;
+			}
+		}
 	}
 	
 	public void rotateRight() {
-		if(paused)
+		if(paused || shape == null)
 			return;
-		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
-			return;
-		shape = shape.rotateRight();
-		reghost();
-		fireRotatedRight();
+//		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
+//			return;
+//		shape = shape.rotateRight();
+		Shape rotated = shape.rotateRight();
+		int[][] table = KickTable.forShape(shape.type(), shape.direction(), rotated.direction()).table();
+		
+		for(int[] kick : table) {
+			int x = shapeX + kick[0];
+			int y = shapeY + kick[0];
+			if(!rotated.intersects(field, x, y)) {
+				shapeX = x;
+				shapeY = y;
+				shape = rotated;
+				reghost();
+				fireRotatedRight();
+				return;
+			}
+		}
 	}
 	
 	public Block getBlock(int x, int y) {
