@@ -17,7 +17,8 @@
          main-class="org.tetrevil.runner.MainApplet"
          width="430"
          height="600">
-         <param name="depth" value="4"/>
+         <param name="depth" value="3"/>
+         <param name="rfactor" value="0.1"/>
      </applet-desc>
      <update check="always"/>
 </jnlp>  

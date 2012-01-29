@@ -47,6 +47,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected Cache cache;
 	
 	protected int depth;
+	protected double rfactor = 0.25;
 	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
 
@@ -57,6 +58,11 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	public MaliciousShapeProvider(int depth) {
 		this.depth = depth;
 		this.cache = new Cache();
+	}
+	
+	@Override
+	public String toString() {
+		return "Malicious: depth=" + depth +", rfactor=" + rfactor;
 	}
 	
 	@Override
@@ -118,7 +124,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 				}
 			}
 			typeScore = decide(typeScore.field, depth + 1);
-			typeScore.score *= 1.25 - Math.random() / 2;
+			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -127,6 +133,22 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			}
 		}
 		return worst;
+	}
+
+	public double getRfactor() {
+		return rfactor;
+	}
+
+	public void setRfactor(double rfactor) {
+		this.rfactor = rfactor;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 	
 }

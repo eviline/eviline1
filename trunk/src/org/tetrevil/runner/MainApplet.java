@@ -50,23 +50,32 @@ public class MainApplet extends JApplet {
 			"R: Reset<br>\n" +
 			"H: Show this help<br><br>\n\n" +
 			"Click to begin.</center></html>");
+	protected JLabel provider = new JLabel(" ");
+	
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
 //			field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
 			
+			provider.setBackground(Color.BLACK);
+			provider.setForeground(Color.WHITE);
+			provider.setOpaque(true);
+			
 			if(getParameter("depth") != null) {
-				try {
-					field.setProvider(new MaliciousShapeProvider(Integer.parseInt(getParameter("depth"))));
-				} catch(NumberFormatException nfe) {
+				field.setProvider(new MaliciousShapeProvider(Integer.parseInt(getParameter("depth"))));
+				if(getParameter("rfactor") != null) {
+					((MaliciousShapeProvider) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
 				}
 			}
+			
+			provider.setText(field.getProvider().toString());
 			
 			ticker.setRepeats(true);
 			start.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					MainApplet.this.remove(start);
+					MainApplet.this.add(provider, BorderLayout.SOUTH);
 					MainApplet.this.add(c, BorderLayout.CENTER);
 					MainApplet.this.validate();
 					MainApplet.this.repaint();
@@ -105,12 +114,6 @@ public class MainApplet extends JApplet {
 							}
 						});
 						e.consume();
-					} else if(e.getKeyCode() == KeyEvent.VK_D && !e.isConsumed()) {
-						ticker.stop();
-						MainApplet.this.remove(c);
-						MainApplet.this.add(start, BorderLayout.CENTER);
-						MainApplet.this.validate();
-						MainApplet.this.repaint();
 					}
 				}
 			};
