@@ -94,11 +94,11 @@ public class MainApplet extends JApplet {
 				}
 			});
 			
-			field.addTetrevilListener(new TetrevilAdapter() {
-				public void gameOver(TetrevilEvent e) {
-					e.getField().reset();
-				}
-			});
+//			field.addTetrevilListener(new TetrevilAdapter() {
+//				public void gameOver(TetrevilEvent e) {
+//					e.getField().reset();
+//				}
+//			});
 
 			addKeyListener(k);
 			setLayout(new BorderLayout());

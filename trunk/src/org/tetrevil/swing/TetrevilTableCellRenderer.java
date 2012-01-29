@@ -35,6 +35,9 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			else
 				c.setText("P");
 		}
+		if(b == null && field.isGameOver()) {
+			c.setText(String.valueOf(field.getLines()));
+		}
 		return c;
 	}
 	
