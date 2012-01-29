@@ -21,6 +21,10 @@ public class Field {
 	protected TetrevilListener[] listeners = new TetrevilListener[0];
 	
 	public Field() {
+		this(false);
+	}
+	
+	public Field(boolean evil) {
 		for(int y = 0; y < field.length - BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
@@ -28,6 +32,10 @@ public class Field {
 		for(int y = field.length - BUFFER; y < field.length; y++) {
 			Arrays.fill(field[y], Block.X);
 		}
+		if(evil)
+			provider = new MaliciousShapeProvider();
+		else
+			provider = new RandomShapeProvider();
 	}
 	
 	public Field copyInto(Field target) {

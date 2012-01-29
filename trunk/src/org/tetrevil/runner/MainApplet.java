@@ -19,7 +19,7 @@ import org.tetrevil.swing.TetrevilComponent;
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
 	
-	protected Field field = new Field();
+	protected Field field = new Field(true);
 	protected TetrevilComponent c;
 	protected JButton start = new JButton("<html>Controls:<br><br>\n\n" +
 			"LEFT: Shift left 1<br>\n" +
@@ -35,8 +35,6 @@ public class MainApplet extends JApplet {
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
-			field.setProvider(new MaliciousShapeProvider());
-			
 			start.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
