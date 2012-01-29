@@ -1,6 +1,7 @@
 package org.tetrevil.runner;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -22,73 +23,25 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		JFrame frame = new JFrame("Tetrevil");
+		final JFrame frame = new JFrame("Tetrevil");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		
-		Field field = new Field();
-		field.setProvider(new EvilShapeProvider(2));
+		final MainApplet applet = new MainApplet();
+		applet.init();
 		
-		TetrevilComponent c = new TetrevilComponent(field);
-		c.getTable().setFocusable(true);
-		KeyAdapter k;
-		c.getTable().addKeyListener(k = new KeyAdapter() {
+		EventQueue.invokeLater(new Runnable() {
 			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.isConsumed())
-					return;
-				Field f = ((TetrevilTable) e.getComponent()).getField();
-				if(e.getKeyCode() == KeyEvent.VK_LEFT)
-					f.shiftLeft();
-				else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-					f.shiftRight();
-				else if(e.getKeyCode() == KeyEvent.VK_UP)
-					f.rotateLeft();
-				else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-					f.rotateRight();
-				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					while(f.getShape() != null) {
-						f.clockTick();
-					}
-				} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-					f.clockTick();
-				} else if(e.getKeyCode() == KeyEvent.VK_R)
-					f.reset();
-				else if(e.getKeyCode() == KeyEvent.VK_P)
-					f.setPaused(!f.isPaused());
-				else
-					return;
-				e.consume();
-			}
-		});
-		frame.addKeyListener(k);
-		
-		field.addTetrevilListener(new TetrevilAdapter() {
-			@Override
-			public void gameOver(TetrevilEvent e) {
-				e.getField().reset();
+			public void run() {
+				frame.add(applet, BorderLayout.CENTER);
+				frame.pack();
+				frame.setSize(500, 500);
+				
+				frame.setVisible(true);
+				applet.start();
 			}
 		});
 		
-		frame.add(c, BorderLayout.CENTER);
-		frame.pack();
-		frame.setVisible(true);
-		frame.setSize(500, 500);
-		
-		JOptionPane.showMessageDialog(frame, "Controls:\n\n" +
-				"LEFT: Shift left 1\n" +
-				"RIGHT: Shift right 1\n" +
-				"UP: Rotate left\n" +
-				"DOWN: Rotate right\n" +
-				"SPACE: Shift down 1\n" +
-				"ENTER: Drop\n" +
-				"P: Pause\n" +
-				"R: Reset");
-		
-		while(true) {
-			field.clockTick();
-			Thread.sleep(1000);
-		}
 	}
 
 }

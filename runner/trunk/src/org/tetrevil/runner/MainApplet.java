@@ -68,7 +68,7 @@ public class MainApplet extends JApplet {
 				public void keyPressed(KeyEvent e) {
 					if(e.isConsumed())
 						return;
-					Field f = ((TetrevilTable) e.getComponent()).getField();
+					Field f = c.getField();
 					if(e.getKeyCode() == KeyEvent.VK_LEFT)
 						f.shiftLeft();
 					else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
