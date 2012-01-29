@@ -13,7 +13,7 @@
 	</target>
 	<target name="dist" depends="jar">
 		<copy todir="dist">
-			<file file="tetrevil.jnlp"/>
+			<fileset file="tetrevil.jnlp"/>
 		</copy>
 	</target>
 	<target name="run" depends="compile">

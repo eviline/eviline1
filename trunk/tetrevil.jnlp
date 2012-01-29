@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.0+" codebase="" href="">
+<jnlp spec="1.0+" codebase="http://www.tetrevil.org/" href="tetrevil.jnlp">
     <information>
         <title>TETREVIL</title>
         <vendor>Robin Kirkman</vendor>
+        <offline-allowed/>
     </information>
     <resources>
         <!-- Application Resources -->
         <j2se version="1.6+"
             href="http://java.sun.com/products/autodl/j2se" />
-        <jar href="tetrevil.jar" main="true" />
+        <jar href="http://www.tetrevil.org/tetrevil.jar" main="true" />
 
     </resources>
     <applet-desc 
@@ -16,6 +17,7 @@
          main-class="org.tetrevil.runner.MainApplet"
          width="430"
          height="600">
+         <param name="depth" value="4"/>
      </applet-desc>
      <update check="always"/>
 </jnlp>  

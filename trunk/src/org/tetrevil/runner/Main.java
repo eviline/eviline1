@@ -15,6 +15,14 @@ public class Main {
 		frame.setLayout(new BorderLayout());
 		
 		final MainApplet applet = new MainApplet();
+		
+		for(String arg : args) {
+			if(arg.contains("=")) {
+				String[] f = arg.split("=", 2);
+				applet.setParameter(f[0], f[1]);
+			}
+		}
+		
 		applet.init();
 		
 		EventQueue.invokeLater(new Runnable() {

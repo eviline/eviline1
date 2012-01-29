@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
@@ -31,6 +33,8 @@ import org.tetrevil.swing.TetrevilKeyListener;
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
 	
+	protected Map<String, String> parameters = new HashMap<String, String>();
+	
 	protected Field field = new Field(true);
 	protected TetrevilComponent c;
 	protected JButton start = new JButton("<html><center>Controls:<br><br>\n\n" +
@@ -44,65 +48,24 @@ public class MainApplet extends JApplet {
 			"ENTER: Drop<br>\n" +
 			"P: Pause<br>\n" +
 			"R: Reset<br>\n" +
-			"D: Change difficulty<br>\n" +
 			"H: Show this help<br><br>\n\n" +
 			"Click to begin.</center></html>");
-	protected JRadioButton depth4 = new JRadioButton(new AbstractAction("Evil") {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			field.setProvider(new MaliciousShapeProvider(4));
-			field.reset();
-		}
-	});
-	protected JRadioButton depth3 = new JRadioButton(new AbstractAction("Nasty") {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			field.setProvider(new MaliciousShapeProvider(3));
-			field.reset();
-		}
-	});
-	protected JRadioButton depth2 = new JRadioButton(new AbstractAction("Mean") {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			field.setProvider(new MaliciousShapeProvider(2));
-			field.reset();
-		}
-	});
-	protected JRadioButton depth1 = new JRadioButton(new AbstractAction("Rude") {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			field.setProvider(new MaliciousShapeProvider(1));
-			field.reset();
-		}
-	});
-	protected JPanel dpanel = new JPanel(new GridLayout(1,0));
-	
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
 //			field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
 			
-			ButtonGroup group = new ButtonGroup();
-			group.add(depth1);
-			group.add(depth2);
-			group.add(depth3);
-			group.add(depth4);
-			depth4.setSelected(true);
-			
-			dpanel.add(new JLabel("Difficulty:"));
-			dpanel.add(depth1);
-			dpanel.add(depth2);
-			dpanel.add(depth3);
-			dpanel.add(depth4);
+			if(getParameter("depth") != null) {
+				try {
+					field.setProvider(new MaliciousShapeProvider(Integer.parseInt(getParameter("depth"))));
+				} catch(NumberFormatException nfe) {
+				}
+			}
 			
 			ticker.setRepeats(true);
 			start.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					depth1.setEnabled(false);
-					depth2.setEnabled(false);
-					depth3.setEnabled(false);
-					depth4.setEnabled(false);
 					MainApplet.this.remove(start);
 					MainApplet.this.add(c, BorderLayout.CENTER);
 					MainApplet.this.validate();
@@ -144,10 +107,6 @@ public class MainApplet extends JApplet {
 						e.consume();
 					} else if(e.getKeyCode() == KeyEvent.VK_D && !e.isConsumed()) {
 						ticker.stop();
-						depth1.setEnabled(true);
-						depth2.setEnabled(true);
-						depth3.setEnabled(true);
-						depth4.setEnabled(true);
 						MainApplet.this.remove(c);
 						MainApplet.this.add(start, BorderLayout.CENTER);
 						MainApplet.this.validate();
@@ -161,7 +120,7 @@ public class MainApplet extends JApplet {
 			setBackground(Color.BLACK);
 			setLayout(new BorderLayout());
 			add(start, BorderLayout.CENTER);
-			add(dpanel, BorderLayout.NORTH);
+//			add(dpanel, BorderLayout.NORTH);
 		}
 	};
 	
@@ -184,5 +143,17 @@ public class MainApplet extends JApplet {
 	@Override
 	public void stop() {
 		ticker.stop();
+	}
+	
+	@Override
+	public String getParameter(String name) {
+		if(parameters.containsKey(name))
+			return parameters.get(name);
+		else
+			return super.getParameter(name);
+	}
+	
+	public void setParameter(String name, String value) {
+		parameters.put(name, value);
 	}
 }
