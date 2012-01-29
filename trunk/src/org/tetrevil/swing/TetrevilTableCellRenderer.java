@@ -3,8 +3,10 @@ package org.tetrevil.swing;
 import java.awt.Color;
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.tetrevil.Block;
@@ -17,6 +19,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1L;
 	
 	protected Field field;
+	
+	protected Border ghost = BorderFactory.createLineBorder(Block.G.color());
 	
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
@@ -43,6 +47,11 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		} else if(field.isGameOver()) {
 			c.setText(" ");
 		}
+		if(b == Block.G) {
+			c.setBorder(ghost);
+			c.setBackground(colors.provideColor(null));
+		} else
+			c.setBorder(null);
 		return c;
 	}
 	
