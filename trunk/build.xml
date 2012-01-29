@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="jar" name="TETREVIL">
+	<target name="compile">
+		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
+	</target>
+	<target name="jar" depends="compile">
+		<jar destfile="tetrevil.jar" update="true">
+			<manifest>
+				<attribute name="Main-Class" value="org.tetrevil.runner.Main"/>
+			</manifest>
+			<fileset dir="bin"/>
+		</jar>
+	</target>
+</project>
