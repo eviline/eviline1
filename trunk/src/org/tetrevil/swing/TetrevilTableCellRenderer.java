@@ -1,5 +1,6 @@
 package org.tetrevil.swing;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JLabel;
@@ -27,7 +28,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		Block b = (Block) value;
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
-		c.setText(value != null && b.isActive() ? String.valueOf(field.getLines()) : " ");
+		c.setText(b != null && b.isActive() ? String.valueOf(field.getLines()) : " ");
+		c.setForeground(Color.BLACK);
 		c.setBackground(colors.provideColor(b));
 		if(field.isPaused() && b != null) {
 			if(!b.isActive() && b != Block.X)
@@ -36,7 +38,10 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 				c.setText("P");
 		}
 		if(b == null && field.isGameOver()) {
+			c.setForeground(Color.WHITE);
 			c.setText(String.valueOf(field.getLines()));
+		} else if(field.isGameOver()) {
+			c.setText(" ");
 		}
 		return c;
 	}
