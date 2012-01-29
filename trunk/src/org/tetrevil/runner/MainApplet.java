@@ -14,8 +14,11 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousShapeProvider;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
 
@@ -41,6 +44,8 @@ public class MainApplet extends JApplet {
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
+//			field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
+			
 			ticker.setRepeats(true);
 			start.addActionListener(new ActionListener() {
 				@Override
@@ -89,6 +94,13 @@ public class MainApplet extends JApplet {
 			};
 			c.getTable().addKeyListener(k);
 			addKeyListener(k);
+			
+			field.addTetrevilListener(new TetrevilAdapter() {
+				@Override
+				public void clockTicked(TetrevilEvent e) {
+					MainApplet.this.repaint();
+				}
+			});
 			
 			setBackground(Color.BLACK);
 			setLayout(new BorderLayout());

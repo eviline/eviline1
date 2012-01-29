@@ -3,6 +3,8 @@ package org.tetrevil.swing;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.SwingUtilities;
+
 import org.tetrevil.Field;
 
 public class TetrevilKeyListener extends KeyAdapter {
@@ -37,10 +39,10 @@ public class TetrevilKeyListener extends KeyAdapter {
 			f.rotateRight();
 		else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 			while(f.getShape() != null) {
-				f.clockTick();
+				field.clockTick();
 			}
 		} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-			f.clockTick();
+			field.clockTick();
 		} else if(e.getKeyCode() == KeyEvent.VK_R)
 			f.reset();
 		else if(e.getKeyCode() == KeyEvent.VK_P)

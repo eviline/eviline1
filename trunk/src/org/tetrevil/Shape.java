@@ -200,6 +200,8 @@ public enum Shape {
 			for(int ix = 0; ix < shape[iy].length; ix++) {
 				if(shape[iy][ix] != null && y + iy >= 0 && field[y + iy][x + ix] != null)
 					return true;
+				if(shape[iy][ix] != null && y + iy < 0)
+					return true;
 			}
 		}
 		return false;
