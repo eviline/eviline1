@@ -1,6 +1,8 @@
 package org.tetrevil.runner;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.Executors;
@@ -9,6 +11,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import javax.swing.JApplet;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -21,12 +24,41 @@ import org.tetrevil.swing.TetrevilTable;
 
 public class MainApplet extends JApplet {
 	protected Field field = new Field();
-	TetrevilComponent c;
+	protected TetrevilComponent c;
+	protected JButton start = new JButton("<html>Controls:<br><br>\n\n" +
+			"LEFT: Shift left 1<br>\n" +
+			"RIGHT: Shift right 1<br>\n" +
+			"UP: Rotate left<br>\n" +
+			"DOWN: Rotate right<br>\n" +
+			"SPACE: Shift down 1<br>\n" +
+			"ENTER: Drop<br>\n" +
+			"P: Pause<br>\n" +
+			"R: Reset<br><br>\n\n" +
+			"Click to begin.</html>");
 	
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
 			field.setProvider(new EvilShapeProvider(2));
+			
+			start.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					MainApplet.this.remove(start);
+					MainApplet.this.add(c, BorderLayout.CENTER);
+					MainApplet.this.validate();
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							if(!c.getTable().isFocusOwner()) {
+								c.getTable().requestFocusInWindow();
+								SwingUtilities.invokeLater(this);
+							} else
+								new Thread(future).start();
+						}
+					});
+				}
+			});
 			
 			c = new TetrevilComponent(field);
 			c.getTable().setFocusable(true);
@@ -69,7 +101,7 @@ public class MainApplet extends JApplet {
 
 			addKeyListener(k);
 			setLayout(new BorderLayout());
-			add(c, BorderLayout.CENTER);
+			add(start, BorderLayout.CENTER);
 		}
 	};
 	
@@ -94,34 +126,6 @@ public class MainApplet extends JApplet {
 			SwingUtilities.invokeAndWait(launch);
 		} catch(Exception ex) {
 		}
-	}
-	
-	@Override
-	public void start() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				JOptionPane.showMessageDialog(c, "Controls:\n\n" +
-						"LEFT: Shift left 1\n" +
-						"RIGHT: Shift right 1\n" +
-						"UP: Rotate left\n" +
-						"DOWN: Rotate right\n" +
-						"SPACE: Shift down 1\n" +
-						"ENTER: Drop\n" +
-						"P: Pause\n" +
-						"R: Reset");
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						if(!c.getTable().isFocusOwner()) {
-							c.getTable().requestFocusInWindow();
-							SwingUtilities.invokeLater(this);
-						} else
-							new Thread(future).start();
-					}
-				});
-			}
-		});
 	}
 	
 	@Override

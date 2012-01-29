@@ -8,7 +8,7 @@ public class EvilShapeProvider implements ShapeProvider {
 	public static final int DEFAULT_DEPTH = 2;
 	public static final int HISTORY_SIZE = 3;
 	
-	protected static double score(Field field) {
+	public static double score(Field field) {
 		double score = 0;
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			int bonus = 0;
@@ -22,7 +22,7 @@ public class EvilShapeProvider implements ShapeProvider {
 		return score;
 	}
 	
-	protected class ScoredPath {
+	public static class ScoredPath {
 		public List<Shape> path = new ArrayList<Shape>();
 		public double score;
 		
