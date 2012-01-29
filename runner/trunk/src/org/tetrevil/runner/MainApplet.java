@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 
 import org.tetrevil.EvilShapeProvider;
 import org.tetrevil.Field;
+import org.tetrevil.MaliciousShapeProvider;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.TetrevilComponent;
@@ -39,7 +40,7 @@ public class MainApplet extends JApplet {
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
-			field.setProvider(new EvilShapeProvider(2));
+			field.setProvider(new MaliciousShapeProvider());
 			
 			start.addActionListener(new ActionListener() {
 				@Override
