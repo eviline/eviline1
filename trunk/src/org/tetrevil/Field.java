@@ -6,7 +6,7 @@ import org.tetrevil.event.TetrevilListener;
 
 public class Field {
 	public static final int HEIGHT = 20;
-	public static final int WIDTH = 8;
+	public static final int WIDTH = 10;
 	public static final int BUFFER = 3;
 	
 	protected Block[][] field = new Block[HEIGHT + BUFFER][WIDTH + 2 * BUFFER];

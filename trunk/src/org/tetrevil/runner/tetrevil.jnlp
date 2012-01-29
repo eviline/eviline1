@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="" href="">
+    <information>
+        <title>TETREVIL</title>
+        <vendor>Robin Kirkman</vendor>
+    </information>
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.6+"
+            href="http://java.sun.com/products/autodl/j2se" />
+        <jar href="http://www.robinkirkman.com/tetrevil.jar" main="true" />
+
+    </resources>
+    <applet-desc 
+         name="TETREVIL"
+         main-class="org.tetrevil.runner.MainApplet"
+         width="600"
+         height="600">
+     </applet-desc>
+     <update check="always"/>
+</jnlp>  
