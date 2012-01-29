@@ -4,7 +4,7 @@
 		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
 	</target>
 	<target name="jar" depends="compile">
-		<jar destfile="tetrevil.jar" update="true">
+		<jar destfile="dist/tetrevil.jar" update="true">
 			<manifest>
 				<attribute name="Main-Class" value="org.tetrevil.runner.Main"/>
 			</manifest>
