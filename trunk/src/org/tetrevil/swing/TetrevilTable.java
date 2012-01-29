@@ -5,6 +5,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JTable;
 
+import org.tetrevil.Block;
 import org.tetrevil.Field;
 
 public class TetrevilTable extends JTable {
@@ -27,7 +28,7 @@ public class TetrevilTable extends JTable {
 		}
 		
 		setShowGrid(true);
-		setGridColor(Color.BLACK);
+		setGridColor(Block.X.color());
 		setRowSelectionAllowed(false);
 		setColumnSelectionAllowed(false);
 		setCellSelectionEnabled(false);

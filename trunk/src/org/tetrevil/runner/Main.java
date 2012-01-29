@@ -22,7 +22,7 @@ public class Main {
 			public void run() {
 				frame.add(applet, BorderLayout.CENTER);
 				frame.pack();
-				frame.setSize(500, 500);
+				frame.setSize(360, 500);
 				
 				frame.setVisible(true);
 				applet.start();

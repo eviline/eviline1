@@ -1,5 +1,7 @@
 package org.tetrevil;
 
+import java.awt.Color;
+
 /**
  * A block on the playing {@link Field}.  There are two block types for each {@link ShapeType}: active and inactive.
  * Additionally, there is a block type for the outer border around the field.  Empty areas in the {@link Field}
@@ -88,4 +90,38 @@ public enum Block {
 		throw new InternalError("Impossible switch fall-through");
 	}
 
+	public Color color() {
+		switch(this) {
+		case I:
+			return new Color(0, 159, 218);
+		case IA:
+			return I.color().darker();
+		case J: 
+			return new Color(0, 101, 189);
+		case JA:
+			return J.color().darker();
+		case L: 
+			return new Color(255, 121, 0);
+		case LA:
+			return L.color().darker();
+		case O: 
+			return new Color(254, 203, 0);
+		case OA:
+			return O.color().darker();
+		case S: 
+			return new Color(105, 190, 40);
+		case SA:
+			return S.color().darker();
+		case T: 
+			return new Color(149, 45, 152);
+		case TA:
+			return T.color().darker();
+		case Z: 
+			return new Color(237, 41, 57);
+		case ZA:
+			return Z.color().darker();
+		case X: return Color.DARK_GRAY.darker();
+		}
+		throw new InternalError("Impossible switch fall-through");
+	}
 }

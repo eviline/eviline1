@@ -25,7 +25,9 @@ public class MainApplet extends JApplet {
 	protected TetrevilComponent c;
 	protected JButton start = new JButton("<html>Controls:<br><br>\n\n" +
 			"LEFT: Shift left 1<br>\n" +
+			"HOLD LEFT: Shift left all the way<br>\n" +
 			"RIGHT: Shift right 1<br>\n" +
+			"HOLD RIGHT: Shift right all the way<br>\n" +
 			"UP: Rotate left<br>\n" +
 			"DOWN: Rotate right<br>\n" +
 			"SPACE: Shift down 1<br>\n" +
