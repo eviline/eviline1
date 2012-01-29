@@ -75,7 +75,6 @@ public class MainApplet extends JApplet {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					MainApplet.this.remove(start);
-					MainApplet.this.add(provider, BorderLayout.SOUTH);
 					MainApplet.this.add(c, BorderLayout.CENTER);
 					MainApplet.this.validate();
 					MainApplet.this.repaint();
@@ -123,7 +122,7 @@ public class MainApplet extends JApplet {
 			setBackground(Color.BLACK);
 			setLayout(new BorderLayout());
 			add(start, BorderLayout.CENTER);
-//			add(dpanel, BorderLayout.NORTH);
+			add(provider, BorderLayout.SOUTH);
 		}
 	};
 	
