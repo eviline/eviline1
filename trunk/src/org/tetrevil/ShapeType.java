@@ -24,4 +24,30 @@ public enum ShapeType {
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
+	
+	public Shape starter() {
+		switch(this) {
+		case O: return O_DOWN;
+		case S: return S_RIGHT;
+		case Z: return Z_LEFT;
+		case T: return T_UP;
+		case I: return I_UP;
+		case J: return J_RIGHT;
+		case L: return L_LEFT;
+		}
+		throw new InternalError("Fell through to default when all enums covered");
+	}
+	
+	public int starterY() {
+		switch(this) {
+		case O: return 0;
+		case S: return 0;
+		case Z: return 0;
+		case I: return -1;
+		case T: return 0;
+		case J: return 0;
+		case L: return 0;
+		}
+		throw new InternalError("Fell through to default when all enums covered");
+	}
 }

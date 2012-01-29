@@ -72,8 +72,8 @@ public class Field {
 		if(gameOver)
 			return;
 		if(shape == null) {
-			shape = provider.provideShape(this);
-			shapeY = 0;
+			shape = provider.provideShape(this).type().starter();
+			shapeY = shape.type().starterY();
 			shapeX = WIDTH / 2 + 1;
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
 			Block[][] s = shape.shape();

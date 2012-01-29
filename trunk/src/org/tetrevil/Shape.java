@@ -213,7 +213,7 @@ public enum Shape {
 		Block[][] shape = this.shape();
 		for(int iy = 0; iy < shape.length; iy++) {
 			for(int ix = 0; ix < shape[iy].length; ix++) {
-				if(shape[iy][ix] != null && field[y + iy][x + ix] != null)
+				if(shape[iy][ix] != null && y + iy >= 0 && field[y + iy][x + ix] != null)
 					return true;
 			}
 		}

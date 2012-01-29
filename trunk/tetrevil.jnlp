@@ -14,7 +14,7 @@
     <applet-desc 
          name="TETREVIL"
          main-class="org.tetrevil.runner.MainApplet"
-         width="600"
+         width="430"
          height="600">
      </applet-desc>
      <update check="always"/>

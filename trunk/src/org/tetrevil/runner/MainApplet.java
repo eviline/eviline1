@@ -11,10 +11,12 @@ import java.util.concurrent.RunnableFuture;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousShapeProvider;
 import org.tetrevil.swing.TetrevilComponent;
+import org.tetrevil.swing.TetrevilKeyListener;
 
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
@@ -35,6 +37,7 @@ public class MainApplet extends JApplet {
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
+			ticker.setRepeats(true);
 			start.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -47,8 +50,9 @@ public class MainApplet extends JApplet {
 							if(!c.getTable().isFocusOwner()) {
 								c.getTable().requestFocusInWindow();
 								SwingUtilities.invokeLater(this);
-							} else
-								new Thread(future).start();
+							} else {
+								ticker.start();
+							}
 						}
 					});
 				}
@@ -56,63 +60,21 @@ public class MainApplet extends JApplet {
 			
 			c = new TetrevilComponent(field);
 			c.getTable().setFocusable(true);
-			KeyAdapter k;
-			c.getTable().addKeyListener(k = new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if(e.isConsumed())
-						return;
-					Field f = c.getField();
-					if(e.getKeyCode() == KeyEvent.VK_LEFT)
-						f.shiftLeft();
-					else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-						f.shiftRight();
-					else if(e.getKeyCode() == KeyEvent.VK_UP)
-						f.rotateLeft();
-					else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-						f.rotateRight();
-					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-						while(f.getShape() != null) {
-							f.clockTick();
-						}
-					} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-						f.clockTick();
-					} else if(e.getKeyCode() == KeyEvent.VK_R)
-						f.reset();
-					else if(e.getKeyCode() == KeyEvent.VK_P)
-						f.setPaused(!f.isPaused());
-					else
-						return;
-					e.consume();
-				}
-			});
-			
-//			field.addTetrevilListener(new TetrevilAdapter() {
-//				public void gameOver(TetrevilEvent e) {
-//					e.getField().reset();
-//				}
-//			});
-
+			KeyAdapter k = new TetrevilKeyListener(field);
+			c.getTable().addKeyListener(k);
 			addKeyListener(k);
 			setLayout(new BorderLayout());
 			add(start, BorderLayout.CENTER);
 		}
 	};
 	
-	protected Runnable tick = new Runnable() {
+	protected ActionListener tick = new ActionListener() {
 		@Override
-		public void run() {
-			try {
-				while(!future.isCancelled() && !future.isDone()) {
-					Thread.sleep(1000);
-					field.clockTick();
-				}
-			} catch(InterruptedException ie) {
-			}
+		public void actionPerformed(ActionEvent arg0) {
+			field.clockTick();
 		}
 	};
-	
-	protected RunnableFuture<?> future = new FutureTask<Object>(tick, null);
+	protected Timer ticker = new Timer(1000, tick);
 	
 	@Override
 	public void init() {
@@ -124,6 +86,6 @@ public class MainApplet extends JApplet {
 	
 	@Override
 	public void stop() {
-		future.cancel(true);
+		ticker.stop();
 	}
 }

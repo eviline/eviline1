@@ -1,5 +1,6 @@
 package org.tetrevil.swing;
 
+import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JTable;
@@ -25,7 +26,11 @@ public class TetrevilTable extends JTable {
 			getColumnModel().getColumn(i).setCellRenderer(ttcr);
 		}
 		
-		setShowGrid(false);
+		setShowGrid(true);
+		setGridColor(Color.BLACK);
+		setRowSelectionAllowed(false);
+		setColumnSelectionAllowed(false);
+		setCellSelectionEnabled(false);
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
