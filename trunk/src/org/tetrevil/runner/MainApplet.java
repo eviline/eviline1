@@ -1,6 +1,7 @@
 package org.tetrevil.runner;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -23,7 +24,7 @@ public class MainApplet extends JApplet {
 	
 	protected Field field = new Field(true);
 	protected TetrevilComponent c;
-	protected JButton start = new JButton("<html>Controls:<br><br>\n\n" +
+	protected JButton start = new JButton("<html><center>Controls:<br><br>\n\n" +
 			"LEFT: Shift left 1<br>\n" +
 			"HOLD LEFT: Shift left all the way<br>\n" +
 			"RIGHT: Shift right 1<br>\n" +
@@ -33,8 +34,9 @@ public class MainApplet extends JApplet {
 			"SPACE: Shift down 1<br>\n" +
 			"ENTER: Drop<br>\n" +
 			"P: Pause<br>\n" +
-			"R: Reset<br><br>\n\n" +
-			"Click to begin.</html>");
+			"R: Reset<br>\n" +
+			"H: Show this help<br><br>\n\n" +
+			"Click to begin.</center></html>");
 	
 	protected Runnable launch = new Runnable() {
 		@Override
@@ -46,6 +48,7 @@ public class MainApplet extends JApplet {
 					MainApplet.this.remove(start);
 					MainApplet.this.add(c, BorderLayout.CENTER);
 					MainApplet.this.validate();
+					MainApplet.this.repaint();
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
@@ -65,6 +68,29 @@ public class MainApplet extends JApplet {
 			KeyAdapter k = new TetrevilKeyListener(field);
 			c.getTable().addKeyListener(k);
 			addKeyListener(k);
+			
+			k = new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
+						ticker.stop();
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								MainApplet.this.remove(c);
+								MainApplet.this.add(start, BorderLayout.CENTER);
+								MainApplet.this.validate();
+								MainApplet.this.repaint();
+							}
+						});
+						e.consume();
+					}
+				}
+			};
+			c.getTable().addKeyListener(k);
+			addKeyListener(k);
+			
+			setBackground(Color.BLACK);
 			setLayout(new BorderLayout());
 			add(start, BorderLayout.CENTER);
 		}

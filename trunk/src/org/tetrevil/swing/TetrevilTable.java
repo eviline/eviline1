@@ -32,6 +32,7 @@ public class TetrevilTable extends JTable {
 		setRowSelectionAllowed(false);
 		setColumnSelectionAllowed(false);
 		setCellSelectionEnabled(false);
+		setBackground(Block.X.color());
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
