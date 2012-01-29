@@ -14,6 +14,7 @@ public class Field {
 	protected Shape shape;
 	protected int shapeX;
 	protected int shapeY;
+	protected int ghostY;
 	protected boolean gameOver;
 	protected boolean paused;
 	protected int lines;
@@ -75,6 +76,7 @@ public class Field {
 			shape = provider.provideShape(this).type().starter();
 			shapeY = shape.type().starterY();
 			shapeX = WIDTH / 2 + 1 + shape.type().starterX();
+			reghost();
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
 			Block[][] s = shape.shape();
 			for(int y = 0; y < s.length; y++) {
@@ -117,6 +119,7 @@ public class Field {
 		if(shape == null || shape.intersects(field, shapeX-1, shapeY))
 			return;
 		shapeX--;
+		reghost();
 		fireShiftedLeft();
 	}
 	
@@ -126,7 +129,14 @@ public class Field {
 		if(shape == null || shape.intersects(field, shapeX+1, shapeY))
 			return;
 		shapeX++;
+		reghost();
 		fireShiftedRight();
+	}
+	
+	protected void reghost() {
+		ghostY = shapeY;
+		while(!shape.intersects(field, shapeX, ghostY + 1))
+			ghostY++;
 	}
 	
 	public void rotateLeft() {
@@ -135,6 +145,7 @@ public class Field {
 		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
 			return;
 		shape = shape.rotateLeft();
+		reghost();
 		fireRotatedLeft();
 	}
 	
@@ -144,6 +155,7 @@ public class Field {
 		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
 			return;
 		shape = shape.rotateRight();
+		reghost();
 		fireRotatedRight();
 	}
 	
@@ -154,6 +166,10 @@ public class Field {
 				Block b;
 				if((b = s[y - shapeY][x - shapeX]) != null)
 					return b;
+			}
+			if(x - shapeX < s[0].length && y >= ghostY && y - ghostY < s.length) {
+				if(s[y - ghostY][x - shapeX] != null)
+					return Block.G;
 			}
 		}
 		return field[y][x];
