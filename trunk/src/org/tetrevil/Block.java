@@ -93,33 +93,33 @@ public enum Block {
 	public Color color() {
 		switch(this) {
 		case I:
-			return new Color(0, 159, 218);
+			return IA.color().darker();
 		case IA:
-			return I.color().darker();
+			return new Color(0, 159, 218);
 		case J: 
-			return new Color(0, 101, 189);
+			return JA.color().darker();
 		case JA:
-			return J.color().darker();
+			return new Color(0, 101, 189);
 		case L: 
-			return new Color(255, 121, 0);
+			return LA.color().darker();
 		case LA:
-			return L.color().darker();
+			return new Color(255, 121, 0);
 		case O: 
-			return new Color(254, 203, 0);
+			return OA.color().darker();
 		case OA:
-			return O.color().darker();
+			return new Color(254, 203, 0);
 		case S: 
-			return new Color(105, 190, 40);
+			return SA.color().darker();
 		case SA:
-			return S.color().darker();
+			return new Color(105, 190, 40);
 		case T: 
-			return new Color(149, 45, 152);
+			return TA.color().darker();
 		case TA:
-			return T.color().darker();
+			return new Color(149, 45, 152);
 		case Z: 
-			return new Color(237, 41, 57);
+			return ZA.color().darker();
 		case ZA:
-			return Z.color().darker();
+			return new Color(237, 41, 57);
 		case X: return Color.DARK_GRAY.darker();
 		}
 		throw new InternalError("Impossible switch fall-through");
