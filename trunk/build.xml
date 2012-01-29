@@ -16,4 +16,7 @@
 			<file file="tetrevil.jnlp"/>
 		</copy>
 	</target>
+	<target name="run" depends="compile">
+		<java classpath="bin" classname="org.tetrevil.runner.Main" fork="true"/>
+	</target>
 </project>
