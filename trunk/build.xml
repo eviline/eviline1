@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="jar" name="TETREVIL">
+<project default="dist" name="TETREVIL">
 	<target name="compile">
 		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
 	</target>
@@ -10,5 +10,10 @@
 			</manifest>
 			<fileset dir="bin"/>
 		</jar>
+	</target>
+	<target name="dist" depends="jar">
+		<copy todir="dist">
+			<file file="tetrevil.jnlp"/>
+		</copy>
 	</target>
 </project>

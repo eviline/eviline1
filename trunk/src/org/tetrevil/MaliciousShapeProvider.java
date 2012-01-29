@@ -26,9 +26,26 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	public static class Score {
 		public double score;
 		public Shape shape;
-		public Field field;
+		public Field field = new Field();
 	}
 
+	protected class Cache {
+		public Score depestDecide = new Score();
+		public Score[] worst = new Score[depth + 1];
+		public Field[] f = new Field[depth + 1];
+		public Score[] typeScore = new Score[depth + 1];
+		
+		public Cache() {
+			for(int i = 0; i < depth + 1; i++) {
+				worst[i] = new Score();
+				f[i] = new Field();
+				typeScore[i] = new Score();
+			}
+		}
+	}
+	
+	protected Cache cache;
+	
 	protected int depth;
 	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
@@ -39,6 +56,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	
 	public MaliciousShapeProvider(int depth) {
 		this.depth = depth;
+		this.cache = new Cache();
 	}
 	
 	@Override
@@ -52,7 +70,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	
 	protected Score decide(Field field, int depth) {
 		if(depth > this.depth) {
-			Score score = new Score();
+			Score score = cache.depestDecide;
 			score.field = field;
 			score.score = score(field);
 			return score;
@@ -71,12 +89,14 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			}
 		}
 
-		Score worst = new Score();
+		Score worst = cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
-		Field f = new Field();
+		
+		Field f = cache.f[depth];
 		for(ShapeType type : ShapeType.values()) {
-			Score typeScore = new Score();
+			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
+
 			for(Shape shape : type.shapes()) {
 				for(int x = 0; x < Field.WIDTH; x++) {
 					field.copyInto(f);
@@ -92,7 +112,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 					double fscore = score(f);
 					if(fscore < typeScore.score) {
 						typeScore.score = fscore;
-						typeScore.field = f.copyInto(new Field());
+						typeScore.field = f.copyInto(typeScore.field);
 						typeScore.shape = shape;
 					}
 				}
@@ -102,7 +122,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
-				worst.field = typeScore.field;
+				worst.field = typeScore.field.copyInto(worst.field);
 				worst.shape = typeScore.shape;
 			}
 		}
