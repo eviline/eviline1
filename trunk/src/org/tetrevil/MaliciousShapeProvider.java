@@ -50,6 +50,8 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected double rfactor = 0.25;
 	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
+	protected int[] typeCounts = new int[ShapeType.values().length];
+	protected int totalCount = 0;
 
 	public MaliciousShapeProvider() {
 		this(DEFAULT_DEPTH);
@@ -58,6 +60,9 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	public MaliciousShapeProvider(int depth) {
 		this.depth = depth;
 		this.cache = new Cache();
+		for(int i = 0; i < typeCounts.length; i++) {
+			totalCount += (typeCounts[i] = 30);
+		}
 	}
 	
 	@Override
@@ -71,6 +76,8 @@ public class MaliciousShapeProvider implements ShapeProvider {
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
+		typeCounts[shape.type().ordinal()]++;
+		typeCounts[(int)(typeCounts.length * Math.random())]--;
 		return shape;
 	}
 	
@@ -125,6 +132,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			}
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
+			typeScore.score *= totalCount / (double)(typeCounts.length * typeCounts[type.ordinal()]);
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;

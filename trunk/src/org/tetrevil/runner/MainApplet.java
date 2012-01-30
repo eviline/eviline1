@@ -52,23 +52,37 @@ public class MainApplet extends JApplet {
 			"Click to begin.</center></html>");
 	protected JLabel provider = new JLabel(" ");
 	
+	protected void setProvider() {
+		if(getParameter("depth") != null) {
+			field.setProvider(new MaliciousShapeProvider(Integer.parseInt(getParameter("depth"))));
+			if(getParameter("rfactor") != null) {
+				((MaliciousShapeProvider) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
+			}
+		} else {
+			field.setProvider(new MaliciousShapeProvider());
+		}
+		
+		provider.setText(field.getProvider().toString());
+	}
+	
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
 //			field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
 			
+			getContentPane().setBackground(Color.BLACK);
+			
 			provider.setBackground(Color.BLACK);
 			provider.setForeground(Color.WHITE);
 			provider.setOpaque(true);
 			
-			if(getParameter("depth") != null) {
-				field.setProvider(new MaliciousShapeProvider(Integer.parseInt(getParameter("depth"))));
-				if(getParameter("rfactor") != null) {
-					((MaliciousShapeProvider) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
-				}
-			}
+			setProvider();
 			
-			provider.setText(field.getProvider().toString());
+			field.addTetrevilListener(new TetrevilAdapter() {
+				public void gameReset(TetrevilEvent e) {
+					setProvider();
+				}
+			});
 			
 			ticker.setRepeats(true);
 			start.addActionListener(new ActionListener() {
