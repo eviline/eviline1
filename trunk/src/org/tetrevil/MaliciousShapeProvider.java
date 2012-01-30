@@ -49,6 +49,8 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected int depth;
 	protected double rfactor = 0.25;
 	
+	protected boolean randomFirst = true;
+	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
 	protected int[] typeCounts = new int[ShapeType.values().length];
 	protected int totalCount = 0;
@@ -72,6 +74,10 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	
 	@Override
 	public Shape provideShape(Field field) {
+		if(randomFirst) {
+			randomFirst = false;
+			return ShapeType.values()[(int)(Math.random() * ShapeType.values().length)].starter();
+		}
 		Shape shape = decide(field, 0).shape;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
