@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaliciousShapeProvider implements ShapeProvider {
-	public static final int DEFAULT_DEPTH = 4;
+	public static final int DEFAULT_DEPTH = 3;
 	public static final int HISTORY_SIZE = 3;
 
 	public static double score(Field field) {
@@ -47,7 +47,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected Cache cache;
 	
 	protected int depth;
-	protected double rfactor = 0.25;
+	protected double rfactor = 0.05;
 	
 	protected boolean randomFirst = true;
 	
