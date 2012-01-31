@@ -33,15 +33,15 @@ public class TetrevilKeyListener extends KeyAdapter {
 				for(int i = 0; i < Field.WIDTH; i++)
 					f.shiftRight();
 			}
-		} else if(e.getKeyCode() == KeyEvent.VK_UP)
+		} else if(e.getKeyCode() == KeyEvent.VK_A)
 			f.rotateLeft();
-		else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+		else if(e.getKeyCode() == KeyEvent.VK_D)
 			f.rotateRight();
-		else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+		else if(e.getKeyCode() == KeyEvent.VK_UP) {
 			while(f.getShape() != null) {
 				field.clockTick();
 			}
-		} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+		} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
 			field.clockTick();
 		} else if(e.getKeyCode() == KeyEvent.VK_R)
 			f.reset();

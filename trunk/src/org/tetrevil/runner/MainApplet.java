@@ -42,10 +42,10 @@ public class MainApplet extends JApplet {
 			"HOLD LEFT: Shift left all the way<br>\n" +
 			"RIGHT: Shift right 1<br>\n" +
 			"HOLD RIGHT: Shift right all the way<br>\n" +
-			"UP: Rotate left<br>\n" +
-			"DOWN: Rotate right<br>\n" +
-			"SPACE: Shift down 1<br>\n" +
-			"ENTER: Drop<br>\n" +
+			"A: Rotate left<br>\n" +
+			"D: Rotate right<br>\n" +
+			"DOWN: Shift down 1<br>\n" +
+			"UP: Drop<br>\n" +
 			"P: Pause<br>\n" +
 			"R: Reset<br>\n" +
 			"H: Show this help<br><br>\n\n" +
