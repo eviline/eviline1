@@ -65,6 +65,57 @@ public class MainApplet extends JApplet {
 		provider.setText(field.getProvider().toString());
 	}
 	
+	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
+		if(getParameter("left") != null)
+			kl.LEFT = getKeyCode(getParameter("left"));
+		if(getParameter("right") != null)
+			kl.RIGHT = getKeyCode(getParameter("right"));
+		if(getParameter("rotate_left") != null)
+			kl.ROTATE_LEFT = getKeyCode(getParameter("rotate_left"));
+		if(getParameter("rotate_right") != null)
+			kl.ROTATE_RIGHT = getKeyCode(getParameter("rotate_right"));
+		if(getParameter("down") != null)
+			kl.DOWN = getKeyCode(getParameter("down"));
+		if(getParameter("drop") != null)
+			kl.DROP = getKeyCode(getParameter("drop"));
+		if(getParameter("reset") != null)
+			kl.RESET = getKeyCode(getParameter("reset"));
+		if(getParameter("pause") != null)
+			kl.PAUSE = getKeyCode(getParameter("pause"));
+		
+		start.setText("<html><center>Controls:<br><br>\n\n" +
+				KeyEvent.getKeyText(kl.LEFT) + ": Shift left 1<br>\n" +
+				"HOLD " + KeyEvent.getKeyText(kl.LEFT) + ": Shift left all the way<br>\n" +
+				KeyEvent.getKeyText(kl.RIGHT) + ": Shift right 1<br>\n" +
+				"HOLD " + KeyEvent.getKeyText(kl.RIGHT) + ": Shift right all the way<br>\n" +
+				KeyEvent.getKeyText(kl.ROTATE_LEFT) + ": Rotate left<br>\n" +
+				KeyEvent.getKeyText(kl.ROTATE_RIGHT) + ": Rotate right<br>\n" +
+				KeyEvent.getKeyText(kl.DOWN) + ": Shift down 1<br>\n" +
+				KeyEvent.getKeyText(kl.DROP) + ": Drop<br>\n" +
+				KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
+				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
+				"H: Show this help<br><br>\n\n" +
+				"Click to begin.</center></html>");
+		
+		return kl;
+	}
+	
+	protected int getKeyCode(String code) {
+		code = code.toUpperCase();
+		try {
+			java.lang.reflect.Field kf = KeyEvent.class.getField("VK_" + code);
+			return (Integer) kf.get(null);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	protected Runnable launch = new Runnable() {
 		@Override
 		public void run() {
@@ -108,7 +159,7 @@ public class MainApplet extends JApplet {
 			
 			c = new TetrevilComponent(field);
 			c.getTable().setFocusable(true);
-			KeyAdapter k = new TetrevilKeyListener(field);
+			KeyAdapter k = setKeys(new TetrevilKeyListener(field));
 			c.getTable().addKeyListener(k);
 			addKeyListener(k);
 			
