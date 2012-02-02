@@ -53,14 +53,14 @@ public class MainApplet extends JApplet {
 	protected JLabel provider = new JLabel(" ");
 	
 	protected void setProvider() {
-		if(getParameter("depth") != null) {
-			field.setProvider(new MaliciousShapeProvider(Integer.parseInt(getParameter("depth"))));
-			if(getParameter("rfactor") != null) {
-				((MaliciousShapeProvider) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
-			}
-		} else {
-			field.setProvider(new MaliciousShapeProvider());
-		}
+		field.setProvider(new MaliciousShapeProvider());
+
+		if(getParameter("depth") != null)
+			((MaliciousShapeProvider) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
+		if(getParameter("rfactor") != null)
+			((MaliciousShapeProvider) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
+		if(getParameter("fair") != null)
+			((MaliciousShapeProvider) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
 		provider.setText(field.getProvider().toString());
 	}
@@ -153,6 +153,7 @@ public class MainApplet extends JApplet {
 		try {
 			SwingUtilities.invokeAndWait(launch);
 		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 	
@@ -165,8 +166,13 @@ public class MainApplet extends JApplet {
 	public String getParameter(String name) {
 		if(parameters.containsKey(name))
 			return parameters.get(name);
-		else
-			return super.getParameter(name);
+		else {
+			try {
+				return super.getParameter(name);
+			} catch(NullPointerException npe) {
+				return null;
+			}
+		}
 	}
 	
 	public void setParameter(String name, String value) {

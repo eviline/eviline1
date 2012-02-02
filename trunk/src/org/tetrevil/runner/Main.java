@@ -25,18 +25,18 @@ public class Main {
 		
 		applet.init();
 		
+		frame.add(applet, BorderLayout.CENTER);
+		frame.pack();
+		frame.setSize(360, 500);
+		
+		frame.setVisible(true);
+		
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				frame.add(applet, BorderLayout.CENTER);
-				frame.pack();
-				frame.setSize(360, 500);
-				
-				frame.setVisible(true);
 				applet.start();
 			}
 		});
-		
 	}
 
 }

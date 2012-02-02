@@ -18,7 +18,8 @@
          width="430"
          height="600">
          <param name="depth" value="3"/>
-         <param name="rfactor" value="0.1"/>
+         <param name="rfactor" value="0.05"/>
+         <param name="fair" value="true"/>
      </applet-desc>
      <update check="always"/>
 </jnlp>  

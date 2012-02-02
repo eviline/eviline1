@@ -46,8 +46,9 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	
 	protected Cache cache;
 	
-	protected int depth;
+	protected int depth = 3;
 	protected double rfactor = 0.05;
+	protected boolean fair = true;
 	
 	protected boolean randomFirst = true;
 	
@@ -69,7 +70,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	
 	@Override
 	public String toString() {
-		return "Malicious: depth=" + depth +", rfactor=" + rfactor;
+		return "Malicious: depth=" + depth +", rfactor=" + rfactor + ", fair=" + fair;
 	}
 	
 	@Override
@@ -138,7 +139,8 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			}
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
-			typeScore.score *= totalCount / (double)(typeCounts.length * typeCounts[type.ordinal()]);
+			if(fair)
+				typeScore.score *= totalCount / (double)(typeCounts.length * typeCounts[type.ordinal()]);
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -163,6 +165,14 @@ public class MaliciousShapeProvider implements ShapeProvider {
 
 	public void setDepth(int depth) {
 		this.depth = depth;
+	}
+
+	public boolean isFair() {
+		return fair;
+	}
+
+	public void setFair(boolean fair) {
+		this.fair = fair;
 	}
 	
 }
