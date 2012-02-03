@@ -43,14 +43,6 @@ public class MainApplet extends JApplet {
 	protected TetrevilKeyPanel kp;
 	
 	protected JButton start = new JButton("<html><center>Controls:<br><br>\n\n" +
-			"LEFT: Shift left 1<br>\n" +
-			"HOLD LEFT: Shift left all the way<br>\n" +
-			"RIGHT: Shift right 1<br>\n" +
-			"HOLD RIGHT: Shift right all the way<br>\n" +
-			"A: Rotate left<br>\n" +
-			"D: Rotate right<br>\n" +
-			"DOWN: Shift down 1<br>\n" +
-			"UP: Drop<br>\n" +
 			"P: Pause<br>\n" +
 			"R: Reset<br>\n" +
 			"H: Show this help<br><br>\n\n" +
@@ -89,14 +81,6 @@ public class MainApplet extends JApplet {
 			kl.PAUSE = TetrevilKeyListener.getKeyCode(getParameter("pause"));
 		
 		start.setText("<html><center>Controls:<br><br>\n\n" +
-				KeyEvent.getKeyText(kl.LEFT) + ": Shift left 1<br>\n" +
-				"HOLD " + KeyEvent.getKeyText(kl.LEFT) + ": Shift left all the way<br>\n" +
-				KeyEvent.getKeyText(kl.RIGHT) + ": Shift right 1<br>\n" +
-				"HOLD " + KeyEvent.getKeyText(kl.RIGHT) + ": Shift right all the way<br>\n" +
-				KeyEvent.getKeyText(kl.ROTATE_LEFT) + ": Rotate left<br>\n" +
-				KeyEvent.getKeyText(kl.ROTATE_RIGHT) + ": Rotate right<br>\n" +
-				KeyEvent.getKeyText(kl.DOWN) + ": Shift down 1<br>\n" +
-				KeyEvent.getKeyText(kl.DROP) + ": Drop<br>\n" +
 				KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
 				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
 				"H: Show this help<br><br>\n\n" +

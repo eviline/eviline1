@@ -1,5 +1,6 @@
 package org.tetrevil.swing;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,6 +69,12 @@ public class TetrevilKeyPanel extends JPanel {
 			add(new JLabel("DOWN:")); add(new KeyButton(TetrevilKeyListener.class.getField("DOWN")));
 			add(new JLabel("DROP:")); add(new KeyButton(TetrevilKeyListener.class.getField("DROP")));
 
+			setBackground(Color.BLACK);
+			for(int i = 0; i < getComponentCount(); i++) {
+				if(getComponent(i) instanceof JLabel) {
+					getComponent(i).setForeground(Color.WHITE);
+				}
+			}
 
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException(e);
