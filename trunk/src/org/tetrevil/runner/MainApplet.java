@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
@@ -29,6 +30,7 @@ import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
+import org.tetrevil.swing.TetrevilKeyPanel;
 
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
@@ -37,6 +39,9 @@ public class MainApplet extends JApplet {
 	
 	protected Field field = new Field(true);
 	protected TetrevilComponent c;
+	protected TetrevilKeyListener kl;
+	protected TetrevilKeyPanel kp;
+	
 	protected JButton start = new JButton("<html><center>Controls:<br><br>\n\n" +
 			"LEFT: Shift left 1<br>\n" +
 			"HOLD LEFT: Shift left all the way<br>\n" +
@@ -67,21 +72,21 @@ public class MainApplet extends JApplet {
 	
 	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
 		if(getParameter("left") != null)
-			kl.LEFT = getKeyCode(getParameter("left"));
+			kl.LEFT = TetrevilKeyListener.getKeyCode(getParameter("left"));
 		if(getParameter("right") != null)
-			kl.RIGHT = getKeyCode(getParameter("right"));
+			kl.RIGHT = TetrevilKeyListener.getKeyCode(getParameter("right"));
 		if(getParameter("rotate_left") != null)
-			kl.ROTATE_LEFT = getKeyCode(getParameter("rotate_left"));
+			kl.ROTATE_LEFT = TetrevilKeyListener.getKeyCode(getParameter("rotate_left"));
 		if(getParameter("rotate_right") != null)
-			kl.ROTATE_RIGHT = getKeyCode(getParameter("rotate_right"));
+			kl.ROTATE_RIGHT = TetrevilKeyListener.getKeyCode(getParameter("rotate_right"));
 		if(getParameter("down") != null)
-			kl.DOWN = getKeyCode(getParameter("down"));
+			kl.DOWN = TetrevilKeyListener.getKeyCode(getParameter("down"));
 		if(getParameter("drop") != null)
-			kl.DROP = getKeyCode(getParameter("drop"));
+			kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
 		if(getParameter("reset") != null)
-			kl.RESET = getKeyCode(getParameter("reset"));
+			kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
 		if(getParameter("pause") != null)
-			kl.PAUSE = getKeyCode(getParameter("pause"));
+			kl.PAUSE = TetrevilKeyListener.getKeyCode(getParameter("pause"));
 		
 		start.setText("<html><center>Controls:<br><br>\n\n" +
 				KeyEvent.getKeyText(kl.LEFT) + ": Shift left 1<br>\n" +
@@ -98,22 +103,6 @@ public class MainApplet extends JApplet {
 				"Click to begin.</center></html>");
 		
 		return kl;
-	}
-	
-	protected int getKeyCode(String code) {
-		code = code.toUpperCase();
-		try {
-			java.lang.reflect.Field kf = KeyEvent.class.getField("VK_" + code);
-			return (Integer) kf.get(null);
-		} catch (SecurityException e) {
-			throw new RuntimeException(e);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
 	}
 	
 	protected Runnable launch = new Runnable() {
@@ -140,6 +129,7 @@ public class MainApplet extends JApplet {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					MainApplet.this.remove(start);
+					MainApplet.this.remove(kp);
 					MainApplet.this.add(c, BorderLayout.CENTER);
 					MainApplet.this.validate();
 					MainApplet.this.repaint();
@@ -159,11 +149,12 @@ public class MainApplet extends JApplet {
 			
 			c = new TetrevilComponent(field);
 			c.getTable().setFocusable(true);
-			KeyAdapter k = setKeys(new TetrevilKeyListener(field));
-			c.getTable().addKeyListener(k);
-			addKeyListener(k);
+			setKeys(kl = new TetrevilKeyListener(field));
+			c.getTable().addKeyListener(kl);
+			addKeyListener(kl);
+			kp = new TetrevilKeyPanel(kl);
 			
-			k = new KeyAdapter() {
+			KeyListener k = new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
@@ -186,6 +177,7 @@ public class MainApplet extends JApplet {
 			
 			setBackground(Color.BLACK);
 			setLayout(new BorderLayout());
+			add(kp, BorderLayout.NORTH);
 			add(start, BorderLayout.CENTER);
 			add(provider, BorderLayout.SOUTH);
 		}

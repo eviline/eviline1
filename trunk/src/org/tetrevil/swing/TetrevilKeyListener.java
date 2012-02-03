@@ -8,6 +8,22 @@ import javax.swing.SwingUtilities;
 import org.tetrevil.Field;
 
 public class TetrevilKeyListener extends KeyAdapter {
+	public static int getKeyCode(String code) {
+		code = code.toUpperCase();
+		try {
+			java.lang.reflect.Field kf = KeyEvent.class.getField("VK_" + code);
+			return (Integer) kf.get(null);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public int LEFT = KeyEvent.VK_LEFT;
 	public int RIGHT = KeyEvent.VK_RIGHT;
 	public int ROTATE_LEFT = KeyEvent.VK_A;
