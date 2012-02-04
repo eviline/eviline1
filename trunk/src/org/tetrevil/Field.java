@@ -150,7 +150,7 @@ public class Field {
 		
 		for(int[] kick : table) {
 			int x = shapeX + kick[0];
-			int y = shapeY + kick[0];
+			int y = shapeY + kick[1];
 			if(!rotated.intersects(field, x, y)) {
 				shapeX = x;
 				shapeY = y;
@@ -173,7 +173,7 @@ public class Field {
 		
 		for(int[] kick : table) {
 			int x = shapeX + kick[0];
-			int y = shapeY + kick[0];
+			int y = shapeY + kick[1];
 			if(!rotated.intersects(field, x, y)) {
 				shapeX = x;
 				shapeY = y;
