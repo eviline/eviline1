@@ -193,6 +193,7 @@ public class Field {
 				shapeY = y;
 				shape = rotated;
 				reghost();
+				autoshift();
 				fireRotatedLeft();
 				return;
 			}
@@ -216,6 +217,7 @@ public class Field {
 				shapeY = y;
 				shape = rotated;
 				reghost();
+				autoshift();
 				fireRotatedRight();
 				return;
 			}
