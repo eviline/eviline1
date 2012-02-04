@@ -70,7 +70,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	
 	@Override
 	public String toString() {
-		return "Malicious: depth=" + depth +", rfactor=" + rfactor + ", fair=" + fair;
+		return "Malicious: d=" + depth +", rf=" + rfactor + ", fair=" + fair;
 	}
 	
 	@Override
