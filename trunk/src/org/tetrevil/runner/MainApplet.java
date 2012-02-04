@@ -147,6 +147,7 @@ public class MainApplet extends JApplet {
 							@Override
 							public void run() {
 								MainApplet.this.remove(c);
+								MainApplet.this.add(kp, BorderLayout.NORTH);
 								MainApplet.this.add(start, BorderLayout.CENTER);
 								MainApplet.this.validate();
 								MainApplet.this.repaint();
