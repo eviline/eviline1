@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.Field;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -58,6 +60,21 @@ public class TetrevilKeyPanel extends JPanel {
 		}
 	}
 	
+	protected JToggleButton das = new JToggleButton(new AbstractAction("") {
+		private long down;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(das.isSelected())
+				down = System.currentTimeMillis();
+			else {
+				long delay = System.currentTimeMillis() - down;
+				kl.DAS_TIME = (int) delay;
+				das.setText(String.valueOf(delay));
+			}
+				
+		}
+	});
+	
 	public TetrevilKeyPanel(TetrevilKeyListener kl) {
 		super(new GridLayout(0, 2));
 		this.kl = kl;
@@ -69,6 +86,10 @@ public class TetrevilKeyPanel extends JPanel {
 			add(new JLabel("DOWN:")); add(new KeyButton(TetrevilKeyListener.class.getField("DOWN")));
 			add(new JLabel("DROP:")); add(new KeyButton(TetrevilKeyListener.class.getField("DROP")));
 
+			add(new JLabel("DAS_TIME:")); add(das);
+			
+			das.setText(String.valueOf(kl.DAS_TIME));
+			
 			setBackground(Color.BLACK);
 			for(int i = 0; i < getComponentCount(); i++) {
 				if(getComponent(i) instanceof JLabel) {

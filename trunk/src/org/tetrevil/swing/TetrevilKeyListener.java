@@ -1,9 +1,14 @@
 package org.tetrevil.swing;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import org.tetrevil.Field;
 
@@ -32,10 +37,24 @@ public class TetrevilKeyListener extends KeyAdapter {
 	public int DROP = KeyEvent.VK_UP;
 	public int RESET = KeyEvent.VK_R;
 	public int PAUSE = KeyEvent.VK_P;
+	public int DAS_TIME = 1000;
 	
 	protected Field field;
 
-	protected int lastPressed;
+	protected Timer dasLeft = new Timer(DAS_TIME, new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			for(int i = 0; i < Field.WIDTH; i++)
+				field.shiftLeft();
+		}
+	});
+	protected Timer dasRight = new Timer(DAS_TIME, new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			for(int i = 0; i < Field.WIDTH; i++)
+				field.shiftRight();
+		}
+	});
 	
 	public TetrevilKeyListener(Field field) {
 		this.field = field;
@@ -46,18 +65,15 @@ public class TetrevilKeyListener extends KeyAdapter {
 		if(e.isConsumed())
 			return;
 		Field f = field;
-		if(e.getKeyCode() == LEFT) {
+		boolean consume = true;
+		if(e.getKeyCode() == LEFT && !dasLeft.isRunning()) {
 			f.shiftLeft();
-			if(lastPressed == LEFT) {
-				for(int i = 0; i < Field.WIDTH; i++)
-					f.shiftLeft();
-			}
-		} else if(e.getKeyCode() == RIGHT) {
+			dasLeft.setInitialDelay(DAS_TIME);
+			dasLeft.start();
+		} else if(e.getKeyCode() == RIGHT & !dasRight.isRunning()) {
 			f.shiftRight();
-			if(lastPressed == RIGHT) {
-				for(int i = 0; i < Field.WIDTH; i++)
-					f.shiftRight();
-			}
+			dasRight.setInitialDelay(DAS_TIME);
+			dasRight.start();
 		} else if(e.getKeyCode() == ROTATE_LEFT)
 			f.rotateLeft();
 		else if(e.getKeyCode() == ROTATE_RIGHT)
@@ -73,13 +89,16 @@ public class TetrevilKeyListener extends KeyAdapter {
 		else if(e.getKeyCode() == PAUSE)
 			f.setPaused(!f.isPaused());
 		else
-			return;
-		lastPressed = e.getKeyCode();
-		e.consume();
+			consume = false;
+		if(consume)
+			e.consume();
 	}
 	
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		lastPressed = 0;
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode() == LEFT)
+			dasLeft.stop();
+		if(e.getKeyCode() == RIGHT)
+			dasRight.stop();
 	}
 }
