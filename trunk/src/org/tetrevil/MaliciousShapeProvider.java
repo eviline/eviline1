@@ -13,7 +13,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 		double score = 0;
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			int bonus = 0;
-			for(int y = Field.HEIGHT - 1; y >= 0; y--) {
+			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
 				if(field.getBlock(x, y) != null)
 					score += Field.HEIGHT + Field.BUFFER - y + bonus * 10;
 				else
@@ -64,7 +64,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 		this.depth = depth;
 		this.cache = new Cache();
 		for(int i = 0; i < typeCounts.length; i++) {
-			totalCount += (typeCounts[i] = 30);
+			totalCount += (typeCounts[i] = 100);
 		}
 	}
 	
