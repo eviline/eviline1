@@ -19,6 +19,8 @@ public class Field {
 	protected boolean paused;
 	protected int lines;
 	
+	protected ShapeDirection autoShift = null;
+	
 	protected TetrevilListener[] listeners = new TetrevilListener[0];
 	
 	public Field() {
@@ -74,6 +76,7 @@ public class Field {
 		shape = null;
 		gameOver = false;
 		lines = 0;
+		autoShift = null;
 		fireGameReset();
 	}
 	
@@ -86,6 +89,7 @@ public class Field {
 			shape = provider.provideShape(this).type().starter();
 			shapeY = shape.type().starterY();
 			shapeX = WIDTH / 2 + 2 + shape.type().starterX();
+			autoShift = null;
 			reghost();
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
 			Block[][] s = shape.shape();
@@ -102,6 +106,7 @@ public class Field {
 			shape = null;
 		} else {
 			shapeY++;
+			autoshift();
 		}
 		fireClockTicked();
 		if(shape != null && shape.intersects(field, shapeX, shapeY)) {
@@ -146,6 +151,23 @@ public class Field {
 		shapeX++;
 		reghost();
 		fireShiftedRight();
+	}
+	
+	public void autoshift() {
+		if(paused || autoShift == null)
+			return;
+		switch(autoShift) {
+		case LEFT:
+			for(int i = 0; i < Field.WIDTH; i++)
+				shiftLeft();
+			reghost();
+			break;
+		case RIGHT:
+			for(int i = 0; i < Field.WIDTH; i++)
+				shiftRight();
+			reghost();
+			break;
+		}
 	}
 	
 	protected void reghost() {
@@ -369,5 +391,13 @@ public class Field {
 	public void setPaused(boolean paused) {
 		this.paused = paused;
 		fireGamePaused();
+	}
+
+	public ShapeDirection getAutoShift() {
+		return autoShift;
+	}
+
+	public void setAutoShift(ShapeDirection autoShift) {
+		this.autoShift = autoShift;
 	}
 }

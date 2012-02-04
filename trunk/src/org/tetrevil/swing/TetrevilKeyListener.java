@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.tetrevil.Field;
+import org.tetrevil.ShapeDirection;
 
 public class TetrevilKeyListener extends KeyAdapter {
 	public static int getKeyCode(String code) {
@@ -44,15 +45,15 @@ public class TetrevilKeyListener extends KeyAdapter {
 	protected Timer dasLeft = new Timer(DAS_TIME, new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			for(int i = 0; i < Field.WIDTH; i++)
-				field.shiftLeft();
+			field.setAutoShift(ShapeDirection.LEFT);
+			field.autoshift();
 		}
 	});
 	protected Timer dasRight = new Timer(DAS_TIME, new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			for(int i = 0; i < Field.WIDTH; i++)
-				field.shiftRight();
+			field.setAutoShift(ShapeDirection.RIGHT);
+			field.autoshift();
 		}
 	});
 	
@@ -96,9 +97,15 @@ public class TetrevilKeyListener extends KeyAdapter {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode() == LEFT)
+		if(e.getKeyCode() == LEFT) {
 			dasLeft.stop();
-		if(e.getKeyCode() == RIGHT)
+			if(field.getAutoShift() == ShapeDirection.LEFT)
+				field.setAutoShift(null);
+		}
+		if(e.getKeyCode() == RIGHT) {
 			dasRight.stop();
+			if(field.getAutoShift() == ShapeDirection.RIGHT)
+				field.setAutoShift(null);
+		}
 	}
 }
