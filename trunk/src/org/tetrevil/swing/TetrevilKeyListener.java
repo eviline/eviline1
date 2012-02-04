@@ -37,7 +37,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 	public int DROP = KeyEvent.VK_UP;
 	public int RESET = KeyEvent.VK_R;
 	public int PAUSE = KeyEvent.VK_P;
-	public int DAS_TIME = 1000;
+	public int DAS_TIME = 500;
 	
 	protected Field field;
 
