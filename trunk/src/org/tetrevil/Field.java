@@ -89,12 +89,14 @@ public class Field {
 			reghost();
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
 			Block[][] s = shape.shape();
+			gameOver = true;
 			for(int y = 0; y < s.length; y++) {
 				for(int x = 0; x < s[y].length; x++) {
-					if(field[y + shapeY][x + shapeX] == Block.G)
-						gameOver = true;
-					if(s[y][x] != null)
+					if(s[y][x] != null) {
 						field[y + shapeY][x + shapeX] = s[y][x].inactive();
+						if(y + shapeY >= BUFFER)
+							gameOver = false;
+					}
 				}
 			}
 			shape = null;
