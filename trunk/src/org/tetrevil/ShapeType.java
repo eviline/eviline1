@@ -40,13 +40,13 @@ public enum ShapeType {
 	
 	public int starterY() {
 		switch(this) {
-		case O: return 0;
-		case S: return 0;
-		case Z: return 0;
-		case I: return -1;
-		case T: return 0;
-		case J: return 0;
-		case L: return 0;
+		case O: return 2;
+		case S: return 1;
+		case Z: return 1;
+		case I: return 0;
+		case T: return 1;
+		case J: return 1;
+		case L: return 1;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}

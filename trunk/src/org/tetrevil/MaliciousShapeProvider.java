@@ -122,7 +122,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 					field.copyInto(f);
 					f.setShape(shape);
 					f.setShapeY(0);
-					f.setShapeX(Field.WIDTH / 2 + 1);
+					f.setShapeX(Field.WIDTH / 2 + 2);
 					for(int i = 0; i < Field.WIDTH / 2 + 1; i++)
 						f.shiftLeft();
 					for(int i = 0; i < x; i++)

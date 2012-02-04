@@ -198,9 +198,11 @@ public enum Shape {
 		Block[][] shape = this.shape();
 		for(int iy = 0; iy < shape.length; iy++) {
 			for(int ix = 0; ix < shape[iy].length; ix++) {
-				if(shape[iy][ix] != null && y + iy >= 0 && field[y + iy][x + ix] != null)
+				Block sb = shape[iy][ix];
+				Block fb;
+				if(sb != null && y + iy >= 0 && (fb = field[y + iy][x + ix]) != null && fb != Block.G)
 					return true;
-				if(shape[iy][ix] != null && y + iy < 0)
+				if(sb != null && y + iy < 0)
 					return true;
 			}
 		}

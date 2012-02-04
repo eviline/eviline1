@@ -7,9 +7,9 @@ import org.tetrevil.event.TetrevilListener;
 public class Field {
 	public static final int HEIGHT = 20;
 	public static final int WIDTH = 10;
-	public static final int BUFFER = 3;
+	public static final int BUFFER = 4;
 	
-	protected Block[][] field = new Block[HEIGHT + BUFFER][WIDTH + 2 * BUFFER];
+	protected Block[][] field = new Block[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
 	protected ShapeProvider provider = new RandomShapeProvider();
 	protected Shape shape;
 	protected int shapeX;
@@ -26,7 +26,12 @@ public class Field {
 	}
 	
 	public Field(boolean evil) {
-		for(int y = 0; y < field.length - BUFFER; y++) {
+		for(int y = 0; y < BUFFER; y++) {
+			Arrays.fill(field[y], 0, BUFFER, Block.X);
+			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
+			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
+		}
+		for(int y = BUFFER; y < field.length - BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
 		}
@@ -53,7 +58,12 @@ public class Field {
 	}
 	
 	public void reset() {
-		for(int y = 0; y < field.length - BUFFER; y++) {
+		for(int y = 0; y < BUFFER; y++) {
+			Arrays.fill(field[y], 0, BUFFER, Block.X);
+			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
+			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
+		}
+		for(int y = BUFFER; y < field.length - BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
@@ -75,12 +85,14 @@ public class Field {
 		if(shape == null) {
 			shape = provider.provideShape(this).type().starter();
 			shapeY = shape.type().starterY();
-			shapeX = WIDTH / 2 + 1 + shape.type().starterX();
+			shapeX = WIDTH / 2 + 2 + shape.type().starterX();
 			reghost();
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
 			Block[][] s = shape.shape();
 			for(int y = 0; y < s.length; y++) {
 				for(int x = 0; x < s[y].length; x++) {
+					if(field[y + shapeY][x + shapeX] == Block.G)
+						gameOver = true;
 					if(s[y][x] != null)
 						field[y + shapeY][x + shapeX] = s[y][x].inactive();
 				}
@@ -92,10 +104,11 @@ public class Field {
 		fireClockTicked();
 		if(shape != null && shape.intersects(field, shapeX, shapeY)) {
 			gameOver = true;
-			fireGameOver();
 		}
+		if(gameOver == true)
+			fireGameOver();
 		if(shape == null) {
-			for(int y = field.length - 1 - BUFFER; y >= 0; y--) {
+			for(int y = field.length - 1 - BUFFER; y >= BUFFER; y--) {
 				boolean tetris = true;
 				for(int x = BUFFER; x < field[y].length - BUFFER; x++) {
 					if(field[y][x] == null)
@@ -103,7 +116,7 @@ public class Field {
 				}
 				if(tetris) {
 					lines++;
-					for(int z = y - 1; z >= 0; z--) {
+					for(int z = y - 1; z >= BUFFER; z--) {
 						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
 					}
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
