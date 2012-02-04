@@ -30,7 +30,7 @@ public class Field {
 	public Field(boolean evil) {
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
-			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
+//			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
 		}
 		for(int y = BUFFER; y < field.length - BUFFER; y++) {
@@ -62,7 +62,7 @@ public class Field {
 	public void reset() {
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
-			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
+//			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
 		}
 		for(int y = BUFFER; y < field.length - BUFFER; y++) {
@@ -122,10 +122,10 @@ public class Field {
 				}
 				if(tetris) {
 					lines++;
-					for(int z = y - 1; z >= BUFFER; z--) {
+					for(int z = y - 1; z >= 0; z--) {
 						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
 					}
-					Arrays.fill(field[BUFFER], BUFFER, field[BUFFER].length - BUFFER, null);
+					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
 					y = field.length - BUFFER;
 				}
 			}
@@ -171,6 +171,8 @@ public class Field {
 	
 	protected void reghost() {
 		ghostY = shapeY;
+		if(shape == null)
+			return;
 		while(!shape.intersects(field, shapeX, ghostY + 1))
 			ghostY++;
 	}
@@ -236,6 +238,8 @@ public class Field {
 					return Block.G;
 			}
 		}
+		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
+			return Block.G;
 		return field[y][x];
 	}
 	
