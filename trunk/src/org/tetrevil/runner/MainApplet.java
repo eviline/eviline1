@@ -107,6 +107,7 @@ public class MainApplet extends JApplet {
 					setProvider();
 				}
 			});
+			field.setGhosting(true);
 			
 			ticker.setRepeats(true);
 			start.addActionListener(new ActionListener() {

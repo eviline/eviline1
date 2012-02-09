@@ -14,6 +14,7 @@ public class Field {
 	protected Shape shape;
 	protected int shapeX;
 	protected int shapeY;
+	protected boolean ghosting = false;
 	protected int ghostY;
 	protected boolean gameOver;
 	protected boolean paused;
@@ -171,7 +172,7 @@ public class Field {
 	
 	protected void reghost() {
 		ghostY = shapeY;
-		if(shape == null)
+		if(shape == null || !ghosting)
 			return;
 		while(!shape.intersects(field, shapeX, ghostY + 1))
 			ghostY++;
@@ -404,5 +405,17 @@ public class Field {
 
 	public void setAutoShift(ShapeDirection autoShift) {
 		this.autoShift = autoShift;
+	}
+
+	public Block[][] getField() {
+		return field;
+	}
+
+	public boolean isGhosting() {
+		return ghosting;
+	}
+
+	public void setGhosting(boolean ghosting) {
+		this.ghosting = ghosting;
 	}
 }
