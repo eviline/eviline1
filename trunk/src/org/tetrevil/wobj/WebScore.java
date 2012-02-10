@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import java.util.Map;
 
 public class WebScore implements Serializable {
 	private static final long serialVersionUID = 0;
+	
+	public static final int PORT = 24308;
 	
 	public static final String COMMAND = "command";
 	public static final String SUBMIT_SCORE = "submit_score";
@@ -23,49 +26,40 @@ public class WebScore implements Serializable {
 	public String name;
 	public long ts;
 	
-	public static void submit(WebScore score, URL url) throws IOException {
-		HttpURLConnection http = (HttpURLConnection) url.openConnection();
-		http.setDoInput(true);
-		http.setDoOutput(true);
-		http.setRequestMethod("POST");
-		
+	public static void submit(WebScore score, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, SUBMIT_SCORE);
 		mreq.put(SCORE, score);
 
-		http.setChunkedStreamingMode(256);
-		
-		http.connect();
-		
-		ObjectOutputStream out = new ObjectOutputStream(http.getOutputStream());
-		out.writeObject(mreq);
-		out.flush();
-		out.close();
+		Socket socket = new Socket(host, PORT);
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			out.writeObject(mreq);
+			out.flush();
+			out.close();
+		} finally {
+			socket.close();
+		}
 		
 	}
 	
-	public static WebScore highScore(URL url) throws IOException {
-		HttpURLConnection http = (HttpURLConnection) url.openConnection();
-		http.setDoInput(true);
-		http.setDoOutput(true);
-		http.setRequestMethod("POST");
-		
+	public static WebScore highScore(String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, HIGH_SCORE);
+		
+		Socket socket = new Socket(host, PORT);
 
-		http.setChunkedStreamingMode(256);
-		
-		http.connect();
-		
-		ObjectOutputStream out = new ObjectOutputStream(http.getOutputStream());
-		out.writeObject(mreq);
-		out.flush();
-		out.close();
-		
 		try {
-			return (WebScore) new ObjectInputStream(http.getInputStream()).readObject();
+			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			out.writeObject(mreq);
+			out.flush();
+			out.close();
+		
+			return (WebScore) new ObjectInputStream(socket.getInputStream()).readObject();
 		} catch (ClassNotFoundException e) {
 			throw new IOException(e);
+		} finally {
+			socket.close();
 		}
 	}
 }

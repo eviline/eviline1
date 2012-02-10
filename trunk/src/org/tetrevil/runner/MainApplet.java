@@ -96,8 +96,8 @@ public class MainApplet extends JApplet {
 			
 			setProvider();
 			
-			if(getParameter("score_url") == null)
-				setParameter("score_url", "http://www.tetrevil.org:8080/tetrevil_srv/score");
+			if(getParameter("score_host") == null)
+				setParameter("score_host", "www.tetrevil.org");
 
 
 			field.addTetrevilListener(new TetrevilAdapter() {
@@ -111,10 +111,10 @@ public class MainApplet extends JApplet {
 						score.lines = e.getField().getLines();
 						score.name = "web user";
 						score.ts = System.currentTimeMillis();
-						WebScore.submit(score, new URL(getParameter("score_url")));
+						WebScore.submit(score, getParameter("score_host"));
 
 						
-						WebScore highScore = WebScore.highScore(new URL(getParameter("score_url")));
+						WebScore highScore = WebScore.highScore(getParameter("score_host"));
 						
 						start.setText("<html><center>High Score: " + highScore.lines + "<br><br>\n\n" +
 								"Controls:<br><br>\n\n" +
@@ -162,7 +162,7 @@ public class MainApplet extends JApplet {
 			
 			WebScore highScore = new WebScore();
 			try {
-				highScore = WebScore.highScore(new URL(getParameter("score_url")));
+				highScore = WebScore.highScore(getParameter("score_host"));
 			} catch(IOException ioe) {
 			}
 			
