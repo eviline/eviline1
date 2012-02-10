@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
@@ -31,6 +33,7 @@ import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
 import org.tetrevil.swing.TetrevilKeyPanel;
+import org.tetrevil.wobj.WebScore;
 
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
@@ -102,6 +105,19 @@ public class MainApplet extends JApplet {
 			field.addTetrevilListener(new TetrevilAdapter() {
 				public void gameReset(TetrevilEvent e) {
 					setProvider();
+				}
+				@Override
+				public void gameOver(TetrevilEvent e) {
+					try {
+						WebScore score = new WebScore();
+						score.lines = e.getField().getLines();
+						score.name = System.getProperty("user.name");
+						score.ts = System.currentTimeMillis();
+						WebScore.submit(score, new URL("http://localhost:8088/tetrevil_srv/score"));
+					} catch(Exception ioe) {
+						ioe.printStackTrace();
+					}
+					System.out.println("Foo");
 				}
 			});
 			field.setGhosting(true);

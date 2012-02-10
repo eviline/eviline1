@@ -63,7 +63,7 @@ public class Field {
 	public void reset() {
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
-//			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
+			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
 		}
 		for(int y = BUFFER; y < field.length - BUFFER; y++) {
