@@ -102,6 +102,9 @@ public class MainApplet extends JApplet {
 			
 			setProvider();
 			
+			if(getParameter("url") == null)
+				setParameter("url", "http://www.tetrevil.org:8080/tetrevil_srv/score");
+			
 			field.addTetrevilListener(new TetrevilAdapter() {
 				public void gameReset(TetrevilEvent e) {
 					setProvider();
@@ -113,11 +116,9 @@ public class MainApplet extends JApplet {
 						score.lines = e.getField().getLines();
 						score.name = System.getProperty("user.name");
 						score.ts = System.currentTimeMillis();
-						WebScore.submit(score, new URL("http://localhost:8088/tetrevil_srv/score"));
+						WebScore.submit(score, new URL(getParameter("url")));
 					} catch(Exception ioe) {
-						ioe.printStackTrace();
 					}
-					System.out.println("Foo");
 				}
 			});
 			field.setGhosting(true);
