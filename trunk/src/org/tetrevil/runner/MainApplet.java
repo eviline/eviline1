@@ -42,11 +42,7 @@ public class MainApplet extends JApplet {
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel kp;
 	
-	protected JButton start = new JButton("<html><center>Controls:<br><br>\n\n" +
-			"P: Pause<br>\n" +
-			"R: Reset<br>\n" +
-			"H: Show this help<br><br>\n\n" +
-			"Click to begin.</center></html>");
+	protected JButton start = new JButton("");
 	protected JLabel provider = new JLabel(" ");
 	
 	protected void setProvider() {
@@ -84,7 +80,8 @@ public class MainApplet extends JApplet {
 				KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
 				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
 				"H: Show this help<br><br>\n\n" +
-				"Click to begin.</center></html>");
+				"Click to begin.<br><br>\n\n" +
+				"&copy;2012 Robin Kirkman</center></html>");
 		
 		return kl;
 	}
