@@ -79,12 +79,6 @@ public class MainApplet extends JApplet {
 		if(getParameter("pause") != null)
 			kl.PAUSE = TetrevilKeyListener.getKeyCode(getParameter("pause"));
 		
-		start.setText("<html><center>Controls:<br><br>\n\n" +
-				KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
-				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
-				"H: Show this help<br><br>\n\n" +
-				"Click to begin.<br><br>\n\n" +
-				"&copy;2012 Robin Kirkman</center></html>");
 		
 		return kl;
 	}
@@ -102,9 +96,10 @@ public class MainApplet extends JApplet {
 			
 			setProvider();
 			
-			if(getParameter("url") == null)
-				setParameter("url", "http://www.tetrevil.org:8080/tetrevil_srv/score");
-			
+			if(getParameter("score_url") == null)
+				setParameter("score_url", "http://www.tetrevil.org:8080/tetrevil_srv/score");
+
+
 			field.addTetrevilListener(new TetrevilAdapter() {
 				public void gameReset(TetrevilEvent e) {
 					setProvider();
@@ -114,10 +109,22 @@ public class MainApplet extends JApplet {
 					try {
 						WebScore score = new WebScore();
 						score.lines = e.getField().getLines();
-						score.name = System.getProperty("user.name");
+						score.name = "web user";
 						score.ts = System.currentTimeMillis();
-						WebScore.submit(score, new URL(getParameter("url")));
+						WebScore.submit(score, new URL(getParameter("score_url")));
+
+						
+						WebScore highScore = WebScore.highScore(new URL(getParameter("score_url")));
+						
+						start.setText("<html><center>High Score: " + highScore.lines + "<br><br>\n\n" +
+								"Controls:<br><br>\n\n" +
+								KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
+								KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
+								"H: Show this help<br><br>\n\n" +
+								"Click to begin.<br><br>\n\n" +
+								"&copy;2012 Robin Kirkman</center></html>");
 					} catch(Exception ioe) {
+						ioe.printStackTrace();
 					}
 				}
 			});
@@ -153,6 +160,20 @@ public class MainApplet extends JApplet {
 			addKeyListener(kl);
 			kp = new TetrevilKeyPanel(kl);
 			
+			WebScore highScore = new WebScore();
+			try {
+				highScore = WebScore.highScore(new URL(getParameter("score_url")));
+			} catch(IOException ioe) {
+			}
+			
+			start.setText("<html><center>High Score: " + highScore.lines + "<br><br>\n\n" +
+					"Controls:<br><br>\n\n" +
+					KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
+					KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
+					"H: Show this help<br><br>\n\n" +
+					"Click to begin.<br><br>\n\n" +
+					"&copy;2012 Robin Kirkman</center></html>");
+
 			KeyListener k = new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
