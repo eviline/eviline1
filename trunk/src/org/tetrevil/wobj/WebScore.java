@@ -26,6 +26,11 @@ public class WebScore implements Serializable {
 	public String name;
 	public long ts;
 	
+	@Override
+	public String toString() {
+		return "WebScore[" + lines + "," + name + "," + ts + "]";
+	}
+	
 	public static void submit(WebScore score, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, SUBMIT_SCORE);
@@ -36,7 +41,6 @@ public class WebScore implements Serializable {
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.writeObject(mreq);
 			out.flush();
-			out.close();
 		} finally {
 			socket.close();
 		}
@@ -53,7 +57,6 @@ public class WebScore implements Serializable {
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			out.writeObject(mreq);
 			out.flush();
-			out.close();
 		
 			return (WebScore) new ObjectInputStream(socket.getInputStream()).readObject();
 		} catch (ClassNotFoundException e) {
@@ -61,5 +64,10 @@ public class WebScore implements Serializable {
 		} finally {
 			socket.close();
 		}
+	}
+
+	public static void main(String[] args) throws IOException{
+		WebScore score = highScore("localhost");
+		submit(score, "localhost");
 	}
 }
