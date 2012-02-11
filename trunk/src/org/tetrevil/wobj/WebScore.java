@@ -68,6 +68,7 @@ public class WebScore implements Serializable {
 
 	public static void main(String[] args) throws IOException{
 		WebScore score = highScore("localhost");
+		System.out.println(score);
 		submit(score, "localhost");
 	}
 }
