@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="dist" name="TETREVIL">
+
 	<target name="compile">
 		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
+		<copy todir="bin">
+			<fileset dir="src" excludes="**/*.java"/>
+		</copy>
 	</target>
+	
 	<target name="jar" depends="compile">
 		<jar destfile="dist/tetrevil.jar" update="true">
 			<manifest>
@@ -11,11 +16,13 @@
 			<fileset dir="bin"/>
 		</jar>
 	</target>
+	
 	<target name="dist" depends="jar">
 		<copy todir="dist">
 			<fileset file="tetrevil.jnlp"/>
 		</copy>
 	</target>
+	
 	<target name="run" depends="compile">
 		<java classpath="bin" classname="org.tetrevil.runner.Main" fork="true"/>
 	</target>
