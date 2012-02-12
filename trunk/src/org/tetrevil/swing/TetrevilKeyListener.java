@@ -57,6 +57,8 @@ public class TetrevilKeyListener extends KeyAdapter {
 		}
 	});
 	
+	protected Set<Integer> pressed = new HashSet<Integer>();
+	
 	public TetrevilKeyListener(Field field) {
 		this.field = field;
 	}
@@ -84,7 +86,8 @@ public class TetrevilKeyListener extends KeyAdapter {
 				field.clockTick();
 			}
 		} else if(e.getKeyCode() == DOWN) {
-			field.clockTick();
+			if(!pressed.contains(DOWN) || !field.isGrounded())
+				field.clockTick();
 		} else if(e.getKeyCode() == RESET)
 			f.reset();
 		else if(e.getKeyCode() == PAUSE)
@@ -93,10 +96,12 @@ public class TetrevilKeyListener extends KeyAdapter {
 			consume = false;
 		if(consume)
 			e.consume();
+		pressed.add(e.getKeyCode());
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
+		pressed.remove(e.getKeyCode());
 		if(e.getKeyCode() == LEFT) {
 			dasLeft.stop();
 			if(field.getAutoShift() == ShapeDirection.LEFT)
