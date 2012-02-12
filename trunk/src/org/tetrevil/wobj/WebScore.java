@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WebScore implements Serializable {
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 1;
 	
 	public static final int PORT = 24308;
 	
