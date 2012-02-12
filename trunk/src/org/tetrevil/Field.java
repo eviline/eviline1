@@ -16,6 +16,7 @@ public class Field {
 	protected int shapeY;
 	protected boolean ghosting = false;
 	protected int ghostY;
+	protected boolean playing;
 	protected boolean gameOver;
 	protected boolean paused;
 	protected int lines;
@@ -78,6 +79,7 @@ public class Field {
 		gameOver = false;
 		lines = 0;
 		autoShift = null;
+		playing = false;
 		fireGameReset();
 	}
 	
@@ -86,6 +88,7 @@ public class Field {
 			return;
 		if(gameOver)
 			return;
+		playing = true;
 		if(shape == null) {
 			shape = provider.provideShape(this).type().starter();
 			shapeY = shape.type().starterY();
@@ -423,5 +426,9 @@ public class Field {
 
 	public void setGhosting(boolean ghosting) {
 		this.ghosting = ghosting;
+	}
+
+	public boolean isPlaying() {
+		return playing;
 	}
 }

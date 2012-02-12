@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -21,9 +23,11 @@ import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -32,6 +36,7 @@ import org.tetrevil.Field;
 import org.tetrevil.MaliciousShapeProvider;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
+import org.tetrevil.swing.IntegerDocument;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
 import org.tetrevil.swing.TetrevilKeyPanel;
@@ -49,6 +54,22 @@ public class MainApplet extends JApplet {
 	
 	protected JButton start = new JButton("");
 	protected JLabel provider = new JLabel(" ");
+	{{
+		provider.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(!field.isPlaying() || field.isGameOver()) {
+					remove(provider);
+					add(difficulty, BorderLayout.SOUTH);
+					difficulty.revalidate();
+					validate();
+					repaint();
+				}
+			}
+		});
+	}}
+	
+	protected JPanel difficulty = createDifficultyPanel();
 	
 	protected void setProvider() {
 		if(getParameter("distribution") != null)
@@ -65,7 +86,7 @@ public class MainApplet extends JApplet {
 		if(getParameter("fair") != null)
 			((MaliciousShapeProvider) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
-		provider.setText(field.getProvider().toString());
+		provider.setText(field.getProvider().toString() + "   [Click]");
 	}
 	
 	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
@@ -117,6 +138,45 @@ public class MainApplet extends JApplet {
 				"H: Show this help<br><br>\n\n" +
 				"Click to begin.<br><br>\n\n" +
 				"&copy;2012 Robin Kirkman</center></html>");
+	}
+	
+	protected JPanel createDifficultyPanel() {
+		JPanel ret = new JPanel(new GridLayout(0, 2));
+		MaliciousShapeProvider p = (MaliciousShapeProvider) field.getProvider();
+		
+		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
+		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
+		final JCheckBox fair = new JCheckBox(""); fair.setSelected(p.isFair());
+		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
+		
+		ret.add(new JLabel("Depth:")); ret.add(depth);
+		ret.add(new JLabel("Random factor %:")); ret.add(rfactor);
+		ret.add(new JLabel("fair")); ret.add(fair);
+		ret.add(new JLabel("dist factor:")); ret.add(distribution);
+		
+		ret.add(new JButton(new AbstractAction("Set") {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setParameter("depth", depth.getText());
+				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
+				setParameter("fair", "" + fair.isSelected());
+				setParameter("distribution", distribution.getText());
+				setProvider();
+				setStartText();
+			}
+		}));
+		ret.add(new JButton(new AbstractAction("Hide") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				remove(difficulty);
+				add(provider, BorderLayout.SOUTH);
+				provider.revalidate();
+				validate();
+				repaint();
+			}
+		}));
+		
+		return ret;
 	}
 	
 	protected Runnable launch = new Runnable() {
@@ -201,6 +261,8 @@ public class MainApplet extends JApplet {
 					MainApplet.this.remove(start);
 					MainApplet.this.remove(kp);
 					MainApplet.this.add(c, BorderLayout.CENTER);
+					MainApplet.this.remove(difficulty);
+					MainApplet.this.add(provider, BorderLayout.SOUTH);
 					MainApplet.this.validate();
 					MainApplet.this.repaint();
 					SwingUtilities.invokeLater(new Runnable() {

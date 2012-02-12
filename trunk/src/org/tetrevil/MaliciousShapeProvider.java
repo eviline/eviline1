@@ -160,7 +160,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 			if(fair)
-				typeScore.score *= distribution / (double) typeCounts[type.ordinal()];
+				typeScore.score *= distribution / Math.max((double) typeCounts[type.ordinal()], 1);
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;

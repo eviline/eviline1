@@ -73,15 +73,7 @@ public class TetrevilKeyPanel extends JPanel {
 		}
 	}
 	
-	protected Document dasdoc = new PlainDocument() {
-		@Override
-		public void insertString(int offs, String str, AttributeSet a)
-				throws BadLocationException {
-			if(!str.matches("[0-9]+"))
-				return;
-			super.insertString(offs, str, a);
-		}
-	};
+	protected Document dasdoc = new IntegerDocument();
 	protected JTextField dastext = new JTextField(dasdoc, "350", 5);
 	{{
 		dasdoc.addDocumentListener(new DocumentListener() {
