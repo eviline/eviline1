@@ -14,7 +14,7 @@ import java.awt.Color;
  */
 public enum Block {
 	/*
-	 * Active block types
+	 * Inactive block types
 	 */
 	I,
 	T,
@@ -24,7 +24,7 @@ public enum Block {
 	J,
 	L,
 	/*
-	 * Inactive block types
+	 * Active block types
 	 */
 	IA,
 	TA,

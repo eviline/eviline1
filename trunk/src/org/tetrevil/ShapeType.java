@@ -63,4 +63,17 @@ public enum ShapeType {
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
+	
+	public Block inactive() {
+		switch(this) {
+		case O: return Block.O;
+		case S: return Block.S;
+		case Z: return Block.Z;
+		case I: return Block.I;
+		case T: return Block.T;
+		case J: return Block.J;
+		case L: return Block.L;
+		}
+		throw new InternalError("Fell through to default when all enums covered");
+	}
 }

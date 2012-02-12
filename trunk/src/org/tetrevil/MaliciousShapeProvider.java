@@ -34,12 +34,14 @@ public class MaliciousShapeProvider implements ShapeProvider {
 		public Score depestDecide = new Score();
 		public Score[] worst = new Score[depth + 1];
 		public Field[] f = new Field[depth + 1];
+		public Field[] fc = new Field[depth + 1];
 		public Score[] typeScore = new Score[depth + 1];
 		
 		public Cache() {
 			for(int i = 0; i < depth + 1; i++) {
 				worst[i] = new Score();
 				f[i] = new Field();
+				fc[i] = new Field();
 				typeScore[i] = new Score();
 			}
 		}
@@ -114,6 +116,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 		worst.score = Double.NEGATIVE_INFINITY;
 		
 		Field f = cache.f[depth];
+		Field fc = cache.fc[depth];
 		for(ShapeType type : ShapeType.values()) {
 			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
@@ -122,19 +125,32 @@ public class MaliciousShapeProvider implements ShapeProvider {
 				for(int x = 0; x < Field.WIDTH; x++) {
 					field.copyInto(f);
 					f.setShape(shape);
-					f.setShapeY(0);
-					f.setShapeX(Field.WIDTH / 2 + 2);
-					for(int i = 0; i < Field.WIDTH / 2 + 1; i++)
-						f.shiftLeft();
-					for(int i = 0; i < x; i++)
-						f.shiftRight();
-					while(f.getShape() != null && !f.isGameOver())
-						f.clockTick();
-					double fscore = score(f);
-					if(fscore < typeScore.score) {
-						typeScore.score = fscore;
-						typeScore.field = f.copyInto(typeScore.field);
-						typeScore.shape = shape;
+//					f.setShapeY(0);
+					f.setShapeX(x);
+//					for(int i = 0; i < Field.WIDTH / 2 + 1; i++)
+//						f.shiftLeft();
+//					for(int i = 0; i < x; i++)
+//						f.shiftRight();
+//					while(f.getShape() != null && !f.isGameOver())
+//						f.clockTick();
+//					double fscore = score(f);
+//					if(fscore < typeScore.score) {
+//						typeScore.score = fscore;
+//						typeScore.field = f.copyInto(typeScore.field);
+//						typeScore.shape = shape;
+//					}
+					for(int y = 0; y < Field.HEIGHT + Field.BUFFER; y++) {
+						f.setShapeY(y);
+						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+							f.copyInto(fc);
+							fc.clockTick();
+							double fscore = score(fc);
+							if(fscore < typeScore.score) {
+								typeScore.score = fscore;
+								typeScore.field = fc.copyInto(typeScore.field);
+								typeScore.shape = shape;
+							}
+						}
 					}
 				}
 			}

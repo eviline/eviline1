@@ -229,6 +229,14 @@ public enum Shape {
 		return false;
 	}
 	
+	public int x(int i) {
+		return bx[i];
+	}
+	
+	public int y(int i) {
+		return by[i];
+	}
+	
 	public ShapeDirection direction() {
 		String ts = toString();
 		if(ts.endsWith("UP"))
