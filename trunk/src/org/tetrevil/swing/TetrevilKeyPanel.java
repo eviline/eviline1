@@ -82,7 +82,7 @@ public class TetrevilKeyPanel extends JPanel {
 			super.insertString(offs, str, a);
 		}
 	};
-	protected JTextField dastext = new JTextField(dasdoc, "500", 5);
+	protected JTextField dastext = new JTextField(dasdoc, "350", 5);
 	{{
 		dasdoc.addDocumentListener(new DocumentListener() {
 			@Override

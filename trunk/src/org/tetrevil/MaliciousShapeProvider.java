@@ -5,6 +5,7 @@ import java.util.List;
 
 public class MaliciousShapeProvider implements ShapeProvider {
 	public static final int DEFAULT_DEPTH = 3;
+	public static final int DEFAULT_DIST = 50;
 	public static final int HISTORY_SIZE = 3;
 
 	public static double score(Field field) {
@@ -52,6 +53,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected int depth = 3;
 	protected double rfactor = 0.05;
 	protected boolean fair = true;
+	protected int distribution = 100;
 	
 	protected boolean randomFirst = true;
 	
@@ -60,20 +62,21 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected int totalCount = 0;
 
 	public MaliciousShapeProvider() {
-		this(DEFAULT_DEPTH);
+		this(DEFAULT_DEPTH, DEFAULT_DIST);
 	}
 	
-	public MaliciousShapeProvider(int depth) {
+	public MaliciousShapeProvider(int depth, int distribution) {
 		this.depth = depth;
+		this.distribution = distribution;
 		this.cache = new Cache();
 		for(int i = 0; i < typeCounts.length; i++) {
-			totalCount += (typeCounts[i] = 100);
+			totalCount += (typeCounts[i] = distribution);
 		}
 	}
 	
 	@Override
 	public String toString() {
-		return "Malicious: d=" + depth +", rf=" + rfactor + ", fair=" + fair;
+		return "d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
 	}
 	
 	@Override
@@ -157,7 +160,7 @@ public class MaliciousShapeProvider implements ShapeProvider {
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 			if(fair)
-				typeScore.score *= totalCount / (double)(typeCounts.length * typeCounts[type.ordinal()]);
+				typeScore.score *= distribution / (double) typeCounts[type.ordinal()];
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -190,6 +193,10 @@ public class MaliciousShapeProvider implements ShapeProvider {
 
 	public void setFair(boolean fair) {
 		this.fair = fair;
+	}
+
+	public int getDistribution() {
+		return distribution;
 	}
 	
 }

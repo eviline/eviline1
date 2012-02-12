@@ -51,7 +51,12 @@ public class MainApplet extends JApplet {
 	protected JLabel provider = new JLabel(" ");
 	
 	protected void setProvider() {
-		field.setProvider(new MaliciousShapeProvider());
+		if(getParameter("distribution") != null)
+			field.setProvider(new MaliciousShapeProvider(
+					MaliciousShapeProvider.DEFAULT_DEPTH,
+					Integer.parseInt(getParameter("distribution"))));
+		else
+			field.setProvider(new MaliciousShapeProvider());
 
 		if(getParameter("depth") != null)
 			((MaliciousShapeProvider) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
@@ -90,8 +95,15 @@ public class MainApplet extends JApplet {
 		highScore.setScore(0);
 		highScore.setName("web user");
 		highScore.setTs(new Date());
+		MaliciousShapeProvider p = (MaliciousShapeProvider) field.getProvider();
+		highScore.setDepth(p.getDepth());
+		highScore.setRfactor(p.getRfactor());
+		highScore.setFair(p.isFair() ? 1 : 0);
+		highScore.setDistribution(p.getDistribution());
 		try {
-			highScore = WebScore.highScore(getParameter("score_host"));
+			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
+			if(ws != null)
+				highScore = ws;
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -167,10 +179,12 @@ public class MainApplet extends JApplet {
 						score.setScore(e.getField().getLines());
 						score.setName(kp.getPlayerName());
 						score.setTs(new Date());
+						MaliciousShapeProvider p = (MaliciousShapeProvider) e.getField().getProvider();
+						score.setDepth(p.getDepth());
+						score.setRfactor(p.getRfactor());
+						score.setFair(p.isFair() ? 1 : 0);
+						score.setDistribution(p.getDistribution());
 						WebScore.submit(score, getParameter("score_host"));
-
-						
-						
 						
 						setStartText();
 					} catch(Exception ioe) {

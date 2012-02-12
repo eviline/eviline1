@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WebScore implements Serializable {
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 2;
 	
-	public static final int PORT = 24308;
+	public static final int PORT = 24309;
 	
 	public static final String COMMAND = "command";
 	public static final String SUBMIT_SCORE = "submit_score";
@@ -26,6 +26,11 @@ public class WebScore implements Serializable {
 	protected Integer score;
 	protected String name;
 	protected Date ts;
+	
+	protected Integer depth;
+	protected Double rfactor;
+	protected Integer fair;
+	protected Integer distribution;
 	
 	@Override
 	public String toString() {
@@ -48,9 +53,10 @@ public class WebScore implements Serializable {
 		
 	}
 	
-	public static WebScore highScore(String host) throws IOException {
+	public static WebScore highScore(WebScore params, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, HIGH_SCORE);
+		mreq.put(SCORE, params);
 		
 		Socket socket = new Socket(host, PORT);
 
@@ -67,11 +73,11 @@ public class WebScore implements Serializable {
 		}
 	}
 
-	public static void main(String[] args) throws IOException{
-		WebScore score = highScore("localhost");
-		System.out.println(score);
-		submit(score, "localhost");
-	}
+//	public static void main(String[] args) throws IOException{
+//		WebScore score = highScore("localhost");
+//		System.out.println(score);
+//		submit(score, "localhost");
+//	}
 
 	public Integer getScore() {
 		return score;
@@ -95,5 +101,37 @@ public class WebScore implements Serializable {
 
 	public void setTs(Date ts) {
 		this.ts = ts;
+	}
+
+	public Integer getDepth() {
+		return depth;
+	}
+
+	public void setDepth(Integer depth) {
+		this.depth = depth;
+	}
+
+	public Double getRfactor() {
+		return rfactor;
+	}
+
+	public void setRfactor(Double rfactor) {
+		this.rfactor = rfactor;
+	}
+
+	public Integer getFair() {
+		return fair;
+	}
+
+	public void setFair(Integer fair) {
+		this.fair = fair;
+	}
+
+	public Integer getDistribution() {
+		return distribution;
+	}
+
+	public void setDistribution(Integer distribution) {
+		this.distribution = distribution;
 	}
 }
