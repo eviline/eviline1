@@ -27,7 +27,7 @@ public class Main {
 		
 		frame.add(applet, BorderLayout.CENTER);
 		frame.pack();
-		frame.setSize(260, 500);
+		frame.setSize(520, 500);
 		
 		frame.setVisible(true);
 		

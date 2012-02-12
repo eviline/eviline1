@@ -49,6 +49,7 @@ public class MainApplet extends JApplet {
 	
 	protected Field field = new Field(true);
 	protected TetrevilComponent c;
+	protected JPanel right = new JPanel(new BorderLayout());
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel kp;
 	
@@ -59,8 +60,8 @@ public class MainApplet extends JApplet {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(!field.isPlaying() || field.isGameOver()) {
-					remove(provider);
-					add(difficulty, BorderLayout.SOUTH);
+					right.remove(provider);
+					right.add(difficulty, BorderLayout.SOUTH);
 					difficulty.revalidate();
 					validate();
 					repaint();
@@ -130,18 +131,20 @@ public class MainApplet extends JApplet {
 		}
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		start.setText("<html><center>High Score: " + highScore.getScore() + 
-				"<br>by " + highScore.getName() + 
-				"<br>on " + df.format(highScore.getTs()) + "<br><br>\n\n" +
-				"Controls:<br><br>\n\n" +
-				KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
+				" by " + highScore.getName() + 
+				" on " + df.format(highScore.getTs()) + "<br>\n" +
+				"<br>\n" +
+				KeyEvent.getKeyText(kl.PAUSE) + ": Pause / " +
 				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
-				"H: Show this help<br><br>\n\n" +
-				"Click to begin.<br><br>\n\n" +
+//				"H: Show this help<br>\n" +
+				"<br>\n" +
+				"Click to begin.<br>\n" +
 				"&copy;2012 Robin Kirkman</center></html>");
 	}
 	
 	protected JPanel createDifficultyPanel() {
 		JPanel ret = new JPanel(new GridLayout(0, 2));
+		ret.setBackground(Color.BLACK);
 		MaliciousShapeProvider p = (MaliciousShapeProvider) field.getProvider();
 		
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
@@ -149,10 +152,11 @@ public class MainApplet extends JApplet {
 		final JCheckBox fair = new JCheckBox(""); fair.setSelected(p.isFair());
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		ret.add(new JLabel("Depth:")); ret.add(depth);
-		ret.add(new JLabel("Random factor %:")); ret.add(rfactor);
-		ret.add(new JLabel("fair")); ret.add(fair);
-		ret.add(new JLabel("dist factor:")); ret.add(distribution);
+		JLabel l;
+		ret.add(l = new JLabel("Depth:")); ret.add(depth); l.setForeground(Color.WHITE);
+		ret.add(l = new JLabel("Random factor %:")); ret.add(rfactor); l.setForeground(Color.WHITE);
+		ret.add(l = new JLabel("fair")); ret.add(fair); l.setForeground(Color.WHITE);
+		ret.add(l = new JLabel("dist factor:")); ret.add(distribution); l.setForeground(Color.WHITE);
 		
 		ret.add(new JButton(new AbstractAction("Set") {
 			@Override
@@ -168,8 +172,8 @@ public class MainApplet extends JApplet {
 		ret.add(new JButton(new AbstractAction("Hide") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				remove(difficulty);
-				add(provider, BorderLayout.SOUTH);
+				right.remove(difficulty);
+				right.add(provider, BorderLayout.SOUTH);
 				provider.revalidate();
 				validate();
 				repaint();
@@ -258,11 +262,8 @@ public class MainApplet extends JApplet {
 			start.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					MainApplet.this.remove(start);
-					MainApplet.this.remove(kp);
-					MainApplet.this.add(c, BorderLayout.CENTER);
-					MainApplet.this.remove(difficulty);
-					MainApplet.this.add(provider, BorderLayout.SOUTH);
+					right.remove(difficulty);
+					right.add(provider, BorderLayout.SOUTH);
 					MainApplet.this.validate();
 					MainApplet.this.repaint();
 					SwingUtilities.invokeLater(new Runnable() {
@@ -289,33 +290,39 @@ public class MainApplet extends JApplet {
 			
 			setStartText();
 
-			KeyListener k = new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
-						ticker.stop();
-						SwingUtilities.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								MainApplet.this.remove(c);
-								MainApplet.this.add(kp, BorderLayout.NORTH);
-								MainApplet.this.add(start, BorderLayout.CENTER);
-								MainApplet.this.validate();
-								MainApplet.this.repaint();
-							}
-						});
-						e.consume();
-					}
-				}
-			};
-			c.getTable().addKeyListener(k);
-			addKeyListener(k);
+//			KeyListener k = new KeyAdapter() {
+//				@Override
+//				public void keyPressed(KeyEvent e) {
+//					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
+//						ticker.stop();
+//						SwingUtilities.invokeLater(new Runnable() {
+//							@Override
+//							public void run() {
+//								MainApplet.this.remove(c);
+//								MainApplet.this.add(kp, BorderLayout.NORTH);
+//								MainApplet.this.add(start, BorderLayout.CENTER);
+//								MainApplet.this.validate();
+//								MainApplet.this.repaint();
+//							}
+//						});
+//						e.consume();
+//					}
+//				}
+//			};
+//			c.getTable().addKeyListener(k);
+//			addKeyListener(k);
 			
 			setBackground(Color.BLACK);
-			setLayout(new BorderLayout());
-			add(kp, BorderLayout.NORTH);
-			add(start, BorderLayout.CENTER);
-			add(provider, BorderLayout.SOUTH);
+			right.setBackground(Color.BLACK);
+			
+			right.setLayout(new BorderLayout());
+			right.add(kp, BorderLayout.NORTH);
+			right.add(start, BorderLayout.CENTER);
+			right.add(provider, BorderLayout.SOUTH);
+			
+			setLayout(new GridLayout(0, 2));
+			add(c);
+			add(right);
 		}
 	};
 	
