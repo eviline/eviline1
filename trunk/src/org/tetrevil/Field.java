@@ -10,7 +10,7 @@ public class Field {
 	public static final int BUFFER = 4;
 	
 	protected Block[][] field = new Block[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
-	protected ShapeProvider provider = new RandomShapeProvider();
+	protected Randomizer provider = new RandomRandomizer();
 	protected Shape shape;
 	protected int shapeX;
 	protected int shapeY;
@@ -43,9 +43,9 @@ public class Field {
 			Arrays.fill(field[y], Block.X);
 		}
 		if(evil)
-			provider = new MaliciousShapeProvider();
+			provider = new MaliciousRandomizer();
 		else
-			provider = new RandomShapeProvider();
+			provider = new RandomRandomizer();
 	}
 	
 	public Field copyInto(Field target) {
@@ -351,11 +351,11 @@ public class Field {
 		}
 	}
 
-	public ShapeProvider getProvider() {
+	public Randomizer getProvider() {
 		return provider;
 	}
 
-	public void setProvider(ShapeProvider provider) {
+	public void setProvider(Randomizer provider) {
 		this.provider = provider;
 	}
 

@@ -1,6 +1,6 @@
 package org.tetrevil;
 
-public class RandomShapeProvider implements ShapeProvider {
+public class RandomRandomizer implements Randomizer {
 
 	@Override
 	public Shape provideShape(Field field) {

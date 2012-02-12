@@ -35,7 +35,7 @@ import javax.swing.Timer;
 
 import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
-import org.tetrevil.MaliciousShapeProvider;
+import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.IntegerDocument;
@@ -76,18 +76,18 @@ public class MainApplet extends JApplet {
 	
 	protected void setProvider() {
 		if(getParameter("distribution") != null)
-			field.setProvider(new MaliciousShapeProvider(
-					MaliciousShapeProvider.DEFAULT_DEPTH,
+			field.setProvider(new MaliciousRandomizer(
+					MaliciousRandomizer.DEFAULT_DEPTH,
 					Integer.parseInt(getParameter("distribution"))));
 		else
-			field.setProvider(new MaliciousShapeProvider());
+			field.setProvider(new MaliciousRandomizer());
 
 		if(getParameter("depth") != null)
-			((MaliciousShapeProvider) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
+			((MaliciousRandomizer) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
 		if(getParameter("rfactor") != null)
-			((MaliciousShapeProvider) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
+			((MaliciousRandomizer) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
 		if(getParameter("fair") != null)
-			((MaliciousShapeProvider) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
+			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
 		provider.setText(field.getProvider().toString() + "   [Click]");
 	}
@@ -119,7 +119,7 @@ public class MainApplet extends JApplet {
 		highScore.setScore(0);
 		highScore.setName("[no score for these settings]");
 		highScore.setTs(new Date());
-		MaliciousShapeProvider p = (MaliciousShapeProvider) field.getProvider();
+		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		highScore.setDepth(p.getDepth());
 		highScore.setRfactor(p.getRfactor());
 		highScore.setFair(p.isFair() ? 1 : 0);
@@ -148,7 +148,7 @@ public class MainApplet extends JApplet {
 	protected JPanel createDifficultyPanel() {
 		JPanel ret = new JPanel(new GridLayout(0, 2));
 		ret.setBackground(Color.BLACK);
-		MaliciousShapeProvider p = (MaliciousShapeProvider) field.getProvider();
+		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
@@ -267,7 +267,7 @@ public class MainApplet extends JApplet {
 						score.setScore(e.getField().getLines());
 						score.setName(kp.getPlayerName());
 						score.setTs(new Date());
-						MaliciousShapeProvider p = (MaliciousShapeProvider) e.getField().getProvider();
+						MaliciousRandomizer p = (MaliciousRandomizer) e.getField().getProvider();
 						score.setDepth(p.getDepth());
 						score.setRfactor(p.getRfactor());
 						score.setFair(p.isFair() ? 1 : 0);

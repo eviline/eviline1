@@ -3,7 +3,7 @@ package org.tetrevil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaliciousShapeProvider implements ShapeProvider {
+public class MaliciousRandomizer implements Randomizer {
 	public static final int DEFAULT_DEPTH = 3;
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
@@ -61,11 +61,11 @@ public class MaliciousShapeProvider implements ShapeProvider {
 	protected int[] typeCounts = new int[ShapeType.values().length];
 	protected int totalCount = 0;
 
-	public MaliciousShapeProvider() {
+	public MaliciousRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);
 	}
 	
-	public MaliciousShapeProvider(int depth, int distribution) {
+	public MaliciousRandomizer(int depth, int distribution) {
 		this.depth = depth;
 		this.distribution = distribution;
 		this.cache = new Cache();

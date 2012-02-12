@@ -4,14 +4,14 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.SynchronousQueue;
 
-public class ConcurrentShapeProvider implements ShapeProvider {
+public class ConcurrentShapeProvider implements Randomizer {
 
 	protected SynchronousQueue<Shape> next = new SynchronousQueue<Shape>();
 	protected Field field;
-	protected ShapeProvider provider;
+	protected Randomizer provider;
 	protected RunnableFuture<?> future;
 	
-	public ConcurrentShapeProvider(Field f, ShapeProvider p) {
+	public ConcurrentShapeProvider(Field f, Randomizer p) {
 		this.field = f;
 		this.provider = p;
 		
