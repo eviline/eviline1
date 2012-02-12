@@ -15,7 +15,7 @@
     <applet-desc 
          name="TETREVIL"
          main-class="org.tetrevil.runner.MainApplet"
-         width="260"
+         width="520"
          height="500">
          <param name="depth" value="3"/>
          <param name="rfactor" value="0.05"/>

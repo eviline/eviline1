@@ -2,6 +2,8 @@ package org.tetrevil.runner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -135,7 +137,8 @@ public class MainApplet extends JApplet {
 				" on " + df.format(highScore.getTs()) + "<br>\n" +
 				"<br>\n" +
 				KeyEvent.getKeyText(kl.PAUSE) + ": Pause / " +
-				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
+				KeyEvent.getKeyText(kl.RESET) + ": Reset / " +
+				"H: Settings<br>\n" +
 //				"H: Show this help<br>\n" +
 				"<br>\n" +
 				"Click to begin.<br>\n" +
@@ -181,6 +184,27 @@ public class MainApplet extends JApplet {
 		}));
 		
 		return ret;
+	}
+	
+	protected void toggleSettings() {
+		if(right.isVisible()) {
+			remove(c);
+			remove(right);
+			right.setVisible(false);
+			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+			c.setPreferredSize(new Dimension(260, 500));
+			c.setMaximumSize(c.getPreferredSize());
+			add(c);
+		} else {
+			remove(c);
+			setLayout(new GridLayout(0, 2));
+			add(c);
+			add(right);
+			right.setVisible(true);
+		}
+		validate();
+		repaint();
+		c.getTable().requestFocusInWindow();
 	}
 	
 	protected Runnable launch = new Runnable() {
@@ -264,6 +288,7 @@ public class MainApplet extends JApplet {
 				public void actionPerformed(ActionEvent arg0) {
 					right.remove(difficulty);
 					right.add(provider, BorderLayout.SOUTH);
+					toggleSettings();
 					MainApplet.this.validate();
 					MainApplet.this.repaint();
 					SwingUtilities.invokeLater(new Runnable() {
@@ -290,27 +315,23 @@ public class MainApplet extends JApplet {
 			
 			setStartText();
 
-//			KeyListener k = new KeyAdapter() {
-//				@Override
-//				public void keyPressed(KeyEvent e) {
-//					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
-//						ticker.stop();
-//						SwingUtilities.invokeLater(new Runnable() {
-//							@Override
-//							public void run() {
-//								MainApplet.this.remove(c);
-//								MainApplet.this.add(kp, BorderLayout.NORTH);
-//								MainApplet.this.add(start, BorderLayout.CENTER);
-//								MainApplet.this.validate();
-//								MainApplet.this.repaint();
-//							}
-//						});
-//						e.consume();
-//					}
-//				}
-//			};
-//			c.getTable().addKeyListener(k);
-//			addKeyListener(k);
+			KeyListener k = new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								toggleSettings();
+							}
+						});
+						e.consume();
+					}
+				}
+			};
+			c.getTable().addKeyListener(k);
+			c.addKeyListener(k);
+			addKeyListener(k);
 			
 			setBackground(Color.BLACK);
 			right.setBackground(Color.BLACK);
