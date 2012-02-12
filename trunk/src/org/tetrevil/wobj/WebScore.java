@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +23,13 @@ public class WebScore implements Serializable {
 	
 	public static final String SCORE = "score";
 	
-	public int lines;
-	public String name;
-	public long ts;
+	protected Integer score;
+	protected String name;
+	protected Date ts;
 	
 	@Override
 	public String toString() {
-		return "WebScore[" + lines + "," + name + "," + ts + "]";
+		return "WebScore[" + score + "," + name + "," + ts + "]";
 	}
 	
 	public static void submit(WebScore score, String host) throws IOException {
@@ -70,5 +71,29 @@ public class WebScore implements Serializable {
 		WebScore score = highScore("localhost");
 		System.out.println(score);
 		submit(score, "localhost");
+	}
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Date getTs() {
+		return ts;
+	}
+
+	public void setTs(Date ts) {
+		this.ts = ts;
 	}
 }

@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
@@ -108,15 +109,15 @@ public class MainApplet extends JApplet {
 				public void gameOver(TetrevilEvent e) {
 					try {
 						WebScore score = new WebScore();
-						score.lines = e.getField().getLines();
-						score.name = "web user";
-						score.ts = System.currentTimeMillis();
+						score.setScore(e.getField().getLines());
+						score.setName(kp.getPlayerName());
+						score.setTs(new Date());
 						WebScore.submit(score, getParameter("score_host"));
 
 						
 						WebScore highScore = WebScore.highScore(getParameter("score_host"));
 						
-						start.setText("<html><center>High Score: " + highScore.lines + "<br><br>\n\n" +
+						start.setText("<html><center>High Score: " + highScore.getScore() + " by " + highScore.getName() + "<br><br>\n\n" +
 								"Controls:<br><br>\n\n" +
 								KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
 								KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
@@ -166,7 +167,7 @@ public class MainApplet extends JApplet {
 			} catch(IOException ioe) {
 			}
 			
-			start.setText("<html><center>High Score: " + highScore.lines + "<br><br>\n\n" +
+			start.setText("<html><center>High Score: " + highScore.getScore() + " by " + highScore.getName() + "<br><br>\n\n" +
 					"Controls:<br><br>\n\n" +
 					KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
 					KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +

@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 public class TetrevilKeyPanel extends JPanel {
@@ -75,6 +76,8 @@ public class TetrevilKeyPanel extends JPanel {
 		}
 	});
 	
+	protected JTextField playerName = new JTextField("web user");
+	
 	public TetrevilKeyPanel(TetrevilKeyListener kl) {
 		super(new GridLayout(0, 2));
 		this.kl = kl;
@@ -88,6 +91,8 @@ public class TetrevilKeyPanel extends JPanel {
 
 			add(new JLabel("DAS_TIME:")); add(das);
 			
+			add(new JLabel("Player name:")); add(playerName);
+			
 			das.setText(String.valueOf(kl.DAS_TIME));
 			
 			setBackground(Color.BLACK);
@@ -100,5 +105,9 @@ public class TetrevilKeyPanel extends JPanel {
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public String getPlayerName() {
+		return playerName.getText();
 	}
 }
