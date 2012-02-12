@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MaliciousShapeProvider implements ShapeProvider {
 	public static final int DEFAULT_DEPTH = 3;
-	public static final int DEFAULT_DIST = 50;
+	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
 	public static double score(Field field) {
