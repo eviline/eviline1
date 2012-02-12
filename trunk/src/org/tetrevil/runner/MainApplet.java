@@ -100,6 +100,38 @@ public class MainApplet extends JApplet {
 			if(getParameter("score_host") == null)
 				setParameter("score_host", "www.tetrevil.org");
 
+			
+			field.addTetrevilListener(new TetrevilAdapter() {
+				@Override
+				public void clockTicked(TetrevilEvent e) {
+					if(field.isGrounded())
+						ticker.restart();
+				}
+
+				@Override
+				public void shiftedLeft(TetrevilEvent e) {
+					if(field.isGrounded())
+						ticker.restart();
+				}
+
+				@Override
+				public void shiftedRight(TetrevilEvent e) {
+					if(field.isGrounded())
+						ticker.restart();
+				}
+
+				@Override
+				public void rotatedLeft(TetrevilEvent e) {
+					if(field.isGrounded())
+						ticker.restart();
+				}
+
+				@Override
+				public void rotatedRight(TetrevilEvent e) {
+					if(field.isGrounded())
+						ticker.restart();
+				}
+			});
 
 			field.addTetrevilListener(new TetrevilAdapter() {
 				public void gameReset(TetrevilEvent e) {

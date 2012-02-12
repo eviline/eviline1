@@ -133,6 +133,12 @@ public class Field {
 		}
 	}
 	
+	public boolean isGrounded() {
+		if(shape == null)
+			return false;
+		return shape.intersects(field, shapeX, shapeY+1);
+	}
+	
 	public void shiftLeft() {
 		if(paused)
 			return;
