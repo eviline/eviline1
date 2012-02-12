@@ -93,7 +93,7 @@ public class MainApplet extends JApplet {
 	protected void setStartText() {
 		WebScore highScore = new WebScore();
 		highScore.setScore(0);
-		highScore.setName("web user");
+		highScore.setName("[no score for these settings]");
 		highScore.setTs(new Date());
 		MaliciousShapeProvider p = (MaliciousShapeProvider) field.getProvider();
 		highScore.setDepth(p.getDepth());
@@ -109,8 +109,8 @@ public class MainApplet extends JApplet {
 		}
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		start.setText("<html><center>High Score: " + highScore.getScore() + 
-				" by " + highScore.getName() + 
-				" on " + df.format(highScore.getTs()) + "<br><br>\n\n" +
+				"<br>by " + highScore.getName() + 
+				"<br>on " + df.format(highScore.getTs()) + "<br><br>\n\n" +
 				"Controls:<br><br>\n\n" +
 				KeyEvent.getKeyText(kl.PAUSE) + ": Pause<br>\n" +
 				KeyEvent.getKeyText(kl.RESET) + ": Reset<br>\n" +
