@@ -6,6 +6,7 @@ import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -32,9 +33,13 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		Block b = (Block) value;
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
-		c.setText(b != null && b.isActive() ? String.valueOf(field.getLines()) : " ");
-		c.setForeground(Color.BLACK);
+		c.setText(b != null && b.isActive() && b != Block.G? String.valueOf(field.getLines()) : " ");
+		
+		c.setHorizontalTextPosition(SwingConstants.CENTER);
+		c.setHorizontalAlignment(SwingConstants.CENTER);
+		c.setForeground(Color.WHITE);
 		c.setBackground(colors.provideColor(b));
+		
 		if(field.isPaused() && b != null) {
 			if(!b.isActive() && b != Block.X)
 				c.setBackground(null);
@@ -42,7 +47,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 				c.setText("P");
 		}
 		if(b == null && field.isGameOver()) {
-			c.setForeground(Color.WHITE);
+//			c.setForeground(Color.WHITE);
 			c.setText(String.valueOf(field.getLines()));
 		} else if(field.isGameOver()) {
 			c.setText(" ");
