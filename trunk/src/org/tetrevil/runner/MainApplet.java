@@ -171,7 +171,7 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent arg0) {
 				depth.setText("4");
 				rfactor.setText("5");
-				distribution.setText("5");
+				distribution.setText("3");
 			}
 		});
 		stat.addActionListener(new ActionListener() {
