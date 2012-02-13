@@ -35,7 +35,9 @@ import javax.swing.Timer;
 
 import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
+import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
+import org.tetrevil.RandomizerFactory;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.IntegerDocument;
@@ -76,11 +78,11 @@ public class MainApplet extends JApplet {
 	
 	protected void setProvider() {
 		if(getParameter("distribution") != null)
-			field.setProvider(new MaliciousRandomizer(
+			field.setProvider(RandomizerFactory.newRandomizer(
 					MaliciousRandomizer.DEFAULT_DEPTH,
 					Integer.parseInt(getParameter("distribution"))));
 		else
-			field.setProvider(new MaliciousRandomizer());
+			field.setProvider(RandomizerFactory.newRandomizer());
 
 		if(getParameter("depth") != null)
 			((MaliciousRandomizer) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
@@ -89,7 +91,7 @@ public class MainApplet extends JApplet {
 		if(getParameter("fair") != null)
 			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
-		provider.setText(field.getProvider().toString() + "   [Click]");
+		provider.setText(field.getProvider().toString() + "   [Change]");
 	}
 	
 	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
@@ -124,6 +126,7 @@ public class MainApplet extends JApplet {
 		highScore.setRfactor(p.getRfactor());
 		highScore.setFair(p.isFair() ? 1 : 0);
 		highScore.setDistribution(p.getDistribution());
+		highScore.setRandomizer(RandomizerFactory.getClazz().getName());
 		try {
 			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
 			if(ws != null)
@@ -150,15 +153,40 @@ public class MainApplet extends JApplet {
 		ret.setBackground(Color.BLACK);
 		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		
+		final JRadioButton stat = new JRadioButton("Default"); stat.setForeground(Color.WHITE);
+		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE);
+
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
-		final JCheckBox fair = new JCheckBox(""); fair.setSelected(p.isFair());
+		ButtonGroup g = new ButtonGroup(); g.add(stat); g.add(bag);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
+		if(MaliciousBagRandomizer.class == RandomizerFactory.getClazz())
+			bag.setSelected(true);
+		else
+			stat.setSelected(true);
+		
+		bag.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				depth.setText("4");
+				rfactor.setText("5");
+				distribution.setText("5");
+			}
+		});
+		stat.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				depth.setText("3");
+				rfactor.setText("5");
+				distribution.setText("30");
+			}
+		});
+		
 		JLabel l;
+		ret.add(stat); ret.add(bag);
 		ret.add(l = new JLabel("Depth:")); ret.add(depth); l.setForeground(Color.WHITE);
 		ret.add(l = new JLabel("Random factor %:")); ret.add(rfactor); l.setForeground(Color.WHITE);
-		ret.add(l = new JLabel("fair")); ret.add(fair); l.setForeground(Color.WHITE);
 		ret.add(l = new JLabel("dist factor:")); ret.add(distribution); l.setForeground(Color.WHITE);
 		
 		ret.add(new JButton(new AbstractAction("Set") {
@@ -166,8 +194,11 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent arg0) {
 				setParameter("depth", depth.getText());
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
-				setParameter("fair", "" + fair.isSelected());
 				setParameter("distribution", distribution.getText());
+				if(bag.isSelected())
+					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+				else
+					RandomizerFactory.setClazz(MaliciousRandomizer.class);
 				setProvider();
 				setStartText();
 			}
@@ -272,6 +303,7 @@ public class MainApplet extends JApplet {
 						score.setRfactor(p.getRfactor());
 						score.setFair(p.isFair() ? 1 : 0);
 						score.setDistribution(p.getDistribution());
+						score.setRandomizer(p.getClass().getName());
 						WebScore.submit(score, getParameter("score_host"));
 						
 						setStartText();

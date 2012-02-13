@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WebScore implements Serializable {
-	private static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 3;
 	
 	public static final int PORT = 24309;
 	
@@ -31,6 +31,8 @@ public class WebScore implements Serializable {
 	protected Double rfactor;
 	protected Integer fair;
 	protected Integer distribution;
+	
+	protected String randomizer;
 	
 	@Override
 	public String toString() {
@@ -133,5 +135,13 @@ public class WebScore implements Serializable {
 
 	public void setDistribution(Integer distribution) {
 		this.distribution = distribution;
+	}
+
+	public String getRandomizer() {
+		return randomizer;
+	}
+
+	public void setRandomizer(String randomizer) {
+		this.randomizer = randomizer;
 	}
 }

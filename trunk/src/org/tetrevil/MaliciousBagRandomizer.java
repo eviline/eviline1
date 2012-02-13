@@ -3,80 +3,88 @@ package org.tetrevil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaliciousRandomizer implements Randomizer {
+import org.tetrevil.MaliciousRandomizer.Cache;
+import org.tetrevil.MaliciousRandomizer.Score;
+
+public class MaliciousBagRandomizer extends MaliciousRandomizer implements Randomizer {
 	public static final int DEFAULT_DEPTH = 3;
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
-	public static class Score {
-		public double score;
-		public Shape shape;
-		public Field field = new Field();
-	}
+//	public static class Score {
+//		public double score;
+//		public Shape shape;
+//		public Field field = new Field();
+//	}
 
 	protected class Cache {
 		public Score depestDecide = new Score();
-		public Score[] worst = new Score[depth + 1];
-		public Field[] f = new Field[depth + 1];
-		public Field[] fc = new Field[depth + 1];
-		public Score[] typeScore = new Score[depth + 1];
+		public Score[] worst = new Score[depth + 2];
+		public Field[] f = new Field[depth + 2];
+		public Field[] fc = new Field[depth + 2];
+		public Score[] typeScore = new Score[depth + 2];
+		public List<ShapeType>[] bag = new List[depth + 2];
 		
 		public Cache() {
-			for(int i = 0; i < depth + 1; i++) {
+			for(int i = 0; i < depth + 2; i++) {
 				worst[i] = new Score();
 				f[i] = new Field();
 				fc[i] = new Field();
 				typeScore[i] = new Score();
+				bag[i] = new ArrayList<ShapeType>();
 			}
 		}
 	}
 	
 	protected Cache cache;
 	
-	protected int depth = 3;
-	protected double rfactor = 0.05;
-	protected boolean fair = true;
-	protected int distribution = 100;
-	
-	protected boolean randomFirst = true;
-	
-	protected List<ShapeType> recent = new ArrayList<ShapeType>();
-	protected int[] typeCounts = new int[ShapeType.values().length];
-	protected int totalCount = 0;
+	protected List<ShapeType> bag = new ArrayList<ShapeType>();
 
-	public MaliciousRandomizer() {
+	public MaliciousBagRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);
 	}
 	
-	public MaliciousRandomizer(int depth, int distribution) {
+	public MaliciousBagRandomizer(int depth, int distribution) {
 		this.depth = depth;
 		this.distribution = distribution;
 		this.cache = new Cache();
-		for(int i = 0; i < typeCounts.length; i++) {
-			totalCount += (typeCounts[i] = distribution);
+		for(ShapeType type : ShapeType.values()) {
+			bag.add(type);
+			for(int i = 1; i < distribution; i++)
+				bag.add(type);
 		}
 	}
 	
 	@Override
 	public String toString() {
-		return "d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
+		return "bag, d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
 	}
 	
 	@Override
 	public Shape provideShape(Field field) {
 		if(randomFirst) {
 			randomFirst = false;
-			return ShapeType.values()[(int)(Math.random() * ShapeType.values().length)].starter();
+			Shape s = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)].starter();
+			bag.remove(s.type());
+			return s;
 		}
+		if(this.bag.size() == 0) {
+			for(ShapeType type : ShapeType.values()) {
+				bag.add(type);
+				for(int i = 1; i < distribution; i++)
+					bag.add(type);
+			}
+		}
+		cache.bag[0].clear(); cache.bag[0].addAll(this.bag);
 		Shape shape = decide(field, 0).shape;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
-		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * Math.random())]--;
+		this.bag.remove(shape.type());
 		return shape;
 	}
-	
+
+	@Override
 	protected Score decide(Field field, int depth) {
 		if(depth > this.depth) {
 			Score score = cache.depestDecide;
@@ -87,7 +95,8 @@ public class MaliciousRandomizer implements Randomizer {
 		
 		return worstFor(field, depth);
 	}
-	
+
+	@Override
 	protected Score worstFor(Field field, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
@@ -97,13 +106,24 @@ public class MaliciousRandomizer implements Randomizer {
 					omit = null;
 			}
 		}
-
+		
+		List<ShapeType> bag = cache.bag[depth];
+		if(bag.size() == 0) {
+			for(ShapeType type : ShapeType.values()) {
+				bag.add(type);
+				for(int i = 1; i < distribution; i++)
+					bag.add(type);
+			}
+		}
+		
 		Score worst = cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
 		
 		Field f = cache.f[depth];
 		Field fc = cache.fc[depth];
 		for(ShapeType type : ShapeType.values()) {
+			if(!bag.contains(type))
+				continue;
 			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
 
@@ -140,10 +160,9 @@ public class MaliciousRandomizer implements Randomizer {
 					}
 				}
 			}
+			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
-			if(fair)
-				typeScore.score *= distribution / (double) typeCounts[type.ordinal()];
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -154,33 +173,9 @@ public class MaliciousRandomizer implements Randomizer {
 		return worst;
 	}
 
-	public double getRfactor() {
-		return rfactor;
-	}
-
-	public void setRfactor(double rfactor) {
-		this.rfactor = rfactor;
-	}
-
-	public int getDepth() {
-		return depth;
-	}
-
+	@Override
 	public void setDepth(int depth) {
-		this.depth = depth;
+		super.setDepth(depth);
 		cache = new Cache();
 	}
-
-	public boolean isFair() {
-		return fair;
-	}
-
-	public void setFair(boolean fair) {
-		this.fair = fair;
-	}
-
-	public int getDistribution() {
-		return distribution;
-	}
-	
 }
