@@ -367,14 +367,15 @@ public class MainApplet extends JApplet {
 			
 			setBackground(Color.BLACK);
 			right.setBackground(Color.BLACK);
+			right.setPreferredSize(new Dimension(260,500));
 			
 			right.setLayout(new BorderLayout());
 			right.add(kp, BorderLayout.NORTH);
 			right.add(start, BorderLayout.CENTER);
 			right.add(provider, BorderLayout.SOUTH);
 			
-			setLayout(new GridLayout(0, 2));
-			add(c);
+			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+//			add(c);
 			add(right);
 		}
 	};
