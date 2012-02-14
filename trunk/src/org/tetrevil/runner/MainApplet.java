@@ -246,16 +246,38 @@ public class MainApplet extends JApplet {
 		final JButton normal = new JButton("Aggressive");
 		final JButton easy = new JButton("Rude");
 		
-		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.WHITE);
-		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE);
+		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
+		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
-		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.WHITE);
-		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.WHITE);
+		
+		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
+		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
+		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
-		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
+		
+		final JButton set = new JButton(new AbstractAction("Set") {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setParameter("depth", depth.getText());
+				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
+				setParameter("distribution", distribution.getText());
+				setParameter("fair", "" + fair.isSelected());
+				if(bag.isSelected())
+					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+				else
+					RandomizerFactory.setClazz(MaliciousRandomizer.class);
+				setProvider();
+				setStartText();
+				right.remove(difficulty);
+				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
+				start.revalidate();
+				validate();
+				repaint();
+			}
+		});
 		
 		if(MaliciousBagRandomizer.class == RandomizerFactory.getClazz()) {
 			bag.setSelected(true);
@@ -342,52 +364,62 @@ public class MainApplet extends JApplet {
 			}
 		});
 
-		GridBagConstraints gc = new GridBagConstraints(0, 0, 2, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
-		JPanel ret = new JPanel(new GridBagLayout());
-		ret.setBackground(Color.BLACK);
-
+//		GridBagConstraints gc = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+//		JPanel ret = new JPanel(new GridBagLayout());
+//		ret.setBackground(Color.BLACK);
+//
+//		JLabel l;
+//
+//		gc.gridx = 0; gc.gridwidth = 2; ret.add(evil, gc);
+//		gc.gridx += 2; ret.add(normal, gc);
+//		gc.gridx += 2; ret.add(easy, gc);
+//		
+//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 3; gc.weightx = 1; ret.add(l = new JLabel("Randomizer: "), gc); l.setForeground(Color.WHITE);
+//		gc.gridx += 3; gc.weightx = 0; ret.add(malicious, gc);
+//		gc.gridy++; ret.add(bag, gc);
+//
+//		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("Distribution:"), gc); l.setForeground(Color.WHITE);
+//		gc.gridx += 3; ret.add(unfair, gc);
+//		gc.gridy++; ret.add(fair, gc);
+//
+//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(l = new JLabel("Depth:"), gc); l.setForeground(Color.WHITE); 
+//		gc.gridx += 4; gc.gridwidth = 2; ret.add(depth, gc);
+//		
+//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(l = new JLabel("Random factor %:"), gc); l.setForeground(Color.WHITE); 
+//		gc.gridx += 4; gc.gridwidth = 2; ret.add(rfactor, gc);
+//		
+//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(l = new JLabel("dist factor:"), gc); l.setForeground(Color.WHITE); 
+//		gc.gridx += 4; gc.gridwidth = 2; ret.add(distribution, gc);
+//		
+//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 6;
+//		ret.add(set, gc);
+		
+		JPanel ret = new JPanel(new GridBagLayout()); ret.setBackground(Color.BLACK);
+		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+		
+		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.BLACK);
+		presets.add(evil, c);
+		c.gridx++; presets.add(normal, c);
+		c.gridx++; presets.add(easy, c);
+		
+		c.gridx = 0;  ret.add(presets, c);
+		
 		JLabel l;
+		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.BLACK);
+		
+		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.WHITE);
+		details.add(new JLabel("")); details.add(bag);
+		
+		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.WHITE);
+		details.add(new JLabel("")); details.add(fair);
+		
+		details.add(l = new JLabel("Depth:")); details.add(depth); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Random Factor %:")); details.add(rfactor); l.setForeground(Color.WHITE);
+		
+		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.WHITE);
+		c.gridy++; c.weighty = 1; ret.add(details, c);
 
-		gc.gridx = 0; gc.gridwidth = 2; ret.add(evil, gc);
-		gc.gridx += 2; ret.add(normal, gc);
-		gc.gridx += 2; ret.add(easy, gc);
-		
-		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(malicious, gc);
-		gc.gridx += 4; ret.add(bag, gc);
-
-		gc.gridy++; gc.gridx = 0; ret.add(unfair, gc);
-		gc.gridx += 4; ret.add(fair, gc);
-
-		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("Depth:"), gc); l.setForeground(Color.WHITE); 
-		gc.gridx += 4; ret.add(depth, gc);
-		
-		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("Random factor %:"), gc); l.setForeground(Color.WHITE); 
-		gc.gridx += 4; ret.add(rfactor, gc);
-		
-		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("dist factor:"), gc); l.setForeground(Color.WHITE); 
-		gc.gridx += 4; ret.add(distribution, gc);
-		
-		gc.gridy++; gc.gridx = 0; gc.gridwidth = 6;
-		ret.add(new JButton(new AbstractAction("Set") {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				setParameter("depth", depth.getText());
-				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
-				setParameter("distribution", distribution.getText());
-				setParameter("fair", "" + fair.isSelected());
-				if(bag.isSelected())
-					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
-				else
-					RandomizerFactory.setClazz(MaliciousRandomizer.class);
-				setProvider();
-				setStartText();
-				right.remove(difficulty);
-				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
-				start.revalidate();
-				validate();
-				repaint();
-			}
-		}), gc);
+		c.gridy++; c.weighty = 0; ret.add(set, c);
 		
 		return ret;
 	}
