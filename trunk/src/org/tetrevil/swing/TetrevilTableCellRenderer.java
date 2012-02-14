@@ -25,6 +25,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
+		
 	}
 	
 	protected ColorProvider colors = new DefaultColorProvider();
@@ -35,6 +36,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
 		c.setText(b != null && b.isActive() && b != Block.G? String.valueOf(field.getLines()) : " ");
 		
+		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
 		c.setHorizontalTextPosition(SwingConstants.CENTER);
 		c.setHorizontalAlignment(SwingConstants.CENTER);
 		c.setForeground(Color.WHITE);
