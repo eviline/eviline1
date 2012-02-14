@@ -68,6 +68,7 @@ public class MaliciousRandomizer implements Randomizer {
 			randomFirst = false;
 			return ShapeType.values()[(int)(Math.random() * ShapeType.values().length)].starter();
 		}
+		field = field.copyInto(new Field());
 		Shape shape = decide(field, 0).shape;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
@@ -100,6 +101,8 @@ public class MaliciousRandomizer implements Randomizer {
 
 		Score worst = cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
+		
+		paintImpossibles(field);
 		
 		Field f = cache.f[depth];
 		Field fc = cache.fc[depth];
@@ -152,6 +155,26 @@ public class MaliciousRandomizer implements Randomizer {
 			}
 		}
 		return worst;
+	}
+	
+	protected void paintImpossibles(Field field) {
+		Block[][] f = field.getField();
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] == null)
+					f[y][x] = Block.X;
+			}
+		}
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null)
+					f[y][x] = null;
+			}
+			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
+				if(f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null)
+					f[y][x] = null;
+			}
+		}
 	}
 
 	public double getRfactor() {

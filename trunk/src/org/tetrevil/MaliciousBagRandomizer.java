@@ -83,6 +83,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			}
 		}
 		cache.bag[0].clear(); cache.bag[0].addAll(this.bag);
+		field = field.copyInto(new Field());
 		Shape shape = decide(field, 0).shape;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
@@ -125,6 +126,8 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 		
 		Score worst = cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
+		
+		paintImpossibles(field);
 		
 		Field f = cache.f[depth];
 		Field fc = cache.fc[depth];
