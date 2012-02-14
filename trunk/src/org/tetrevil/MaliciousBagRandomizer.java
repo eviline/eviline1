@@ -1,7 +1,9 @@
 package org.tetrevil;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import org.tetrevil.MaliciousRandomizer.Cache;
 import org.tetrevil.MaliciousRandomizer.Score;
@@ -16,6 +18,11 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 //		public Shape shape;
 //		public Field field = new Field();
 //	}
+	
+	protected static Map<ShapeType, Double> WEIGHTS = new EnumMap<ShapeType, Double>(ShapeType.class);
+	static {
+		WEIGHTS.put(ShapeType.I, 1.1);
+	}
 
 	protected class Cache {
 		public Score depestDecide = new Score();
@@ -163,6 +170,8 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
+			if(WEIGHTS.containsKey(type))
+				typeScore.score *= WEIGHTS.get(type);
 			typeScore.shape = type.shapes()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
