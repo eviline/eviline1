@@ -93,6 +93,8 @@ public class Field {
 			shape = provider.provideShape(this).type().starter();
 			shapeY = shape.type().starterY();
 			shapeX = WIDTH / 2 + 2 + shape.type().starterX();
+			if(!shape.intersects(field, shapeX, shapeY+1))
+				shapeY++;
 			reghost();
 		} else if(shape.intersects(field, shapeX, shapeY+1)) {
 			Block[][] s = shape.shape();

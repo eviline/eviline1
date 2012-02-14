@@ -71,8 +71,12 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 	public Shape provideShape(Field field) {
 		if(randomFirst) {
 			randomFirst = false;
-			Shape s = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)].starter();
-			bag.remove(s.type());
+			ShapeType type;
+			do {
+				type = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)];
+			} while(type == ShapeType.S || type == ShapeType.Z);
+			Shape s = type.starter();
+			bag.remove(type);
 			return s;
 		}
 		if(this.bag.size() == 0) {

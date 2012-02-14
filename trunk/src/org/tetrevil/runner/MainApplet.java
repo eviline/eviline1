@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -67,14 +68,16 @@ public class MainApplet extends JApplet {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(!field.isPlaying() || field.isGameOver()) {
-					right.remove(provider);
-					right.add(difficulty, BorderLayout.SOUTH);
+					right.remove(start);
+					right.add(difficulty, BorderLayout.CENTER);
 					difficulty.revalidate();
 					validate();
 					repaint();
 				}
 			}
 		});
+		provider.setHorizontalAlignment(SwingConstants.RIGHT);
+		provider.setFont(provider.getFont().deriveFont(provider.getFont().getSize2D() / 1.125f));
 	}}
 	
 	protected JPanel difficulty = createDifficultyPanel();
@@ -152,70 +155,154 @@ public class MainApplet extends JApplet {
 	}
 	
 	protected JPanel createDifficultyPanel() {
-		JPanel ret = new JPanel(new GridLayout(0, 2));
-		ret.setBackground(Color.BLACK);
 		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		
-		final JRadioButton stat = new JRadioButton("Default"); stat.setForeground(Color.WHITE);
+		final JButton hard = new JButton("Hard");
+		final JButton normal = new JButton("Normal");
+		final JButton easy = new JButton("Easy");
+		
+		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.WHITE);
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE);
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
+		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.WHITE);
+		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.WHITE);
 
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
-		ButtonGroup g = new ButtonGroup(); g.add(stat); g.add(bag);
+		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		if(MaliciousBagRandomizer.class == RandomizerFactory.getClazz())
+		if(MaliciousBagRandomizer.class == RandomizerFactory.getClazz()) {
 			bag.setSelected(true);
-		else
-			stat.setSelected(true);
+			fair.setEnabled(false);
+			unfair.setEnabled(false);
+			fair.setSelected(true);
+		} else {
+			malicious.setSelected(true);
+			fair.setEnabled(true);
+			unfair.setEnabled(true);
+			fair.setSelected(p.isFair());
+			unfair.setSelected(!p.isFair());
+		}
 		
-		bag.addActionListener(new ActionListener() {
+		hard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				depth.setText("4");
-				rfactor.setText("5");
-				distribution.setText("3");
-			}
-		});
-		stat.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+				malicious.setSelected(true);
 				depth.setText("3");
 				rfactor.setText("5");
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+				unfair.setSelected(true);
+				distribution.setEnabled(false);
 				distribution.setText("30");
 			}
 		});
 		
-		JLabel l;
-		ret.add(stat); ret.add(bag);
-		ret.add(l = new JLabel("Depth:")); ret.add(depth); l.setForeground(Color.WHITE);
-		ret.add(l = new JLabel("Random factor %:")); ret.add(rfactor); l.setForeground(Color.WHITE);
-		ret.add(l = new JLabel("dist factor:")); ret.add(distribution); l.setForeground(Color.WHITE);
+		normal.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				malicious.setSelected(true);
+				depth.setText("3");
+				rfactor.setText("5");
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+				fair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("30");
+			}
+		});
 		
+		easy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				bag.setSelected(true);
+				depth.setText("4");
+				rfactor.setText("5");
+				fair.setEnabled(false);
+				unfair.setEnabled(false);
+				distribution.setEnabled(true);
+				distribution.setText("3");
+			}
+		});
+		
+		malicious.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+			}
+		});
+		
+		bag.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fair.setEnabled(false);
+				unfair.setEnabled(false);
+			}
+		});
+				
+		fair.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				distribution.setEnabled(fair.isSelected());
+			}
+		});
+		
+		unfair.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				distribution.setEnabled(!unfair.isSelected());
+
+			}
+		});
+
+		GridBagConstraints gc = new GridBagConstraints(0, 0, 2, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+		JPanel ret = new JPanel(new GridBagLayout());
+		ret.setBackground(Color.BLACK);
+
+		JLabel l;
+
+		gc.gridx = 0; gc.gridwidth = 2; ret.add(hard, gc);
+		gc.gridx += 2; ret.add(normal, gc);
+		gc.gridx += 2; ret.add(easy, gc);
+		
+		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(malicious, gc);
+		gc.gridx += 4; ret.add(bag, gc);
+
+		gc.gridy++; gc.gridx = 0; ret.add(unfair, gc);
+		gc.gridx += 4; ret.add(fair, gc);
+
+		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("Depth:"), gc); l.setForeground(Color.WHITE); 
+		gc.gridx += 4; ret.add(depth, gc);
+		
+		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("Random factor %:"), gc); l.setForeground(Color.WHITE); 
+		gc.gridx += 4; ret.add(rfactor, gc);
+		
+		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("dist factor:"), gc); l.setForeground(Color.WHITE); 
+		gc.gridx += 4; ret.add(distribution, gc);
+		
+		gc.gridy++; gc.gridx = 0; gc.gridwidth = 6;
 		ret.add(new JButton(new AbstractAction("Set") {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setParameter("depth", depth.getText());
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
 				setParameter("distribution", distribution.getText());
+				setParameter("fair", "" + fair.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else
 					RandomizerFactory.setClazz(MaliciousRandomizer.class);
 				setProvider();
 				setStartText();
-			}
-		}));
-		ret.add(new JButton(new AbstractAction("Hide") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
 				right.remove(difficulty);
-				right.add(provider, BorderLayout.SOUTH);
-				provider.revalidate();
+				right.add(start, BorderLayout.CENTER);
+				start.revalidate();
 				validate();
 				repaint();
 			}
-		}));
+		}), gc);
 		
 		return ret;
 	}
@@ -318,6 +405,9 @@ public class MainApplet extends JApplet {
 			field.setGhosting(true);
 			
 			ticker.setRepeats(true);
+			ticker.setInitialDelay(1500);
+			ticker.setDelay(1000);
+			
 			start.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -362,6 +452,17 @@ public class MainApplet extends JApplet {
 						});
 						e.consume();
 					}
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							if(field.getShape() == null) {
+								ticker.stop();
+								field.clockTick();
+								repaint();
+								ticker.start();
+							}
+						}
+					});
 				}
 			};
 			c.getTable().addKeyListener(k);

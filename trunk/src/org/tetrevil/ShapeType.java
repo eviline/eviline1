@@ -40,10 +40,10 @@ public enum ShapeType {
 	
 	public int starterY() {
 		switch(this) {
-		case O: return 2;
+		case O: return 1;
 		case S: return 1;
 		case Z: return 1;
-		case I: return 0;
+		case I: return 1;
 		case T: return 1;
 		case J: return 1;
 		case L: return 1;

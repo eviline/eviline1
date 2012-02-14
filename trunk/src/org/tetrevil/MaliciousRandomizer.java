@@ -59,14 +59,18 @@ public class MaliciousRandomizer implements Randomizer {
 	
 	@Override
 	public String toString() {
-		return "d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
+		return "mal, d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
 	}
 	
 	@Override
 	public Shape provideShape(Field field) {
 		if(randomFirst) {
 			randomFirst = false;
-			return ShapeType.values()[(int)(Math.random() * ShapeType.values().length)].starter();
+			ShapeType type;
+			do {
+				type = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)];
+			} while(type == ShapeType.S || type == ShapeType.Z);
+			return type.starter();
 		}
 		field = field.copyInto(new Field());
 		Shape shape = decide(field, 0).shape;
