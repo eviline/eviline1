@@ -56,28 +56,113 @@ public class MainApplet extends JApplet {
 	protected Map<String, String> parameters = new HashMap<String, String>();
 	
 	protected Field field = new Field(true);
+	{{
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void clockTicked(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void shiftedLeft(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void shiftedRight(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void rotatedLeft(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void rotatedRight(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+		});
+
+		field.addTetrevilListener(new TetrevilAdapter() {
+			public void gameReset(TetrevilEvent e) {
+				setProvider();
+			}
+			@Override
+			public void gameOver(TetrevilEvent e) {
+				try {
+					WebScore score = new WebScore();
+					score.setScore(e.getField().getLines());
+					score.setName(kp.getPlayerName());
+					score.setTs(new Date());
+					MaliciousRandomizer p = (MaliciousRandomizer) e.getField().getProvider();
+					score.setDepth(p.getDepth());
+					score.setRfactor(p.getRfactor());
+					score.setFair(p.isFair() ? 1 : 0);
+					score.setDistribution(p.getDistribution());
+					score.setRandomizer(p.getClass().getName());
+					WebScore.submit(score, getParameter("score_host"));
+					
+					setStartText();
+				} catch(Exception ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		});
+		field.setGhosting(true);
+	}}
 	protected TetrevilComponent c;
 	protected JPanel right = new JPanel(new BorderLayout());
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel kp;
 	
 	protected JButton start = new JButton("");
-	protected JLabel provider = new JLabel(" ");
 	{{
-		provider.addMouseListener(new MouseAdapter() {
+		start.addActionListener(new ActionListener() {
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void actionPerformed(ActionEvent arg0) {
+				right.remove(difficulty);
+				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
+				toggleSettings();
+				if(field.isPaused())
+					field.setPaused(false);
+				MainApplet.this.validate();
+				MainApplet.this.repaint();
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if(!c.getTable().isFocusOwner()) {
+							c.getTable().requestFocusInWindow();
+							SwingUtilities.invokeLater(this);
+						} else {
+							ticker.start();
+						}
+					}
+				});
+			}
+		});
+	}}
+	protected JButton provider = new JButton(" ");
+	{{
+//		provider.setHorizontalAlignment(SwingConstants.RIGHT);
+		provider.setFont(provider.getFont().deriveFont(provider.getFont().getSize2D() / 1.125f));
+		provider.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				if(!field.isPlaying() || field.isGameOver()) {
 					right.remove(start);
-					right.add(difficulty, BorderLayout.CENTER);
+					right.add(difficulty, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 					difficulty.revalidate();
 					validate();
 					repaint();
 				}
 			}
 		});
-		provider.setHorizontalAlignment(SwingConstants.RIGHT);
-		provider.setFont(provider.getFont().deriveFont(provider.getFont().getSize2D() / 1.125f));
 	}}
 	
 	protected JPanel difficulty = createDifficultyPanel();
@@ -97,7 +182,7 @@ public class MainApplet extends JApplet {
 		if(getParameter("fair") != null)
 			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
-		provider.setText(field.getProvider().toString() + "   [Change]");
+		provider.setText(field.getProvider().toString());
 	}
 	
 	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
@@ -297,7 +382,7 @@ public class MainApplet extends JApplet {
 				setProvider();
 				setStartText();
 				right.remove(difficulty);
-				right.add(start, BorderLayout.CENTER);
+				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 				start.revalidate();
 				validate();
 				repaint();
@@ -335,9 +420,6 @@ public class MainApplet extends JApplet {
 			
 			getContentPane().setBackground(Color.BLACK);
 			
-			provider.setBackground(Color.BLACK);
-			provider.setForeground(Color.WHITE);
-			provider.setOpaque(true);
 			
 			setProvider();
 			
@@ -345,90 +427,8 @@ public class MainApplet extends JApplet {
 				setParameter("score_host", "www.tetrevil.org");
 
 			
-			field.addTetrevilListener(new TetrevilAdapter() {
-				@Override
-				public void clockTicked(TetrevilEvent e) {
-					if(field.isGrounded())
-						ticker.restart();
-				}
-
-				@Override
-				public void shiftedLeft(TetrevilEvent e) {
-					if(field.isGrounded())
-						ticker.restart();
-				}
-
-				@Override
-				public void shiftedRight(TetrevilEvent e) {
-					if(field.isGrounded())
-						ticker.restart();
-				}
-
-				@Override
-				public void rotatedLeft(TetrevilEvent e) {
-					if(field.isGrounded())
-						ticker.restart();
-				}
-
-				@Override
-				public void rotatedRight(TetrevilEvent e) {
-					if(field.isGrounded())
-						ticker.restart();
-				}
-			});
-
-			field.addTetrevilListener(new TetrevilAdapter() {
-				public void gameReset(TetrevilEvent e) {
-					setProvider();
-				}
-				@Override
-				public void gameOver(TetrevilEvent e) {
-					try {
-						WebScore score = new WebScore();
-						score.setScore(e.getField().getLines());
-						score.setName(kp.getPlayerName());
-						score.setTs(new Date());
-						MaliciousRandomizer p = (MaliciousRandomizer) e.getField().getProvider();
-						score.setDepth(p.getDepth());
-						score.setRfactor(p.getRfactor());
-						score.setFair(p.isFair() ? 1 : 0);
-						score.setDistribution(p.getDistribution());
-						score.setRandomizer(p.getClass().getName());
-						WebScore.submit(score, getParameter("score_host"));
-						
-						setStartText();
-					} catch(Exception ioe) {
-						ioe.printStackTrace();
-					}
-				}
-			});
-			field.setGhosting(true);
 			
-			ticker.setRepeats(true);
-			ticker.setInitialDelay(1500);
-			ticker.setDelay(1000);
 			
-			start.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					right.remove(difficulty);
-					right.add(provider, BorderLayout.SOUTH);
-					toggleSettings();
-					MainApplet.this.validate();
-					MainApplet.this.repaint();
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							if(!c.getTable().isFocusOwner()) {
-								c.getTable().requestFocusInWindow();
-								SwingUtilities.invokeLater(this);
-							} else {
-								ticker.start();
-							}
-						}
-					});
-				}
-			});
 			
 			c = new TetrevilComponent(field);
 			c.getTable().setFocusable(true);
@@ -474,10 +474,11 @@ public class MainApplet extends JApplet {
 			right.setPreferredSize(new Dimension(260,500));
 			right.setMaximumSize(right.getPreferredSize());
 			
-			right.setLayout(new BorderLayout());
-			right.add(kp, BorderLayout.NORTH);
-			right.add(start, BorderLayout.CENTER);
-			right.add(provider, BorderLayout.SOUTH);
+			right.setLayout(new GridBagLayout());
+			GridBagConstraints gc = new GridBagConstraints(0, 0, 2, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+			right.add(kp, gc);
+			gc.gridy++; gc.weighty = 1; right.add(start, gc);
+			gc.gridy++; gc.weighty = 0; right.add(provider, gc);
 			
 //			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 ////			add(c);
@@ -499,7 +500,11 @@ public class MainApplet extends JApplet {
 		}
 	};
 	protected Timer ticker = new Timer(1000, tick);
-	
+	{{
+		ticker.setRepeats(true);
+		ticker.setInitialDelay(1500);
+		ticker.setDelay(1000);
+	}}
 	@Override
 	public void init() {
 		try {
