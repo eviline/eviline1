@@ -1,6 +1,27 @@
 package org.tetrevil;
 
-import static org.tetrevil.Shape.*;
+import static org.tetrevil.Shape.I_DOWN;
+import static org.tetrevil.Shape.I_LEFT;
+import static org.tetrevil.Shape.I_UP;
+import static org.tetrevil.Shape.J_DOWN;
+import static org.tetrevil.Shape.J_LEFT;
+import static org.tetrevil.Shape.J_RIGHT;
+import static org.tetrevil.Shape.J_UP;
+import static org.tetrevil.Shape.L_DOWN;
+import static org.tetrevil.Shape.L_LEFT;
+import static org.tetrevil.Shape.L_RIGHT;
+import static org.tetrevil.Shape.L_UP;
+import static org.tetrevil.Shape.O_UP;
+import static org.tetrevil.Shape.S_DOWN;
+import static org.tetrevil.Shape.S_LEFT;
+import static org.tetrevil.Shape.S_UP;
+import static org.tetrevil.Shape.T_DOWN;
+import static org.tetrevil.Shape.T_LEFT;
+import static org.tetrevil.Shape.T_RIGHT;
+import static org.tetrevil.Shape.T_UP;
+import static org.tetrevil.Shape.Z_DOWN;
+import static org.tetrevil.Shape.Z_LEFT;
+import static org.tetrevil.Shape.Z_UP;
 
 public enum ShapeType {
 	O,

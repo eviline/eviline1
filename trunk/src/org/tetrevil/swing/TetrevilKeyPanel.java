@@ -8,25 +8,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.Field;
-import java.text.NumberFormat;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Element;
-import javax.swing.text.PlainDocument;
-import javax.swing.text.Position;
-import javax.swing.text.Segment;
 
 public class TetrevilKeyPanel extends JPanel {
 	protected TetrevilKeyListener kl;

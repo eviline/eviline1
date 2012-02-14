@@ -5,9 +5,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import org.tetrevil.MaliciousRandomizer.Cache;
-import org.tetrevil.MaliciousRandomizer.Score;
-
 public class MaliciousBagRandomizer extends MaliciousRandomizer implements Randomizer {
 	public static final int DEFAULT_DEPTH = 4;
 	public static final int DEFAULT_DIST = 3;

@@ -1,8 +1,8 @@
 package org.tetrevil.swing;
 
-import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+
 import javax.swing.JTable;
 
 import org.tetrevil.Block;

@@ -1,6 +1,12 @@
 package org.tetrevil;
 
-import static org.tetrevil.Block.*;
+import static org.tetrevil.Block.IA;
+import static org.tetrevil.Block.JA;
+import static org.tetrevil.Block.LA;
+import static org.tetrevil.Block.OA;
+import static org.tetrevil.Block.SA;
+import static org.tetrevil.Block.TA;
+import static org.tetrevil.Block.ZA;
 
 public enum Shape {
 	O_UP(new Block[][] {

@@ -2,6 +2,7 @@ package org.tetrevil.runner;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 
 public class Main {
