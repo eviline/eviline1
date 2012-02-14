@@ -9,8 +9,8 @@ import org.tetrevil.MaliciousRandomizer.Cache;
 import org.tetrevil.MaliciousRandomizer.Score;
 
 public class MaliciousBagRandomizer extends MaliciousRandomizer implements Randomizer {
-	public static final int DEFAULT_DEPTH = 3;
-	public static final int DEFAULT_DIST = 30;
+	public static final int DEFAULT_DEPTH = 4;
+	public static final int DEFAULT_DIST = 3;
 	public static final int HISTORY_SIZE = 3;
 
 //	public static class Score {

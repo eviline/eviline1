@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -368,17 +371,25 @@ public class MainApplet extends JApplet {
 			setBackground(Color.BLACK);
 			right.setBackground(Color.BLACK);
 			right.setPreferredSize(new Dimension(260,500));
+			right.setMaximumSize(right.getPreferredSize());
 			
 			right.setLayout(new BorderLayout());
 			right.add(kp, BorderLayout.NORTH);
 			right.add(start, BorderLayout.CENTER);
 			right.add(provider, BorderLayout.SOUTH);
 			
-			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-//			add(c);
-			add(right);
+//			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+////			add(c);
+//			add(right);
+			startupLayout();
 		}
 	};
+	
+	protected void startupLayout() {
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0);
+		add(right, c);
+	}
 	
 	protected ActionListener tick = new ActionListener() {
 		@Override
