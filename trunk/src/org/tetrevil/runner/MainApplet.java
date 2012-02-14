@@ -16,10 +16,16 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -30,6 +36,7 @@ import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -126,6 +133,7 @@ public class MainApplet extends JApplet {
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				saveKeys();
 				right.remove(difficulty);
 				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 				toggleSettings();
@@ -185,6 +193,16 @@ public class MainApplet extends JApplet {
 		provider.setText(field.getProvider().toString());
 	}
 	
+	protected void saveKeys() {
+		setParameter("left", KeyEvent.getKeyText(kl.LEFT));
+		setParameter("right", KeyEvent.getKeyText(kl.RIGHT));
+		setParameter("rotate_left", KeyEvent.getKeyText(kl.ROTATE_LEFT));
+		setParameter("rotate_right", KeyEvent.getKeyText(kl.ROTATE_RIGHT));
+		setParameter("down", KeyEvent.getKeyText(kl.DOWN));
+		setParameter("drop", KeyEvent.getKeyText(kl.DROP));
+		setParameter("das_time", "" + kl.DAS_TIME);
+	}
+	
 	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
 		if(getParameter("left") != null)
 			kl.LEFT = TetrevilKeyListener.getKeyCode(getParameter("left"));
@@ -198,6 +216,8 @@ public class MainApplet extends JApplet {
 			kl.DOWN = TetrevilKeyListener.getKeyCode(getParameter("down"));
 		if(getParameter("drop") != null)
 			kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
+		if(getParameter("das_time") != null)
+			kl.DAS_TIME = Integer.parseInt(getParameter("das_time"));
 		if(getParameter("reset") != null)
 			kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
 		if(getParameter("pause") != null)
@@ -364,36 +384,6 @@ public class MainApplet extends JApplet {
 			}
 		});
 
-//		GridBagConstraints gc = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
-//		JPanel ret = new JPanel(new GridBagLayout());
-//		ret.setBackground(Color.BLACK);
-//
-//		JLabel l;
-//
-//		gc.gridx = 0; gc.gridwidth = 2; ret.add(evil, gc);
-//		gc.gridx += 2; ret.add(normal, gc);
-//		gc.gridx += 2; ret.add(easy, gc);
-//		
-//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 3; gc.weightx = 1; ret.add(l = new JLabel("Randomizer: "), gc); l.setForeground(Color.WHITE);
-//		gc.gridx += 3; gc.weightx = 0; ret.add(malicious, gc);
-//		gc.gridy++; ret.add(bag, gc);
-//
-//		gc.gridy++; gc.gridx = 0; ret.add(l = new JLabel("Distribution:"), gc); l.setForeground(Color.WHITE);
-//		gc.gridx += 3; ret.add(unfair, gc);
-//		gc.gridy++; ret.add(fair, gc);
-//
-//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(l = new JLabel("Depth:"), gc); l.setForeground(Color.WHITE); 
-//		gc.gridx += 4; gc.gridwidth = 2; ret.add(depth, gc);
-//		
-//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(l = new JLabel("Random factor %:"), gc); l.setForeground(Color.WHITE); 
-//		gc.gridx += 4; gc.gridwidth = 2; ret.add(rfactor, gc);
-//		
-//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 4; ret.add(l = new JLabel("dist factor:"), gc); l.setForeground(Color.WHITE); 
-//		gc.gridx += 4; gc.gridwidth = 2; ret.add(distribution, gc);
-//		
-//		gc.gridy++; gc.gridx = 0; gc.gridwidth = 6;
-//		ret.add(set, gc);
-		
 		JPanel ret = new JPanel(new GridBagLayout()); ret.setBackground(Color.BLACK);
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 		
@@ -556,13 +546,12 @@ public class MainApplet extends JApplet {
 	public String getParameter(String name) {
 		if(parameters.containsKey(name))
 			return parameters.get(name);
-		else {
-			try {
-				return super.getParameter(name);
-			} catch(NullPointerException npe) {
-				return null;
-			}
+		String ret = null;
+		try {
+			ret = super.getParameter(name);
+		} catch(NullPointerException npe) {
 		}
+		return ret;
 	}
 	
 	public void setParameter(String name, String value) {
