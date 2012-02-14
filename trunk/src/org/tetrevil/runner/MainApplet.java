@@ -165,7 +165,7 @@ public class MainApplet extends JApplet {
 		});
 	}}
 	
-	protected JPanel difficulty = createDifficultyPanel();
+	protected JPanel difficulty;
 	
 	protected void setProvider() {
 		if(getParameter("distribution") != null)
@@ -242,9 +242,9 @@ public class MainApplet extends JApplet {
 	protected JPanel createDifficultyPanel() {
 		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		
-		final JButton hard = new JButton("Hard");
-		final JButton normal = new JButton("Normal");
-		final JButton easy = new JButton("Easy");
+		final JButton evil = new JButton("Evil");
+		final JButton normal = new JButton("Aggressive");
+		final JButton easy = new JButton("Rude");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.WHITE);
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE);
@@ -270,7 +270,7 @@ public class MainApplet extends JApplet {
 			unfair.setSelected(!p.isFair());
 		}
 		
-		hard.addActionListener(new ActionListener() {
+		evil.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				malicious.setSelected(true);
@@ -348,7 +348,7 @@ public class MainApplet extends JApplet {
 
 		JLabel l;
 
-		gc.gridx = 0; gc.gridwidth = 2; ret.add(hard, gc);
+		gc.gridx = 0; gc.gridwidth = 2; ret.add(evil, gc);
 		gc.gridx += 2; ret.add(normal, gc);
 		gc.gridx += 2; ret.add(easy, gc);
 		
@@ -422,7 +422,8 @@ public class MainApplet extends JApplet {
 			
 			
 			setProvider();
-			
+			difficulty = createDifficultyPanel();
+					
 			if(getParameter("score_host") == null)
 				setParameter("score_host", "www.tetrevil.org");
 
