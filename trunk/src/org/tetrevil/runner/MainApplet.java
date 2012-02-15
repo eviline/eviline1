@@ -333,6 +333,7 @@ public class MainApplet extends JApplet {
 				rfactor.setText("5");
 				fair.setEnabled(false);
 				unfair.setEnabled(false);
+				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("3");
 			}

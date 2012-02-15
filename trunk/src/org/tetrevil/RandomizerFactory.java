@@ -3,7 +3,7 @@ package org.tetrevil;
 import java.lang.reflect.Constructor;
 
 public class RandomizerFactory {
-	private static Class<? extends MaliciousRandomizer> clazz = MaliciousBagRandomizer.class;
+	private static Class<? extends MaliciousRandomizer> clazz = MaliciousRandomizer.class;
 	
 	public static MaliciousRandomizer newRandomizer() {
 		try {

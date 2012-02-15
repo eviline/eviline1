@@ -35,7 +35,7 @@ public class MaliciousRandomizer implements Randomizer {
 	
 	protected int depth = 3;
 	protected double rfactor = 0.05;
-	protected boolean fair = true;
+	protected boolean fair = false;
 	protected int distribution = 100;
 	
 	protected boolean randomFirst = true;
