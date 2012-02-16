@@ -140,7 +140,7 @@ public class MainApplet extends JApplet {
 			}
 		});
 	}}
-	protected JButton provider = new JButton(" ");
+	protected JButton provider = new JButton("Settings");
 	{{
 //		provider.setHorizontalAlignment(SwingConstants.RIGHT);
 		provider.setFont(provider.getFont().deriveFont(provider.getFont().getSize2D() / 1.125f));
@@ -175,7 +175,7 @@ public class MainApplet extends JApplet {
 		if(getParameter("fair") != null)
 			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
-		provider.setText(field.getProvider().toString());
+//		provider.setText(field.getProvider().toString());
 	}
 	
 	protected void saveKeys() {
