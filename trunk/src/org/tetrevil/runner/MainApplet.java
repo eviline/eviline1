@@ -240,7 +240,7 @@ public class MainApplet extends JApplet {
 				"H: Settings<br>\n" +
 //				"H: Show this help<br>\n" +
 				"<br>\n" +
-				"Click to begin.<br>\n" +
+				"Click to begin.<br><br>\n\n" +
 				"&copy;2012 Robin Kirkman</center></html>");
 	}
 	
