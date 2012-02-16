@@ -9,4 +9,5 @@ public interface TetrevilListener {
 	public void rotatedRight(TetrevilEvent e);
 	public void gameReset(TetrevilEvent e);
 	public void gamePaused(TetrevilEvent e);
+	public void linesCleared(TetrevilEvent e);
 }

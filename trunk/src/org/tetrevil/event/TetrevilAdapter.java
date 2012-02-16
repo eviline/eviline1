@@ -33,4 +33,8 @@ public abstract class TetrevilAdapter implements TetrevilListener {
 	@Override
 	public void gamePaused(TetrevilEvent e) {
 	}
+	
+	@Override
+	public void linesCleared(TetrevilEvent e) {
+	}
 }

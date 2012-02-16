@@ -102,4 +102,8 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 		changed();
 	}
 
+	@Override
+	public void linesCleared(TetrevilEvent e) {
+		changed();
+	}
 }

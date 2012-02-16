@@ -140,6 +140,7 @@ public class MainApplet extends JApplet {
 			}
 		});
 	}}
+	protected String provText = "Aggressive";
 	protected JButton provider = new JButton("Settings");
 	{{
 //		provider.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -175,7 +176,7 @@ public class MainApplet extends JApplet {
 		if(getParameter("fair") != null)
 			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		
-//		provider.setText(field.getProvider().toString());
+		provider.setText("Settings: " + provText);
 	}
 	
 	protected void saveKeys() {
@@ -266,6 +267,7 @@ public class MainApplet extends JApplet {
 		final JButton set = new JButton(new AbstractAction("Set") {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				provText = "Custom";
 				setParameter("depth", depth.getText());
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
 				setParameter("distribution", distribution.getText());
@@ -308,6 +310,9 @@ public class MainApplet extends JApplet {
 				unfair.setSelected(true);
 				distribution.setEnabled(false);
 				distribution.setText("30");
+				set.doClick();
+				provText = "Evil";
+				setProvider();
 			}
 		});
 		
@@ -322,6 +327,9 @@ public class MainApplet extends JApplet {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("30");
+				set.doClick();
+				provText = "Aggressive";
+				setProvider();
 			}
 		});
 		
@@ -336,6 +344,9 @@ public class MainApplet extends JApplet {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("3");
+				set.doClick();
+				provText = "Rude";
+				setProvider();
 			}
 		});
 		
@@ -397,6 +408,13 @@ public class MainApplet extends JApplet {
 
 		c.gridy++; c.weighty = 0; ret.add(set, c);
 		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				normal.doClick();
+			}
+		});
+		
 		return ret;
 	}
 	
@@ -430,7 +448,6 @@ public class MainApplet extends JApplet {
 			
 			
 			setProvider();
-			difficulty = createDifficultyPanel();
 					
 			if(getParameter("score_host") == null)
 				setParameter("score_host", "www.tetrevil.org");
@@ -446,7 +463,8 @@ public class MainApplet extends JApplet {
 			addKeyListener(kl);
 			kp = new TetrevilKeyPanel(kl);
 			
-			
+			difficulty = createDifficultyPanel();
+
 			setStartText();
 
 			KeyListener k = new KeyAdapter() {
@@ -477,6 +495,15 @@ public class MainApplet extends JApplet {
 			c.getTable().addKeyListener(k);
 			c.addKeyListener(k);
 			addKeyListener(k);
+			
+			field.addTetrevilListener(new TetrevilAdapter() {
+				@Override
+				public void linesCleared(TetrevilEvent e) {
+					int level = field.getLines() / 10;
+					double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
+					ticker.setDelay((int)(1000 * fss));
+				}
+			});
 			
 			setBackground(Color.BLACK);
 			right.setBackground(Color.BLACK);
@@ -511,7 +538,7 @@ public class MainApplet extends JApplet {
 	protected Timer ticker = new Timer(1000, tick);
 	{{
 		ticker.setRepeats(true);
-		ticker.setInitialDelay(1500);
+		ticker.setInitialDelay(500);
 		ticker.setDelay(1000);
 	}}
 	@Override

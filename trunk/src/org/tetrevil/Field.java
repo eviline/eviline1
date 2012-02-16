@@ -134,6 +134,7 @@ public class Field {
 					}
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
 					y = field.length - BUFFER;
+					fireLinesCleared();
 				}
 			}
 		}
@@ -351,6 +352,16 @@ public class Field {
 			if(e == null)
 				e = new TetrevilEvent(this, this);
 			ll[i].rotatedRight(e);
+		}
+	}
+
+	protected void fireLinesCleared() {
+		TetrevilEvent e = null;
+		TetrevilListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(e == null)
+				e = new TetrevilEvent(this, this);
+			ll[i].linesCleared(e);
 		}
 	}
 

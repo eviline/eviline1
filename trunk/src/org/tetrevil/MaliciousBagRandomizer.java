@@ -85,7 +85,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 		}
 		cache.bag[0].clear(); cache.bag[0].addAll(this.bag);
 		field = field.copyInto(new Field());
-		Shape shape = decide(field, 0).shape;
+		Shape shape = decide(field, depth).shape;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
