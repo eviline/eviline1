@@ -114,6 +114,9 @@ public class MainApplet extends JApplet {
 					WebScore.submit(score, getParameter("score_host"));
 					
 					setStartText();
+					
+					if(!right.isVisible())
+						toggleSettings();
 				} catch(Exception ioe) {
 					ioe.printStackTrace();
 				}
