@@ -484,88 +484,6 @@ public class MainApplet extends JApplet {
 		c.getTable().requestFocusInWindow();
 	}
 	
-	protected Runnable launch = new Runnable() {
-		@Override
-		public void run() {
-//			field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
-			
-			try {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			
-			getContentPane().setBackground(Color.BLACK);
-			
-			
-			setProvider();
-					
-			if(getParameter("score_host") == null)
-				setParameter("score_host", "www.tetrevil.org");
-
-			
-			
-			
-			
-			c = new TetrevilComponent(field);
-			c.getTable().setFocusable(true);
-			setKeys(kl = new TetrevilKeyListener(field));
-			c.getTable().addKeyListener(kl);
-			addKeyListener(kl);
-			kp = new TetrevilKeyPanel(kl);
-			
-			difficulty = createDifficultyPanel();
-			controls = createControlsPanel();
-			
-			setStartText();
-
-			KeyListener k = new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
-						SwingUtilities.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								toggleSettings();
-							}
-						});
-						e.consume();
-					}
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							if(field.getShape() == null) {
-								ticker.stop();
-								field.clockTick();
-								repaint();
-								ticker.start();
-							}
-						}
-					});
-				}
-			};
-			c.getTable().addKeyListener(k);
-			c.addKeyListener(k);
-			addKeyListener(k);
-			
-			setBackground(Color.BLACK);
-			right.setBackground(Color.BLACK);
-			right.setPreferredSize(new Dimension(260,500));
-			right.setMaximumSize(right.getPreferredSize());
-			
-			right.setLayout(new GridBagLayout());
-			GridBagConstraints gc = new GridBagConstraints(0, 0, 2, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-			right.add(controls, gc);
-			gc.gridy++; gc.weighty = 1; right.add(start, gc);
-			gc.gridy++; gc.weighty = 0; right.add(provider, gc);
-			
-//			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-////			add(c);
-//			add(right);
-			startupLayout();
-		}
-	};
-	
 	protected void startupLayout() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0, 1, GridBagConstraints.CENTER, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0);
@@ -586,11 +504,94 @@ public class MainApplet extends JApplet {
 	}}
 	@Override
 	public void init() {
+		if(!SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {
+					@Override
+					public void run() {
+						init();
+					}
+				});
+			} catch(Exception ex) {
+			}
+			return;
+		}
+//		field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
+		
 		try {
-			SwingUtilities.invokeAndWait(launch);
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		getContentPane().setBackground(Color.BLACK);
+		
+		
+		setProvider();
+				
+		if(getParameter("score_host") == null)
+			setParameter("score_host", "www.tetrevil.org");
+
+		
+		
+		
+		
+		c = new TetrevilComponent(field);
+		c.getTable().setFocusable(true);
+		setKeys(kl = new TetrevilKeyListener(field));
+		c.getTable().addKeyListener(kl);
+		addKeyListener(kl);
+		kp = new TetrevilKeyPanel(kl);
+		
+		difficulty = createDifficultyPanel();
+		controls = createControlsPanel();
+		
+		setStartText();
+
+		KeyListener k = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_H && !e.isConsumed()) {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							toggleSettings();
+						}
+					});
+					e.consume();
+				}
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if(field.getShape() == null) {
+							ticker.stop();
+							field.clockTick();
+							repaint();
+							ticker.start();
+						}
+					}
+				});
+			}
+		};
+		c.getTable().addKeyListener(k);
+		c.addKeyListener(k);
+		addKeyListener(k);
+		
+		setBackground(Color.BLACK);
+		right.setBackground(Color.BLACK);
+		right.setPreferredSize(new Dimension(260,500));
+		right.setMaximumSize(right.getPreferredSize());
+		
+		right.setLayout(new GridBagLayout());
+		GridBagConstraints gc = new GridBagConstraints(0, 0, 2, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+		right.add(controls, gc);
+		gc.gridy++; gc.weighty = 1; right.add(start, gc);
+		gc.gridy++; gc.weighty = 0; right.add(provider, gc);
+		
+//		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+////		add(c);
+//		add(right);
+		startupLayout();
 	}
 	
 	@Override
