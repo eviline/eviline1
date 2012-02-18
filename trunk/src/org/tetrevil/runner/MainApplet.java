@@ -31,6 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
@@ -161,7 +162,6 @@ public class MainApplet extends JApplet {
 	protected JButton provider = new JButton("Settings");
 	{{
 //		provider.setHorizontalAlignment(SwingConstants.RIGHT);
-		provider.setFont(provider.getFont().deriveFont(provider.getFont().getSize2D() / 1.125f));
 		provider.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -488,6 +488,12 @@ public class MainApplet extends JApplet {
 		@Override
 		public void run() {
 //			field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
+			
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 			
 			getContentPane().setBackground(Color.BLACK);
 			
