@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JButton;
@@ -435,7 +436,9 @@ public class MainApplet extends JApplet {
 		final JPanel ret = new JPanel(new BorderLayout());
 		ret.setBackground(Color.BLACK);
 		
-		ret.add(new JToggleButton(new AbstractAction("Controls") {
+		JToggleButton b;
+		ret.add(b = new JToggleButton(new AbstractAction("Controls & Player Name") {
+			private static final long serialVersionUID = 0;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JToggleButton b = (JToggleButton) e.getSource();
@@ -450,6 +453,9 @@ public class MainApplet extends JApplet {
 				}
 			}
 		}), BorderLayout.NORTH);
+		
+		ret.add(kp, BorderLayout.CENTER);
+		b.setSelected(true);
 		
 		return ret;
 	}
