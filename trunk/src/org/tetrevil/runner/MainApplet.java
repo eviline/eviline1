@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -123,6 +124,7 @@ public class MainApplet extends JApplet {
 	protected JPanel right = new JPanel(new BorderLayout());
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel kp;
+	protected JPanel controls;
 	
 	protected JButton start = new JButton("");
 	{{
@@ -429,6 +431,29 @@ public class MainApplet extends JApplet {
 		return ret;
 	}
 	
+	protected JPanel createControlsPanel() {
+		final JPanel ret = new JPanel(new BorderLayout());
+		ret.setBackground(Color.BLACK);
+		
+		ret.add(new JToggleButton(new AbstractAction("Controls") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JToggleButton b = (JToggleButton) e.getSource();
+				if(b.isSelected()) {
+					ret.add(kp, BorderLayout.CENTER);
+					validate();
+					repaint();
+				} else {
+					ret.remove(kp);
+					validate();
+					repaint();
+				}
+			}
+		}), BorderLayout.NORTH);
+		
+		return ret;
+	}
+	
 	protected void toggleSettings() {
 		if(right.isVisible()) {
 			remove(c);
@@ -475,7 +500,8 @@ public class MainApplet extends JApplet {
 			kp = new TetrevilKeyPanel(kl);
 			
 			difficulty = createDifficultyPanel();
-
+			controls = createControlsPanel();
+			
 			setStartText();
 
 			KeyListener k = new KeyAdapter() {
@@ -514,7 +540,7 @@ public class MainApplet extends JApplet {
 			
 			right.setLayout(new GridBagLayout());
 			GridBagConstraints gc = new GridBagConstraints(0, 0, 2, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-			right.add(kp, gc);
+			right.add(controls, gc);
 			gc.gridy++; gc.weighty = 1; right.add(start, gc);
 			gc.gridy++; gc.weighty = 0; right.add(provider, gc);
 			
