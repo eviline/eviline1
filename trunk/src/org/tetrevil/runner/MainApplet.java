@@ -126,55 +126,14 @@ public class MainApplet extends JApplet {
 		field.setGhosting(true);
 	}}
 	protected TetrevilComponent c;
-	protected JPanel right = new JPanel(new BorderLayout());
+	protected JPanel right;
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel kp;
 	protected JPanel controls;
 	
-	protected JButton start = new JButton("");
-	{{
-		start.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				saveKeys();
-				right.remove(difficulty);
-				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
-				toggleSettings();
-				if(field.isPaused())
-					field.setPaused(false);
-				MainApplet.this.validate();
-				MainApplet.this.repaint();
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						if(!c.getTable().isFocusOwner()) {
-							c.getTable().requestFocusInWindow();
-							SwingUtilities.invokeLater(this);
-						} else {
-							ticker.start();
-						}
-					}
-				});
-			}
-		});
-	}}
+	protected JButton start;
 	protected String provText = "Aggressive";
-	protected JButton provider = new JButton("Settings");
-	{{
-//		provider.setHorizontalAlignment(SwingConstants.RIGHT);
-		provider.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(!field.isPlaying() || field.isGameOver()) {
-					right.remove(start);
-					right.add(difficulty, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
-					difficulty.revalidate();
-					validate();
-					repaint();
-				}
-			}
-		});
-	}}
+	protected JButton provider;
 	
 	protected JPanel difficulty;
 	
@@ -524,9 +483,50 @@ public class MainApplet extends JApplet {
 			ex.printStackTrace();
 		}
 		
+		
 		getContentPane().setBackground(Color.BLACK);
 		
-		
+		right = new JPanel(new BorderLayout());
+
+		start = new JButton("");
+		start.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				saveKeys();
+				right.remove(difficulty);
+				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
+				toggleSettings();
+				if(field.isPaused())
+					field.setPaused(false);
+				MainApplet.this.validate();
+				MainApplet.this.repaint();
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if(!c.getTable().isFocusOwner()) {
+							c.getTable().requestFocusInWindow();
+							SwingUtilities.invokeLater(this);
+						} else {
+							ticker.start();
+						}
+					}
+				});
+			}
+		});
+
+		provider = new JButton("Settings");
+		provider.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!field.isPlaying() || field.isGameOver()) {
+					right.remove(start);
+					right.add(difficulty, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
+					difficulty.revalidate();
+					validate();
+					repaint();
+				}
+			}
+		});
 		setProvider();
 				
 		if(getParameter("score_host") == null)
