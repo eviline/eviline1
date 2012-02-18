@@ -13,10 +13,15 @@ public class Fitness {
 		double score = 0;
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
+				int h = Field.HEIGHT + Field.BUFFER - y;
 				if(f[y][x] != null && f[y][x] != Block.X)
-					score += 15 * Field.HEIGHT + Field.BUFFER - y;
+					score += 15 * h;
 				else if(f[y][x] == Block.X)
-					score += Math.pow(Field.HEIGHT + Field.BUFFER - y, 1.5);
+					score += Math.pow(h, 1.5);
+				else if(f[y][x] == null) {
+					if(f[y][x-1] != null && f[y][x+1] != null)
+						score += h;
+				}
 			}
 		}
 		return score;
