@@ -4,26 +4,83 @@ import java.util.Arrays;
 
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.event.TetrevilListener;
+import org.tetrevil.swing.TetrevilTableModel;
 
+/**
+ * Object which keeps track of the tetris matrix itself.  It keeps an array of {@link Block} enums
+ * to store the state of the matrix, using <code>null</code> to store an empty area.<p>
+ * 
+ * This is the "engine" of tetrevil.
+ * @author robin
+ *
+ */
 public class Field {
+	/**
+	 * The height of the matrix
+	 */
 	public static final int HEIGHT = 20;
+	/**
+	 * The width of the matrix
+	 */
 	public static final int WIDTH = 10;
+	/**
+	 * The size of the buffer area around the matrix in each direction
+	 */
 	public static final int BUFFER = 4;
 	
+	/**
+	 * The matrix itself
+	 */
 	protected Block[][] field = new Block[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
+	/**
+	 * The source of shapes
+	 */
 	protected Randomizer provider = new RandomRandomizer();
+	/**
+	 * The current shape
+	 */
 	protected Shape shape;
+	/**
+	 * The horizontal position of the current shape
+	 */
 	protected int shapeX;
+	/**
+	 * The vertical position of the current shape
+	 */
 	protected int shapeY;
+	/**
+	 * Whether ghosting is enabled
+	 */
 	protected boolean ghosting = false;
+	/**
+	 * The vertical position of the current shape's ghost
+	 */
 	protected int ghostY;
+	/**
+	 * Whether a game is playing
+	 */
 	protected boolean playing;
+	/**
+	 * Whether a game is over
+	 */
 	protected boolean gameOver;
+	/**
+	 * Whether a game is paused
+	 */
 	protected boolean paused;
+	/**
+	 * The number of lines scored so far
+	 */
 	protected int lines;
 	
+	/**
+	 * The direction of the currently active DAS
+	 */
 	protected ShapeDirection autoShift = null;
 	
+	/**
+	 * Event listeners
+	 */
 	protected TetrevilListener[] listeners = new TetrevilListener[0];
 	
 	public Field() {
@@ -49,6 +106,11 @@ public class Field {
 			provider = new RandomRandomizer();
 	}
 	
+	/**
+	 * Copy this {@link Field} into a target and return the target.
+	 * @param target The destination and return {@link Field}
+	 * @return The target
+	 */
 	public Field copyInto(Field target) {
 		for(int y = 0; y < field.length; y++) {
 			System.arraycopy(field[y], 0, target.field[y], 0, field[y].length);
@@ -62,6 +124,9 @@ public class Field {
 		return target;
 	}
 	
+	/**
+	 * Reset the field
+	 */
 	public void reset() {
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
@@ -84,20 +149,28 @@ public class Field {
 		fireGameReset();
 	}
 	
+	/**
+	 * Cause one clock tick.  One clock tick means one movement of gravity downwards.
+	 * Tetrevil does not keep a separate 60Hz clock, or some other such independent clock.
+	 */
 	public void clockTick() {
 		if(paused)
 			return;
 		if(gameOver)
 			return;
 		playing = true;
-		if(shape == null) {
+		if(shape == null) { // Create a new shape if there is no active one
 			shape = provider.provideShape(this).type().starter();
 			shapeY = shape.type().starterY();
 			shapeX = WIDTH / 2 + 2 + shape.type().starterX();
-			if(!shape.intersects(field, shapeX, shapeY+1))
+			if(!shape.intersects(field, shapeX, shapeY+1)) // Move the shape down one row if possible
 				shapeY++;
 			reghost();
-		} else if(shape.intersects(field, shapeX, shapeY+1)) {
+		} else if(shape.intersects(field, shapeX, shapeY+1)) { // If the shape can't be moved down a row...
+			/*
+			 * Copy this shape to the field, assuming a game over.  If any of the shape
+			 * is within the playable field then un-game-over.
+			 */
 			Block[][] s = shape.shape();
 			gameOver = true;
 			for(int y = 0; y < s.length; y++) {
@@ -109,43 +182,54 @@ public class Field {
 					}
 				}
 			}
-			shape = null;
+			shape = null; // No active shape
 		} else {
+			// Move the shape down one row and autoshift
 			shapeY++;
 			autoshift();
 		}
-		fireClockTicked();
+		fireClockTicked(); // Fire a clock tick event
 		if(shape != null && shape.intersects(field, shapeX, shapeY)) {
+			// If we have an active shape and the shape intersects the field then game over
 			gameOver = true;
 		}
 		if(gameOver == true)
-			fireGameOver();
-		if(shape == null) {
+			fireGameOver(); // Fire game over event
+		if(shape == null) { // If there is no active shape, check for cleared lines
 			for(int y = field.length - 1 - BUFFER; y >= BUFFER; y--) {
-				boolean tetris = true;
+				boolean cleared = true;
 				for(int x = BUFFER; x < field[y].length - BUFFER; x++) {
 					if(field[y][x] == null)
-						tetris = false;
+						cleared = false;
 				}
-				if(tetris) {
+				if(cleared) {
 					lines++;
+					// Shift down the field
 					for(int z = y - 1; z >= 0; z--) {
 						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
 					}
+					// Fill in the top row with nulls
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
 					y = field.length - BUFFER;
-					fireLinesCleared();
+					fireLinesCleared(); // Fire a line cleared event
 				}
 			}
 		}
 	}
 	
+	/**
+	 * Returns whether the current shape is "grounded", e.g. can be locked but isn't
+	 * @return
+	 */
 	public boolean isGrounded() {
 		if(shape == null)
 			return false;
 		return shape.intersects(field, shapeX, shapeY+1);
 	}
 	
+	/**
+	 * Shift the current shape one to the left
+	 */
 	public void shiftLeft() {
 		if(paused)
 			return;
@@ -156,6 +240,9 @@ public class Field {
 		fireShiftedLeft();
 	}
 	
+	/**
+	 * Shift the current shape one to the right
+	 */
 	public void shiftRight() {
 		if(paused)
 			return;
@@ -166,6 +253,9 @@ public class Field {
 		fireShiftedRight();
 	}
 	
+	/**
+	 * Auto-shift the current shape all the way to the left or right.
+	 */
 	public void autoshift() {
 		if(paused || autoShift == null)
 			return;
@@ -183,6 +273,9 @@ public class Field {
 		}
 	}
 	
+	/**
+	 * Recalculate the ghost location
+	 */
 	protected void reghost() {
 		ghostY = shapeY;
 		if(shape == null || !ghosting)
@@ -191,6 +284,9 @@ public class Field {
 			ghostY++;
 	}
 	
+	/**
+	 * Counter-clockwise shape rotation
+	 */
 	public void rotateLeft() {
 		if(paused || shape == null)
 			return;
@@ -215,6 +311,9 @@ public class Field {
 		}
 	}
 	
+	/**
+	 * Clockwise shape rotation
+	 */
 	public void rotateRight() {
 		if(paused || shape == null)
 			return;
@@ -239,6 +338,13 @@ public class Field {
 		}
 	}
 	
+	/**
+	 * Return the block at the specified x,y pair, with the current shape and current ghost applied.
+	 * Used by field renderers such as {@link TetrevilTableModel}
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public Block getBlock(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
 			Block[][] s = shape.shape();
@@ -257,12 +363,20 @@ public class Field {
 		return field[y][x];
 	}
 	
+	/**
+	 * Add a tetrevil listener to this field
+	 * @param l
+	 */
 	public void addTetrevilListener(TetrevilListener l) {
 		TetrevilListener[] ll = Arrays.copyOf(listeners, listeners.length + 1);
 		ll[ll.length - 1] = l;
 		listeners = ll;
 	}
 	
+	/**
+	 * Remove a tetrevil listener from this field
+	 * @param l
+	 */
 	public void removeTetrevilListener(TetrevilListener l) {
 		TetrevilListener[] listeners = this.listeners;
 		for(int i = listeners.length - 1; i >= 0; i--) {

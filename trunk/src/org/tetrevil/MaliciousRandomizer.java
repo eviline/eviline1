@@ -3,6 +3,12 @@ package org.tetrevil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@link Randomizer} that looks a few moves ahead in the future to come up with the worst
+ * {@link Shape} to return.
+ * @author robin
+ *
+ */
 public class MaliciousRandomizer implements Randomizer {
 	public static final int DEFAULT_DEPTH = 3;
 	public static final int DEFAULT_DIST = 30;
@@ -114,7 +120,7 @@ public class MaliciousRandomizer implements Randomizer {
 			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
 
-			for(Shape shape : type.shapes()) {
+			for(Shape shape : type.orientations()) {
 				for(int x = 0; x < Field.WIDTH; x++) {
 					field.copyInto(f);
 					f.setShape(shape);
@@ -151,7 +157,7 @@ public class MaliciousRandomizer implements Randomizer {
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 			if(fair)
 				typeScore.score *= distribution / (double) typeCounts[type.ordinal()];
-			typeScore.shape = type.shapes()[0];
+			typeScore.shape = type.orientations()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
 				worst.field = typeScore.field.copyInto(worst.field);

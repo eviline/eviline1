@@ -1,5 +1,10 @@
 package org.tetrevil;
 
+/**
+ * Table of kicks for shape rotations using SRS
+ * @author robin
+ *
+ */
 public enum KickTable {
 	NO_KICK(new int[][]{{0,0}}),
 	
@@ -32,6 +37,13 @@ public enum KickTable {
 	
 	public int[][] table() { return table; }
 	
+	/**
+	 * Return the kick table for a shape type being rotated from the specified start to end directions
+	 * @param type
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public static KickTable forShape(ShapeType type, ShapeDirection start, ShapeDirection end) {
 		String prefix = (type == ShapeType.I ? "I" : "");
 		String name = prefix + start + "_" + end;

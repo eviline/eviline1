@@ -2,6 +2,15 @@ package org.tetrevil;
 
 import java.lang.reflect.Constructor;
 
+import org.tetrevil.runner.MainApplet;
+
+/**
+ * Class with factory methods for constructing a {@link MaliciousRandomizer}.
+ * Needs to be extended to cover all randomizers, but {@link MainApplet} is too tied
+ * to {@link MaliciousRandomizer} right now.
+ * @author robin
+ *
+ */
 public class RandomizerFactory {
 	private static Class<? extends MaliciousRandomizer> clazz = MaliciousRandomizer.class;
 	

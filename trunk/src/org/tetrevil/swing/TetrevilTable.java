@@ -8,6 +8,11 @@ import javax.swing.JTable;
 import org.tetrevil.Block;
 import org.tetrevil.Field;
 
+/**
+ * Table for displaying a {@link Field} that resizes itself as appropriate
+ * @author robin
+ *
+ */
 public class TetrevilTable extends JTable {
 	/**
 	 * 

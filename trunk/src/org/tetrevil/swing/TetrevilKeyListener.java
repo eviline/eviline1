@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,17 @@ import javax.swing.Timer;
 import org.tetrevil.Field;
 import org.tetrevil.ShapeDirection;
 
+/**
+ * {@link KeyListener} that implements the controls for tetrevil
+ * @author robin
+ *
+ */
 public class TetrevilKeyListener extends KeyAdapter {
+	/**
+	 * Convert a string to a key code, used when parsing parameters
+	 * @param code
+	 * @return
+	 */
 	public static int getKeyCode(String code) {
 		code = code.toUpperCase();
 		try {

@@ -8,6 +8,11 @@ import static org.tetrevil.Block.SA;
 import static org.tetrevil.Block.TA;
 import static org.tetrevil.Block.ZA;
 
+/**
+ * A tetrimino.  Stored as both an array of blocks and as arrays of (x,y) pairs for speed efficiency.
+ * @author robin
+ *
+ */
 public enum Shape {
 	O_UP(new Block[][] {
 					{OA,	 OA},

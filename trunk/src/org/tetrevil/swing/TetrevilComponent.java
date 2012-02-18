@@ -7,6 +7,11 @@ import javax.swing.JScrollPane;
 
 import org.tetrevil.Field;
 
+/**
+ * A {@link JScrollPane} that holds, and will resize if necessary, a {@link TetrevilTable}
+ * @author robin
+ *
+ */
 public class TetrevilComponent extends JScrollPane {
 	/**
 	 * 

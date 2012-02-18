@@ -1,7 +1,11 @@
 package org.tetrevil;
 
 public class Fitness {
-
+	/**
+	 * Fitness function used to score a board.  Higher score is worse for the player.
+	 * @param field
+	 * @return
+	 */
 	public static double score(Field field) {
 		if(field.isGameOver())
 			return Double.POSITIVE_INFINITY;

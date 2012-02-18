@@ -8,11 +8,12 @@ import org.tetrevil.Field;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.event.TetrevilListener;
 
+/**
+ * Table model for a {@link TetrevilTable}.  Mostly just a passthrough to {@link Field#getBlock(int, int)}
+ * @author robin
+ *
+ */
 public class TetrevilTableModel extends AbstractTableModel implements TetrevilListener {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	protected Field field;
 	

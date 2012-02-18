@@ -9,6 +9,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A score that gets submitted to the tetrevil score server
+ * @author robin
+ *
+ */
 public class WebScore implements Serializable {
 	private static final long serialVersionUID = 3;
 	
@@ -36,6 +41,12 @@ public class WebScore implements Serializable {
 		return "WebScore[" + score + "," + name + "," + ts + "]";
 	}
 	
+	/**
+	 * Submit a high score
+	 * @param score
+	 * @param host
+	 * @throws IOException
+	 */
 	public static void submit(WebScore score, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, SUBMIT_SCORE);
@@ -52,6 +63,13 @@ public class WebScore implements Serializable {
 		
 	}
 	
+	/**
+	 * Return the high score matching the argument score parameters
+	 * @param params
+	 * @param host
+	 * @return
+	 * @throws IOException
+	 */
 	public static WebScore highScore(WebScore params, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, HIGH_SCORE);

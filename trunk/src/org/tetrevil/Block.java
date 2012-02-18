@@ -7,7 +7,7 @@ import java.awt.Color;
  * Additionally, there is a block type for the outer border around the field.  Empty areas in the {@link Field}
  * are stored as nulls.<p>
  * 
- * A block is active if it is a part of the currently active {@link Shape} in the field.  Once a {@link Shape} settles
+ * A block is active if it is a part of the currently active {@link Shape} in the field.  Once a {@link Shape} locks
  * on the field its active blocks become inactive blocks and are stored.
  * @author robin
  *

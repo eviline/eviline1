@@ -13,10 +13,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.tetrevil.Block;
 import org.tetrevil.Field;
 
+/**
+ * Cell renderer for a {@link TetrevilTable}
+ * @author robin
+ *
+ */
 public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	protected Field field;

@@ -17,10 +17,25 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
+/**
+ * Panel used to set the control values of a {@link TetrevilKeyListener}
+ * @author robin
+ *
+ */
 public class TetrevilKeyPanel extends JPanel {
+	private static final long serialVersionUID = 0;
+	
 	protected TetrevilKeyListener kl;
 	
+	/**
+	 * A button which will set the value of a particular {@link Field} to whatever key is pressed
+	 * after the button is clicked
+	 * @author robin
+	 *
+	 */
 	protected class KeyButton extends JToggleButton {
+		private static final long serialVersionUID = 0;
+		
 		protected Field f;
 		
 		protected void update() {

@@ -5,6 +5,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Extension of {@link MaliciousRandomizer} that follows a bag shape selection model.
+ * @author robin
+ *
+ */
 public class MaliciousBagRandomizer extends MaliciousRandomizer implements Randomizer {
 	public static final int DEFAULT_DEPTH = 4;
 	public static final int DEFAULT_DIST = 3;
@@ -138,7 +143,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
 
-			for(Shape shape : type.shapes()) {
+			for(Shape shape : type.orientations()) {
 				for(int x = 0; x < Field.WIDTH; x++) {
 					field.copyInto(f);
 					f.setShape(shape);
@@ -176,7 +181,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 			if(WEIGHTS.containsKey(type))
 				typeScore.score *= WEIGHTS.get(type);
-			typeScore.shape = type.shapes()[0];
+			typeScore.shape = type.orientations()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
 				worst.field = typeScore.field.copyInto(worst.field);

@@ -1,5 +1,10 @@
 package org.tetrevil.event;
 
+/**
+ * Abstract implementation of {@link TetrevilListener}
+ * @author robin
+ *
+ */
 public abstract class TetrevilAdapter implements TetrevilListener {
 
 	@Override
