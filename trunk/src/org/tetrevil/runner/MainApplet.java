@@ -79,7 +79,18 @@ public class MainApplet extends JApplet {
 				if(field.isGrounded())
 					ticker.restart();
 			}
+			@Override
+			public void linesCleared(TetrevilEvent e) {
+				int level = field.getLines() / 10;
+				double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
+				ticker.setDelay((int)(1000 * fss));
+			}
+			@Override
+			public void gameReset(TetrevilEvent e) {
+				ticker.setDelay(1000);
+			}
 		});
+		
 
 		field.addTetrevilListener(new TetrevilAdapter() {
 			public void gameReset(TetrevilEvent e) {
@@ -495,19 +506,6 @@ public class MainApplet extends JApplet {
 			c.getTable().addKeyListener(k);
 			c.addKeyListener(k);
 			addKeyListener(k);
-			
-			field.addTetrevilListener(new TetrevilAdapter() {
-				@Override
-				public void linesCleared(TetrevilEvent e) {
-					int level = field.getLines() / 10;
-					double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
-					ticker.setDelay((int)(1000 * fss));
-				}
-				@Override
-				public void gameReset(TetrevilEvent e) {
-					ticker.setDelay(1000);
-				}
-			});
 			
 			setBackground(Color.BLACK);
 			right.setBackground(Color.BLACK);
