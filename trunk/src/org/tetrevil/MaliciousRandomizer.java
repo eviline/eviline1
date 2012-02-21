@@ -3,6 +3,10 @@ package org.tetrevil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
+import org.tetrevil.event.TetrevilListener;
+
 /**
  * {@link Randomizer} that looks a few moves ahead in the future to come up with the worst
  * {@link Shape} to return.
@@ -43,12 +47,19 @@ public class MaliciousRandomizer implements Randomizer {
 	protected double rfactor = 0.05;
 	protected boolean fair = false;
 	protected int distribution = 100;
+	protected boolean adaptive = false;
 	
 	protected boolean randomFirst = true;
 	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
 	protected int[] typeCounts = new int[ShapeType.values().length];
-	protected int totalCount = 0;
+	protected int distAdjustment = 0;
+	protected TetrevilListener adaptiveListener = new TetrevilAdapter() {
+		@Override
+		public void linesCleared(TetrevilEvent e) {
+			adjustDistribution(1);
+		}
+	};
 
 	public MaliciousRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);
@@ -59,7 +70,7 @@ public class MaliciousRandomizer implements Randomizer {
 		this.distribution = distribution;
 		this.cache = new Cache();
 		for(int i = 0; i < typeCounts.length; i++) {
-			totalCount += (typeCounts[i] = distribution);
+			typeCounts[i] = distribution;
 		}
 	}
 	
@@ -156,7 +167,7 @@ public class MaliciousRandomizer implements Randomizer {
 			typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 			if(fair)
-				typeScore.score *= distribution / (double) typeCounts[type.ordinal()];
+				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
 			typeScore.shape = type.orientations()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -215,5 +226,25 @@ public class MaliciousRandomizer implements Randomizer {
 	public int getDistribution() {
 		return distribution;
 	}
+
+	public boolean isAdaptive() {
+		return adaptive;
+	}
+
+	public void setAdaptive(Field field, boolean adaptive) {
+		if(this.adaptive != adaptive) {
+			if(adaptive)
+				field.addTetrevilListener(adaptiveListener);
+			else
+				field.removeTetrevilListener(adaptiveListener);
+		}
+		this.adaptive = adaptive;
+	}
 	
+	public void adjustDistribution(int adjustment) {
+		for(int i = 0; i < typeCounts.length; i++) {
+			typeCounts[i] += adjustment;
+		}
+		distAdjustment += adjustment;
+	}
 }

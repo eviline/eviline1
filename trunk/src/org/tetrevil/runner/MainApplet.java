@@ -24,6 +24,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -112,6 +113,7 @@ public class MainApplet extends JApplet {
 					score.setFair(p.isFair() ? 1 : 0);
 					score.setDistribution(p.getDistribution());
 					score.setRandomizer(p.getClass().getName());
+					score.setAdaptive(p.isAdaptive() ? 1 : 0);
 					WebScore.submit(score, getParameter("score_host"));
 					
 					setStartText();
@@ -151,6 +153,8 @@ public class MainApplet extends JApplet {
 			((MaliciousRandomizer) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
 		if(getParameter("fair") != null)
 			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
+		if(getParameter("adaptive") != null)
+			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
 		
 		provider.setText("Settings: " + provText);
 	}
@@ -198,6 +202,7 @@ public class MainApplet extends JApplet {
 		highScore.setDepth(p.getDepth());
 		highScore.setRfactor(p.getRfactor());
 		highScore.setFair(p.isFair() ? 1 : 0);
+		highScore.setAdaptive(p.isAdaptive() ? 1 : 0);
 		highScore.setDistribution(p.getDistribution());
 		highScore.setRandomizer(RandomizerFactory.getClazz().getName());
 		try {
@@ -240,6 +245,8 @@ public class MainApplet extends JApplet {
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
+		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.WHITE);
+		
 		final JButton set = new JButton(new AbstractAction("Set") {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -248,6 +255,7 @@ public class MainApplet extends JApplet {
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
 				setParameter("distribution", distribution.getText());
 				setParameter("fair", "" + fair.isSelected());
+				setParameter("adaptive", "" + adaptive.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else
@@ -267,12 +275,16 @@ public class MainApplet extends JApplet {
 			fair.setEnabled(false);
 			unfair.setEnabled(false);
 			fair.setSelected(true);
+			adaptive.setEnabled(false);
+			adaptive.setSelected(false);
 		} else {
 			malicious.setSelected(true);
 			fair.setEnabled(true);
 			unfair.setEnabled(true);
 			fair.setSelected(p.isFair());
 			unfair.setSelected(!p.isFair());
+			adaptive.setEnabled(true);
+			adaptive.setSelected(p.isAdaptive());
 		}
 		
 		evil.addActionListener(new ActionListener() {
@@ -286,6 +298,8 @@ public class MainApplet extends JApplet {
 				unfair.setSelected(true);
 				distribution.setEnabled(false);
 				distribution.setText("30");
+				adaptive.setEnabled(false);
+				adaptive.setSelected(false);
 				set.doClick();
 				provText = "Evil";
 				setProvider();
@@ -303,6 +317,8 @@ public class MainApplet extends JApplet {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("30");
+				adaptive.setEnabled(true);
+				adaptive.setSelected(true);
 				set.doClick();
 				provText = "Aggressive";
 				setProvider();
@@ -320,6 +336,8 @@ public class MainApplet extends JApplet {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("3");
+				adaptive.setEnabled(false);
+				adaptive.setSelected(false);
 				set.doClick();
 				provText = "Rude";
 				setProvider();
@@ -331,6 +349,7 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent e) {
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
+				adaptive.setEnabled(true);
 			}
 		});
 		
@@ -339,6 +358,7 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent e) {
 				fair.setEnabled(false);
 				unfair.setEnabled(false);
+				adaptive.setEnabled(false);
 			}
 		});
 				
@@ -346,6 +366,7 @@ public class MainApplet extends JApplet {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				distribution.setEnabled(fair.isSelected());
+				adaptive.setEnabled(fair.isSelected());
 			}
 		});
 		
@@ -353,7 +374,7 @@ public class MainApplet extends JApplet {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				distribution.setEnabled(!unfair.isSelected());
-
+				adaptive.setEnabled(!unfair.isSelected());
 			}
 		});
 
@@ -380,6 +401,9 @@ public class MainApplet extends JApplet {
 		details.add(l = new JLabel("Random Factor %:")); details.add(rfactor); l.setForeground(Color.WHITE);
 		
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.WHITE);
+		
+		details.add(l = new JLabel("")); details.add(adaptive);
+		
 		c.gridy++; c.weighty = 1; ret.add(details, c);
 
 		c.gridy++; c.weighty = 0; ret.add(set, c);

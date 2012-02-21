@@ -15,7 +15,7 @@ import java.util.Map;
  *
  */
 public class WebScore implements Serializable {
-	private static final long serialVersionUID = 3;
+	private static final long serialVersionUID = 4;
 	
 	public static final int PORT = 24309;
 	
@@ -33,6 +33,7 @@ public class WebScore implements Serializable {
 	protected Double rfactor;
 	protected Integer fair;
 	protected Integer distribution;
+	protected Integer adaptive;
 	
 	protected String randomizer;
 	
@@ -158,5 +159,13 @@ public class WebScore implements Serializable {
 
 	public void setRandomizer(String randomizer) {
 		this.randomizer = randomizer;
+	}
+
+	public Integer getAdaptive() {
+		return adaptive;
+	}
+
+	public void setAdaptive(Integer adaptive) {
+		this.adaptive = adaptive;
 	}
 }
