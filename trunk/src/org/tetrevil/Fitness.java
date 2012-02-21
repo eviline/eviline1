@@ -21,19 +21,19 @@ public class Fitness {
 					score += 15 * h;
 				else if(f[y][x] == Block.X)
 					score += Math.pow(h, 1.5);
-//				else if(f[y][x] == null) {
-//					if(f[y][x-1] != null && f[y][x+1] != null)
-//						score += h;
-//				}
+				else if(f[y][x] == null) {
+					if(f[y][x-1] != null && f[y][x+1] != null)
+						score += h;
+				}
 			}
 		}
-		// Add in surface smoothness weight
-		int sr = Math.max(stackHeight[1] - stackHeight[0], 0);
-		for(int i = 1; i < stackHeight.length - 2; i++)
-			sr += Math.abs(stackHeight[i] - stackHeight[i+1]);
-		sr += Math.max(stackHeight[stackHeight.length - 2] - stackHeight[stackHeight.length - 1], 0);
-		
-		score += sr * 10;
+//		// Add in surface smoothness weight
+//		int sr = Math.max(stackHeight[1] - stackHeight[0], 0);
+//		for(int i = 1; i < stackHeight.length - 2; i++)
+//			sr += Math.abs(stackHeight[i] - stackHeight[i+1]);
+//		sr += Math.max(stackHeight[stackHeight.length - 2] - stackHeight[stackHeight.length - 1], 0);
+//		
+//		score += sr * 10;
 		
 		return score;
 	}
