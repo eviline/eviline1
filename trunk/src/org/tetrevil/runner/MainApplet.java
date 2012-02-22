@@ -292,7 +292,7 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent arg0) {
 				malicious.setSelected(true);
 				depth.setText("3");
-				rfactor.setText("5");
+				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
 				unfair.setSelected(true);
@@ -311,7 +311,7 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent e) {
 				malicious.setSelected(true);
 				depth.setText("3");
-				rfactor.setText("5");
+				rfactor.setText("2");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
 				fair.setSelected(true);
