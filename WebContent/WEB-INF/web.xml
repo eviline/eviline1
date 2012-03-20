@@ -6,7 +6,7 @@
 		</description>
 		<display-name>score</display-name>
 		<servlet-name>score</servlet-name>
-		<servlet-class>org.tetrevil.src.ScoreServlet</servlet-class>
+		<servlet-class>org.tetrevil.servlet.ScoreServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>score</servlet-name>

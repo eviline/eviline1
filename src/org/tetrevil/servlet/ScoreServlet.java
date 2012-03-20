@@ -1,4 +1,4 @@
-package org.tetrevil.src;
+package org.tetrevil.servlet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
