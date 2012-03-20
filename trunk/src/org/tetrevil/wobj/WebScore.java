@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,15 +56,30 @@ public class WebScore implements Serializable {
 		mreq.put(COMMAND, SUBMIT_SCORE);
 		mreq.put(SCORE, score);
 
-		Socket socket = new Socket(host, PORT);
+//		Socket socket = new Socket(host, PORT);
+//		try {
+//			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+//			out.writeObject(mreq);
+//			out.flush();
+//		} finally {
+//			socket.close();
+//		}
+		
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + host + "/tetrevil_tomcat/score").openConnection();
+		
+		http.setChunkedStreamingMode(1024);
+		http.setRequestMethod("POST");
+		http.setDoOutput(true);
+		
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			ObjectOutputStream out = new ObjectOutputStream(http.getOutputStream());
 			out.writeObject(mreq);
 			out.flush();
 		} finally {
-			socket.close();
+			http.getOutputStream().close();
 		}
 		
+		http.connect();
 	}
 	
 	/**
@@ -76,19 +94,42 @@ public class WebScore implements Serializable {
 		mreq.put(COMMAND, HIGH_SCORE);
 		mreq.put(SCORE, params);
 		
-		Socket socket = new Socket(host, PORT);
-
+//		Socket socket = new Socket(host, PORT);
+//
+//		try {
+//			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+//			out.writeObject(mreq);
+//			out.flush();
+//		
+//			return (WebScore) new ObjectInputStream(socket.getInputStream()).readObject();
+//		} catch (ClassNotFoundException e) {
+//			throw new IOException(e);
+//		} finally {
+//			socket.close();
+//		}
+		
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + host + "/tetrevil_tomcat/score").openConnection();
+		
+		http.setChunkedStreamingMode(1024);
+		http.setRequestMethod("POST");
+		http.setDoOutput(true);
+		
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			ObjectOutputStream out = new ObjectOutputStream(http.getOutputStream());
 			out.writeObject(mreq);
 			out.flush();
-		
-			return (WebScore) new ObjectInputStream(socket.getInputStream()).readObject();
-		} catch (ClassNotFoundException e) {
-			throw new IOException(e);
 		} finally {
-			socket.close();
+			http.getOutputStream().close();
 		}
+		
+		http.connect();
+		
+		try {
+			http.getHeaderFields();
+			return (WebScore) new ObjectInputStream(http.getInputStream()).readObject();
+		} catch(ClassNotFoundException cnfe) {
+			throw new IOException(cnfe);
+		} 
 	}
 
 //	public static void main(String[] args) throws IOException{
