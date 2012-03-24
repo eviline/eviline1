@@ -5,12 +5,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -20,19 +22,23 @@ import javax.swing.JLabel;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.RandomizerFactory;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.wobj.WebScore;
 
 public class TetrevilFrame extends JFrame {
-	protected Map<String, String> parameters = new HashMap<String, String>();
+	protected Properties parameters = new Properties();
 	
 	protected Field field;
 	protected TetrevilComponent tc;
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel tkp;
+	protected DifficultyPanel dp;
 	
 	protected JButton start = new JButton(new AbstractAction(" ") {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			dp.setEnabled(false);
 			tc.start();
 		}
 	});
@@ -47,15 +53,30 @@ public class TetrevilFrame extends JFrame {
 		
 		tc = new TetrevilComponent(field);
 		tkp = new TetrevilKeyPanel(kl = tc.getTetrevilKeyListener());
+		dp = new DifficultyPanel(field, parameters);
+		dp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setStartText();
+			}
+		});
 		
-		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 3, 0, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
+		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 4, 0, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
 		
 		add(tc, c);
 		c.gridx++; c.weightx = 1; add(new JLabel(" "), c);
 		c.gridx++; c.weightx = 0; c.gridheight = 1; c.weighty = 0; add(tkp, c);
+		c.gridy++; add(dp, c);
 		c.gridy++; c.weighty = 1; add(new JLabel(" "), c);
 		c.gridy++; c.weighty = 0; add(start, c);
 		
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void gameReset(TetrevilEvent e) {
+				field.setPaused(true);
+				dp.setEnabled(true);
+			}
+		});
 	}
 	
 	public void init() {
@@ -65,7 +86,7 @@ public class TetrevilFrame extends JFrame {
 	protected void setStartText() {
 		WebScore highScore = new WebScore();
 		highScore.setScore(0);
-		highScore.setName("[no score for these settings]");
+		highScore.setName("[nobody]");
 		highScore.setTs(new Date());
 		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		highScore.setDepth(p.getDepth());
@@ -96,11 +117,11 @@ public class TetrevilFrame extends JFrame {
 	}
 
 	public String getParameter(String name) {
-		return parameters.get(name);
+		return parameters.getProperty(name);
 	}
 	
 	public void setParameter(String name, String value) {
-		parameters.put(name, value);
+		parameters.setProperty(name, value);
 	}
 	public TetrevilComponent getTc() {
 		return tc;
