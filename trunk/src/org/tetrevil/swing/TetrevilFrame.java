@@ -1,11 +1,14 @@
 package org.tetrevil.swing;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -56,8 +59,23 @@ public class TetrevilFrame extends JFrame {
 		setBackground(Color.BLACK);
 		
 		tc = new TetrevilComponent(field);
-		tkp = new TetrevilKeyPanel(kl = tc.getTetrevilKeyListener());
+		kl = tc.getTetrevilKeyListener();
+		setKeysFromParams();
+		tkp = new TetrevilKeyPanel(kl);
 		dp = new DifficultyPanel(field, parameters);
+		
+		tc.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				Dimension d = e.getComponent().getSize();
+				int width = d.width;
+				int height = d.height;
+				if(Math.abs(height - width * 2) > 1)
+					width = height / 2;
+				e.getComponent().setSize(new Dimension(width, height));
+			}
+		});
+		
 		dp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -93,10 +111,13 @@ public class TetrevilFrame extends JFrame {
 			}
 		};
 		tc.getTable().addFocusListener(fcl);
+		
 	}
 	
 	public void init() {
 		setStartText();
+		setKeysFromParams();
+		tkp.update();
 	}
 	
 	protected void setStartText() {
@@ -132,6 +153,40 @@ public class TetrevilFrame extends JFrame {
 				"&copy;2012 Robin Kirkman</center></html>");
 	}
 	
+	public void setParamsFromKeys() {
+		setParameter("left", "" + kl.LEFT);
+		setParameter("right", "" + kl.RIGHT);
+		setParameter("rotate_left", "" + kl.ROTATE_LEFT);
+		setParameter("rotate_right", "" + kl.ROTATE_RIGHT);
+		setParameter("down", "" + kl.DOWN);
+		setParameter("drop", "" + kl.DROP);
+		setParameter("das_time", "" + kl.DAS_TIME);
+		setParameter("player_name", tkp.getPlayerName());
+	}
+	
+	public void setKeysFromParams() {
+		if(getParameter("left") != null)
+			kl.LEFT = TetrevilKeyListener.getKeyCode(getParameter("left"));
+		if(getParameter("right") != null)
+			kl.RIGHT = TetrevilKeyListener.getKeyCode(getParameter("right"));
+		if(getParameter("rotate_left") != null)
+			kl.ROTATE_LEFT = TetrevilKeyListener.getKeyCode(getParameter("rotate_left"));
+		if(getParameter("rotate_right") != null)
+			kl.ROTATE_RIGHT = TetrevilKeyListener.getKeyCode(getParameter("rotate_right"));
+		if(getParameter("down") != null)
+			kl.DOWN = TetrevilKeyListener.getKeyCode(getParameter("down"));
+		if(getParameter("drop") != null)
+			kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
+		if(getParameter("das_time") != null)
+			kl.DAS_TIME = Integer.parseInt(getParameter("das_time"));
+		if(getParameter("reset") != null)
+			kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
+		if(getParameter("pause") != null)
+			kl.PAUSE = TetrevilKeyListener.getKeyCode(getParameter("pause"));
+		if(getParameter("player_name") != null)
+			tkp.setPlayerName(getParameter("player_name"));
+	}
+
 	public Properties getParameters() {
 		return parameters;
 	}

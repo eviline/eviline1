@@ -38,7 +38,7 @@ public class TetrevilKeyPanel extends JPanel {
 		
 		protected Field f;
 		
-		protected void update() {
+		public void update() {
 			try {
 				setText(KeyEvent.getKeyText((Integer) f.get(kl)));
 			} catch (IllegalAccessException e) {
@@ -130,7 +130,19 @@ public class TetrevilKeyPanel extends JPanel {
 		}
 	}
 	
+	public void update() {
+		for(int i = 0; i < getComponentCount(); i++) {
+			if(getComponent(i) instanceof KeyButton) {
+				((KeyButton) getComponent(i)).update();
+			}
+		}
+	}
+	
 	public String getPlayerName() {
 		return playerName.getText();
+	}
+	
+	public void setPlayerName(String playerName) {
+		this.playerName.setText(playerName);
 	}
 }

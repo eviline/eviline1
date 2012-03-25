@@ -25,6 +25,8 @@ public class TetrevilKeyListener extends KeyAdapter {
 	 * @return
 	 */
 	public static int getKeyCode(String code) {
+		if(code.matches("[0-9]+"))
+			return Integer.parseInt(code);
 		code = code.toUpperCase();
 		try {
 			java.lang.reflect.Field kf = KeyEvent.class.getField("VK_" + code);

@@ -7,6 +7,10 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +32,12 @@ public class Main {
 
 		final TetrevilFrame frame = new TetrevilFrame(field);
 
+		try {
+			frame.getParameters().load(new FileInputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"));
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+		
 		for(String arg : args) {
 			if(arg.contains("=")) {
 				String[] f = arg.split("=", 2);
@@ -52,6 +62,18 @@ public class Main {
 				}
 			});
 		}
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				frame.setParamsFromKeys();
+				try {
+					frame.getParameters().store(new FileOutputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"), "Tetrevil Settings");
+				} catch(IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		}));
 	}
 
 }
