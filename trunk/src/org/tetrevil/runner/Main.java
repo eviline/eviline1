@@ -35,7 +35,6 @@ public class Main {
 		try {
 			frame.getParameters().load(new FileInputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"));
 		} catch(IOException ioe) {
-			ioe.printStackTrace();
 		}
 		
 		for(String arg : args) {
@@ -70,7 +69,6 @@ public class Main {
 				try {
 					frame.getParameters().store(new FileOutputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"), "Tetrevil Settings");
 				} catch(IOException ioe) {
-					ioe.printStackTrace();
 				}
 			}
 		}));
