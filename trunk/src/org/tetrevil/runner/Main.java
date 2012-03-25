@@ -24,6 +24,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		Field field = new Field(true);
+		field.setGhosting(true);
 
 		final TetrevilFrame frame = new TetrevilFrame(field);
 
@@ -34,18 +35,23 @@ public class Main {
 			}
 		}
 		
+		boolean fullscreen = Boolean.parseBoolean(frame.getParameters().getProperty("fullscreen", "false"));
+		
 		frame.init();
 		
-		frame.setUndecorated(true);
+		if(fullscreen)
+			frame.setUndecorated(true);
 		frame.pack();
 		frame.setVisible(true);
 		
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			}
-		});
+		if(fullscreen) {
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				}
+			});
+		}
 	}
 
 }
