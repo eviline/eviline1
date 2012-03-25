@@ -44,6 +44,9 @@ public class Main {
 			}
 		}
 		
+		if(frame.getParameter("score_host") == null)
+			frame.setParameter("score_host", "www.tetrevil.org:8080");
+		
 		boolean fullscreen = Boolean.parseBoolean(frame.getParameters().getProperty("fullscreen", "false"));
 		
 		frame.init();
