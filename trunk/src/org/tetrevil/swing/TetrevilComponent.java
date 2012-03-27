@@ -11,6 +11,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.tetrevil.Field;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 
 /**
  * A {@link JScrollPane} that holds, and will resize if necessary, a {@link TetrevilTable}
@@ -38,9 +40,9 @@ public class TetrevilComponent extends JScrollPane {
 		ticker.setDelay(1000);
 	}}
 	
-	public TetrevilComponent(Field field) {
-		super(new TetrevilTable(field), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		this.field = field;
+	public TetrevilComponent(Field f) {
+		super(new TetrevilTable(f), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.field = f;
 		table = (TetrevilTable) getViewport().getView();
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -53,6 +55,48 @@ public class TetrevilComponent extends JScrollPane {
 		tetrevilKeyListener = new TetrevilKeyListener(field);
 		getTable().addKeyListener(tetrevilKeyListener);
 		addKeyListener(tetrevilKeyListener);
+		
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void clockTicked(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void shiftedLeft(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void shiftedRight(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void rotatedLeft(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+
+			@Override
+			public void rotatedRight(TetrevilEvent e) {
+				if(field.isGrounded())
+					ticker.restart();
+			}
+			@Override
+			public void linesCleared(TetrevilEvent e) {
+				int level = field.getLines() / 10;
+				double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
+				ticker.setDelay((int)(1000 * fss));
+			}
+			@Override
+			public void gameReset(TetrevilEvent e) {
+				ticker.setDelay(1000);
+			}
+		});
 	}
 	
 	@Override
