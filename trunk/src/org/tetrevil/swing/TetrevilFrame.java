@@ -1,10 +1,15 @@
 package org.tetrevil.swing;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.LayoutManager2;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -34,6 +39,65 @@ import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.wobj.WebScore;
 
 public class TetrevilFrame extends JFrame {
+	private class TFLayoutManager implements LayoutManager {
+
+		@Override
+		public void addLayoutComponent(String name, Component comp) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeLayoutComponent(Component comp) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Dimension preferredLayoutSize(Container parent) {
+			Dimension d = parent.getSize();
+			d.width = Math.max(d.width, d.height);
+			d.width = Math.max(d.width, 800);
+			d.height = Math.max(d.height, 600);
+			return d;
+		}
+
+		@Override
+		public Dimension minimumLayoutSize(Container parent) {
+			Dimension d = parent.getSize();
+			d.width = d.height / 3;
+			d.width = Math.max(d.width, 800);
+			d.height = Math.max(d.height, 600);
+			return d;
+		}
+
+		@Override
+		public void layoutContainer(Container parent) {
+			Dimension psize = parent.getSize();
+			
+			Dimension d = new Dimension(psize);
+			d.width = d.height;
+			tc.setLocation(0, 0);
+			tc.setSize(d);
+			
+			d = new Dimension(psize);
+			d.height /= 3;
+			d.width = Math.max(d.height, d.width / 4);
+			tkp.setSize(d); dp.setSize(d); start.setSize(d);
+			
+			Point p = new Point(psize.width - d.width, 0);
+			tkp.setLocation(p);
+			p.y += d.height; dp.setLocation(p);
+			p.y += d.height; start.setLocation(p);
+			
+			d = new Dimension(psize.width - tc.getSize().width - d.width, psize.height);
+			p = new Point(tc.getSize().width, 0);
+			center.setSize(d);
+			center.setLocation(p);
+		}
+		
+	}
+	
 	protected Properties parameters = new Properties();
 	
 	protected Field field;
@@ -41,6 +105,7 @@ public class TetrevilFrame extends JFrame {
 	protected TetrevilKeyListener kl;
 	protected TetrevilKeyPanel tkp;
 	protected DifficultyPanel dp;
+	protected JPanel center = new JPanel();
 	
 	protected JButton start = new JButton(new AbstractAction(" ") {
 		@Override
@@ -66,18 +131,8 @@ public class TetrevilFrame extends JFrame {
 		setKeysFromParams();
 		tkp = new TetrevilKeyPanel(kl);
 		dp = new DifficultyPanel(field, parameters);
-		
-		tc.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				Dimension d = e.getComponent().getSize();
-				int width = d.width;
-				int height = d.height;
-				if(Math.abs(height - width * 2) > 1)
-					width = height / 2;
-				e.getComponent().setSize(new Dimension(width, height));
-			}
-		});
+		center.setBackground(Color.WHITE);
+		center.setOpaque(true);
 		
 		dp.addActionListener(new ActionListener() {
 			@Override
@@ -86,14 +141,18 @@ public class TetrevilFrame extends JFrame {
 			}
 		});
 		
-		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 4, 0, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
+//		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 4, 0, 1, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
+//		
+//		add(tc, c);
+//		c.gridx++; c.weightx = 1; add(new JLabel(" "), c);
+//		c.gridx++; c.weightx = 0; c.gridheight = 1; c.weighty = 0; add(tkp, c);
+//		c.gridy++; add(dp, c);
+//		c.gridy++; c.weighty = 1; add(new JLabel(" "), c);
+//		c.gridy++; c.weighty = 0; add(start, c);
 		
-		add(tc, c);
-		c.gridx++; c.weightx = 1; add(new JLabel(" "), c);
-		c.gridx++; c.weightx = 0; c.gridheight = 1; c.weighty = 0; add(tkp, c);
-		c.gridy++; add(dp, c);
-		c.gridy++; c.weighty = 1; add(new JLabel(" "), c);
-		c.gridy++; c.weighty = 0; add(start, c);
+		add(tc); add(tkp); add(dp); add(start); add(center);
+		
+		setLayout(new TFLayoutManager());
 		
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
@@ -228,6 +287,10 @@ public class TetrevilFrame extends JFrame {
 	
 	public TetrevilKeyPanel getTkp() {
 		return tkp;
+	}
+	
+	public JPanel getCenter() {
+		return center;
 	}
 }
 

@@ -7,11 +7,14 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
@@ -34,7 +37,7 @@ public class Main {
 			ex.printStackTrace();
 		}
 		
-		Field field = new Field(true);
+		final Field field = new Field(true);
 		field.setGhosting(true);
 
 		final TetrevilFrame frame = new TetrevilFrame(field);
@@ -57,6 +60,34 @@ public class Main {
 		boolean fullscreen = Boolean.parseBoolean(frame.getParameters().getProperty("fullscreen", "false"));
 		
 		frame.init();
+		
+//		frame.getCenter().add(new JLabel("<html>HAHAHA<br>AHAHAH</html>"));
+		
+		frame.getCenter().add(new JButton(new AbstractAction("Pause") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				field.setPaused(true);
+			}
+		}));
+		frame.getCenter().add(new JButton(new AbstractAction("Resume") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				field.setPaused(false);
+			}
+		}));
+		frame.getCenter().add(new JButton(new AbstractAction("Reset") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				field.reset();
+			}
+		}));
+		
+		frame.getCenter().add(new JButton(new AbstractAction("Quit") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		}));
 		
 		if(fullscreen)
 			frame.setUndecorated(true);

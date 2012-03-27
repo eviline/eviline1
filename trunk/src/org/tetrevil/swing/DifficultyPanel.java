@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,6 +33,7 @@ public class DifficultyPanel extends JPanel {
 	{{
 		provText.setForeground(Color.BLACK);
 		provText.setHorizontalAlignment(SwingConstants.CENTER);
+		provText.setBorder(BorderFactory.createTitledBorder("Difficulty Setting"));
 	}}
 	protected JButton set;
 	protected JButton evil;
@@ -81,7 +83,6 @@ public class DifficultyPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!DifficultyPanel.this.isEnabled())
 					return;
-				provText.setText("Custom");
 				setParameter("depth", depth.getText());
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
 				setParameter("distribution", distribution.getText());
@@ -92,6 +93,7 @@ public class DifficultyPanel extends JPanel {
 				else
 					RandomizerFactory.setClazz(MaliciousRandomizer.class);
 				setProvider();
+				provText.setText(field.getProvider().toString());
 			}
 		});
 		
