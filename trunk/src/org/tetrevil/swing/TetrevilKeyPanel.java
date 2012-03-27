@@ -118,10 +118,10 @@ public class TetrevilKeyPanel extends JPanel {
 			
 			add(new JLabel("Player name:")); add(playerName);
 			
-			setBackground(Color.BLACK);
+			setBackground(Color.WHITE);
 			for(int i = 0; i < getComponentCount(); i++) {
 				if(getComponent(i) instanceof JLabel) {
-					getComponent(i).setForeground(Color.WHITE);
+					getComponent(i).setForeground(Color.BLACK);
 				}
 			}
 

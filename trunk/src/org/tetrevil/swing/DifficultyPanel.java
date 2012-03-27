@@ -30,7 +30,7 @@ public class DifficultyPanel extends JPanel {
 	protected Field field;
 	protected JLabel provText = new JLabel("Aggressive");
 	{{
-		provText.setForeground(Color.WHITE);
+		provText.setForeground(Color.BLACK);
 		provText.setHorizontalAlignment(SwingConstants.CENTER);
 	}}
 	protected JButton set;
@@ -52,20 +52,20 @@ public class DifficultyPanel extends JPanel {
 		easy = new JButton("Rude");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); 
-		malicious.setForeground(Color.WHITE); malicious.setBackground(Color.BLACK); 
+		malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); 
 		malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		
 		final JRadioButton bag = new JRadioButton("Bag"); 
-		bag.setForeground(Color.WHITE); bag.setBackground(Color.BLACK);
+		bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE);
 		bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); 
-		fair.setForeground(Color.WHITE); fair.setBackground(Color.BLACK); 
+		fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); 
 		fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		
 		final JRadioButton unfair = new JRadioButton("Unfair"); 
-		unfair.setForeground(Color.WHITE); unfair.setBackground(Color.BLACK);
+		unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE);
 		unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
@@ -74,7 +74,7 @@ public class DifficultyPanel extends JPanel {
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
 		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
-		adaptive.setForeground(Color.WHITE); adaptive.setBackground(Color.BLACK);
+		adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE);
 		
 		set = new JButton(new AbstractAction("Set Custom Difficulty") {
 			@Override
@@ -209,10 +209,10 @@ public class DifficultyPanel extends JPanel {
 			}
 		});
 
-		setBackground(Color.BLACK);
+		setBackground(Color.WHITE);
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 		
-		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.BLACK);
+		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
 		presets.add(evil, c);
 		c.gridx++; presets.add(normal, c);
 		c.gridx++; presets.add(easy, c);
@@ -220,18 +220,18 @@ public class DifficultyPanel extends JPanel {
 		c.gridx = 0;  add(presets, c);
 		
 		JLabel l;
-		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.BLACK);
+		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
-		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(bag);
 		
-		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);
 		
-		details.add(l = new JLabel("Depth:")); details.add(depth); l.setForeground(Color.WHITE);
-		details.add(l = new JLabel("Random Factor %:")); details.add(rfactor); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Depth:")); details.add(depth); l.setForeground(Color.BLACK);
+		details.add(l = new JLabel("Random Factor %:")); details.add(rfactor); l.setForeground(Color.BLACK);
 		
-		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
 		details.add(l = new JLabel("")); details.add(adaptive);
 		

@@ -233,19 +233,19 @@ public class MainApplet extends JApplet {
 		final JButton normal = new JButton("Aggressive");
 		final JButton easy = new JButton("Rude");
 		
-		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
-		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
+		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
 		
-		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
-		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
+		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
+		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.WHITE);
+		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK);
 		
 		final JButton set = new JButton(new AbstractAction("Set") {
 			@Override
@@ -378,10 +378,10 @@ public class MainApplet extends JApplet {
 			}
 		});
 
-		JPanel ret = new JPanel(new GridBagLayout()); ret.setBackground(Color.BLACK);
+		JPanel ret = new JPanel(new GridBagLayout()); ret.setBackground(Color.WHITE);
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 		
-		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.BLACK);
+		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
 		presets.add(evil, c);
 		c.gridx++; presets.add(normal, c);
 		c.gridx++; presets.add(easy, c);
@@ -389,18 +389,18 @@ public class MainApplet extends JApplet {
 		c.gridx = 0;  ret.add(presets, c);
 		
 		JLabel l;
-		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.BLACK);
+		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
-		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(bag);
 		
-		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);
 		
-		details.add(l = new JLabel("Depth:")); details.add(depth); l.setForeground(Color.WHITE);
-		details.add(l = new JLabel("Random Factor %:")); details.add(rfactor); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Depth:")); details.add(depth); l.setForeground(Color.BLACK);
+		details.add(l = new JLabel("Random Factor %:")); details.add(rfactor); l.setForeground(Color.BLACK);
 		
-		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.WHITE);
+		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
 		details.add(l = new JLabel("")); details.add(adaptive);
 		
@@ -420,7 +420,7 @@ public class MainApplet extends JApplet {
 	
 	protected JPanel createControlsPanel() {
 		final JPanel ret = new JPanel(new BorderLayout());
-		ret.setBackground(Color.BLACK);
+		ret.setBackground(Color.WHITE);
 		
 		JToggleButton b;
 		ret.add(b = new JToggleButton(new AbstractAction("Controls & Player Name") {
@@ -508,7 +508,7 @@ public class MainApplet extends JApplet {
 		}
 		
 		
-		getContentPane().setBackground(Color.BLACK);
+		getContentPane().setBackground(Color.WHITE);
 		
 		right = new JPanel(new BorderLayout());
 
@@ -554,7 +554,7 @@ public class MainApplet extends JApplet {
 		setProvider();
 				
 		if(getParameter("score_host") == null)
-			setParameter("score_host", "www.tetrevil.org");
+			setParameter("score_host", "www.tetrevil.org:8080");
 
 		
 		
@@ -601,8 +601,8 @@ public class MainApplet extends JApplet {
 		c.addKeyListener(k);
 		addKeyListener(k);
 		
-		setBackground(Color.BLACK);
-		right.setBackground(Color.BLACK);
+		setBackground(Color.WHITE);
+		right.setBackground(Color.WHITE);
 		right.setPreferredSize(new Dimension(260,500));
 		right.setMaximumSize(right.getPreferredSize());
 		

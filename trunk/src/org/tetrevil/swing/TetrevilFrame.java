@@ -57,8 +57,8 @@ public class TetrevilFrame extends JFrame {
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new GridBagLayout());
-		setBackground(Color.BLACK);
-		getContentPane().setBackground(Color.BLACK);
+		setBackground(Color.WHITE);
+		getContentPane().setBackground(Color.WHITE);
 		((JPanel) getContentPane()).setOpaque(true);
 		
 		tc = new TetrevilComponent(field);
