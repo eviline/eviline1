@@ -100,31 +100,31 @@ public enum Block {
 	public Color color() {
 		switch(this) {
 		case I:
-			return IA.color().darker().darker();
+			return IA.color().darker();
 		case IA:
 			return new Color(0, 159, 218);
 		case J: 
-			return JA.color().darker().darker();
+			return JA.color().darker();
 		case JA:
 			return new Color(0, 101, 189);
 		case L: 
-			return LA.color().darker().darker();
+			return LA.color().darker();
 		case LA:
 			return new Color(255, 121, 0);
 		case O: 
-			return OA.color().darker().darker();
+			return OA.color().darker();
 		case OA:
 			return new Color(254, 203, 0);
 		case S: 
-			return SA.color().darker().darker();
+			return SA.color().darker();
 		case SA:
 			return new Color(105, 190, 40);
 		case T: 
-			return TA.color().darker().darker();
+			return TA.color().darker();
 		case TA:
 			return new Color(149, 45, 152);
 		case Z: 
-			return ZA.color().darker().darker();
+			return ZA.color().darker();
 		case ZA:
 			return new Color(237, 41, 57);
 		case X: return Color.DARK_GRAY.darker();
