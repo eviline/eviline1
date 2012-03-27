@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import org.tetrevil.Field;
@@ -27,6 +28,12 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
 		Field field = new Field(true);
 		field.setGhosting(true);
 
