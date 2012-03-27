@@ -51,19 +51,30 @@ public class DifficultyPanel extends JPanel {
 		normal = new JButton("Aggressive");
 		easy = new JButton("Rude");
 		
-		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
-		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		final JRadioButton malicious = new JRadioButton("Malicious"); 
+		malicious.setForeground(Color.WHITE); malicious.setBackground(Color.BLACK); 
+		malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
+		
+		final JRadioButton bag = new JRadioButton("Bag"); 
+		bag.setForeground(Color.WHITE); bag.setBackground(Color.BLACK);
+		bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
 		
-		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
-		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
+		final JRadioButton fair = new JRadioButton("Fair"); 
+		fair.setForeground(Color.WHITE); fair.setBackground(Color.BLACK); 
+		fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
+		
+		final JRadioButton unfair = new JRadioButton("Unfair"); 
+		unfair.setForeground(Color.WHITE); unfair.setBackground(Color.BLACK);
+		unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.WHITE);
+		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
+		adaptive.setForeground(Color.WHITE); adaptive.setBackground(Color.BLACK);
 		
 		set = new JButton(new AbstractAction("Set Custom Difficulty") {
 			@Override
