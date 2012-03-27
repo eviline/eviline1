@@ -562,7 +562,7 @@ public class MainApplet extends JApplet {
 		
 		c = new TetrevilComponent(field);
 		c.getTable().setFocusable(true);
-		setKeys(kl = new TetrevilKeyListener(field));
+		setKeys(kl = c.getTetrevilKeyListener());
 		c.getTable().addKeyListener(kl);
 		addKeyListener(kl);
 		kp = new TetrevilKeyPanel(kl);
