@@ -101,6 +101,27 @@ public class TetrevilFrame extends JFrame {
 				field.setPaused(true);
 				dp.setEnabled(true);
 			}
+			@Override
+			public void gameOver(TetrevilEvent e) {
+				try {
+					WebScore score = new WebScore();
+					score.setScore(e.getField().getLines());
+					score.setName(tkp.getPlayerName());
+					score.setTs(new Date());
+					MaliciousRandomizer p = (MaliciousRandomizer) e.getField().getProvider();
+					score.setDepth(p.getDepth());
+					score.setRfactor(p.getRfactor());
+					score.setFair(p.isFair() ? 1 : 0);
+					score.setDistribution(p.getDistribution());
+					score.setRandomizer(p.getClass().getName());
+					score.setAdaptive(p.isAdaptive() ? 1 : 0);
+					WebScore.submit(score, getParameter("score_host"));
+
+					setStartText();
+				} catch(Exception ex) {
+					ex.printStackTrace();
+				}
+			}
 		});
 		
 		FocusListener fcl = new FocusAdapter() {
