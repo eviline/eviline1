@@ -54,49 +54,6 @@ public class MainApplet extends JApplet {
 	protected Field field = new Field(true);
 	{{
 		field.addTetrevilListener(new TetrevilAdapter() {
-			@Override
-			public void clockTicked(TetrevilEvent e) {
-				if(field.isGrounded())
-					ticker.restart();
-			}
-
-			@Override
-			public void shiftedLeft(TetrevilEvent e) {
-				if(field.isGrounded())
-					ticker.restart();
-			}
-
-			@Override
-			public void shiftedRight(TetrevilEvent e) {
-				if(field.isGrounded())
-					ticker.restart();
-			}
-
-			@Override
-			public void rotatedLeft(TetrevilEvent e) {
-				if(field.isGrounded())
-					ticker.restart();
-			}
-
-			@Override
-			public void rotatedRight(TetrevilEvent e) {
-				if(field.isGrounded())
-					ticker.restart();
-			}
-			@Override
-			public void linesCleared(TetrevilEvent e) {
-				int level = field.getLines() / 10;
-				double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
-				ticker.setDelay((int)(1000 * fss));
-			}
-			@Override
-			public void gameReset(TetrevilEvent e) {
-				ticker.setDelay(1000);
-			}
-		});
-		
-
-		field.addTetrevilListener(new TetrevilAdapter() {
 			public void gameReset(TetrevilEvent e) {
 				setProvider();
 			}
@@ -481,12 +438,12 @@ public class MainApplet extends JApplet {
 			field.clockTick();
 		}
 	};
-	protected Timer ticker = new Timer(1000, tick);
-	{{
-		ticker.setRepeats(true);
-		ticker.setInitialDelay(500);
-		ticker.setDelay(1000);
-	}}
+//	protected Timer ticker = new Timer(1000, tick);
+//	{{
+//		ticker.setRepeats(true);
+//		ticker.setInitialDelay(500);
+//		ticker.setDelay(1000);
+//	}}
 	@Override
 	public void init() {
 		if(!SwingUtilities.isEventDispatchThread()) {
@@ -535,7 +492,7 @@ public class MainApplet extends JApplet {
 							c.getTable().requestFocusInWindow();
 							SwingUtilities.invokeLater(this);
 						} else {
-							ticker.start();
+							c.start();
 						}
 					}
 				});
@@ -592,10 +549,10 @@ public class MainApplet extends JApplet {
 					@Override
 					public void run() {
 						if(field.getShape() == null) {
-							ticker.stop();
+							c.getTicker().stop();
 							field.clockTick();
 							repaint();
-							ticker.start();
+							c.getTicker().start();
 						}
 					}
 				});
@@ -624,7 +581,7 @@ public class MainApplet extends JApplet {
 	
 	@Override
 	public void stop() {
-		ticker.stop();
+		c.stop();
 	}
 	
 	@Override

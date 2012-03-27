@@ -147,5 +147,9 @@ public class TetrevilComponent extends JScrollPane {
 	public TetrevilKeyListener getTetrevilKeyListener() {
 		return tetrevilKeyListener;
 	}
+
+	public Timer getTicker() {
+		return ticker;
+	}
 }
 
