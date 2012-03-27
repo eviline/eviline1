@@ -127,7 +127,7 @@ public enum Block {
 			return ZA.color().darker();
 		case ZA:
 			return new Color(237, 41, 57);
-		case X: return Color.DARK_GRAY.darker();
+		case X: return Color.DARK_GRAY;
 		case G: return Color.WHITE;
 		}
 		throw new InternalError("Impossible switch fall-through");
