@@ -82,7 +82,7 @@ public class TetrevilFrame extends JFrame {
 			
 			d = new Dimension(psize);
 			d.height /= 3;
-			d.width = Math.max(d.height, d.width / 4);
+			d.width = Math.max(d.height, 300);
 			tkp.setSize(d); dp.setSize(d); start.setSize(d);
 			
 			Point p = new Point(psize.width - d.width, 0);
