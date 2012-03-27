@@ -123,6 +123,8 @@ public class MainApplet extends JApplet {
 				} catch(Exception ioe) {
 					ioe.printStackTrace();
 				}
+				if(!right.isVisible())
+					toggleSettings();
 			}
 		});
 		field.setGhosting(true);
@@ -520,6 +522,8 @@ public class MainApplet extends JApplet {
 				right.remove(difficulty);
 				right.add(start, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 				toggleSettings();
+				if(field.isGameOver())
+					field.reset();
 				if(field.isPaused())
 					field.setPaused(false);
 				MainApplet.this.validate();
