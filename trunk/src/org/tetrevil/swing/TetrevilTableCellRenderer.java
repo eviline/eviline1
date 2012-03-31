@@ -41,7 +41,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
 		c.setHorizontalTextPosition(SwingConstants.CENTER);
 		c.setHorizontalAlignment(SwingConstants.CENTER);
-		c.setForeground(Color.BLACK);
+		c.setForeground(Color.WHITE);
 		c.setBackground(colors.provideColor(b));
 		
 		if(field.isPaused() && b != null) {
