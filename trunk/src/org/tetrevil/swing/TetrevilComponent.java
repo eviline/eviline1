@@ -36,7 +36,7 @@ public class TetrevilComponent extends JScrollPane {
 	});
 	{{
 		ticker.setRepeats(true);
-		ticker.setInitialDelay(500);
+		ticker.setInitialDelay(1000);
 		ticker.setDelay(1000);
 	}}
 	

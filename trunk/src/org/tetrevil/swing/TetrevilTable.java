@@ -1,5 +1,6 @@
 package org.tetrevil.swing;
 
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -32,12 +33,14 @@ public class TetrevilTable extends JTable {
 			getColumnModel().getColumn(i).setCellRenderer(ttcr);
 		}
 		
-		setShowGrid(true);
-		setGridColor(Block.X.color());
+		setShowGrid(false);
+		setShowHorizontalLines(false);
+		setShowVerticalLines(false);
 		setRowSelectionAllowed(false);
 		setColumnSelectionAllowed(false);
 		setCellSelectionEnabled(false);
 		setBackground(Block.X.color());
+		setIntercellSpacing(new Dimension(0, 0));
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -52,6 +55,7 @@ public class TetrevilTable extends JTable {
 						table.getColumnModel().getColumn(i).setWidth(width);
 					}
 				}
+				setShowGrid(false);
 			}
 		});
 	}

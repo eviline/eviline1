@@ -358,8 +358,8 @@ public class Field {
 					return Block.G;
 			}
 		}
-		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
-			return Block.G;
+//		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
+//			return Block.G;
 		return field[y][x];
 	}
 	

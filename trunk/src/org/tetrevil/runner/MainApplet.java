@@ -432,12 +432,12 @@ public class MainApplet extends JApplet {
 		add(right, c);
 	}
 	
-	protected ActionListener tick = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			field.clockTick();
-		}
-	};
+//	protected ActionListener tick = new ActionListener() {
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+//			field.clockTick();
+//		}
+//	};
 //	protected Timer ticker = new Timer(1000, tick);
 //	{{
 //		ticker.setRepeats(true);

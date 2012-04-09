@@ -23,11 +23,14 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	
 	protected Field field;
 	
+	protected TetrevilBorder border;
 	protected Border ghost = BorderFactory.createLineBorder(Block.G.color());
 	
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
+		this.border = new TetrevilBorder(field);
 		
+		super.setBorder(BorderFactory.createEmptyBorder());
 	}
 	
 	protected ColorProvider colors = new DefaultColorProvider();
@@ -44,6 +47,9 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		c.setForeground(Color.WHITE);
 		c.setBackground(colors.provideColor(b));
 		
+		if(b == null || b == Block.X)
+			c.setBackground(Color.WHITE);
+		
 		if(field.isPaused() && b != null) {
 			if(!b.isActive() && b != Block.X)
 				c.setBackground(null);
@@ -59,8 +65,13 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		if(b == Block.G) {
 			c.setBorder(ghost);
 			c.setBackground(colors.provideColor(null));
-		} else
-			c.setBorder(null);
+		} else {
+			border.set(colors, column + Field.BUFFER - 1, row + Field.BUFFER);
+			c.setBorder(border);
+		}
+		if(b != null && !b.isActive()) {
+			c.setBackground(c.getBackground().darker().darker());
+		}
 		return c;
 	}
 	

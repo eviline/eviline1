@@ -24,7 +24,7 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	
 	@Override
 	public int getRowCount() {
-		return Field.HEIGHT + 2;
+		return Field.HEIGHT + 1;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return field.getBlock(columnIndex + Field.BUFFER - 1, rowIndex + Field.BUFFER - 1);
+		return field.getBlock(columnIndex + Field.BUFFER - 1, rowIndex + Field.BUFFER);
 	}
 
 	protected void changed() {
