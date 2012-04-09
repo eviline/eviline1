@@ -14,7 +14,7 @@ public class DefaultColorProvider implements ColorProvider {
 	@Override
 	public Color provideColor(Block block) {
 		if(block == null)
-			return Color.GRAY.darker();
+			return Color.BLACK;
 		Color ret = block.color();
 		return ret;
 	}
