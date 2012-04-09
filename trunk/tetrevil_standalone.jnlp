@@ -14,6 +14,8 @@
         <jar href="http://www.tetrevil.org/tetrevil_signed.jar" main="true" />
 
     </resources>
-     <application-desc/>
+     <application-desc>
+     	<argument>fullscreen=true</argument>
+     </application-desc>
      <update check="always"/>
 </jnlp>
