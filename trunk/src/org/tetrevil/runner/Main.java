@@ -32,7 +32,8 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		try {
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+//			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
