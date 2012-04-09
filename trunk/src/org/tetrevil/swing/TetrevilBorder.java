@@ -34,6 +34,7 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		Block cb = field.getBlock(x, y);
 		boolean ca = cb != null && cb.isActive();
 		Color c = colors.provideColor(cb);
+		
 		Block n = field.getBlock(x, y-1);
 		Block s = field.getBlock(x, y+1);
 		Block e = field.getBlock(x+1, y);
@@ -45,6 +46,14 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		south = cb != s ? blend(c, colors.provideColor(s)) : null;
 		east = cb != e ? blend(c, colors.provideColor(e)) : null;
 		west = cb != w ? blend(c, colors.provideColor(w)) : null;
+
+		if(cb == Block.G) {
+			c = field.getShape().type().inactive().active().color();
+			if(north != null) north = c;
+			if(south != null) south = c;
+			if(east != null) east = c;
+			if(west != null) west = c;
+		}
 		
 		if(top && n != null && cb == null && (w == null || w == Block.X) && (e == null || e == Block.X)) {
 			north = colors.provideColor(n);

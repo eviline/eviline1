@@ -62,13 +62,13 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		} else if(field.isGameOver()) {
 			c.setText(" ");
 		}
-		if(b == Block.G) {
-			c.setBorder(ghost);
-			c.setBackground(colors.provideColor(null));
-		} else {
+//		if(b == Block.G) {
+//			c.setBorder(ghost);
+//			c.setBackground(colors.provideColor(null));
+//		} else {
 			border.set(colors, column + Field.BUFFER - 1, row + Field.BUFFER);
 			c.setBorder(border);
-		}
+//		}
 		if(b != null && !b.isActive()) {
 			c.setBackground(c.getBackground().darker().darker());
 		}
