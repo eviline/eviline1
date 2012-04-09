@@ -19,7 +19,7 @@
 	
 	<target name="dist" depends="jar">
 		<copy todir="dist">
-			<fileset file="tetrevil.jnlp"/>
+			<fileset file="*.jnlp"/>
 		</copy>
 	</target>
 	
