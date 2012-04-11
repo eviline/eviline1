@@ -128,6 +128,7 @@ public class Field {
 	 * Reset the field
 	 */
 	public void reset() {
+		fireGameReset();
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
@@ -146,7 +147,6 @@ public class Field {
 		lines = 0;
 		autoShift = null;
 		playing = false;
-		fireGameReset();
 	}
 	
 	/**

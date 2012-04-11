@@ -157,24 +157,14 @@ public class TetrevilFrame extends JFrame {
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
 			public void gameReset(TetrevilEvent e) {
+				submitScore();
 				field.setPaused(true);
 				dp.setEnabled(true);
 			}
 			@Override
 			public void gameOver(TetrevilEvent e) {
 				try {
-					WebScore score = new WebScore();
-					score.setScore(e.getField().getLines());
-					score.setName(tkp.getPlayerName());
-					score.setTs(new Date());
-					MaliciousRandomizer p = (MaliciousRandomizer) e.getField().getProvider();
-					score.setDepth(p.getDepth());
-					score.setRfactor(p.getRfactor());
-					score.setFair(p.isFair() ? 1 : 0);
-					score.setDistribution(p.getDistribution());
-					score.setRandomizer(p.getClass().getName());
-					score.setAdaptive(p.isAdaptive() ? 1 : 0);
-					WebScore.submit(score, getParameter("score_host"));
+					submitScore();
 
 					setStartText();
 				} catch(Exception ex) {
@@ -235,7 +225,26 @@ public class TetrevilFrame extends JFrame {
 				"Click to begin.<br><br>\n\n" +
 				"&copy;2012 Robin Kirkman</center></html>");
 	}
-	
+
+	protected void submitScore() {
+		try {
+			WebScore score = new WebScore();
+			score.setScore(field.getLines());
+			score.setName(tkp.getPlayerName());
+			score.setTs(new Date());
+			MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
+			score.setDepth(p.getDepth());
+			score.setRfactor(p.getRfactor());
+			score.setFair(p.isFair() ? 1 : 0);
+			score.setDistribution(p.getDistribution());
+			score.setRandomizer(p.getClass().getName());
+			score.setAdaptive(p.isAdaptive() ? 1 : 0);
+			WebScore.submit(score, getParameter("score_host"));
+		} catch(Exception ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
 	public void setParamsFromKeys() {
 		setParameter("left", "" + kl.LEFT);
 		setParameter("right", "" + kl.RIGHT);
