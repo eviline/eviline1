@@ -8,9 +8,20 @@
 		<servlet-name>score</servlet-name>
 		<servlet-class>org.tetrevil.servlet.ScoreServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>cookie</display-name>
+		<servlet-name>cookie</servlet-name>
+		<servlet-class>org.tetrevil.servlet.CookieServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>score</servlet-name>
 		<url-pattern>/score</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>cookie</servlet-name>
+		<url-pattern>/cookie</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
