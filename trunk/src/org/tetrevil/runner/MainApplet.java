@@ -125,6 +125,8 @@ public class MainApplet extends JApplet {
 	
 	protected void submitScore() {
 		setCookies();
+		if(!field.isPlaying() && !field.isGameOver())
+			return;
 		try {
 			WebScore score = new WebScore();
 			score.setScore(field.getLines());

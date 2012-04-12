@@ -227,6 +227,8 @@ public class TetrevilFrame extends JFrame {
 	}
 
 	protected void submitScore() {
+		if(!field.isPlaying() && !field.isGameOver())
+			return;
 		try {
 			WebScore score = new WebScore();
 			score.setScore(field.getLines());
