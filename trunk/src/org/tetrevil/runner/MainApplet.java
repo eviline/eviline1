@@ -13,8 +13,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +29,7 @@ import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -44,6 +48,7 @@ import org.tetrevil.swing.IntegerDocument;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
 import org.tetrevil.swing.TetrevilKeyPanel;
+import org.tetrevil.wobj.CookieAccess;
 import org.tetrevil.wobj.WebScore;
 
 public class MainApplet extends JApplet {
@@ -88,7 +93,38 @@ public class MainApplet extends JApplet {
 	
 	protected JPanel difficulty;
 	
+	protected void setCookies() {
+		CookieAccess.set(this, "player_name", kp.getPlayerName());
+		int[] controls = new int[] {
+				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME
+		};
+		CookieAccess.set(this, "controls", Arrays.toString(controls));
+	}
+	
+	protected void loadCookies() {
+		try {
+			kp.setPlayerName(CookieAccess.get(this, "player_name", "web user"));
+
+			String ia = CookieAccess.get(this, "controls", "");
+			if(!"".equals(ia)) {
+				ia = ia.substring(1, ia.length() - 1);
+				String[] controls = ia.split(", ");
+				kl.LEFT = Integer.parseInt(controls[0]);
+				kl.RIGHT = Integer.parseInt(controls[1]);
+				kl.ROTATE_LEFT = Integer.parseInt(controls[2]);
+				kl.ROTATE_RIGHT = Integer.parseInt(controls[3]);
+				kl.DOWN = Integer.parseInt(controls[4]);
+				kl.DROP = Integer.parseInt(controls[5]);
+				kl.DAS_TIME = Integer.parseInt(controls[6]);
+			}
+
+			kp.update();
+		} catch(Exception ex) {
+		}
+	}
+	
 	protected void submitScore() {
+		setCookies();
 		try {
 			WebScore score = new WebScore();
 			score.setScore(field.getLines());
@@ -410,6 +446,8 @@ public class MainApplet extends JApplet {
 		
 		ret.add(kp, BorderLayout.CENTER);
 		b.setSelected(true);
+		
+		loadCookies();
 		
 		return ret;
 	}
