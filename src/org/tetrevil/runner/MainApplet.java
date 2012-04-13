@@ -60,7 +60,8 @@ public class MainApplet extends JApplet {
 	{{
 		field.addTetrevilListener(new TetrevilAdapter() {
 			public void gameReset(TetrevilEvent e) {
-				submitScore();
+				if(!field.isGameOver())
+					submitScore();
 				setProvider();
 			}
 			@Override

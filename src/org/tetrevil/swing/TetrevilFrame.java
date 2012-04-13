@@ -157,7 +157,8 @@ public class TetrevilFrame extends JFrame {
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
 			public void gameReset(TetrevilEvent e) {
-				submitScore();
+				if(!field.isGameOver())
+					submitScore();
 				field.setPaused(true);
 				dp.setEnabled(true);
 			}
