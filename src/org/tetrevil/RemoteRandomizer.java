@@ -6,24 +6,32 @@ import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RemoteRandomizer extends MaliciousRandomizer {
+public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 	
-	protected String server;
+	protected String server = "localhost:8088";
 	
 	public RemoteRandomizer() {
-		this("www.tetrevil.org:8080");
+		this(DEFAULT_DEPTH, DEFAULT_DIST);
 	}
 	
 	public RemoteRandomizer(int depth, int dist) {
-		this("www.tetrevil.org:8080");
+		super(depth, dist);
 	}
 	
-	public RemoteRandomizer(String server) {
-		this.server = server;
+	public Shape provideLocalShape(Field field) {
+		return super.provideShape(field);
 	}
 	
 	@Override
 	public Shape provideShape(Field field) {
+		if(randomFirst) {
+			randomFirst = false;
+			ShapeType type;
+			do {
+				type = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)];
+			} while(type == ShapeType.S || type == ShapeType.Z);
+			return type.starter();
+		}
 		try {
 			HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/tetrevil_tomcat/randomizer").openConnection();
 
@@ -32,8 +40,8 @@ public class RemoteRandomizer extends MaliciousRandomizer {
 			http.setDoOutput(true);
 			
 			ObjectOutputStream out = new ObjectOutputStream(http.getOutputStream());
-			out.writeInt(getDepth());
-			out.writeObject(field.getField());
+			out.writeObject(this);
+			out.writeObject(field);
 			out.close();
 			
 			http.connect();

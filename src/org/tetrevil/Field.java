@@ -1,5 +1,6 @@
 package org.tetrevil;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import org.tetrevil.event.TetrevilEvent;
@@ -14,7 +15,7 @@ import org.tetrevil.swing.TetrevilTableModel;
  * @author robin
  *
  */
-public class Field {
+public class Field implements Serializable {
 	/**
 	 * The height of the matrix
 	 */
@@ -81,7 +82,7 @@ public class Field {
 	/**
 	 * Event listeners
 	 */
-	protected TetrevilListener[] listeners = new TetrevilListener[0];
+	protected transient TetrevilListener[] listeners = new TetrevilListener[0];
 	
 	public Field() {
 		this(false);
@@ -373,6 +374,8 @@ public class Field {
 	 * @param l
 	 */
 	public void addTetrevilListener(TetrevilListener l) {
+		if(listeners == null)
+			listeners = new TetrevilListener[0];
 		TetrevilListener[] ll = Arrays.copyOf(listeners, listeners.length + 1);
 		ll[ll.length - 1] = l;
 		listeners = ll;
@@ -383,6 +386,8 @@ public class Field {
 	 * @param l
 	 */
 	public void removeTetrevilListener(TetrevilListener l) {
+		if(listeners == null)
+			listeners = new TetrevilListener[0];
 		TetrevilListener[] listeners = this.listeners;
 		for(int i = listeners.length - 1; i >= 0; i--) {
 			if(l == listeners[i]) {

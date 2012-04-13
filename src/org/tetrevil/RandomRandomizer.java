@@ -1,11 +1,13 @@
 package org.tetrevil;
 
+import java.io.Serializable;
+
 /**
  * {@link Randomizer} that chooses at random, not using a bag.
  * @author robin
  *
  */
-public class RandomRandomizer implements Randomizer {
+public class RandomRandomizer implements Randomizer, Serializable {
 
 	@Override
 	public Shape provideShape(Field field) {

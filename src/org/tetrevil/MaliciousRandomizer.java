@@ -1,5 +1,6 @@
 package org.tetrevil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,18 +14,18 @@ import org.tetrevil.event.TetrevilListener;
  * @author robin
  *
  */
-public class MaliciousRandomizer implements Randomizer {
+public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int DEFAULT_DEPTH = 3;
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
-	public static class Score {
+	public static class Score implements Serializable {
 		public double score;
 		public Shape shape;
 		public Field field = new Field();
 	}
 
-	protected class Cache {
+	protected class Cache implements Serializable {
 		public Score depestDecide = new Score();
 		public Score[] worst = new Score[depth + 1];
 		public Field[] f = new Field[depth + 1];
@@ -54,10 +55,11 @@ public class MaliciousRandomizer implements Randomizer {
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
 	protected int[] typeCounts = new int[ShapeType.values().length];
 	protected int distAdjustment = 0;
+	
 	protected TetrevilListener adaptiveListener = new TetrevilAdapter() {
 		@Override
 		public void linesCleared(TetrevilEvent e) {
-			adjustDistribution(1);
+			adjustDistribution(e.getLines());
 		}
 	};
 

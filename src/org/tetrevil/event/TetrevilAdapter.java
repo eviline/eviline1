@@ -1,11 +1,13 @@
 package org.tetrevil.event;
 
+import java.io.Serializable;
+
 /**
  * Abstract implementation of {@link TetrevilListener}
  * @author robin
  *
  */
-public abstract class TetrevilAdapter implements TetrevilListener {
+public abstract class TetrevilAdapter implements TetrevilListener, Serializable {
 
 	@Override
 	public void clockTicked(TetrevilEvent e) {
