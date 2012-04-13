@@ -654,7 +654,8 @@ public class MainApplet extends JApplet {
 	@Override
 	public void stop() {
 		c.stop();
-		submitScore();
+		if(!field.isGameOver())
+			submitScore();
 	}
 	
 	@Override
