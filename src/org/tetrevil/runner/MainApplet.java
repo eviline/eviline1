@@ -298,7 +298,7 @@ public class MainApplet extends JApplet {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				malicious.setSelected(true);
-				depth.setText("3");
+				depth.setText("4");
 				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
