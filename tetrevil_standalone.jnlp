@@ -15,7 +15,7 @@
 
     </resources>
      <application-desc>
-     	<argument>fullscreen=true</argument>
+     	<argument>fullscreen=false</argument>
      </application-desc>
      <update check="always"/>
 </jnlp>

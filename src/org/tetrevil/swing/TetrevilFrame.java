@@ -113,6 +113,7 @@ public class TetrevilFrame extends JFrame {
 			dp.setEnabled(false);
 			tc.start();
 			tc.getTable().requestFocusInWindow();
+			field.setPaused(false);
 		}
 	});
 	
@@ -177,7 +178,7 @@ public class TetrevilFrame extends JFrame {
 		FocusListener fcl = new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				field.setPaused(false);
+//				field.setPaused(false);
 			}
 			@Override
 			public void focusLost(FocusEvent e) {
