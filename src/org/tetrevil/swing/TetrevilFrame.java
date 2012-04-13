@@ -229,7 +229,7 @@ public class TetrevilFrame extends JFrame {
 				"&copy;2012 Robin Kirkman</center></html>");
 	}
 
-	protected void submitScore() {
+	public void submitScore() {
 		if(!field.isPlaying() && !field.isGameOver())
 			return;
 		try {
