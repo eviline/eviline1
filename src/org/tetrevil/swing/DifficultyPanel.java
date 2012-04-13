@@ -95,7 +95,7 @@ public class DifficultyPanel extends JPanel {
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else
-					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
+					RandomizerFactory.setClazz(RemoteRandomizer.class);
 				setProvider();
 				provText.setText(field.getProvider().toString());
 			}
@@ -134,7 +134,6 @@ public class DifficultyPanel extends JPanel {
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
 				set.doClick();
-				RandomizerFactory.setClazz(RemoteRandomizer.class);
 				provText.setText("Sadistic");
 				setProvider();
 			}
@@ -146,7 +145,7 @@ public class DifficultyPanel extends JPanel {
 				if(!DifficultyPanel.this.isEnabled())
 					return;
 				malicious.setSelected(true);
-				depth.setText("4");
+				depth.setText("3");
 				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);

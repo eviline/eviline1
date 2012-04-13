@@ -42,6 +42,7 @@ import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.RandomizerFactory;
+import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.IntegerDocument;
@@ -236,6 +237,7 @@ public class MainApplet extends JApplet {
 	protected JPanel createDifficultyPanel() {
 		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		
+		final JButton sadistic = new JButton("Sadistic");
 		final JButton evil = new JButton("Evil");
 		final JButton normal = new JButton("Aggressive");
 		final JButton easy = new JButton("Rude");
@@ -266,7 +268,7 @@ public class MainApplet extends JApplet {
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else
-					RandomizerFactory.setClazz(MaliciousRandomizer.class);
+					RandomizerFactory.setClazz(RemoteRandomizer.class);
 				setProvider();
 				setStartText();
 				right.remove(difficulty);
@@ -294,11 +296,30 @@ public class MainApplet extends JApplet {
 			adaptive.setSelected(p.isAdaptive());
 		}
 		
+		sadistic.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				malicious.setSelected(true);
+				depth.setText("5");
+				rfactor.setText("0");
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+				unfair.setSelected(true);
+				distribution.setEnabled(false);
+				distribution.setText("30");
+				adaptive.setEnabled(false);
+				adaptive.setSelected(false);
+				set.doClick();
+				provText = "Sadistic";
+				setProvider();
+			}
+		});
+		
 		evil.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				malicious.setSelected(true);
-				depth.setText("4");
+				depth.setText("3");
 				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
@@ -392,8 +413,9 @@ public class MainApplet extends JApplet {
 		presets.add(evil, c);
 		c.gridx++; presets.add(normal, c);
 		c.gridx++; presets.add(easy, c);
+		c.gridx = 0; c.gridy++; c.gridwidth = 3; presets.add(sadistic, c);
 		
-		c.gridx = 0;  ret.add(presets, c);
+		c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
 		
 		JLabel l;
 		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
