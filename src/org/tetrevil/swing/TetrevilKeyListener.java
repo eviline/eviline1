@@ -78,7 +78,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 			return;
 		Field f = field;
 		boolean consume = true;
-		if(e.getKeyCode() == LEFT) {
+		if(e.getKeyCode() == LEFT && !pressed.contains(LEFT)) {
 			f.shiftLeft();
 			if(dasActive) {
 				dasDirection = ShapeDirection.LEFT;
@@ -88,7 +88,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 				dasDirection = ShapeDirection.LEFT;
 				dasTimer.restart();
 			}
-		} else if(e.getKeyCode() == RIGHT) {
+		} else if(e.getKeyCode() == RIGHT && !pressed.contains(RIGHT)) {
 			f.shiftRight();
 			if(dasActive) {
 				dasDirection = ShapeDirection.RIGHT;
@@ -151,5 +151,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 				dasTimer.stop();
 			}
 		}
+		if(!dasActive)
+			dasDirection = null;
 	}
 }
