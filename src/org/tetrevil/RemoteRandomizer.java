@@ -47,29 +47,4 @@ public class RemoteRandomizer extends MaliciousRandomizer {
 			throw new RuntimeException(cnfe);
 		}
 	}
-	
-	@Override
-	public boolean isAdaptive() {
-		return false;
-	}
-	
-	@Override
-	public int getDepth() {
-		return 5;
-	}
-	
-	@Override
-	public boolean isFair() {
-		return false;
-	}
-	
-	@Override
-	public double getRfactor() {
-		return 0;
-	}
-	
-	@Override
-	public int getDistribution() {
-		return 0;
-	}
 }

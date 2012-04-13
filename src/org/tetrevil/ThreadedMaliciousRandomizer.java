@@ -115,7 +115,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			futures.add(EXECUTOR.submit(new Callable<Score>() {
 				@Override
 				public Score call() throws Exception {
-					return children.get(type).decide(field.copyInto(new Field()), 0);
+					return children.get(type).decide(field.copyInto(new Field()), 1);
 				}
 			}));
 		}

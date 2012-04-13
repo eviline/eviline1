@@ -134,6 +134,7 @@ public class DifficultyPanel extends JPanel {
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
 				set.doClick();
+				RandomizerFactory.setClazz(RemoteRandomizer.class);
 				provText.setText("Sadistic");
 				setProvider();
 			}
