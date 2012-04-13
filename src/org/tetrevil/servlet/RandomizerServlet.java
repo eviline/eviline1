@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.tetrevil.Block;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousRandomizer;
+import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.Shape;
 import org.tetrevil.ThreadedMaliciousRandomizer;
 
@@ -37,29 +38,18 @@ public class RandomizerServlet extends HttpServlet {
 		ObjectInputStream in = new ObjectInputStream(request.getInputStream());
 		ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
 		
-		int depth = in.readInt();
-		
-		Block[][] blocks;
+		RemoteRandomizer randomizer;
+		Field field;
 		try {
-			blocks = (Block[][]) in.readObject();
+			randomizer = (RemoteRandomizer) in.readObject();
+			field = (Field) in.readObject();
 		} catch(ClassNotFoundException cnfe) {
 			throw new IOException(cnfe);
 		}
 		
-		Field field = new Field(true);
-		field.setField(blocks);
+		System.out.println("Providing shape for " + field + " using " + randomizer);
 		
-		MaliciousRandomizer randomizer = new ThreadedMaliciousRandomizer();
-		randomizer.setAdaptive(field, false);
-		randomizer.setDepth(depth);
-		randomizer.setFair(false);
-		randomizer.setRfactor(0);
-		field.setProvider(randomizer);
-		
-		System.out.println("Providing shape for " + field + " depth " + depth);
-		
-		randomizer.provideShape(field); // Skip the random starting shape
-		Shape shape = randomizer.provideShape(field);
+		Shape shape = randomizer.provideLocalShape(field); // Skip the random starting shape
 		
 		System.out.println("Chose to provide " + shape);
 		
