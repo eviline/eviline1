@@ -57,8 +57,8 @@ public class TetrevilFrame extends JFrame {
 		public Dimension preferredLayoutSize(Container parent) {
 			Dimension d = parent.getSize();
 			d.width = Math.max(d.width, d.height);
-			d.width = Math.max(d.width, 800);
-			d.height = Math.max(d.height, 600);
+			d.width = Math.max(d.width, 1024);
+			d.height = Math.max(d.height, 768);
 			return d;
 		}
 
@@ -66,8 +66,8 @@ public class TetrevilFrame extends JFrame {
 		public Dimension minimumLayoutSize(Container parent) {
 			Dimension d = parent.getSize();
 			d.width = d.height / 3;
-			d.width = Math.max(d.width, 800);
-			d.height = Math.max(d.height, 600);
+			d.width = Math.max(d.width, 1024);
+			d.height = Math.max(d.height, 768);
 			return d;
 		}
 

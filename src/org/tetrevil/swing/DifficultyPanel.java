@@ -42,6 +42,7 @@ public class DifficultyPanel extends JPanel {
 	protected JButton evil;
 	protected JButton normal;
 	protected JButton easy;
+	protected JCheckBox online;
 	
 	protected Properties props;
 
@@ -82,6 +83,22 @@ public class DifficultyPanel extends JPanel {
 		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
 		adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE);
 		
+		online = new JCheckBox("Use TETREVIL server");
+		online.setForeground(Color.BLACK); online.setBackground(Color.WHITE);
+		online.setSelected(true);
+		online.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(bag.isSelected())
+					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+				else if(online.isSelected())
+					RandomizerFactory.setClazz(RemoteRandomizer.class);
+				else
+					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
+				setProvider();
+			}
+		});
+		
 		set = new JButton(new AbstractAction("Set Custom Difficulty") {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -94,8 +111,10 @@ public class DifficultyPanel extends JPanel {
 				setParameter("adaptive", "" + adaptive.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
-				else
+				else if(online.isSelected())
 					RandomizerFactory.setClazz(RemoteRandomizer.class);
+				else
+					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
 				provText.setText(field.getProvider().toString());
 			}
@@ -263,9 +282,11 @@ public class DifficultyPanel extends JPanel {
 		
 		details.add(l = new JLabel("")); details.add(adaptive);
 		
+		
 		c.gridy++; c.weighty = 1; add(details, c);
 
-		c.gridy++; c.weighty = 0; add(set, c);
+		c.gridy++; c.weighty = 0; add(online, c);
+		c.gridy++; add(set, c);
 		
 		c.gridy++; add(provText, c);
 		
@@ -300,6 +321,7 @@ public class DifficultyPanel extends JPanel {
 		evil.setEnabled(enabled);
 		normal.setEnabled(enabled);
 		easy.setEnabled(enabled);
+		online.setEnabled(enabled);
 	}
 	
 	public void setProvider() {
