@@ -62,13 +62,13 @@ public class MainApplet extends JApplet {
 		field.addTetrevilListener(new TetrevilAdapter() {
 			public void gameReset(TetrevilEvent e) {
 				if(!field.isGameOver())
-					submitScore();
+					submitScore("Reset");
 				setProvider();
 			}
 			@Override
 			public void gameOver(TetrevilEvent e) {
 				try {
-					submitScore();
+					submitScore("Game Over");
 					
 					setStartText();
 					
@@ -125,7 +125,7 @@ public class MainApplet extends JApplet {
 		}
 	}
 	
-	protected void submitScore() {
+	protected void submitScore(String reason) {
 		setCookies();
 		if(!field.isPlaying() && !field.isGameOver())
 			return;
@@ -141,6 +141,7 @@ public class MainApplet extends JApplet {
 			score.setDistribution(p.getDistribution());
 			score.setRandomizer(p.getRandomizerName());
 			score.setAdaptive(p.isAdaptive() ? 1 : 0);
+			score.setReason(reason);
 			WebScore.submit(score, getParameter("score_host"));
 		} catch(Exception ioe) {
 			ioe.printStackTrace();
@@ -655,7 +656,7 @@ public class MainApplet extends JApplet {
 	public void stop() {
 		c.stop();
 		if(!field.isGameOver())
-			submitScore();
+			submitScore("Quit");
 	}
 	
 	@Override

@@ -115,7 +115,8 @@ public class Main {
 					frame.getParameters().store(new FileOutputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"), "Tetrevil Settings");
 				} catch(IOException ioe) {
 				}
-				frame.submitScore();
+				if(!field.isGameOver())
+					frame.submitScore("Quit");
 			}
 		}));
 	}

@@ -160,7 +160,7 @@ public class TetrevilFrame extends JFrame {
 			@Override
 			public void gameReset(TetrevilEvent e) {
 				if(!field.isGameOver())
-					submitScore();
+					submitScore("Reset");
 				field.setPaused(true);
 				dp.setEnabled(true);
 				dp.setProvider();
@@ -168,7 +168,7 @@ public class TetrevilFrame extends JFrame {
 			@Override
 			public void gameOver(TetrevilEvent e) {
 				try {
-					submitScore();
+					submitScore("Game Over");
 
 					setStartText();
 				} catch(Exception ex) {
@@ -230,7 +230,7 @@ public class TetrevilFrame extends JFrame {
 				"&copy;2012 Robin Kirkman</center></html>");
 	}
 
-	public void submitScore() {
+	public void submitScore(String reason) {
 		if(!field.isPlaying() && !field.isGameOver())
 			return;
 		try {
@@ -245,6 +245,7 @@ public class TetrevilFrame extends JFrame {
 			score.setDistribution(p.getDistribution());
 			score.setRandomizer(p.getRandomizerName());
 			score.setAdaptive(p.isAdaptive() ? 1 : 0);
+			score.setReason(reason);
 			WebScore.submit(score, getParameter("score_host"));
 		} catch(Exception ioe) {
 			ioe.printStackTrace();

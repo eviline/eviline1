@@ -40,6 +40,8 @@ public class WebScore implements Serializable {
 	
 	protected String randomizer;
 	
+	protected String reason;
+	
 	@Override
 	public String toString() {
 		return "WebScore[" + score + "," + name + "," + ts + "]";
@@ -208,5 +210,13 @@ public class WebScore implements Serializable {
 
 	public void setAdaptive(Integer adaptive) {
 		this.adaptive = adaptive;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 }
