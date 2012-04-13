@@ -26,6 +26,8 @@ import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.RandomizerFactory;
+import org.tetrevil.RemoteRandomizer;
+import org.tetrevil.ThreadedMaliciousRandomizer;
 
 public class DifficultyPanel extends JPanel {
 	protected Field field;
@@ -36,6 +38,7 @@ public class DifficultyPanel extends JPanel {
 		provText.setBorder(BorderFactory.createTitledBorder("Difficulty Setting"));
 	}}
 	protected JButton set;
+	protected JButton worst;
 	protected JButton evil;
 	protected JButton normal;
 	protected JButton easy;
@@ -49,6 +52,7 @@ public class DifficultyPanel extends JPanel {
 		
 		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
 		
+		worst = new JButton("Sadistic");
 		evil = new JButton("Evil");
 		normal = new JButton("Aggressive");
 		easy = new JButton("Rude");
@@ -91,7 +95,7 @@ public class DifficultyPanel extends JPanel {
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else
-					RandomizerFactory.setClazz(MaliciousRandomizer.class);
+					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
 				provText.setText(field.getProvider().toString());
 			}
@@ -113,6 +117,27 @@ public class DifficultyPanel extends JPanel {
 			adaptive.setEnabled(true);
 			adaptive.setSelected(p.isAdaptive());
 		}
+		
+		worst.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!DifficultyPanel.this.isEnabled())
+					return;
+				malicious.setSelected(true);
+				depth.setText("6");
+				rfactor.setText("0");
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+				unfair.setSelected(true);
+				distribution.setEnabled(false);
+				distribution.setText("30");
+				adaptive.setEnabled(false);
+				adaptive.setSelected(false);
+				set.doClick();
+				provText.setText("Sadistic");
+				setProvider();
+			}
+		});
 		
 		evil.addActionListener(new ActionListener() {
 			@Override
@@ -215,7 +240,8 @@ public class DifficultyPanel extends JPanel {
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 		
 		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
-		presets.add(evil, c);
+		presets.add(worst, c);
+		c.gridx++; presets.add(evil, c);
 		c.gridx++; presets.add(normal, c);
 		c.gridx++; presets.add(easy, c);
 		
@@ -270,6 +296,7 @@ public class DifficultyPanel extends JPanel {
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		set.setEnabled(enabled);
+		worst.setEnabled(enabled);
 		evil.setEnabled(enabled);
 		normal.setEnabled(enabled);
 		easy.setEnabled(enabled);

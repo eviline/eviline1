@@ -553,6 +553,10 @@ public class Field {
 		return field;
 	}
 
+	public void setField(Block[][] field) {
+		this.field = field;
+	}
+	
 	public boolean isGhosting() {
 		return ghosting;
 	}

@@ -68,4 +68,5 @@ public class TetrevilTable extends JTable {
 		this.field = field;
 		((TetrevilTableModel) getModel()).setField(field);
 	}
+	
 }
