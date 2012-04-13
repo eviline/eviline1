@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 	
-	protected String server = "localhost:8088";
+	protected String server = "www.tetrevil.org:8080";
 	
 	public RemoteRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);

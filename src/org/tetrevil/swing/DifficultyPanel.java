@@ -124,7 +124,7 @@ public class DifficultyPanel extends JPanel {
 				if(!DifficultyPanel.this.isEnabled())
 					return;
 				malicious.setSelected(true);
-				depth.setText("6");
+				depth.setText("5");
 				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);

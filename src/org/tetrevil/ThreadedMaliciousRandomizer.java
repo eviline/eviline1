@@ -1,5 +1,9 @@
 package org.tetrevil;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,9 +74,19 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			futures.add(EXECUTOR.submit(new Callable<Score>() {
 				@Override
 				public Score call() throws Exception {
-					MaliciousRandomizer child = new MaliciousRandomizer(depth - 1, distribution);
-					child.setFair(fair);
-					child.setRfactor(rfactor);
+//					MaliciousRandomizer child = new MaliciousRandomizer(depth, distribution);
+//					child.setFair(fair);
+//					child.setRfactor(rfactor);
+					
+					ThreadedMaliciousRandomizer child;
+					
+					ByteArrayOutputStream bout = new ByteArrayOutputStream();
+					ObjectOutputStream out = new ObjectOutputStream(bout);
+					out.writeObject(ThreadedMaliciousRandomizer.this);
+					out.close();
+					ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+					ObjectInputStream in = new ObjectInputStream(bin);
+					child = (ThreadedMaliciousRandomizer) in.readObject();
 					
 					Field f = new Field();
 					Field fc = new Field();
@@ -100,7 +114,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 							}
 						}
 					}
-					typeScore = child.decide(typeScore.field, 0);
+					typeScore = child.decide(typeScore.field, 1);
 					typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
 					if(fair)
 						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];

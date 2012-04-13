@@ -400,6 +400,8 @@ public class Field implements Serializable {
 	}
 	
 	protected void fireClockTicked() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -410,6 +412,8 @@ public class Field implements Serializable {
 	}
 	
 	protected void fireGameOver() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -420,6 +424,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireGamePaused() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -430,6 +436,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireGameReset() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -440,6 +448,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireShiftedLeft() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -450,6 +460,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireShiftedRight() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -460,6 +472,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireRotatedLeft() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -470,6 +484,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireRotatedRight() {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
@@ -480,6 +496,8 @@ public class Field implements Serializable {
 	}
 
 	protected void fireLinesCleared(int lines) {
+		if(listeners == null)
+			return;
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
