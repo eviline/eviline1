@@ -12,4 +12,6 @@ public interface Randomizer {
 	 * @return
 	 */
 	public Shape provideShape(Field field);
+	
+	public String getRandomizerName();
 }

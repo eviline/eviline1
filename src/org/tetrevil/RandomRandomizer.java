@@ -13,4 +13,8 @@ public class RandomRandomizer implements Randomizer {
 		return shapes[(int)(shapes.length * Math.random())];
 	}
 
+	@Override
+	public String getRandomizerName() {
+		return getClass().getName();
+	}
 }

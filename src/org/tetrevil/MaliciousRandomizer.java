@@ -75,6 +75,11 @@ public class MaliciousRandomizer implements Randomizer {
 	}
 	
 	@Override
+	public String getRandomizerName() {
+		return getClass().getName();
+	}
+	
+	@Override
 	public String toString() {
 		return "mal, d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
 	}
@@ -135,20 +140,7 @@ public class MaliciousRandomizer implements Randomizer {
 				for(int x = 0; x < Field.WIDTH; x++) {
 					field.copyInto(f);
 					f.setShape(shape);
-//					f.setShapeY(0);
 					f.setShapeX(x);
-//					for(int i = 0; i < Field.WIDTH / 2 + 1; i++)
-//						f.shiftLeft();
-//					for(int i = 0; i < x; i++)
-//						f.shiftRight();
-//					while(f.getShape() != null && !f.isGameOver())
-//						f.clockTick();
-//					double fscore = score(f);
-//					if(fscore < typeScore.score) {
-//						typeScore.score = fscore;
-//						typeScore.field = f.copyInto(typeScore.field);
-//						typeScore.shape = shape;
-//					}
 					for(int y = 0; y < Field.HEIGHT + Field.BUFFER; y++) {
 						f.setShapeY(y);
 						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {

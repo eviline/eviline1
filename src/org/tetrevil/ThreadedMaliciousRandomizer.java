@@ -15,63 +15,11 @@ import org.tetrevil.MaliciousRandomizer.Score;
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	protected static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 	
-	protected Map<ShapeType, MaliciousRandomizer> children = new HashMap<ShapeType, MaliciousRandomizer>();
-	
 	public ThreadedMaliciousRandomizer() {
-		for(ShapeType type : ShapeType.values()) {
-			MaliciousRandomizer r;
-			children.put(type, r = new MaliciousRandomizer());
-			r.provideShape(new Field());
-		}
 	}
 	
 	public ThreadedMaliciousRandomizer(int depth, int distribution) {
 		super(depth, distribution);
-		for(ShapeType type : ShapeType.values()) {
-			MaliciousRandomizer r;
-			children.put(type, r = new MaliciousRandomizer(depth, distribution));
-			r.provideShape(new Field());
-		}
-	}
-	
-	@Override
-	public void setAdaptive(Field field, boolean adaptive) {
-		super.setAdaptive(field, adaptive);
-		for(MaliciousRandomizer child : children.values()) {
-			child.setAdaptive(field, adaptive);
-		}
-	}
-	
-	@Override
-	public void setDepth(int depth) {
-		super.setDepth(depth);
-		for(MaliciousRandomizer child : children.values()) {
-			child.setDepth(depth - 1);
-		}
-	}
-	
-	@Override
-	public void setFair(boolean fair) {
-		super.setFair(fair);
-		for(MaliciousRandomizer child : children.values()) {
-			child.setFair(fair);
-		}
-	}
-	
-	@Override
-	public void setRfactor(double rfactor) {
-		super.setRfactor(rfactor);
-		for(MaliciousRandomizer child : children.values()) {
-			child.setRfactor(rfactor);
-		}
-	}
-	
-	@Override
-	public void adjustDistribution(int adjustment) {
-		super.adjustDistribution(adjustment);
-		for(MaliciousRandomizer child : children.values()) {
-			child.adjustDistribution(adjustment);
-		}
 	}
 	
 	@Override
@@ -93,6 +41,11 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		typeCounts[(int)(typeCounts.length * Math.random())]--;
 		return shape;
 	}
+	
+	@Override
+	public String getRandomizerName() {
+		return MaliciousRandomizer.class.getName();
+	}
 
 	protected Score decideThreaded(Field field) {
 		return worstForThreaded(field);
@@ -107,6 +60,8 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 					omit = null;
 			}
 		}
+		
+		paintImpossibles(field);
 
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -115,13 +70,48 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			futures.add(EXECUTOR.submit(new Callable<Score>() {
 				@Override
 				public Score call() throws Exception {
-					return children.get(type).decide(field.copyInto(new Field()), 1);
+					MaliciousRandomizer child = new MaliciousRandomizer(depth - 1, distribution);
+					child.setFair(fair);
+					child.setRfactor(rfactor);
+					
+					Field f = new Field();
+					Field fc = new Field();
+					
+					Score typeScore = new Score();
+					typeScore.score = Double.POSITIVE_INFINITY;
+
+					for(Shape shape : type.orientations()) {
+						for(int x = 0; x < Field.WIDTH; x++) {
+							field.copyInto(f);
+							f.setShape(shape);
+							f.setShapeX(x);
+							for(int y = 0; y < Field.HEIGHT + Field.BUFFER; y++) {
+								f.setShapeY(y);
+								if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+									f.copyInto(fc);
+									fc.clockTick();
+									double fscore = Fitness.score(fc);
+									if(fscore < typeScore.score) {
+										typeScore.score = fscore;
+										typeScore.field = fc.copyInto(typeScore.field);
+										typeScore.shape = shape;
+									}
+								}
+							}
+						}
+					}
+					typeScore = child.decide(typeScore.field, 0);
+					typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
+					if(fair)
+						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+					typeScore.shape = type.orientations()[0];
+					return typeScore;
 				}
 			}));
 		}
 		
-		double lowestScore = Double.NEGATIVE_INFINITY;
-		Score lowest = null;
+		double highestScore = Double.NEGATIVE_INFINITY;
+		Score worst = null;
 		for(Future<Score> f : futures) {
 			Score score;
 			try {
@@ -131,11 +121,13 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			} catch(ExecutionException ee) {
 				throw new RuntimeException(ee);
 			}
-			if(score.score > lowestScore)
-				lowest = score;
+			if(score.score > highestScore) {
+				worst = score;
+				highestScore = score.score;
+			}
 		}
 		
-		return lowest;
+		return worst;
 	}
 
 

@@ -50,4 +50,8 @@ public class ConcurrentShapeProvider implements Randomizer {
 		}
 	}
 
+	@Override
+	public String getRandomizerName() {
+		return "Concurrent " + provider.getRandomizerName();
+	}
 }

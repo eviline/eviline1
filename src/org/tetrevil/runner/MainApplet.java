@@ -138,7 +138,7 @@ public class MainApplet extends JApplet {
 			score.setRfactor(p.getRfactor());
 			score.setFair(p.isFair() ? 1 : 0);
 			score.setDistribution(p.getDistribution());
-			score.setRandomizer(p.getClass().getName());
+			score.setRandomizer(p.getRandomizerName());
 			score.setAdaptive(p.isAdaptive() ? 1 : 0);
 			WebScore.submit(score, getParameter("score_host"));
 		} catch(Exception ioe) {
@@ -211,7 +211,7 @@ public class MainApplet extends JApplet {
 		highScore.setFair(p.isFair() ? 1 : 0);
 		highScore.setAdaptive(p.isAdaptive() ? 1 : 0);
 		highScore.setDistribution(p.getDistribution());
-		highScore.setRandomizer(RandomizerFactory.getClazz().getName());
+		highScore.setRandomizer(RandomizerFactory.newRandomizer().getRandomizerName());
 		try {
 			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
 			if(ws != null)
