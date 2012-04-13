@@ -13,10 +13,16 @@ public class TetrevilEvent extends EventObject {
 	private static final long serialVersionUID = 1L;
 
 	protected Field field;
+	protected int lines;
 	
 	public TetrevilEvent(Object source, Field field) {
 		super(source);
 		this.field = field;
+	}
+	
+	public TetrevilEvent(Object source, Field field, int lines) {
+		this(source, field);
+		this.lines = lines;
 	}
 	
 	/**
@@ -25,5 +31,13 @@ public class TetrevilEvent extends EventObject {
 	 */
 	public Field getField() {
 		return field;
+	}
+	
+	/**
+	 * Returns the number of lines cleared in a multiline event
+	 * @return
+	 */
+	public int getLines() {
+		return lines;
 	}
 }

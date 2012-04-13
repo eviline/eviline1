@@ -196,6 +196,7 @@ public class Field {
 		if(gameOver == true)
 			fireGameOver(); // Fire game over event
 		if(shape == null) { // If there is no active shape, check for cleared lines
+			int multilines = 0;
 			for(int y = field.length - 1 - BUFFER; y >= BUFFER; y--) {
 				boolean cleared = true;
 				for(int x = BUFFER; x < field[y].length - BUFFER; x++) {
@@ -204,6 +205,7 @@ public class Field {
 				}
 				if(cleared) {
 					lines++;
+					multilines++;
 					// Shift down the field
 					for(int z = y - 1; z >= 0; z--) {
 						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
@@ -211,8 +213,11 @@ public class Field {
 					// Fill in the top row with nulls
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
 					y = field.length - BUFFER;
-					fireLinesCleared(); // Fire a line cleared event
 				}
+			}
+			
+			if(multilines > 0) {
+				fireLinesCleared(multilines);
 			}
 		}
 	}
@@ -469,12 +474,12 @@ public class Field {
 		}
 	}
 
-	protected void fireLinesCleared() {
+	protected void fireLinesCleared(int lines) {
 		TetrevilEvent e = null;
 		TetrevilListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, this, lines);
 			ll[i].linesCleared(e);
 		}
 	}
