@@ -136,6 +136,8 @@ public class TetrevilKeyListener extends KeyAdapter {
 				}
 				dasTimer.stop();
 			}
+			if(!dasActive)
+				dasDirection = null;
 		}
 		if(e.getKeyCode() == RIGHT) {
 			if(dasDirection == ShapeDirection.RIGHT) {
@@ -150,8 +152,8 @@ public class TetrevilKeyListener extends KeyAdapter {
 				}
 				dasTimer.stop();
 			}
+			if(!dasActive)
+				dasDirection = null;
 		}
-		if(!dasActive)
-			dasDirection = null;
 	}
 }
