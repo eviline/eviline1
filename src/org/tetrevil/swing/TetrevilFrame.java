@@ -98,7 +98,7 @@ public class TetrevilFrame extends JFrame {
 		
 	}
 	
-	protected Properties parameters = new Properties();
+	protected Properties parameters;
 	
 	protected Field field;
 	protected TetrevilComponent tc;
@@ -117,9 +117,10 @@ public class TetrevilFrame extends JFrame {
 		}
 	});
 	
-	public TetrevilFrame(Field f) {
+	public TetrevilFrame(Field f, Properties properties) {
 		super("TETREVIL");
 		this.field = f;
+		this.parameters = properties;
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new GridBagLayout());
@@ -262,26 +263,30 @@ public class TetrevilFrame extends JFrame {
 	}
 	
 	public void setKeysFromParams() {
-		if(getParameter("left") != null)
-			kl.LEFT = TetrevilKeyListener.getKeyCode(getParameter("left"));
-		if(getParameter("right") != null)
-			kl.RIGHT = TetrevilKeyListener.getKeyCode(getParameter("right"));
-		if(getParameter("rotate_left") != null)
-			kl.ROTATE_LEFT = TetrevilKeyListener.getKeyCode(getParameter("rotate_left"));
-		if(getParameter("rotate_right") != null)
-			kl.ROTATE_RIGHT = TetrevilKeyListener.getKeyCode(getParameter("rotate_right"));
-		if(getParameter("down") != null)
-			kl.DOWN = TetrevilKeyListener.getKeyCode(getParameter("down"));
-		if(getParameter("drop") != null)
-			kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
-		if(getParameter("das_time") != null)
-			kl.DAS_TIME = Integer.parseInt(getParameter("das_time"));
-		if(getParameter("reset") != null)
-			kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
-		if(getParameter("pause") != null)
-			kl.PAUSE = TetrevilKeyListener.getKeyCode(getParameter("pause"));
-		if(getParameter("player_name") != null)
-			tkp.setPlayerName(getParameter("player_name"));
+		if(kl != null) {
+			if(getParameter("left") != null)
+				kl.LEFT = TetrevilKeyListener.getKeyCode(getParameter("left"));
+			if(getParameter("right") != null)
+				kl.RIGHT = TetrevilKeyListener.getKeyCode(getParameter("right"));
+			if(getParameter("rotate_left") != null)
+				kl.ROTATE_LEFT = TetrevilKeyListener.getKeyCode(getParameter("rotate_left"));
+			if(getParameter("rotate_right") != null)
+				kl.ROTATE_RIGHT = TetrevilKeyListener.getKeyCode(getParameter("rotate_right"));
+			if(getParameter("down") != null)
+				kl.DOWN = TetrevilKeyListener.getKeyCode(getParameter("down"));
+			if(getParameter("drop") != null)
+				kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
+			if(getParameter("das_time") != null)
+				kl.DAS_TIME = Integer.parseInt(getParameter("das_time"));
+			if(getParameter("reset") != null)
+				kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
+			if(getParameter("pause") != null)
+				kl.PAUSE = TetrevilKeyListener.getKeyCode(getParameter("pause"));
+		}
+		if(tkp != null) {
+			if(getParameter("player_name") != null)
+				tkp.setPlayerName(getParameter("player_name"));
+		}
 	}
 
 	public Properties getParameters() {

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -41,12 +42,14 @@ public class Main {
 		final Field field = new Field(true);
 		field.setGhosting(true);
 
-		final TetrevilFrame frame = new TetrevilFrame(field);
-
+		Properties p = new Properties();
 		try {
-			frame.getParameters().load(new FileInputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"));
+			p.load(new FileInputStream(System.getProperty("user.home") + File.separator + ".tetrevilrc"));
 		} catch(IOException ioe) {
 		}
+		
+		final TetrevilFrame frame = new TetrevilFrame(field, p);
+
 		
 		for(String arg : args) {
 			if(arg.contains("=")) {

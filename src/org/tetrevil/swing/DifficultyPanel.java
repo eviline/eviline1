@@ -83,12 +83,13 @@ public class DifficultyPanel extends JPanel {
 		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
 		adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE);
 		
-		online = new JCheckBox("Use TETREVIL server");
+		online = new JCheckBox("Use TETREVIL server for shapes");
 		online.setForeground(Color.BLACK); online.setBackground(Color.WHITE);
-		online.setSelected(true);
+		online.setSelected(Boolean.parseBoolean(props.getProperty("online", "true")));
 		online.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				setParameter("online", "" + online.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else if(online.isSelected())
@@ -152,6 +153,7 @@ public class DifficultyPanel extends JPanel {
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				online.setSelected(true);
 				set.doClick();
 				provText.setText("Sadistic");
 				setProvider();
