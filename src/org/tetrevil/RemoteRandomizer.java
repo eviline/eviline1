@@ -32,6 +32,18 @@ public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 			} while(type == ShapeType.S || type == ShapeType.Z);
 			return type.starter();
 		}
+	
+		Shape shape = remote(field);
+		recent.add(shape.type());
+		while(recent.size() > HISTORY_SIZE)
+			recent.remove(0);
+		typeCounts[shape.type().ordinal()]++;
+		typeCounts[(int)(typeCounts.length * Math.random())]--;
+		return shape;
+
+	}
+	
+	protected Shape remote(Field field) {
 		try {
 			HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/tetrevil_tomcat/randomizer").openConnection();
 

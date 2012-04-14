@@ -57,7 +57,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	
 	protected Score worstForThreaded(final Field field) {
 		ShapeType omit = null;
-		if(depth == 0 && recent.size() > 0) {
+		if(recent.size() > 0) {
 			omit = recent.get(0);
 			for(ShapeType t : recent) {
 				if(omit != t)
