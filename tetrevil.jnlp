@@ -18,8 +18,8 @@
     <applet-desc 
          name="TETREVIL"
          main-class="org.tetrevil.runner.MainApplet"
-         width="520"
-         height="500">
+         width="550"
+         height="550">
      </applet-desc>
      <update check="always"/>
 </jnlp>  
