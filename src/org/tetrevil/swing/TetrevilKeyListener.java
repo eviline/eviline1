@@ -52,6 +52,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 	public int RESET = KeyEvent.VK_R;
 	public int PAUSE = KeyEvent.VK_P;
 	public int DAS_TIME = 350;
+	public int DOWN_TIME = 50;
 	
 	protected Field field;
 
@@ -66,10 +67,26 @@ public class TetrevilKeyListener extends KeyAdapter {
 		}
 	});
 	
+	protected Timer downTimer = new Timer(50, new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(!field.isGrounded())
+				field.clockTick();
+		}
+	});
+	
 	protected Set<Integer> pressed = new HashSet<Integer>();
 	
 	public TetrevilKeyListener(Field field) {
 		this.field = field;
+		updateTimers();
+	}
+	
+	public void updateTimers() {
+		dasTimer.setInitialDelay(DAS_TIME);
+		dasTimer.setDelay(DAS_TIME);
+		downTimer.setInitialDelay(0);
+		downTimer.setDelay(DOWN_TIME);
 	}
 
 	@Override
@@ -107,8 +124,9 @@ public class TetrevilKeyListener extends KeyAdapter {
 				field.clockTick();
 			}
 		} else if(e.getKeyCode() == DOWN) {
-			if(!pressed.contains(DOWN) || !field.isGrounded())
-				field.clockTick();
+			if(!pressed.contains(DOWN)) {
+				downTimer.start();
+			}
 		} else if(e.getKeyCode() == RESET)
 			f.reset();
 		else if(e.getKeyCode() == PAUSE)
@@ -154,6 +172,9 @@ public class TetrevilKeyListener extends KeyAdapter {
 			}
 			if(!dasActive)
 				dasDirection = null;
+		}
+		if(e.getKeyCode() == DOWN) {
+			downTimer.stop();
 		}
 	}
 }

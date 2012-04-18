@@ -176,6 +176,7 @@ public class MainApplet extends JApplet {
 		setParameter("down", KeyEvent.getKeyText(kl.DOWN));
 		setParameter("drop", KeyEvent.getKeyText(kl.DROP));
 		setParameter("das_time", "" + kl.DAS_TIME);
+		setParameter("down_time", "" + kl.DOWN_TIME);
 	}
 	
 	protected TetrevilKeyListener setKeys(TetrevilKeyListener kl) {
@@ -193,6 +194,8 @@ public class MainApplet extends JApplet {
 			kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
 		if(getParameter("das_time") != null)
 			kl.DAS_TIME = Integer.parseInt(getParameter("das_time"));
+		if(getParameter("down_time") != null)
+			kl.DOWN_TIME = Integer.parseInt(getParameter("down_time"));
 		if(getParameter("reset") != null)
 			kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
 		if(getParameter("pause") != null)

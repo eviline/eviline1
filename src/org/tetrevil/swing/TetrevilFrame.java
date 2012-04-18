@@ -260,6 +260,7 @@ public class TetrevilFrame extends JFrame {
 		setParameter("down", "" + kl.DOWN);
 		setParameter("drop", "" + kl.DROP);
 		setParameter("das_time", "" + kl.DAS_TIME);
+		setParameter("down_time", "" + kl.DOWN_TIME);
 		setParameter("player_name", tkp.getPlayerName());
 	}
 	
@@ -279,6 +280,8 @@ public class TetrevilFrame extends JFrame {
 				kl.DROP = TetrevilKeyListener.getKeyCode(getParameter("drop"));
 			if(getParameter("das_time") != null)
 				kl.DAS_TIME = Integer.parseInt(getParameter("das_time"));
+			if(getParameter("down_time") != null)
+				kl.DOWN_TIME = Integer.parseInt(getParameter("down_time"));
 			if(getParameter("reset") != null)
 				kl.RESET = TetrevilKeyListener.getKeyCode(getParameter("reset"));
 			if(getParameter("pause") != null)
