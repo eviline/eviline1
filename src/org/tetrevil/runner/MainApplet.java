@@ -43,6 +43,7 @@ import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.RandomizerFactory;
 import org.tetrevil.RemoteRandomizer;
+import org.tetrevil.ThreadedMaliciousRandomizer;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.IntegerDocument;
@@ -96,11 +97,15 @@ public class MainApplet extends JApplet {
 	protected JPanel difficulty;
 	
 	protected void setCookies() {
-		CookieAccess.set(this, "player_name", kp.getPlayerName());
-		int[] controls = new int[] {
-				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME
-		};
-		CookieAccess.set(this, "controls", Arrays.toString(controls));
+		try {
+			CookieAccess.set(this, "player_name", kp.getPlayerName());
+			int[] controls = new int[] {
+					kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME
+			};
+			CookieAccess.set(this, "controls", Arrays.toString(controls));
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	protected void loadCookies() {
@@ -272,7 +277,7 @@ public class MainApplet extends JApplet {
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else
-					RandomizerFactory.setClazz(RemoteRandomizer.class);
+					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
 				setStartText();
 				right.remove(difficulty);
@@ -314,6 +319,7 @@ public class MainApplet extends JApplet {
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
 				set.doClick();
+				RandomizerFactory.setClazz(RemoteRandomizer.class);
 				provText = "Sadistic";
 				setProvider();
 			}
