@@ -101,7 +101,7 @@ public class MainApplet extends JApplet {
 		
 		cookies.put("player_name", kp.getPlayerName());
 		int[] controls = new int[] {
-				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME
+				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME
 		};
 		cookies.put("controls", Arrays.toString(controls));
 		
@@ -109,28 +109,33 @@ public class MainApplet extends JApplet {
 	}
 	
 	protected void loadCookies() {
-		Map<String, String> cookies = CookieAccess.get(this);
+		try {
+			Map<String, String> cookies = CookieAccess.get(this);
 
-		String playerName = cookies.get("player_name");
-		if(playerName == null)
-			playerName = "web user";
+			String playerName = cookies.get("player_name");
+			if(playerName == null)
+				playerName = "web user";
 
-		kp.setPlayerName(playerName);
+			kp.setPlayerName(playerName);
 
-		String ia = cookies.get("controls");
-		if(ia != null) {
-			ia = ia.substring(1, ia.length() - 1);
-			String[] controls = ia.split(", ");
-			kl.LEFT = Integer.parseInt(controls[0]);
-			kl.RIGHT = Integer.parseInt(controls[1]);
-			kl.ROTATE_LEFT = Integer.parseInt(controls[2]);
-			kl.ROTATE_RIGHT = Integer.parseInt(controls[3]);
-			kl.DOWN = Integer.parseInt(controls[4]);
-			kl.DROP = Integer.parseInt(controls[5]);
-			kl.DAS_TIME = Integer.parseInt(controls[6]);
+			String ia = cookies.get("controls");
+			if(ia != null) {
+				ia = ia.substring(1, ia.length() - 1);
+				String[] controls = ia.split(", ");
+				kl.LEFT = Integer.parseInt(controls[0]);
+				kl.RIGHT = Integer.parseInt(controls[1]);
+				kl.ROTATE_LEFT = Integer.parseInt(controls[2]);
+				kl.ROTATE_RIGHT = Integer.parseInt(controls[3]);
+				kl.DOWN = Integer.parseInt(controls[4]);
+				kl.DROP = Integer.parseInt(controls[5]);
+				kl.DAS_TIME = Integer.parseInt(controls[6]);
+				kl.DOWN_TIME = Integer.parseInt(controls[7]);
+			}
+
+			kp.update();
+		} catch(Exception ex) {
+			ex.printStackTrace();
 		}
-
-		kp.update();
 	}
 	
 	protected void submitScore(String reason) {

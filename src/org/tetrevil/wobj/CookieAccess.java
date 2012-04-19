@@ -38,7 +38,7 @@ public class CookieAccess {
 				String[] cookies = myCookie.split(";");
 				for (String cookie : cookies) {
 					int pos = cookie.indexOf("=");
-					if (cookie.substring(0, pos).trim().equals("cookie")) {
+					if (cookie.substring(0, pos).trim().equals("c")) {
 						data = cookie.substring(pos + 1);
 						break;
 					}
@@ -48,10 +48,11 @@ public class CookieAccess {
 				return new TreeMap<String, String>();
 			ByteArrayOutputStream bout = new ByteArrayOutputStream();
 			for(int i = 0; i < data.length(); i += 2) {
-				bout.write(Byte.parseByte(data.substring(i, i+2), 16));
+				bout.write(Integer.parseInt(data.substring(i, i+2), 16));
 			}
 			return (Map<String, String>) new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray())).readObject();
 		} catch(Exception ex) {
+			JOptionPane.showMessageDialog(applet, ex.toString());
 			ex.printStackTrace();
 			return new TreeMap<String, String>();
 		}
@@ -71,9 +72,10 @@ public class CookieAccess {
 			String value = sb.toString();
 			JSObject win = JSObject.getWindow(applet);
 			JSObject doc = (JSObject) win.getMember("document");
-			String data = "cookie=" + value + "; path=/; expires=Thu, 31-Dec-2019 12:00:00 GMT";
+			String data = "c=" + value + "; path=/; expires=Thu, 31-Dec-2019 12:00:00 GMT";
 			doc.setMember("cookie", data);
 		} catch(Exception ex) {
+			JOptionPane.showMessageDialog(applet, ex.toString());
 			ex.printStackTrace();
 		}
 	}
