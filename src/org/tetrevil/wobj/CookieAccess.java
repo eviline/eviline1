@@ -52,7 +52,7 @@ public class CookieAccess {
 			}
 			return (Map<String, String>) new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray())).readObject();
 		} catch(Exception ex) {
-			JOptionPane.showMessageDialog(applet, ex.toString());
+//			JOptionPane.showMessageDialog(applet, ex.toString());
 			ex.printStackTrace();
 			return new TreeMap<String, String>();
 		}
@@ -75,7 +75,7 @@ public class CookieAccess {
 			String data = "c=" + value + "; path=/; expires=Thu, 31-Dec-2019 12:00:00 GMT";
 			doc.setMember("cookie", data);
 		} catch(Exception ex) {
-			JOptionPane.showMessageDialog(applet, ex.toString());
+//			JOptionPane.showMessageDialog(applet, ex.toString());
 			ex.printStackTrace();
 		}
 	}
