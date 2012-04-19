@@ -97,37 +97,40 @@ public class MainApplet extends JApplet {
 	protected JPanel difficulty;
 	
 	protected void setCookies() {
-		try {
-			CookieAccess.set(this, "player_name", kp.getPlayerName());
-			int[] controls = new int[] {
-					kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME
-			};
-			CookieAccess.set(this, "controls", Arrays.toString(controls));
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
+		Map<String, String> cookies = CookieAccess.get(this);
+		
+		cookies.put("player_name", kp.getPlayerName());
+		int[] controls = new int[] {
+				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME
+		};
+		cookies.put("controls", Arrays.toString(controls));
+		
+		CookieAccess.set(this, cookies);
 	}
 	
 	protected void loadCookies() {
-		try {
-			kp.setPlayerName(CookieAccess.get(this, "player_name", "web user"));
+		Map<String, String> cookies = CookieAccess.get(this);
 
-			String ia = CookieAccess.get(this, "controls", "");
-			if(!"".equals(ia)) {
-				ia = ia.substring(1, ia.length() - 1);
-				String[] controls = ia.split(", ");
-				kl.LEFT = Integer.parseInt(controls[0]);
-				kl.RIGHT = Integer.parseInt(controls[1]);
-				kl.ROTATE_LEFT = Integer.parseInt(controls[2]);
-				kl.ROTATE_RIGHT = Integer.parseInt(controls[3]);
-				kl.DOWN = Integer.parseInt(controls[4]);
-				kl.DROP = Integer.parseInt(controls[5]);
-				kl.DAS_TIME = Integer.parseInt(controls[6]);
-			}
+		String playerName = cookies.get("player_name");
+		if(playerName == null)
+			playerName = "web user";
 
-			kp.update();
-		} catch(Exception ex) {
+		kp.setPlayerName(playerName);
+
+		String ia = cookies.get("controls");
+		if(ia != null) {
+			ia = ia.substring(1, ia.length() - 1);
+			String[] controls = ia.split(", ");
+			kl.LEFT = Integer.parseInt(controls[0]);
+			kl.RIGHT = Integer.parseInt(controls[1]);
+			kl.ROTATE_LEFT = Integer.parseInt(controls[2]);
+			kl.ROTATE_RIGHT = Integer.parseInt(controls[3]);
+			kl.DOWN = Integer.parseInt(controls[4]);
+			kl.DROP = Integer.parseInt(controls[5]);
+			kl.DAS_TIME = Integer.parseInt(controls[6]);
 		}
+
+		kp.update();
 	}
 	
 	protected void submitScore(String reason) {
