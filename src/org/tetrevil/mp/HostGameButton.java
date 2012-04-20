@@ -26,7 +26,7 @@ public class HostGameButton extends JButton implements ActionListener, Runnable 
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		name = JOptionPane.showInputDialog("Please enter the name of your game");
+		name = JOptionPane.showInputDialog(this, "Please enter the name of your game");
 		if(name == null)
 			return;
 		new Thread(this).start();

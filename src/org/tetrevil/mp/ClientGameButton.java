@@ -23,7 +23,7 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		name = JOptionPane.showInputDialog("Please enter the name of their game");
+		name = JOptionPane.showInputDialog(this, "Please enter the name of their game");
 		if(name == null)
 			return;
 		new Thread(this).start();
@@ -33,6 +33,10 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 	public void run() {
 		try {
 			Socket socket = new ClientSocketFactory(frame.getParameter("score_host")).newClientSocket(name);
+			if(socket == null) {
+				JOptionPane.showMessageDialog(this, "No game with that name.");
+				return;
+			}
 			setText("Waiting for host...");
 			socket.getOutputStream().write(0);
 			socket.getInputStream().read();
