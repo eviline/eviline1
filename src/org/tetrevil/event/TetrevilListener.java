@@ -55,4 +55,6 @@ public interface TetrevilListener extends EventListener {
 	 * @param e
 	 */
 	public void linesCleared(TetrevilEvent e);
+	
+	public void garbageReceived(TetrevilEvent e);
 }

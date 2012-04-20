@@ -79,6 +79,8 @@ public class Field implements Serializable {
 	 */
 	protected ShapeDirection autoShift = null;
 	
+	protected boolean unpausable = false;
+	
 	/**
 	 * Event listeners
 	 */
@@ -344,6 +346,18 @@ public class Field implements Serializable {
 		}
 	}
 	
+	public void garbage(int lines) {
+		if(lines == 0)
+			return;
+		for(int i = lines; i < field.length; i++) {
+			System.arraycopy(field[i], 0, field[i - lines], 0, field[i].length);
+		}
+		for(int i = HEIGHT + BUFFER - lines; i < HEIGHT + BUFFER; i++) {
+			int x = (int)(WIDTH * Math.random());
+			field[i][x] = null;
+		}
+	}
+	
 	/**
 	 * Return the block at the specified x,y pair, with the current shape and current ghost applied.
 	 * Used by field renderers such as {@link TetrevilTableModel}
@@ -560,6 +574,8 @@ public class Field implements Serializable {
 	}
 
 	public void setPaused(boolean paused) {
+		if(unpausable && paused)
+			return;
 		this.paused = paused;
 		fireGamePaused();
 	}
@@ -586,6 +602,14 @@ public class Field implements Serializable {
 
 	public void setGhosting(boolean ghosting) {
 		this.ghosting = ghosting;
+	}
+	
+	public boolean isUnpausable() {
+		return unpausable;
+	}
+	
+	public void setUnpausable(boolean unpausable) {
+		this.unpausable = unpausable;
 	}
 
 	public boolean isPlaying() {

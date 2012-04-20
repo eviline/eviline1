@@ -44,4 +44,8 @@ public abstract class TetrevilAdapter implements TetrevilListener, Serializable 
 	@Override
 	public void linesCleared(TetrevilEvent e) {
 	}
+	
+	@Override
+	public void garbageReceived(TetrevilEvent e) {
+	}
 }

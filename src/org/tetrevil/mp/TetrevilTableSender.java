@@ -17,9 +17,21 @@ public class TetrevilTableSender extends TetrevilAdapter {
 	
 	@Override
 	public void clockTicked(TetrevilEvent e) {
-		System.out.println("Sending field");
 		try {
 			out.reset();
+			out.writeObject(e.getField());
+			out.flush();
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+			e.getField().removeTetrevilListener(this);
+		}
+	}
+	
+	@Override
+	public void linesCleared(TetrevilEvent e) {
+		try {
+			out.reset();
+			out.writeObject(e.getLines());
 			out.writeObject(e.getField());
 			out.flush();
 		} catch(IOException ioe) {

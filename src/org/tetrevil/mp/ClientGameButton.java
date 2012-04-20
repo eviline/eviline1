@@ -35,7 +35,7 @@ public class ClientGameButton extends JButton implements ActionListener {
 					setText("Connected");
 					
 					frame.getField().addTetrevilListener(new TetrevilTableSender(socket.getOutputStream()));
-					frame.getCenter().add(new RemoteTetrevilTable(socket));
+					frame.getCenter().add(new RemoteTetrevilTable(socket, frame.getField()));
 					frame.getCenter().revalidate();
 
 				} catch(IOException ioe) {
