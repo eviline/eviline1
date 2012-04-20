@@ -22,6 +22,8 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import org.tetrevil.Field;
+import org.tetrevil.mp.ClientGameButton;
+import org.tetrevil.mp.HostGameButton;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilFrame;
 import org.tetrevil.swing.TetrevilKeyPanel;
@@ -92,6 +94,9 @@ public class Main {
 				System.exit(0);
 			}
 		}));
+		
+		frame.getCenter().add(new HostGameButton(frame));
+		frame.getCenter().add(new ClientGameButton(frame));
 		
 		if(fullscreen)
 			frame.setUndecorated(true);
