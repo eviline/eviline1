@@ -319,5 +319,13 @@ public class TetrevilFrame extends JFrame {
 	public Field getField() {
 		return field;
 	}
+	
+	public JButton getStart() {
+		return start;
+	}
+	
+	public DifficultyPanel getDp() {
+		return dp;
+	}
 }
 

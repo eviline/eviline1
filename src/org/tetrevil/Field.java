@@ -574,7 +574,7 @@ public class Field implements Serializable {
 	}
 
 	public void setPaused(boolean paused) {
-		if(unpausable && paused)
+		if(unpausable)
 			return;
 		this.paused = paused;
 		fireGamePaused();

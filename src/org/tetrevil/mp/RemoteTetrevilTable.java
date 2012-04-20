@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
 import org.tetrevil.Field;
+import org.tetrevil.Randomizer;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilTable;
 
@@ -46,6 +47,10 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 				}
 				if(obj instanceof Integer) {
 					local.garbage(((Integer) obj) - 1);
+				}
+				if(obj instanceof Randomizer) {
+					local.setProvider((Randomizer) obj);
+					local.reset();
 				}
 			}
 		} catch(Exception ex) {

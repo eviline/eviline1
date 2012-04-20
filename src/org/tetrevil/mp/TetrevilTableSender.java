@@ -11,8 +11,8 @@ import org.tetrevil.event.TetrevilEvent;
 public class TetrevilTableSender extends TetrevilAdapter {
 	protected ObjectOutputStream out;
 	
-	public TetrevilTableSender(OutputStream out) throws IOException {
-		this.out = new ObjectOutputStream(out);
+	public TetrevilTableSender(ObjectOutputStream out) throws IOException {
+		this.out = out;
 	}
 	
 	@Override
