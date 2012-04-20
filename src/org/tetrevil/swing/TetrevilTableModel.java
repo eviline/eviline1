@@ -91,6 +91,7 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 
 	public void setField(Field field) {
 		this.field = field;
+		changed();
 	}
 
 	@Override

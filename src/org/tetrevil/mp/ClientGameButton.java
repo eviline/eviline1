@@ -33,6 +33,11 @@ public class ClientGameButton extends JButton implements ActionListener {
 					socket.getOutputStream().write(0);
 					socket.getInputStream().read();
 					setText("Connected");
+					
+					frame.getField().addTetrevilListener(new TetrevilTableSender(socket.getOutputStream()));
+					frame.getCenter().add(new RemoteTetrevilTable(socket));
+					frame.getCenter().revalidate();
+
 				} catch(IOException ioe) {
 					ioe.printStackTrace();
 				}

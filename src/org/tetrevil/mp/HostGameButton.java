@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import org.tetrevil.swing.TetrevilFrame;
+import org.tetrevil.swing.TetrevilTable;
 
 public class HostGameButton extends JButton implements ActionListener {
 	protected TetrevilFrame frame;
@@ -34,6 +35,11 @@ public class HostGameButton extends JButton implements ActionListener {
 					socket.getOutputStream().write(0);
 					socket.getInputStream().read();
 					setText("Connected");
+					
+					frame.getField().addTetrevilListener(new TetrevilTableSender(socket.getOutputStream()));
+					frame.getCenter().add(new RemoteTetrevilTable(socket));
+					frame.getCenter().revalidate();
+					
 				} catch(IOException ioe) {
 					ioe.printStackTrace();
 				}

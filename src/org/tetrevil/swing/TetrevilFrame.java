@@ -315,5 +315,9 @@ public class TetrevilFrame extends JFrame {
 	public JPanel getCenter() {
 		return center;
 	}
+	
+	public Field getField() {
+		return field;
+	}
 }
 

@@ -21,6 +21,8 @@ public class TetrevilTable extends JTable {
 	private static final long serialVersionUID = 1L;
 	protected Field field;
 	
+	protected TetrevilTableCellRenderer ttcr;
+	
 	public TetrevilTable(Field field) {
 		super(new TetrevilTableModel(field));
 		this.field = field;
@@ -28,7 +30,7 @@ public class TetrevilTable extends JTable {
 		setTableHeader(null);
 		setFillsViewportHeight(true);
 		
-		TetrevilTableCellRenderer ttcr = new TetrevilTableCellRenderer(field);
+		ttcr = new TetrevilTableCellRenderer(field);
 		for(int i = 0; i < getColumnCount(); i++) {
 			getColumnModel().getColumn(i).setCellRenderer(ttcr);
 		}
@@ -66,6 +68,7 @@ public class TetrevilTable extends JTable {
 
 	public void setField(Field field) {
 		this.field = field;
+		ttcr.setField(field);
 		((TetrevilTableModel) getModel()).setField(field);
 	}
 	

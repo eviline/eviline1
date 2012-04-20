@@ -35,6 +35,14 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	
 	protected ColorProvider colors = new DefaultColorProvider();
 	
+	public Field getField() {
+		return field;
+	}
+	
+	public void setField(Field field) {
+		this.field = field;
+	}
+	
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		Block b = (Block) value;
