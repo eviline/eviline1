@@ -55,9 +55,9 @@ public class RandomizerServlet extends HttpServlet {
 		
 		out.writeObject(shape);
 		out.close();
-		} catch(IOException ex) {
+		} catch(Exception ex) {
 			ex.printStackTrace();
-			throw ex;
+			throw new RuntimeException(ex);
 		}
 	}
 

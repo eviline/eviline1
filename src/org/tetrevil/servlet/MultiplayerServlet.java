@@ -56,7 +56,7 @@ public class MultiplayerServlet extends HttpServlet {
 					OutputStream clientOut = clientSocket.getOutputStream();
 					
 					
-					byte[] buf = new byte[1024];
+					byte[] buf = new byte[8192];
 					while(true) {
 						int r = hostIn.available();
 						if(r == 0)
@@ -64,6 +64,7 @@ public class MultiplayerServlet extends HttpServlet {
 						
 						r = hostIn.read(buf, 0, Math.min(r, buf.length));
 						clientOut.write(buf, 0, r);
+						clientOut.flush();
 					}
 					
 				} catch(Exception ex) {
@@ -92,7 +93,7 @@ public class MultiplayerServlet extends HttpServlet {
 					OutputStream hostOut = hostSocket.getOutputStream();
 					
 					
-					byte[] buf = new byte[1024];
+					byte[] buf = new byte[8192];
 					while(true) {
 						int r = clientIn.available();
 						if(r == 0)
@@ -100,6 +101,7 @@ public class MultiplayerServlet extends HttpServlet {
 						
 						r = clientIn.read(buf, 0, Math.min(r, buf.length));
 						hostOut.write(buf, 0, r);
+						hostOut.flush();
 					}
 				} catch(Exception ex) {
 					ex.printStackTrace();
@@ -163,7 +165,7 @@ public class MultiplayerServlet extends HttpServlet {
 		}
 	}
 	
-	protected static Set<MultiplayerHost> hosts = Collections.synchronizedSet(new HashSet<MultiplayerHost>());
+	protected static volatile Set<MultiplayerHost> hosts = Collections.synchronizedSet(new HashSet<MultiplayerHost>());
 	
     /**
      * @see HttpServlet#HttpServlet()
