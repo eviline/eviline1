@@ -48,7 +48,10 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 					});
 				}
 				if(obj instanceof Integer) {
-					local.garbage(((Integer) obj) - 1);
+					int lines = (Integer) obj;
+					if(lines > 1) {
+						local.garbage(lines - 1);
+					}
 				}
 				if(obj instanceof Randomizer) {
 					local.setProvider((Randomizer) obj);
