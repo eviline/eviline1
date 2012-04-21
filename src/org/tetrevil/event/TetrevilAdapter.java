@@ -10,9 +10,17 @@ import java.io.Serializable;
 public abstract class TetrevilAdapter implements TetrevilListener, Serializable {
 
 	@Override
+	public void shapeSpawned(TetrevilEvent e) {
+	}
+	
+	@Override
 	public void clockTicked(TetrevilEvent e) {
 	}
 
+	@Override
+	public void shapeLocked(TetrevilEvent e) {
+	}
+	
 	@Override
 	public void gameOver(TetrevilEvent e) {
 	}

@@ -14,12 +14,12 @@ import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilTable;
 
 public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
-	protected Socket socket;
+	protected ObjectInputStream in;
 	protected Field local;
 	
-	public RemoteTetrevilTable(Socket socket, Field local) {
+	public RemoteTetrevilTable(ObjectInputStream in, Field local) {
 		super(new Field(false));
-		this.socket = socket;
+		this.in = in;
 		this.local = local;
 		
 		setBorder(BorderFactory.createTitledBorder("Remote Player"));
@@ -32,7 +32,6 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 	@Override
 	public void run() {
 		try {
-			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			while(true) {
 				Object obj = in.readObject();
 				if(obj instanceof Field) {
@@ -40,8 +39,10 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
-							setField(f);
+							f.copyInto(getField());
 							repaint();
+							if(f.isGameOver())
+								local.setGameOver(true);
 						}
 					});
 				}

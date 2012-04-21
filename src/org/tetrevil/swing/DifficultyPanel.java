@@ -85,7 +85,7 @@ public class DifficultyPanel extends JPanel {
 		
 		online = new JCheckBox("Use TETREVIL server for shapes");
 		online.setForeground(Color.BLACK); online.setBackground(Color.WHITE);
-		online.setSelected(Boolean.parseBoolean(props.getProperty("online", "true")));
+//		online.setSelected(Boolean.parseBoolean(props.getProperty("online", "true")));
 		online.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

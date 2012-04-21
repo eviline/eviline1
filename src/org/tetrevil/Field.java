@@ -69,6 +69,8 @@ public class Field implements Serializable {
 	 * Whether a game is paused
 	 */
 	protected boolean paused;
+	
+	protected int garbage;
 	/**
 	 * The number of lines scored so far
 	 */
@@ -115,8 +117,10 @@ public class Field implements Serializable {
 	 * @return The target
 	 */
 	public Field copyInto(Field target) {
-		for(int y = 0; y < field.length; y++) {
-			System.arraycopy(field[y], 0, target.field[y], 0, field[y].length);
+		if(field != null) {
+			for(int y = 0; y < field.length; y++) {
+				System.arraycopy(field[y], 0, target.field[y], 0, field[y].length);
+			}
 		}
 		target.provider = provider;
 		target.shape = shape;
@@ -169,6 +173,7 @@ public class Field implements Serializable {
 			if(!shape.intersects(field, shapeX, shapeY+1)) // Move the shape down one row if possible
 				shapeY++;
 			reghost();
+			fireShapeSpawned();
 		} else if(shape.intersects(field, shapeX, shapeY+1)) { // If the shape can't be moved down a row...
 			/*
 			 * Copy this shape to the field, assuming a game over.  If any of the shape
@@ -185,7 +190,9 @@ public class Field implements Serializable {
 					}
 				}
 			}
+			fireShapeLocked();
 			shape = null; // No active shape
+			applyGarbage();
 		} else {
 			// Move the shape down one row and autoshift
 			shapeY++;
@@ -347,6 +354,11 @@ public class Field implements Serializable {
 	}
 	
 	public void garbage(int lines) {
+		this.garbage += lines;
+	}
+	
+	protected void applyGarbage() {
+		int lines = this.garbage;
 		if(lines == 0)
 			return;
 		for(int i = lines; i < field.length; i++) {
@@ -356,6 +368,8 @@ public class Field implements Serializable {
 			int x = (int)(WIDTH * Math.random());
 			field[i][x] = null;
 		}
+		fireGarbageReceived(lines);
+		this.garbage = 0;
 	}
 	
 	/**
@@ -518,6 +532,42 @@ public class Field implements Serializable {
 			if(e == null)
 				e = new TetrevilEvent(this, this, lines);
 			ll[i].linesCleared(e);
+		}
+	}
+	
+	protected void fireGarbageReceived(int lines) {
+		if(listeners == null)
+			return;
+		TetrevilEvent e = null;
+		TetrevilListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(e == null)
+				e = new TetrevilEvent(this, this, lines);
+			ll[i].garbageReceived(e);
+		}
+	}
+	
+	protected void fireShapeSpawned() {
+		if(listeners == null)
+			return;
+		TetrevilEvent e = null;
+		TetrevilListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(e == null)
+				e = new TetrevilEvent(this, this, lines);
+			ll[i].shapeSpawned(e);
+		}
+	}
+	
+	protected void fireShapeLocked() {
+		if(listeners == null)
+			return;
+		TetrevilEvent e = null;
+		TetrevilListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(e == null)
+				e = new TetrevilEvent(this, this, lines);
+			ll[i].shapeLocked(e);
 		}
 	}
 

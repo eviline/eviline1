@@ -10,11 +10,15 @@ import org.tetrevil.Field;
  *
  */
 public interface TetrevilListener extends EventListener {
+	
+	public void shapeSpawned(TetrevilEvent e);
 	/**
 	 * A clock tick occurred
 	 * @param e
 	 */
 	public void clockTicked(TetrevilEvent e);
+	
+	public void shapeLocked(TetrevilEvent e);
 	/**
 	 * A game over occurred
 	 * @param e

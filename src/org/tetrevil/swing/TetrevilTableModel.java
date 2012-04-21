@@ -113,4 +113,14 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	public void garbageReceived(TetrevilEvent e) {
 		changed();
 	}
+	
+	@Override
+	public void shapeSpawned(TetrevilEvent e) {
+		changed();
+	}
+	
+	@Override
+	public void shapeLocked(TetrevilEvent e) {
+		changed();
+	}
 }
