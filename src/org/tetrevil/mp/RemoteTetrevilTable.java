@@ -8,6 +8,7 @@ import java.net.Socket;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
+import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.Randomizer;
 import org.tetrevil.swing.TetrevilComponent;
@@ -51,7 +52,7 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 				}
 				if(obj instanceof Randomizer) {
 					local.setProvider((Randomizer) obj);
-					local.reset();
+					local.setProvider(new ConcurrentShapeProvider(local.getProvider()));
 				}
 			}
 		} catch(Exception ex) {

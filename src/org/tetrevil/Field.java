@@ -135,6 +135,8 @@ public class Field implements Serializable {
 	 * Reset the field
 	 */
 	public void reset() {
+		if(unpausable)
+			return;
 		fireGameReset();
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);

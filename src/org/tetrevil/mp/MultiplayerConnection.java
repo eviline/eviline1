@@ -7,10 +7,11 @@ import java.net.Socket;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.swing.TetrevilFrame;
 
 public class MultiplayerConnection {
-	public static void init(TetrevilFrame frame, Socket socket) throws IOException {
+	public static void init(TetrevilFrame frame, Socket socket, boolean host) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 		
 		frame.getCenter().removeAll();
@@ -19,6 +20,10 @@ public class MultiplayerConnection {
 		frame.getStart().doClick();
 		
 		frame.getField().setUnpausable(true);
+		
+		frame.getField().setProvider(new ConcurrentShapeProvider(frame.getField().getProvider()));
+		out.writeObject(frame.getField().getProvider());
+		
 		
 		frame.getField().addTetrevilListener(new TetrevilTableSender(out));
 		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());

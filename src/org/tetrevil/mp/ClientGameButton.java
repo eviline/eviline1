@@ -45,7 +45,7 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 			socket.getInputStream().read();
 			setText("Connected");
 			
-			MultiplayerConnection.init(frame, socket);
+			MultiplayerConnection.init(frame, socket, false);
 			
 		} catch(IOException ioe) {
 			ioe.printStackTrace();

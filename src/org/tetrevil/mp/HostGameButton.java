@@ -42,7 +42,7 @@ public class HostGameButton extends JButton implements ActionListener, Runnable 
 			socket.getInputStream().read();
 			setText("Connected");
 			
-			MultiplayerConnection.init(frame, socket);
+			MultiplayerConnection.init(frame, socket, true);
 			
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
