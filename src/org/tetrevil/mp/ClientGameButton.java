@@ -29,6 +29,7 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 		name = JOptionPane.showInputDialog(this, "Please enter the name of their game");
 		if(name == null)
 			return;
+		MultiplayerConnection.disableButtons(frame);
 		new Thread(this).start();
 	}
 	

@@ -192,8 +192,8 @@ public class Field implements Serializable {
 					}
 				}
 			}
-			fireShapeLocked();
 			shape = null; // No active shape
+			fireShapeLocked();
 			applyGarbage();
 		} else {
 			// Move the shape down one row and autoshift

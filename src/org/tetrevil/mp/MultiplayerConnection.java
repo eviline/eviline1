@@ -1,5 +1,7 @@
 package org.tetrevil.mp;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,22 +9,57 @@ import java.net.Socket;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+
 import org.tetrevil.ConcurrentShapeProvider;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.TetrevilFrame;
 
 public class MultiplayerConnection {
+	public static void disableButtons(TetrevilFrame frame) {
+		for(int i = 0; i < frame.getCenter().getComponentCount(); i++) {
+			Component c = frame.getCenter().getComponent(i);
+			if((c instanceof AbstractButton) && "Quit".equals(((AbstractButton) c).getText()))
+				continue;
+			c.setEnabled(false);
+		}
+	}
+	
 	public static void init(TetrevilFrame frame, Socket socket, boolean host) throws IOException {
 		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 		
 		frame.getCenter().removeAll();
+		frame.getCenter().add(new JButton(new AbstractAction("Quit") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		}));
+		
 		frame.getDp().setEnabled(false);
-		frame.getTc().getTicker().setInitialDelay(0);
+		
+		frame.getField().addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void shapeLocked(final TetrevilEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						e.getField().clockTick();
+					}
+				});
+			}
+		});
 		frame.getStart().doClick();
 		
 		frame.getField().setUnpausable(true);
 		
 		frame.getField().setProvider(new ConcurrentShapeProvider(frame.getField().getProvider()));
-		out.writeObject(frame.getField().getProvider());
+		if(host)
+			out.writeObject(frame.getField().getProvider());
 		
 		
 		frame.getField().addTetrevilListener(new TetrevilTableSender(out));
