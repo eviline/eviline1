@@ -43,6 +43,9 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 				return;
 			}
 			setText("Waiting for host...");
+			while(socket.getInputStream().read() == 0)
+				;
+			
 			socket.getOutputStream().write(0);
 			socket.getInputStream().read();
 			setText("Connected");

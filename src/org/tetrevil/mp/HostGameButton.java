@@ -43,6 +43,10 @@ public class HostGameButton extends JButton implements ActionListener, Runnable 
 			
 			Socket socket = new HostSocketFactory(frame.getParameter("score_host")).newHostSocket(name, null, privateGame);
 			setText("<html>Hosting multiplayer \"" + name + "\"<br>Waiting for client...</html>");
+			while(socket.getInputStream().read() == 0)
+				;
+			
+
 			socket.getOutputStream().write(0);
 			socket.getInputStream().read();
 			setText("Connected");
