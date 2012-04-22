@@ -47,14 +47,15 @@ public class MultiplayerServlet extends HttpServlet {
 					hostSocket.setTcpNoDelay(true);
 					synchronized(socketLock) {
 						socketLock.notifyAll();
-						while(clientSocket == null && !hostSocket.isClosed())
+						while(clientSocket == null) {
 							socketLock.wait(1000);
+							hostSocket.getOutputStream().write(0);
+						}
+						hostSocket.getOutputStream().write(1);
 					}
-					if(hostSocket.isClosed())
-						return;
-					
-					hosts.remove(MultiplayerHost.this);
 
+					hosts.remove(MultiplayerHost.this);
+					
 					InputStream hostIn = hostSocket.getInputStream();
 					OutputStream clientOut = clientSocket.getOutputStream();
 					
@@ -87,15 +88,15 @@ public class MultiplayerServlet extends HttpServlet {
 					clientSocket.setTcpNoDelay(true);
 					synchronized(socketLock) {
 						socketLock.notifyAll();
-						while(hostSocket == null && !clientSocket.isClosed())
+						while(hostSocket == null) {
 							socketLock.wait(1000);
+							clientSocket.getOutputStream().write(0);
+						}
+						clientSocket.getOutputStream().write(1);
 					}
 					
-					if(clientSocket.isClosed())
-						return;
-
 					hosts.remove(MultiplayerHost.this);
-
+					
 					InputStream clientIn = clientSocket.getInputStream();
 					OutputStream hostOut = hostSocket.getOutputStream();
 					
