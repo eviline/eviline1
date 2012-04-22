@@ -19,14 +19,15 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 	protected String name;
 	
 	public ClientGameButton(TetrevilFrame frame) {
-		super("Connect to Multiplayer Host");
+		super("Join Game by Name");
 		this.frame = frame;
 		addActionListener(this);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		name = JOptionPane.showInputDialog(this, "Please enter the name of their game");
+		if(name == null)
+			name = JOptionPane.showInputDialog(this, "Please enter the name of their game");
 		if(name == null)
 			return;
 		MultiplayerConnection.disableButtons(frame);
@@ -51,5 +52,13 @@ public class ClientGameButton extends JButton implements ActionListener, Runnabl
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
+	}
+	
+	public String getGameName() {
+		return name;
+	}
+	
+	public void setGameName(String name) {
+		this.name = name;
 	}
 }

@@ -18,11 +18,13 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import org.tetrevil.Field;
 import org.tetrevil.mp.ClientGameButton;
+import org.tetrevil.mp.ClientSocketFactory;
 import org.tetrevil.mp.HostGameButton;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilFrame;
@@ -95,8 +97,27 @@ public class Main {
 			}
 		}));
 		
+		frame.getCenter().add(new JSeparator());
+		
 		frame.getCenter().add(new HostGameButton(frame));
+		HostGameButton hgb = new HostGameButton(frame);
+		hgb.setPrivateGame(true);
+		hgb.setText("Host Private Game");
+		frame.getCenter().add(hgb);
+		frame.getCenter().add(new JSeparator());
 		frame.getCenter().add(new ClientGameButton(frame));
+		
+		frame.getCenter().add(new JSeparator());
+		
+		try {
+			for(String gameName : new ClientSocketFactory(frame.getParameter("score_host")).listGames()) {
+				ClientGameButton gb = new ClientGameButton(frame);
+				gb.setGameName(gameName);
+				gb.setText("Join Public Multiplayer \"" + gameName + "\"");
+				frame.getCenter().add(gb);
+			}
+		} catch(IOException ioe) {
+		}
 		
 		if(fullscreen)
 			frame.setUndecorated(true);

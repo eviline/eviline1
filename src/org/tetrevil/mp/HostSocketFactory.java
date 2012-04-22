@@ -16,7 +16,7 @@ public class HostSocketFactory {
 		this.server = server;
 	}
 	
-	public Socket newHostSocket(String name, MaliciousRandomizer randomizer) throws IOException {
+	public Socket newHostSocket(String name, MaliciousRandomizer randomizer, boolean privateGame) throws IOException {
 		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/tetrevil_tomcat/multiplayer").openConnection();
 		
 		http.setChunkedStreamingMode(1024);
@@ -28,6 +28,7 @@ public class HostSocketFactory {
 			out.writeObject("host");
 			out.writeObject(name);
 			out.writeObject(randomizer);
+			out.writeBoolean(privateGame);
 		} finally {
 			out.close();
 		}

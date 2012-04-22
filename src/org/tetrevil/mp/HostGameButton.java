@@ -18,9 +18,10 @@ import org.tetrevil.swing.TetrevilTable;
 public class HostGameButton extends JButton implements ActionListener, Runnable {
 	protected TetrevilFrame frame;
 	protected String name;
+	protected boolean privateGame = false;
 	
 	public HostGameButton(TetrevilFrame frame) {
-		super("Host Multiplayer");
+		super("Host Public Multiplayer");
 		this.frame = frame;
 		
 		addActionListener(this);
@@ -40,7 +41,7 @@ public class HostGameButton extends JButton implements ActionListener, Runnable 
 			frame.getStart().setEnabled(false);
 			frame.getDp().setEnabled(false);
 			
-			Socket socket = new HostSocketFactory(frame.getParameter("score_host")).newHostSocket(name, null);
+			Socket socket = new HostSocketFactory(frame.getParameter("score_host")).newHostSocket(name, null, privateGame);
 			setText("<html>Hosting multiplayer \"" + name + "\"<br>Waiting for client...</html>");
 			socket.getOutputStream().write(0);
 			socket.getInputStream().read();
@@ -53,5 +54,21 @@ public class HostGameButton extends JButton implements ActionListener, Runnable 
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
+	}
+	
+	public String getGameName() {
+		return name;
+	}
+	
+	public void setGameName(String name) {
+		this.name = name;
+	}
+	
+	public boolean isPrivateGame() {
+		return privateGame;
+	}
+	
+	public void setPrivateGame(boolean privateGame) {
+		this.privateGame = privateGame;
 	}
 }
