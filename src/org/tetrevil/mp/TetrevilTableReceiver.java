@@ -14,11 +14,11 @@ import org.tetrevil.Randomizer;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilTable;
 
-public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
+public class TetrevilTableReceiver extends TetrevilTable implements Runnable {
 	protected ObjectInputStream in;
 	protected Field local;
 	
-	public RemoteTetrevilTable(ObjectInputStream in, Field local) {
+	public TetrevilTableReceiver(ObjectInputStream in, Field local) {
 		super(new Field(false));
 		this.in = in;
 		this.local = local;
@@ -42,8 +42,15 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 						public void run() {
 							f.copyInto(getField());
 							repaint();
-							if(f.isGameOver())
+							if(f.isGameOver()) {
+								getField().setGameOver(true);
+								getField().setWinner(false);
 								local.setGameOver(true);
+								local.setUnpausable(false);
+								local.setPaused(true);
+								local.setUnpausable(true);
+								local.setWinner(true);
+							}
 						}
 					});
 				}
@@ -60,6 +67,15 @@ public class RemoteTetrevilTable extends TetrevilTable implements Runnable {
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
+			getField().setGameOver(true);
+			getField().setWinner(false);
+			repaint();
+			local.setGameOver(true);
+			local.setUnpausable(false);
+			local.setUnpausable(false);
+			local.setPaused(true);
+			local.setUnpausable(true);
+			local.setWinner(true);
 		}
 	}
 	

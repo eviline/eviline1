@@ -83,6 +83,8 @@ public class Field implements Serializable {
 	
 	protected boolean unpausable = false;
 	
+	protected transient boolean winner;
+	
 	/**
 	 * Event listeners
 	 */
@@ -666,5 +668,13 @@ public class Field implements Serializable {
 
 	public boolean isPlaying() {
 		return playing;
+	}
+
+	public boolean isWinner() {
+		return winner;
+	}
+
+	public void setWinner(boolean winner) {
+		this.winner = winner;
 	}
 }

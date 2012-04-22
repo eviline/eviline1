@@ -64,11 +64,17 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			else
 				c.setText("P");
 		}
-		if(b == null && (field.isGameOver() || field.isPaused())) {
+		if(b == null && field.isPaused() && !field.isGameOver()) {
 			c.setForeground(Color.BLACK);
 			c.setText(String.valueOf(field.getLines()));
-		} else if(field.isGameOver()) {
-			c.setText(" ");
+		} else if(b == null && field.isGameOver()) {
+			c.setForeground(Color.BLACK);
+			c.setText(field.isWinner() ? "W" : "L");
+		} else if(field.isGameOver() || field.isPaused()) {
+			if(b != null && b.isActive())
+				c.setText(String.valueOf(field.getLines()));
+			else
+				c.setText(" ");
 		}
 //		if(b == Block.G) {
 //			c.setBorder(ghost);

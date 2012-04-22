@@ -64,7 +64,7 @@ public class MultiplayerConnection {
 		
 		frame.getField().addTetrevilListener(new TetrevilTableSender(out));
 		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-		frame.getCenter().add(new RemoteTetrevilTable(in, frame.getField()));
+		frame.getCenter().add(new TetrevilTableReceiver(in, frame.getField()));
 		frame.getCenter().revalidate();
 		frame.repaint();
 
