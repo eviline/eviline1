@@ -14,4 +14,6 @@ public interface Randomizer {
 	public Shape provideShape(Field field);
 	
 	public String getRandomizerName();
+	
+	public MaliciousRandomizer getMaliciousRandomizer();
 }

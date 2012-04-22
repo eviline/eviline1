@@ -241,4 +241,9 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		}
 		distAdjustment += adjustment;
 	}
+	
+	@Override
+	public MaliciousRandomizer getMaliciousRandomizer() {
+		return this;
+	}
 }

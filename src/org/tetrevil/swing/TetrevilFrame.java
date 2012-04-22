@@ -238,7 +238,9 @@ public class TetrevilFrame extends JFrame {
 			score.setScore(field.getLines());
 			score.setName(tkp.getPlayerName());
 			score.setTs(new Date());
-			MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
+			MaliciousRandomizer p = field.getProvider().getMaliciousRandomizer();
+			if(p == null)
+				return;
 			score.setDepth(p.getDepth());
 			score.setRfactor(p.getRfactor());
 			score.setFair(p.isFair() ? 1 : 0);

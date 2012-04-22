@@ -63,4 +63,9 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	public Object writeReplace() throws ObjectStreamException {
 		return provider;
 	}
+	
+	@Override
+	public MaliciousRandomizer getMaliciousRandomizer() {
+		return null;
+	}
 }

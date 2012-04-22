@@ -19,4 +19,9 @@ public class RandomRandomizer implements Randomizer, Serializable {
 	public String getRandomizerName() {
 		return getClass().getName();
 	}
+	
+	@Override
+	public MaliciousRandomizer getMaliciousRandomizer() {
+		return null;
+	}
 }
