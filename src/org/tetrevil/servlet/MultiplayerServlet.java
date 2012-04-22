@@ -29,6 +29,7 @@ public class MultiplayerServlet extends HttpServlet {
 	protected static class MultiplayerHost {
 		protected String name;
 		protected MaliciousRandomizer randomizer;
+		protected boolean privateGame;
 
 		protected ServerSocket hostServer;
 		protected ServerSocket clientServer;
@@ -46,9 +47,11 @@ public class MultiplayerServlet extends HttpServlet {
 					hostSocket.setTcpNoDelay(true);
 					synchronized(socketLock) {
 						socketLock.notifyAll();
-						while(clientSocket == null)
-							socketLock.wait();
+						while(clientSocket == null && !hostSocket.isClosed())
+							socketLock.wait(1000);
 					}
+					if(hostSocket.isClosed())
+						return;
 					
 					hosts.remove(MultiplayerHost.this);
 
@@ -69,6 +72,7 @@ public class MultiplayerServlet extends HttpServlet {
 					
 				} catch(Exception ex) {
 					ex.printStackTrace();
+				} finally {
 					disconnect();
 				}
 			}
@@ -83,9 +87,12 @@ public class MultiplayerServlet extends HttpServlet {
 					clientSocket.setTcpNoDelay(true);
 					synchronized(socketLock) {
 						socketLock.notifyAll();
-						while(hostSocket == null)
-							socketLock.wait();
+						while(hostSocket == null && !clientSocket.isClosed())
+							socketLock.wait(1000);
 					}
+					
+					if(clientSocket.isClosed())
+						return;
 
 					hosts.remove(MultiplayerHost.this);
 
@@ -105,6 +112,7 @@ public class MultiplayerServlet extends HttpServlet {
 					}
 				} catch(Exception ex) {
 					ex.printStackTrace();
+				} finally {
 					disconnect();
 				}
 			}
@@ -123,10 +131,11 @@ public class MultiplayerServlet extends HttpServlet {
 			}
 		}
 		
-		public MultiplayerHost(String name, MaliciousRandomizer randomizer) 
+		public MultiplayerHost(String name, MaliciousRandomizer randomizer, boolean privateGame) 
 		throws IOException {
 			this.name = name;
 			this.randomizer = randomizer;
+			this.privateGame = privateGame;
 			
 			hostServer = new ServerSocket(0, 1);
 			clientServer = new ServerSocket(0, 1);
@@ -185,6 +194,7 @@ public class MultiplayerServlet extends HttpServlet {
 		String command;
 		String name;
 		MaliciousRandomizer randomizer;
+		boolean privateGame;
 		
 		try {
 			command = (String) in.readObject();
@@ -197,7 +207,8 @@ public class MultiplayerServlet extends HttpServlet {
 		System.out.println("MultiplayerServlet commanded:" + command);
 		
 		if("host".equals(command)) {
-			MultiplayerHost host = new MultiplayerHost(name, randomizer);
+			privateGame = in.readBoolean();
+			MultiplayerHost host = new MultiplayerHost(name, randomizer, privateGame);
 			System.out.println("Now hosting:" + host);
 			out.writeInt(host.hostServer.getLocalPort());
 		} else if("list".equals(command)) {
@@ -205,6 +216,9 @@ public class MultiplayerServlet extends HttpServlet {
 				for(MultiplayerHost host : hosts) {
 					if(host.hostSocket == null || host.hostSocket.isClosed())
 						continue;
+					if(host.privateGame && (name == null || !name.equals(host.name)))
+						continue;
+						
 					System.out.println("Available host:" + host);
 					out.writeObject(host.name);
 					out.writeObject(host.randomizer);
