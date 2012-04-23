@@ -56,6 +56,7 @@ public class MultiplayerConnection {
 		frame.getStart().doClick();
 		
 		frame.getField().setUnpausable(true);
+		frame.getField().setMultiplayer(true);
 		
 		frame.getField().setProvider(new ConcurrentShapeProvider(frame.getField().getProvider()));
 		if(host)

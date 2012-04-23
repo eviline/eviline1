@@ -85,6 +85,8 @@ public class Field implements Serializable {
 	
 	protected transient boolean winner;
 	
+	protected transient boolean multiplayer;
+	
 	/**
 	 * Event listeners
 	 */
@@ -676,5 +678,13 @@ public class Field implements Serializable {
 
 	public void setWinner(boolean winner) {
 		this.winner = winner;
+	}
+
+	public boolean isMultiplayer() {
+		return multiplayer;
+	}
+	
+	public void setMultiplayer(boolean multiplayer) {
+		this.multiplayer = multiplayer;
 	}
 }

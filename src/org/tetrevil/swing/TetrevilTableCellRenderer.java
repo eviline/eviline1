@@ -69,7 +69,10 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			c.setText(String.valueOf(field.getLines()));
 		} else if(b == null && field.isGameOver()) {
 			c.setForeground(Color.BLACK);
-			c.setText(field.isWinner() ? "W" : "L");
+			if(field.isMultiplayer())
+				c.setText("<html><center>" + (field.isWinner() ? "W" : "L") + "<br>" + String.valueOf(field.getLines()) + "</center></html>");
+			else
+				c.setText("<html><center>" + field.getLines() + "</center></html>");
 		} else if(field.isGameOver() || field.isPaused()) {
 			if(b != null && b.isActive())
 				c.setText(String.valueOf(field.getLines()));
