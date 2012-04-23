@@ -31,7 +31,7 @@ public class Fitness {
 			}
 			int w = x - Field.BUFFER;
 			if(w > 0 && stackHeight[w] == stackHeight[w-1])
-				score -= stackHeight[w];
+				score -= stackHeight[w] * 10;
 		}
 //		// Add in surface smoothness weight
 //		int sr = Math.max(stackHeight[1] - stackHeight[0], 0);

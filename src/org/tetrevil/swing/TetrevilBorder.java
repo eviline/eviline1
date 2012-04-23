@@ -58,6 +58,9 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		if(top && n != null && cb == null && (w == null || w == Block.X) && (e == null || e == Block.X)) {
 			north = colors.provideColor(n);
 			nstroke = topStroke;
+		} else if(top && n != null && n.isActive() && (cb == null || !cb.isActive())) {
+			north = colors.provideColor(n);
+			nstroke = topStroke;
 		} else {
 			nstroke = normalStroke;
 		}
