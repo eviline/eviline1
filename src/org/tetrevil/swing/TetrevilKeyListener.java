@@ -125,6 +125,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 			}
 		} else if(e.getKeyCode() == DOWN) {
 			if(!pressed.contains(DOWN)) {
+				field.clockTick();
 				downTimer.start();
 			}
 		} else if(e.getKeyCode() == RESET)
