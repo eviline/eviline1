@@ -323,6 +323,7 @@ public class MainApplet extends JApplet {
 				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
+				fair.setSelected(false);
 				unfair.setSelected(true);
 				distribution.setEnabled(false);
 				distribution.setText("30");
@@ -343,6 +344,7 @@ public class MainApplet extends JApplet {
 				rfactor.setText("0");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
+				fair.setSelected(false);
 				unfair.setSelected(true);
 				distribution.setEnabled(false);
 				distribution.setText("30");

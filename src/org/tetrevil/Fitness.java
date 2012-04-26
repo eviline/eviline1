@@ -19,9 +19,9 @@ public class Fitness {
 				if(f[y][x] != null)
 					stackHeight[x-Field.BUFFER] = h;
 				if(f[y][x] != null && f[y][x] != Block.X)
-					score += 25 * h * (holes + 1);
+					score += 25 * (holes / 3. + 1);
 				else if(f[y][x] == Block.X) {
-					score += Math.pow(h, 1.5);
+					score += 50 * (holes + 1);
 					holes++;
 				}
 				else if(f[y][x] == null) {

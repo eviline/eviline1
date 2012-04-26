@@ -25,24 +25,24 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		public Field field = new Field();
 	}
 
-	protected class Cache implements Serializable {
-		public Score depestDecide = new Score();
-		public Score[] worst = new Score[depth + 1];
-		public Field[] f = new Field[depth + 1];
-		public Field[] fc = new Field[depth + 1];
-		public Score[] typeScore = new Score[depth + 1];
-		
-		public Cache() {
-			for(int i = 0; i < depth + 1; i++) {
-				worst[i] = new Score();
-				f[i] = new Field();
-				fc[i] = new Field();
-				typeScore[i] = new Score();
-			}
-		}
-	}
+//	protected class Cache implements Serializable {
+//		public Score depestDecide = new Score();
+//		public Score[] worst = new Score[depth + 1];
+//		public Field[] f = new Field[depth + 1];
+//		public Field[] fc = new Field[depth + 1];
+//		public Score[] typeScore = new Score[depth + 1];
+//		
+//		public Cache() {
+//			for(int i = 0; i < depth + 1; i++) {
+//				worst[i] = new Score();
+//				f[i] = new Field();
+//				fc[i] = new Field();
+//				typeScore[i] = new Score();
+//			}
+//		}
+//	}
 	
-	protected Cache cache;
+//	protected Cache cache;
 	
 	protected int depth = 3;
 	protected double rfactor = 0.05;
@@ -70,7 +70,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public MaliciousRandomizer(int depth, int distribution) {
 		this.depth = depth;
 		this.distribution = distribution;
-		this.cache = new Cache();
+//		this.cache = new Cache();
 		for(int i = 0; i < typeCounts.length; i++) {
 			typeCounts[i] = distribution;
 		}
@@ -108,7 +108,8 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	
 	protected Score decide(Field field, int depth) {
 		if(depth > this.depth) {
-			Score score = cache.depestDecide;
+//			Score score = cache.depestDecide;
+			Score score = new Score();
 			score.field = field;
 			score.score = Fitness.score(field);
 			return score;
@@ -127,15 +128,15 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			}
 		}
 
-		Score worst = cache.worst[depth];
+		Score worst = new Score(); // cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
 		
 		paintImpossibles(field);
 		
-		Field f = cache.f[depth];
-		Field fc = cache.fc[depth];
+		Field f = new Field(false); // cache.f[depth];
+		Field fc = new Field(false); // cache.fc[depth];
 		for(ShapeType type : ShapeType.values()) {
-			Score typeScore = cache.typeScore[depth];
+			Score typeScore = new Score(); // cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
 
 			for(Shape shape : type.orientations()) {
@@ -206,7 +207,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 
 	public void setDepth(int depth) {
 		this.depth = depth;
-		cache = new Cache();
+//		cache = new Cache();
 	}
 
 	public boolean isFair() {
