@@ -19,19 +19,19 @@ public class Fitness {
 				if(f[y][x] != null)
 					stackHeight[x-Field.BUFFER] = h;
 				if(f[y][x] != null && f[y][x] != Block.X)
-					score += 25 * (holes / 3. + 1);
+					score += 25 * (holes + 1);
 				else if(f[y][x] == Block.X) {
-					score += 50 * (holes + 1);
+					score += 15 * (holes + 1);
 					holes++;
 				}
 				else if(f[y][x] == null) {
-					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)
-						score += h;
+//					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)
+//						score += h;
 				}
 			}
-			int w = x - Field.BUFFER;
-			if(w > 0 && stackHeight[w] == stackHeight[w-1])
-				score -= stackHeight[w] * 10;
+//			int w = x - Field.BUFFER;
+//			if(w > 0 && stackHeight[w] == stackHeight[w-1])
+//				score -= stackHeight[w];
 		}
 //		// Add in surface smoothness weight
 //		int sr = Math.max(stackHeight[1] - stackHeight[0], 0);

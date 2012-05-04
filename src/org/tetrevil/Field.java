@@ -687,4 +687,17 @@ public class Field implements Serializable {
 	public void setMultiplayer(boolean multiplayer) {
 		this.multiplayer = multiplayer;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(220);
+		for(int y = 0; y < field.length; y++) {
+			for(int x = 0; x < field[y].length; x++) {
+				sb.append(field[y][x] == null ? " " : field[y][x]);
+			}
+			sb.append("\n");
+		}
+		sb.append("Score " + Fitness.score(this));
+		return sb.toString();
+	}
 }

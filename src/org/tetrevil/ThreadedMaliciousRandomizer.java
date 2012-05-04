@@ -95,11 +95,11 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 					typeScore.score = Double.POSITIVE_INFINITY;
 
 					for(Shape shape : type.orientations()) {
-						for(int x = 0; x < Field.WIDTH; x++) {
+						for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
 							field.copyInto(f);
 							f.setShape(shape);
 							f.setShapeX(x);
-							for(int y = 0; y < Field.HEIGHT + Field.BUFFER; y++) {
+							for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
 								f.setShapeY(y);
 								if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 									f.copyInto(fc);
