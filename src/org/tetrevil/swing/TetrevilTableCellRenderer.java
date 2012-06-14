@@ -116,31 +116,39 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	
 	@Override
 	protected void paintComponent(Graphics gg) {
-		Graphics g = gg.create();
+		Graphics2D g = (Graphics2D) gg.create();
 		// TODO Auto-generated method stub
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
 		if(b != null && b != Block.X) {
 			if(m != null) {
 				if(m.shape != null && !m.ghost) {
-					g = g.create();
-					g.setColor(getBackground().brighter().brighter());
+					g = (Graphics2D) gg.create();
 					switch(m.shape.direction()) {
 					case UP: break;
-					case DOWN: ((Graphics2D) g).rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
-					case RIGHT: ((Graphics2D) g).rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
-					case LEFT: ((Graphics2D) g).rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
+					case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
+					case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
+					case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
 					}
-					g.translate(0, -(int)((System.currentTimeMillis() / 100) % getHeight()));
-					g.drawLine(getWidth(), 0, 0, getHeight());
-					g.drawLine(getWidth(), getHeight(), 0, 2 * getHeight());
-					g.drawLine(0, 0, getWidth(), getHeight());
-					g.drawLine(0, getHeight(), getWidth(), 2 * getHeight());
+					g.translate(0, -(int)((System.currentTimeMillis() / 200) % getHeight()));
+					Color c = getBackground();
+					int STEP = 3;
+					for(int j = 0; j < STEP * 3; j += STEP) {
+						g.setColor(c = brighter(c));
+						for(int i = j; i < j+STEP; i++) {
+							g.drawLine(getWidth(), i, 0, getHeight() + i);
+							g.drawLine(0, i, getWidth(), getHeight() + i);
+							g.drawLine(getWidth(), getHeight() + i, 0, 2 * getHeight() + i);
+							g.drawLine(0, getHeight() + i, getWidth(), 2 * getHeight() + i);
+							g.drawLine(getWidth(), -getHeight() + i, 0, i);
+							g.drawLine(0, -getHeight() + i, getWidth(), i);
+						}
+					}
 				}
 			}
 		}
 		
-		g = gg.create();
+		g = (Graphics2D) gg.create();
 		super.paintComponent(g);
 	}
 	
@@ -156,4 +164,29 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		super.paintChildren(g);
 	}
 	
+	private static final double FACTOR = 0.95;
+	
+    public static Color brighter(Color c) {
+        int r = c.getRed();
+        int g = c.getGreen();
+        int b = c.getBlue();
+
+        /* From 2D group:
+         * 1. black.brighter() should return grey
+         * 2. applying brighter to blue will always return blue, brighter
+         * 3. non pure color (non zero rgb) will eventually return white
+         */
+        int i = (int)(1.0/(1.0-FACTOR));
+        if ( r == 0 && g == 0 && b == 0) {
+           return new Color(i, i, i);
+        }
+        if ( r > 0 && r < i ) r = i;
+        if ( g > 0 && g < i ) g = i;
+        if ( b > 0 && b < i ) b = i;
+
+        return new Color(Math.min((int)(r/FACTOR), 255),
+                         Math.min((int)(g/FACTOR), 255),
+                         Math.min((int)(b/FACTOR), 255));
+    }
+
 }
