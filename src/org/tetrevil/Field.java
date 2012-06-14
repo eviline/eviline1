@@ -16,6 +16,7 @@ import org.tetrevil.swing.TetrevilTableModel;
  *
  */
 public class Field implements Serializable {
+	private static final long serialVersionUID = -207525838052607892L;
 	/**
 	 * The height of the matrix
 	 */
@@ -33,6 +34,7 @@ public class Field implements Serializable {
 	 * The matrix itself
 	 */
 	protected Block[][] field = new Block[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
+	protected transient BlockMetadata[][] metadata = new BlockMetadata[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
 	/**
 	 * The source of shapes
 	 */
@@ -145,11 +147,13 @@ public class Field implements Serializable {
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
+			Arrays.fill(metadata[y], BUFFER, metadata[y].length - BUFFER, null);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
 		}
 		for(int y = BUFFER; y < field.length - BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
+			Arrays.fill(metadata[y], BUFFER, metadata[y].length - BUFFER, null);
 			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
 		}
 		for(int y = field.length - BUFFER; y < field.length; y++) {
@@ -191,6 +195,7 @@ public class Field implements Serializable {
 				for(int x = 0; x < s[y].length; x++) {
 					if(s[y][x] != null) {
 						field[y + shapeY][x + shapeX] = s[y][x].inactive();
+						metadata[y + shapeY][x + shapeX] = new BlockMetadata(shape, false);
 						if(y + shapeY >= BUFFER)
 							gameOver = false;
 					}
@@ -225,9 +230,11 @@ public class Field implements Serializable {
 					// Shift down the field
 					for(int z = y - 1; z >= 0; z--) {
 						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
+						System.arraycopy(metadata[z], 0, metadata[z+1], 0, metadata[z].length);
 					}
 					// Fill in the top row with nulls
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
+					Arrays.fill(metadata[0], BUFFER, metadata[0].length - BUFFER, null);
 					y = field.length - BUFFER;
 				}
 			}
@@ -369,6 +376,7 @@ public class Field implements Serializable {
 			return;
 		for(int i = lines; i < field.length; i++) {
 			System.arraycopy(field[i], 0, field[i - lines], 0, field[i].length);
+			System.arraycopy(metadata[i], 0, metadata[i-lines], 0, metadata[i].length);
 		}
 		for(int i = HEIGHT + BUFFER - lines; i < HEIGHT + BUFFER; i++) {
 			int x = (int)(WIDTH * Math.random());
@@ -401,6 +409,24 @@ public class Field implements Serializable {
 //		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
 //			return Block.G;
 		return field[y][x];
+	}
+	
+	public BlockMetadata getMetadata(int x, int y) {
+		if(shape != null && x >= shapeX && y >= shapeY) {
+			Block[][] s = shape.shape();
+			if(x - shapeX < s[0].length && y - shapeY < s.length) {
+				Block b;
+				if((b = s[y - shapeY][x - shapeX]) != null)
+					return new BlockMetadata(shape, false);
+			}
+			if(x - shapeX < s[0].length && y >= ghostY && y - ghostY < s.length) {
+				if(s[y - ghostY][x - shapeX] != null)
+					return new BlockMetadata(shape, true);
+			}
+		}
+//		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
+//			return Block.G;
+		return metadata[y][x];
 	}
 	
 	/**

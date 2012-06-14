@@ -2,6 +2,10 @@ package org.tetrevil.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.font.TextLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -11,6 +15,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.tetrevil.Block;
+import org.tetrevil.BlockMetadata;
 import org.tetrevil.Field;
 
 /**
@@ -26,9 +31,14 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	protected TetrevilBorder border;
 	protected Border ghost = BorderFactory.createLineBorder(Block.G.color());
 	
+	protected Block b;
+	protected BlockMetadata m;
+	
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
 		this.border = new TetrevilBorder(field);
+
+		setOpaque(false);
 		
 		super.setBorder(BorderFactory.createEmptyBorder());
 	}
@@ -47,11 +57,21 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 //		field.getProvider().provideShape(field);
 		
-		Block b = (Block) value;
+		b = (Block) value;
+		m = field.getMetadata(column + Field.BUFFER - 1, row + Field.BUFFER);
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
-		c.setText(b != null && b.isActive() && b != Block.G? String.valueOf(field.getLines()) : " ");
+		c.setText(" ");
+
+		if(column == 0 && row < "TETREVIL".length())
+			c.setText("TETREVIL".substring(row, row+1));
+		if(row == Field.HEIGHT && column < "     LINES:".length())
+			c.setText("     LINES:".substring(column, column+1));
+		if(row == Field.HEIGHT && column == "     LINES:".length())
+			c.setText("" + field.getLines());
+		
 		
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
+		setFont(getFont().deriveFont((b != null && b.isActive()) ? Font.BOLD : Font.PLAIN));
 		c.setHorizontalTextPosition(SwingConstants.CENTER);
 		c.setHorizontalAlignment(SwingConstants.CENTER);
 		c.setForeground(Color.WHITE);
@@ -92,6 +112,48 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			c.setBackground(c.getBackground().darker().darker());
 		}
 		return c;
+	}
+	
+	@Override
+	protected void paintComponent(Graphics gg) {
+		Graphics g = gg.create();
+		// TODO Auto-generated method stub
+		g.setColor(getBackground());
+		g.fillRect(0, 0, getWidth(), getHeight());
+		if(b != null && b != Block.X) {
+			if(m != null) {
+				if(m.shape != null && !m.ghost) {
+					g = g.create();
+					g.setColor(getBackground().brighter().brighter());
+					switch(m.shape.direction()) {
+					case UP: break;
+					case DOWN: ((Graphics2D) g).rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
+					case RIGHT: ((Graphics2D) g).rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
+					case LEFT: ((Graphics2D) g).rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
+					}
+					g.translate(0, -(int)((System.currentTimeMillis() / 100) % getHeight()));
+					g.drawLine(getWidth(), 0, 0, getHeight());
+					g.drawLine(getWidth(), getHeight(), 0, 2 * getHeight());
+					g.drawLine(0, 0, getWidth(), getHeight());
+					g.drawLine(0, getHeight(), getWidth(), 2 * getHeight());
+				}
+			}
+		}
+		
+		g = gg.create();
+		super.paintComponent(g);
+	}
+	
+	@Override
+	protected void paintBorder(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintBorder(g);
+	}
+	
+	@Override
+	protected void paintChildren(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintChildren(g);
 	}
 	
 }

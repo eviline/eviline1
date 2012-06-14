@@ -17,6 +17,10 @@ public enum Shape {
 	O_UP(new Block[][] {
 					{OA,	 OA},
 					{OA,	 OA}}),
+	O_RIGHT(new Block[][] {{OA,	 OA},{OA,	 OA}}),
+	O_DOWN(new Block[][] {{OA,	 OA},{OA,	 OA}}),
+	O_LEFT(new Block[][] {{OA,	 OA},{OA,	 OA}}),
+
 	I_UP(new Block[][] {
 					{null,	null,	null,	null},
 					{IA,	IA,		IA,		IA	},
@@ -144,7 +148,7 @@ public enum Shape {
 	
 	public ShapeType type() {
 		switch(this) {
-		case O_UP: return ShapeType.O;
+		case O_DOWN: case O_LEFT: case O_RIGHT: case O_UP: return ShapeType.O;
 		case I_DOWN: case I_LEFT: case I_RIGHT: case I_UP: return ShapeType.I;
 		case J_DOWN: case J_LEFT: case J_RIGHT: case J_UP: return ShapeType.J;
 		case L_DOWN: case L_LEFT: case L_RIGHT: case L_UP: return ShapeType.L;
@@ -157,7 +161,10 @@ public enum Shape {
 	
 	public Shape rotateRight() {
 		switch(this) {
-		case O_UP: return    O_UP;
+		case O_UP: return    O_RIGHT;
+		case O_RIGHT: return O_DOWN;
+		case O_DOWN: return  O_LEFT;
+		case O_LEFT: return  O_UP;
 		case T_UP: return    T_RIGHT;
 		case T_RIGHT: return T_DOWN;
 		case T_DOWN: return  T_LEFT;
@@ -189,7 +196,10 @@ public enum Shape {
 	
 	public Shape rotateLeft() {
 		switch(this) {
-		case O_UP: return    O_UP;
+		case O_UP: return    O_LEFT;
+		case O_LEFT: return  O_DOWN;
+		case O_DOWN: return  O_RIGHT;
+		case O_RIGHT: return O_UP;
 		case T_UP: return    T_LEFT;
 		case T_LEFT: return  T_DOWN;
 		case T_DOWN: return  T_RIGHT;

@@ -1,10 +1,13 @@
 package org.tetrevil.swing;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JTable;
+import javax.swing.Timer;
 
 import org.tetrevil.Block;
 import org.tetrevil.Field;
@@ -60,6 +63,14 @@ public class TetrevilTable extends JTable {
 				setShowGrid(false);
 			}
 		});
+		
+		Timer repainter = new Timer(100, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				repaint();
+			}
+		});
+		repainter.start();
 	}
 
 	public Field getField() {
