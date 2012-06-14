@@ -560,7 +560,6 @@ public class MainApplet extends JApplet {
 			ex.printStackTrace();
 		}
 		
-		
 		getContentPane().setBackground(Color.WHITE);
 		
 		right = new JPanel(new BorderLayout());

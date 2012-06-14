@@ -30,6 +30,8 @@ public class TetrevilTable extends JTable {
 		super(new TetrevilTableModel(field));
 		this.field = field;
 		
+
+		setDoubleBuffered(true);
 		setTableHeader(null);
 		setFillsViewportHeight(true);
 		
@@ -67,7 +69,7 @@ public class TetrevilTable extends JTable {
 		Timer repainter = new Timer(100, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				repaint();
+				((TetrevilTableModel) getModel()).fireTableDataChanged();
 			}
 		});
 		repainter.start();
