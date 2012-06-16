@@ -1,11 +1,13 @@
 package org.tetrevil.swing;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -19,7 +21,7 @@ import org.tetrevil.event.TetrevilEvent;
  * @author robin
  *
  */
-public class TetrevilComponent extends JScrollPane {
+public class TetrevilComponent extends JPanel {
 	/**
 	 * 
 	 */
@@ -41,11 +43,18 @@ public class TetrevilComponent extends JScrollPane {
 	}}
 	
 	public TetrevilComponent(Field f) {
-		super(new TetrevilTable(f), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		super(new TetrevilTable(f), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		super(new BorderLayout());
+		
+		setFocusable(true);
+		
+		JScrollPane scroll = new JScrollPane(new TetrevilTable(f), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		add(scroll, BorderLayout.CENTER);
+		
 //		setDoubleBuffered(true);
 		this.field = f;
-		table = (TetrevilTable) getViewport().getView();
-		addComponentListener(new ComponentAdapter() {
+		table = (TetrevilTable) scroll.getViewport().getView();
+		scroll.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				JScrollPane scroll = (JScrollPane) e.getComponent();
@@ -55,6 +64,7 @@ public class TetrevilComponent extends JScrollPane {
 		
 		tetrevilKeyListener = new TetrevilKeyListener(field);
 		getTable().addKeyListener(tetrevilKeyListener);
+		scroll.addKeyListener(tetrevilKeyListener);
 		addKeyListener(tetrevilKeyListener);
 		
 		field.addTetrevilListener(new TetrevilAdapter() {

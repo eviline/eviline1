@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.font.TextLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -34,6 +35,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 
 	protected Block b;
 	protected BlockMetadata m;
+	
+	protected JButton reset = new JButton("RESET");
 
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
@@ -55,8 +58,13 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	}
 
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		//		field.getProvider().provideShape(field);
+	public Component getTableCellRendererComponent(
+			JTable table, 
+			Object value, 
+			boolean isSelected, 
+			boolean hasFocus, 
+			int row, 
+			int column) {
 
 		b = (Block) value;
 		m = field.getMetadata(column + Field.BUFFER - 1, row + Field.BUFFER);

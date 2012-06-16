@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -616,10 +617,44 @@ public class MainApplet extends JApplet {
 		
 		c = new TetrevilComponent(field);
 		c.getTable().setFocusable(true);
+		
+		JToolBar buttons = new JToolBar();
+		buttons.setFloatable(false);
+		buttons.add(new AbstractAction("Pause") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				field.setPaused(true);
+				c.requestFocus();
+			}
+		});
+		buttons.add(new AbstractAction("Resume") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				field.setPaused(false);
+				c.requestFocus();
+			}
+		});
+		buttons.add(new AbstractAction("Reset") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				field.reset();
+				c.requestFocus();
+			}
+		});
+		buttons.add(new AbstractAction("Settings") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				toggleSettings();
+				c.requestFocus();
+			}
+		});
+		c.add(buttons, BorderLayout.SOUTH);
+		
 		setKeys(kl = c.getTetrevilKeyListener());
 		c.getTable().addKeyListener(kl);
 		addKeyListener(kl);
 		kp = new TetrevilKeyPanel(kl);
+		
 		
 		difficulty = createDifficultyPanel();
 		controls = createControlsPanel();

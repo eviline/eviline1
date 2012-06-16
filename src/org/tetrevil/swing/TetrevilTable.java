@@ -22,6 +22,7 @@ public class TetrevilTable extends JTable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	protected Field field;
 	
 	protected TetrevilTableCellRenderer ttcr;
