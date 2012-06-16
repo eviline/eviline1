@@ -177,7 +177,10 @@ public class Field implements Serializable {
 			return;
 		playing = true;
 		if(shape == null) { // Create a new shape if there is no active one
-			shape = provider.provideShape(this).type().starter();
+			shape = provider.provideShape(this);
+			if(shape == null)
+				return;
+			shape = shape.type().starter();
 			shapeY = shape.type().starterY();
 			shapeX = WIDTH / 2 + 2 + shape.type().starterX();
 			if(!shape.intersects(field, shapeX, shapeY+1)) // Move the shape down one row if possible

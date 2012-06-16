@@ -17,7 +17,8 @@ import java.util.concurrent.Future;
 import org.tetrevil.MaliciousRandomizer.Score;
 
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
-	protected static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+	private static final long serialVersionUID = -2530461350140162944L;
 	
 	public ThreadedMaliciousRandomizer() {
 	}

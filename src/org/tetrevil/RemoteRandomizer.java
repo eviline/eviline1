@@ -5,10 +5,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
+	private static final long serialVersionUID = -2826120548011502136L;
 	
 	protected String server = "www.tetrevil.org:8080";
+	protected transient Future<Shape> future = null;
 	
 	public RemoteRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);
@@ -23,7 +27,7 @@ public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 	}
 	
 	@Override
-	public Shape provideShape(Field field) {
+	public Shape provideShape(final Field field) {
 		if(randomFirst) {
 			randomFirst = false;
 			ShapeType type;
@@ -33,13 +37,41 @@ public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 			return type.starter();
 		}
 	
-		Shape shape = remote(field);
-		recent.add(shape.type());
-		while(recent.size() > HISTORY_SIZE)
-			recent.remove(0);
-		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * Math.random())]--;
-		return shape;
+		if(future == null || future.isCancelled()) {
+			future = ThreadedMaliciousRandomizer.EXECUTOR.submit(new Callable<Shape>() {
+				@Override
+				public Shape call() throws Exception {
+					Shape shape = remote(field);
+					recent.add(shape.type());
+					while(recent.size() > HISTORY_SIZE)
+						recent.remove(0);
+					typeCounts[shape.type().ordinal()]++;
+					typeCounts[(int)(typeCounts.length * Math.random())]--;
+					return shape;
+				}
+			});
+		}
+		
+		if(!future.isDone())
+			return null;
+		
+		try {
+			return future.get();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			future = null;
+		}
+		
+		
+//		Shape shape = remote(field);
+//		recent.add(shape.type());
+//		while(recent.size() > HISTORY_SIZE)
+//			recent.remove(0);
+//		typeCounts[shape.type().ordinal()]++;
+//		typeCounts[(int)(typeCounts.length * Math.random())]--;
+//		return shape;
 
 	}
 	
