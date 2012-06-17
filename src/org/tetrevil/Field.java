@@ -205,6 +205,7 @@ public class Field implements Serializable {
 				}
 			}
 			shape = null; // No active shape
+			reghost();
 			fireShapeLocked();
 			applyGarbage();
 		} else {
@@ -308,11 +309,34 @@ public class Field implements Serializable {
 	 * Recalculate the ghost location
 	 */
 	protected void reghost() {
+		if(!ghosting)
+			return;
+		for(int y = 0; y < HEIGHT + 2 * BUFFER; y++) {
+			for(int x = 0; x < WIDTH + 2 * BUFFER; x++) {
+				if(metadata[y][x] == null)
+					continue;
+				metadata[y][x].ghostClearable = false;
+			}
+		}
 		ghostY = shapeY;
-		if(shape == null || !ghosting)
+		if(shape == null)
 			return;
 		while(!shape.intersects(field, shapeX, ghostY + 1))
 			ghostY++;
+		for(int i = 0; i < 4; i++) {
+			int by = ghostY + shape.y(i);
+			boolean ghostClear = true;
+			for(int x = BUFFER; x < WIDTH + BUFFER; x++)
+				if(getBlock(x, by) == null)
+					ghostClear = false;
+			if(ghostClear) {
+				for(int x = BUFFER; x < WIDTH + BUFFER; x++) {
+					if(metadata[by][x] == null)
+						continue;
+					metadata[by][x].ghostClearable = true;
+				}
+			}
+		}
 	}
 	
 	/**

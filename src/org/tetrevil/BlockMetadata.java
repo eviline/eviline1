@@ -6,6 +6,7 @@ public class BlockMetadata implements Serializable {
 	
 	public Shape shape;
 	public boolean ghost;
+	public boolean ghostClearable;
 	
 	public BlockMetadata() {}
 	
@@ -14,5 +15,10 @@ public class BlockMetadata implements Serializable {
 		this.ghost = ghost;
 	}
 	
+	public BlockMetadata(BlockMetadata source) {
+		this.shape = source.shape;
+		this.ghost = source.ghost;
+		this.ghostClearable = source.ghostClearable;
+	}
 	
 }

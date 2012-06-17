@@ -127,7 +127,11 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	protected void paintComponent(Graphics gg) {
 		Graphics2D g = (Graphics2D) gg.create();
 
-		g.setColor(getBackground());
+		Color bg = getBackground();
+		
+		if(m != null && m.ghostClearable)
+			bg = Color.GRAY;
+		g.setColor(bg);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		if(b != null && b != Block.X) {
 			if(m != null) {
