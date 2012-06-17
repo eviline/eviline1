@@ -129,8 +129,11 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 
 		Color bg = getBackground();
 		
-		if(m != null && m.ghostClearable)
-			bg = Color.GRAY;
+		if(m != null && m.ghostClearable) {
+			if(b != null && b != Block.G)
+				setBackground(bg = b.color());
+			bg = Color.WHITE;
+		}
 		g.setColor(bg);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		if(b != null && b != Block.X) {
