@@ -67,7 +67,7 @@ public class TetrevilTable extends JTable {
 			}
 		});
 		
-		Timer repainter = new Timer(100, new ActionListener() {
+		Timer repainter = new Timer(200, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				((TetrevilTableModel) getModel()).fireTableDataChanged();
