@@ -9,7 +9,7 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="dist/tetrevil.jar" update="true">
+		<jar destfile="dist/tetrevil.jar" update="true" includes="**/*.class">
 			<manifest>
 				<attribute name="Main-Class" value="org.tetrevil.runner.Main"/>
 			</manifest>
