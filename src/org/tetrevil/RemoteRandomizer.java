@@ -14,6 +14,8 @@ public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 	protected String server = "www.tetrevil.org:8080";
 	protected transient Future<Shape> future = null;
 	
+	protected transient boolean intermediateNulls = true;
+	
 	public RemoteRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);
 	}
@@ -52,7 +54,7 @@ public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 			});
 		}
 		
-		if(!future.isDone())
+		if(intermediateNulls && !future.isDone())
 			return null;
 		
 		try {
@@ -73,6 +75,14 @@ public class RemoteRandomizer extends ThreadedMaliciousRandomizer {
 //		typeCounts[(int)(typeCounts.length * Math.random())]--;
 //		return shape;
 
+	}
+	
+	public boolean isIntermediateNulls() {
+		return intermediateNulls;
+	}
+	
+	public void setIntermediateNulls(boolean intermediateNulls) {
+		this.intermediateNulls = intermediateNulls;
 	}
 	
 	protected Shape remote(Field field) {
