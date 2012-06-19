@@ -33,7 +33,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			randomFirst = false;
 			ShapeType type;
 			do {
-				type = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)];
+				type = ShapeType.values()[(int)(random.nextDouble() * ShapeType.values().length)];
 			} while(type == ShapeType.S || type == ShapeType.Z);
 			return type.starter();
 		}
@@ -43,7 +43,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * Math.random())]--;
+		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
 		return shape;
 	}
 	
@@ -116,7 +116,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 						}
 					}
 					typeScore = child.decide(typeScore.field, 1);
-					typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
+					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 					if(fair)
 						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
 					typeScore.shape = type.orientations()[0];

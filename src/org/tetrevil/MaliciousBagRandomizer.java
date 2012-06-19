@@ -75,7 +75,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			randomFirst = false;
 			ShapeType type;
 			do {
-				type = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)];
+				type = ShapeType.values()[(int)(random.nextDouble() * ShapeType.values().length)];
 			} while(type == ShapeType.S || type == ShapeType.Z);
 			Shape s = type.starter();
 			bag.remove(type);
@@ -178,7 +178,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			}
 			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
 			typeScore = decide(typeScore.field, depth + 1);
-			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
+			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 			if(WEIGHTS.containsKey(type))
 				typeScore.score *= WEIGHTS.get(type);
 			typeScore.shape = type.orientations()[0];

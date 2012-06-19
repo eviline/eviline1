@@ -3,6 +3,7 @@ package org.tetrevil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
@@ -56,6 +57,8 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	protected int[] typeCounts = new int[ShapeType.values().length];
 	protected int distAdjustment = 0;
 	
+	protected Random random = new Random();
+	
 	protected TetrevilListener adaptiveListener = new TetrevilAdapter() {
 		@Override
 		public void linesCleared(TetrevilEvent e) {
@@ -92,7 +95,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			randomFirst = false;
 			ShapeType type;
 			do {
-				type = ShapeType.values()[(int)(Math.random() * ShapeType.values().length)];
+				type = ShapeType.values()[(int)(random.nextDouble() * ShapeType.values().length)];
 			} while(type == ShapeType.S || type == ShapeType.Z);
 			return type.starter();
 		}
@@ -102,7 +105,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * Math.random())]--;
+		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
 		return shape;
 	}
 	
@@ -160,7 +163,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				}
 			}
 			typeScore = decide(typeScore.field, depth + 1);
-			typeScore.score *= 1 + rfactor - 2 * rfactor * Math.random();
+			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 			if(fair)
 				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
 			typeScore.shape = type.orientations()[0];
@@ -246,5 +249,13 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	@Override
 	public MaliciousRandomizer getMaliciousRandomizer() {
 		return this;
+	}
+
+	public Random getRandom() {
+		return random;
+	}
+
+	public void setRandom(Random random) {
+		this.random = random;
 	}
 }
