@@ -2,6 +2,7 @@ package org.tetrevil;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.SynchronousQueue;
@@ -18,8 +19,8 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 
 	protected Randomizer provider;
 	
-	protected SynchronousQueue<Shape> next = new SynchronousQueue<Shape>();
-	protected transient Field field;
+	protected transient Exchanger<Object> exchanger = new Exchanger<Object>();
+	
 	protected transient RunnableFuture<?> future;
 	
 	public ConcurrentShapeProvider(Randomizer p) {
@@ -29,16 +30,14 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	@Override
 	public Shape provideShape(Field f) {
 		if(future == null) {
-			this.field = f;
+			final Field initial = f;
 			this.future = new FutureTask<Object>(new Runnable() {
 				@Override
 				public void run() {
+					Field next = initial;
 					try {
-						next.put(provider.provideShape(field));
 						while(true) {
-							while(field.getShape() == null)
-								Thread.sleep(100);
-							next.put(provider.provideShape(field));
+							next = (Field) exchanger.exchange(provider.provideShape(next));
 						}
 					} catch(InterruptedException ie) {
 					}
@@ -47,8 +46,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 			new Thread(future).start();
 		}
 		try {
-			this.field = f;
-			return next.take();
+			return (Shape) exchanger.exchange(f);
 		} catch(InterruptedException ie) {
 			future.cancel(true);
 			throw new RuntimeException(ie);
