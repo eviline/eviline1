@@ -110,13 +110,13 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	}
 	
 	protected Score decide(Field field, int depth) {
-		if(depth > this.depth) {
-//			Score score = cache.depestDecide;
-			Score score = new Score();
-			score.field = field;
-			score.score = Fitness.score(field);
-			return score;
-		}
+//		if(depth > this.depth) {
+////			Score score = cache.depestDecide;
+//			Score score = new Score();
+//			score.field = field;
+//			score.score = Fitness.score(field);
+//			return score;
+//		}
 		
 		return worstFor(field, depth);
 	}
@@ -146,12 +146,13 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
 					field.copyInto(f);
 					f.setShape(shape);
-					f.setShapeX(x);
 					for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
+						f.setShapeX(x);
 						f.setShapeY(y);
 						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 							f.copyInto(fc);
 							fc.clockTick();
+							paintImpossibles(fc);
 							double fscore = Fitness.score(fc);
 							if(fscore < typeScore.score) {
 								typeScore.score = fscore;
@@ -162,7 +163,8 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 					}
 				}
 			}
-			typeScore = decide(typeScore.field, depth + 1);
+			if(depth < this.depth)
+				typeScore = decide(typeScore.field, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 			if(fair)
 				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];

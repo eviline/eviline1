@@ -128,7 +128,7 @@ public class Field implements Serializable {
 				System.arraycopy(field[y], 0, target.field[y], 0, field[y].length);
 			}
 		}
-		target.provider = provider;
+//		target.provider = provider;
 		target.shape = shape;
 		target.shapeX = shapeX;
 		target.shapeY = shapeY;

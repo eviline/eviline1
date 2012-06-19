@@ -9,22 +9,30 @@ public class Fitness {
 	public static double score(Field field) {
 		if(field.isGameOver())
 			return Double.POSITIVE_INFINITY;
+		paintUnlikelies(field);
 		Block[][] f = field.getField();
 		double score = 0;
 		int[] stackHeight = new int[Field.WIDTH];
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
-			int holes = 0;
+			double holes = 0;
 			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
 				int h = Field.HEIGHT + Field.BUFFER - y;
-				if(f[y][x] != null)
+				Block b = f[y][x];
+				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
-				if(f[y][x] != null && f[y][x] != Block.X)
+				if(b != null && b != Block.X && b != Block.G)
+					score += 25 + 5 * h;
+				else if(b == Block.X) {
 					score += 25 * (holes + 1);
-				else if(f[y][x] == Block.X) {
-					score += 15 * (holes + 1);
 					holes++;
 				}
-				else if(f[y][x] == null) {
+				else if(b == Block.G) {
+					score += 15 * (holes + 1);
+					holes += 0.5;
+				}
+				else if(b == null) {
+//					score += 15 * (holes + 1);
+//					holes += 0.5;
 //					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)
 //						score += h;
 				}
@@ -41,7 +49,54 @@ public class Fitness {
 //		
 //		score += sr * 10;
 		
+		score -= field.getLines() * 250;
+		unpaintUnlikelies(field);
 		return score;
 	}
 
+	private static void paintUnlikelies(Field field) {
+		Block[][] f = field.getField();
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] == null && f[y][x-1] != null && f[y][x+1] != null)
+					f[y][x] = Block.G;
+			}
+		}
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] != null)
+					continue;
+				if(f[y-1][x] == Block.G || f[y][x-1] == Block.G)
+					f[y][x] = Block.G;
+			}
+			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
+				if(f[y][x] != null)
+					continue;
+				if(f[y-1][x] == Block.G || f[y][x+1] == Block.G)
+					f[y][x] = Block.G;
+			}
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] != Block.G)
+					continue;
+				if(f[y][x+1] == null || f[y][x-1] == null)
+					f[y][x] = null;
+			}
+			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
+				if(f[y][x] != Block.G)
+					continue;
+				if(f[y][x+1] == null || f[y][x-1] == null)
+					f[y][x] = null;
+			}
+		}
+	}
+	
+	private static void unpaintUnlikelies(Field field) {
+		Block[][] f = field.getField();
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] == Block.G)
+					f[y][x] = null;
+			}
+		}
+	}
 }

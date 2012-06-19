@@ -99,12 +99,13 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 						for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
 							field.copyInto(f);
 							f.setShape(shape);
-							f.setShapeX(x);
 							for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
+								f.setShapeX(x);
 								f.setShapeY(y);
 								if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 									f.copyInto(fc);
 									fc.clockTick();
+									paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
 									if(fscore < typeScore.score) {
 										typeScore.score = fscore;
