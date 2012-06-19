@@ -41,6 +41,10 @@ public enum Block {
 	 * Ghost
 	 */
 	G,
+	/**
+	 * Internal block used when another block can't be figured out
+	 */
+	_,
 	;
 	
 	/**
@@ -55,6 +59,7 @@ public enum Block {
 			return true;
 		case X: return false; // Field border is considered inactive
 		case G: return true;
+		case _: return false;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -74,6 +79,7 @@ public enum Block {
 		case L: case LA: return LA;
 		case X: return X;
 		case G: return G;
+		case _: return _;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -93,6 +99,7 @@ public enum Block {
 		case L: case LA: return L;
 		case X: return X;
 		case G: return G;
+		case _: return _;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -129,6 +136,7 @@ public enum Block {
 			return new Color(237, 41, 57);
 		case X: return Color.DARK_GRAY;
 		case G: return Color.WHITE;
+		case _: return X.color();
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}

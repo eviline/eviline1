@@ -54,7 +54,28 @@ public class Fitness {
 		return score;
 	}
 
-	private static void paintUnlikelies(Field field) {
+	public static void paintImpossibles(Field field) {
+		Block[][] f = field.getField();
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] == null)
+					f[y][x] = Block.X;
+			}
+		}
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == Block.X)
+					f[y][x] = null;
+			}
+			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
+				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == Block.X)
+					f[y][x] = null;
+			}
+		}
+	}
+
+	
+	public static void paintUnlikelies(Field field) {
 		Block[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -90,7 +111,7 @@ public class Fitness {
 		}
 	}
 	
-	private static void unpaintUnlikelies(Field field) {
+	public static void unpaintUnlikelies(Field field) {
 		Block[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
