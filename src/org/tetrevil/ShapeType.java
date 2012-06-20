@@ -122,4 +122,29 @@ public enum ShapeType {
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
+	
+	public Shape up() {
+		switch(this) {
+		case O: return O_UP;
+		case S: return S_UP;
+		case Z: return Z_UP;
+		case I: return I_UP;
+		case T: return T_UP;
+		case J: return J_UP;
+		case L: return L_UP;
+		}
+		throw new InternalError("Fell through to default when all enums covered");
+	}
+	
+	public Shape right() {
+		return up().rotateRight();
+	}
+	
+	public Shape left() {
+		return up().rotateLeft();
+	}
+	
+	public Shape down() {
+		return up().rotateRight().rotateRight();
+	}
 }
