@@ -21,7 +21,7 @@ public class Fitness {
 				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
 				if(b != null && b != Block.X && b != Block.G)
-					score += 25 + 5 * h;
+					score += 25 + 2 * h;
 				else if(b == Block.X) {
 					score += 25 * (holes + 1);
 					holes++;

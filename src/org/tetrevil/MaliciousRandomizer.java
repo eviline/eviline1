@@ -165,9 +165,10 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			}
 			if(depth < this.depth)
 				typeScore = decide(typeScore.field, depth + 1);
-			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-			if(fair)
-				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+//			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+//			if(fair)
+//				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+			permuteScore(typeScore);
 			typeScore.shape = type.orientations()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -176,6 +177,15 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			}
 		}
 		return worst;
+	}
+	
+	protected void permuteScore(Score typeScore) {
+		typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+		if(fair)
+			typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[typeScore.shape.type().ordinal()];
+		if(typeScore.shape.type() == ShapeType.O) {
+			typeScore.score -= 0.2 * Math.abs(typeScore.score);
+		}
 	}
 	
 	protected void paintImpossibles(Field field) {

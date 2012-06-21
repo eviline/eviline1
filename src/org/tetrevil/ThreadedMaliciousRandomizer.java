@@ -117,9 +117,10 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 						}
 					}
 					typeScore = child.decide(typeScore.field, 1);
-					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-					if(fair)
-						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+//					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+//					if(fair)
+//						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+					permuteScore(typeScore);
 					typeScore.shape = type.orientations()[0];
 					return typeScore;
 				}

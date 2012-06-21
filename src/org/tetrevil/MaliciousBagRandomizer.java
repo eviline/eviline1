@@ -178,9 +178,10 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			}
 			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
 			typeScore = decide(typeScore.field, depth + 1);
-			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-			if(WEIGHTS.containsKey(type))
-				typeScore.score *= WEIGHTS.get(type);
+//			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+//			if(WEIGHTS.containsKey(type))
+//				typeScore.score *= WEIGHTS.get(type);
+			permuteScore(typeScore);
 			typeScore.shape = type.orientations()[0];
 			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
 				worst.score = typeScore.score;
@@ -189,6 +190,13 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			}
 		}
 		return worst;
+	}
+	
+	@Override
+	protected void permuteScore(Score typeScore) {
+		typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+		if(WEIGHTS.containsKey(typeScore.shape.type()))
+			typeScore.score *= WEIGHTS.get(typeScore.shape.type());
 	}
 
 	@Override
