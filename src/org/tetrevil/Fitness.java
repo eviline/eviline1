@@ -120,4 +120,14 @@ public class Fitness {
 			}
 		}
 	}
+	
+	public static void unpaintImpossibles(Field field) {
+		Block[][] f = field.getField();
+		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
+				if(f[y][x] == Block.X)
+					f[y][x] = null;
+			}
+		}
+	}
 }
