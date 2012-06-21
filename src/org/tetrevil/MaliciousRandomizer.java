@@ -180,6 +180,8 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	}
 	
 	protected void permuteScore(Score typeScore) {
+		if(typeScore.score == Double.POSITIVE_INFINITY)
+			return;
 		typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 		if(fair)
 			typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[typeScore.shape.type().ordinal()];
