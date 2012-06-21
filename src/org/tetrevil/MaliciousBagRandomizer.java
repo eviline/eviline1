@@ -177,7 +177,8 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 				}
 			}
 			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
-			typeScore = decide(typeScore.field, depth + 1);
+			if(depth < this.depth)
+				typeScore = decide(typeScore.field, depth + 1);
 //			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 //			if(WEIGHTS.containsKey(type))
 //				typeScore.score *= WEIGHTS.get(type);
