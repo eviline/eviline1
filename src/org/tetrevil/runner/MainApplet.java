@@ -40,6 +40,7 @@ import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.RandomizerFactory;
 import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.ThreadedMaliciousRandomizer;
+import org.tetrevil.Version;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.swing.IntegerDocument;
@@ -246,7 +247,8 @@ public class MainApplet extends JApplet {
 //				"H: Show this help<br>\n" +
 				"<br>\n" +
 				"Click to begin.<br><br>\n\n" +
-				"&copy;2012 Robin Kirkman</center></html>");
+				"&copy;2012 Robin Kirkman<br>\n" +
+				"Version " + Version.getVersion() + "</center></html>");
 	}
 	
 	protected JPanel createDifficultyPanel() {
