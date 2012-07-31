@@ -9,12 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.tetrevil.Block;
 import org.tetrevil.Field;
-import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.Shape;
-import org.tetrevil.ThreadedMaliciousRandomizer;
 
 /**
  * Servlet implementation class RandomizerServlet
