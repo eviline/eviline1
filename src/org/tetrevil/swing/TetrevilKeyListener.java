@@ -12,7 +12,6 @@ import javax.swing.Timer;
 
 import org.tetrevil.Field;
 import org.tetrevil.ShapeDirection;
-import org.tetrevil.ShapeType;
 
 /**
  * {@link KeyListener} that implements the controls for tetrevil

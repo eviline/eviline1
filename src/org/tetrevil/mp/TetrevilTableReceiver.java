@@ -1,17 +1,13 @@
 package org.tetrevil.mp;
 
 import java.awt.Dimension;
-import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.Socket;
-
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
 import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.Randomizer;
-import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilTable;
 
 public class TetrevilTableReceiver extends TetrevilTable implements Runnable {

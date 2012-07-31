@@ -1,6 +1,5 @@
 package org.tetrevil.swing;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -8,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 
 import javax.swing.border.AbstractBorder;
-import javax.swing.border.LineBorder;
 
 public class MulticolorLineBorder extends AbstractBorder {
 	protected Color north = null;

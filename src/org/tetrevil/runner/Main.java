@@ -1,12 +1,6 @@
 package org.tetrevil.runner;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,18 +11,13 @@ import java.util.Properties;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-
 import org.tetrevil.Field;
 import org.tetrevil.mp.ClientGameButton;
 import org.tetrevil.mp.ClientSocketFactory;
 import org.tetrevil.mp.HostGameButton;
-import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilFrame;
-import org.tetrevil.swing.TetrevilKeyPanel;
 
 public class Main {
 
