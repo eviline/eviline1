@@ -50,6 +50,7 @@ import org.tetrevil.ThreadedMaliciousRandomizer;
 import org.tetrevil.Version;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
+import org.tetrevil.sounds.TetrevilMusicListener;
 import org.tetrevil.sounds.TetrevilSoundListener;
 import org.tetrevil.swing.IntegerDocument;
 import org.tetrevil.swing.TetrevilComponent;
@@ -89,8 +90,10 @@ public class MainApplet extends JApplet {
 		});
 		field.setGhosting(true);
 	}}
-	protected boolean soundEnabled = false;
+	protected boolean soundEnabled;
 	protected TetrevilSoundListener soundListener = new TetrevilSoundListener();
+	protected boolean musicEnabled;
+	protected TetrevilMusicListener musicListener = new TetrevilMusicListener();
 	protected TetrevilComponent c;
 	protected JPanel right;
 	protected TetrevilKeyListener kl;
@@ -108,7 +111,7 @@ public class MainApplet extends JApplet {
 		
 		cookies.put("player_name", kp.getPlayerName());
 		int[] controls = new int[] {
-				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME, soundEnabled ? 1 : 0
+				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME, soundEnabled ? 1 : 0, musicEnabled ? 1 : 0
 		};
 		cookies.put("controls", Arrays.toString(controls));
 		
@@ -141,6 +144,10 @@ public class MainApplet extends JApplet {
 					soundEnabled = Integer.parseInt(controls[8]) != 0;
 				else
 					soundEnabled = true;
+				if(controls.length >= 10)
+					musicEnabled = Integer.parseInt(controls[9]) != 0;
+				else
+					musicEnabled = true;
 			}
 
 			kp.update();
@@ -536,7 +543,6 @@ public class MainApplet extends JApplet {
 		}), BorderLayout.NORTH);
 		
 		JCheckBox sound = new JCheckBox("Sound");
-		sound.setHorizontalAlignment(SwingConstants.RIGHT);
 		sound.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent l) {
@@ -547,7 +553,25 @@ public class MainApplet extends JApplet {
 					field.removeTetrevilListener(soundListener);
 			}
 		});
-		kp.add(sound);
+		
+		JCheckBox music = new JCheckBox("Music");
+		music.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent l) {
+				JCheckBox sound = (JCheckBox) l.getSource();
+				if(musicEnabled = sound.isSelected()) {
+					field.addTetrevilListener(musicListener);
+				} else {
+					field.removeTetrevilListener(musicListener);
+				}
+			}
+		});
+		
+		JPanel p = new JPanel(new GridLayout(0, 2));
+		p.setOpaque(false);
+		p.add(music);
+		p.add(sound);
+		kp.add(p);
 		
 		ret.add(kp, BorderLayout.CENTER);
 		b.setSelected(true);
@@ -555,6 +579,8 @@ public class MainApplet extends JApplet {
 		loadCookies();
 		if(soundEnabled)
 			sound.doClick();
+		if(musicEnabled)
+			music.doClick();
 		
 		return ret;
 	}

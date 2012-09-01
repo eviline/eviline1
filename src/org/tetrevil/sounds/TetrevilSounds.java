@@ -1,12 +1,18 @@
 package org.tetrevil.sounds;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 
@@ -76,5 +82,56 @@ public class TetrevilSounds {
 	
 	public static Clip getLock() {
 		return lock;
+	}
+	
+	private static Clip music;
+	private static byte[] musicBuffer;
+	private static int BUFFER_SIZE = 65536 * 4;
+	private static int musicBufferPosition = BUFFER_SIZE;
+	private static boolean musicPaused = false;
+	static {
+		try {
+			music = AudioSystem.getClip();
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			byte[] buf = new byte[8192];
+			final AudioInputStream in = AudioSystem.getAudioInputStream(TetrevilSounds.class.getResource("Tetris.wav"));
+			for(int r = in.read(buf); r != -1; r = in.read(buf))
+				bout.write(buf, 0, r);
+			musicBuffer = bout.toByteArray();
+			music.open(in.getFormat(), musicBuffer, 0, BUFFER_SIZE);
+			music.addLineListener(new LineListener() {
+				@Override
+				public void update(LineEvent e) {
+					if(e.getType() != LineEvent.Type.STOP)
+						return;
+					if(e.getType() == LineEvent.Type.STOP && musicPaused)
+						return;
+					try {
+						music.close();
+						music.open(in.getFormat(), musicBuffer, musicBufferPosition, Math.min(BUFFER_SIZE, musicBuffer.length - musicBufferPosition));
+						music.start();
+						musicBufferPosition += BUFFER_SIZE;
+						if(musicBufferPosition > musicBuffer.length)
+							musicBufferPosition = 0;
+					} catch(Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			});
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public static Clip getMusic() {
+		return music;
+	};
+	
+	public static boolean isMusicPaused() {
+		return musicPaused;
+	}
+	
+	public static void setMusicPaused(boolean musicPaused) {
+		TetrevilSounds.musicPaused = musicPaused;
 	}
 }
