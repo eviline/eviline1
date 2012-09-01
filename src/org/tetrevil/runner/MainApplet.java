@@ -553,7 +553,8 @@ public class MainApplet extends JApplet {
 		b.setSelected(true);
 		
 		loadCookies();
-		sound.setSelected(soundEnabled);
+		if(soundEnabled)
+			sound.doClick();
 		
 		return ret;
 	}
