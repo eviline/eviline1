@@ -42,6 +42,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		worst.score = Double.POSITIVE_INFINITY;
 		
 		paintImpossibles(field);
+		double startScore = Fitness.score(field);
 		
 		Field f = new Field(false); // cache.f[depth];
 		Field fc = new Field(false); // cache.fc[depth];
@@ -72,9 +73,9 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			}
 			if(depth < this.depth)
 				typeScore = decide(typeScore.field, depth + 1);
-//			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-//			if(fair)
-//				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+			if(fair)
+				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
 			permuteScore(typeScore);
 			typeScore.shape = type.orientations()[0];
 			if(typeScore.score < worst.score && omit != typeScore.shape.type()) {
@@ -83,6 +84,10 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				worst.shape = typeScore.shape;
 			}
 		}
+		
+		worst.score /= depth;
+		worst.score += startScore;
+		
 		return worst;
 	}
 
@@ -146,10 +151,10 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 							}
 						}
 					}
-//					typeScore = child.decide(typeScore.field, 1);
-//					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-//					if(fair)
-//						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
+					typeScore = child.decide(typeScore.field, 1);
+					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+					if(fair)
+						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
 					permuteScore(typeScore);
 					typeScore.shape = type.orientations()[0];
 					return typeScore;
