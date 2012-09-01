@@ -147,7 +147,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 					case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
 					case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
 					}
-					g.translate(0, -(int)((System.currentTimeMillis() / 200) % getHeight()));
+					g.translate(0, -(int)((System.currentTimeMillis() / 150) % getHeight()));
 					Color c = getBackground();
 					int STEP = 3;
 					for(int j = 0; j < STEP * 3; j += STEP) {

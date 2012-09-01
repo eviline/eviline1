@@ -102,6 +102,7 @@ public class TetrevilComponent extends JPanel {
 				int level = field.getLines() / 10;
 				double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
 				ticker.setDelay((int)(1000 * fss));
+//				ticker.setInitialDelay(ticker.getDelay());
 			}
 			@Override
 			public void gameReset(TetrevilEvent e) {

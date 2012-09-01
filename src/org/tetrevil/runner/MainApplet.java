@@ -406,17 +406,17 @@ public class MainApplet extends JApplet {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				angel.setSelected(true);
-				depth.setText("1");
-				rfactor.setText("5");
+				depth.setText("3");
+				rfactor.setText("0");
 				fair.setEnabled(false);
 				unfair.setEnabled(false);
-				unfair.setSelected(true);
+				fair.setSelected(true);
 				distribution.setEnabled(true);
-				distribution.setText("1");
+				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
 				set.doClick();
-				provText = "Rude";
+				provText = "Angelic";
 				setProvider();
 			}
 		});
@@ -495,7 +495,10 @@ public class MainApplet extends JApplet {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				normal.doClick();
+				if("true".equals(getParameter("angelic")))
+					angelic.doClick();
+				else
+					normal.doClick();
 			}
 		});
 		
