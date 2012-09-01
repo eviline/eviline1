@@ -52,6 +52,7 @@ import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.sounds.TetrevilMusicListener;
 import org.tetrevil.sounds.TetrevilSoundListener;
+import org.tetrevil.sounds.TetrevilSounds;
 import org.tetrevil.swing.IntegerDocument;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
@@ -797,6 +798,12 @@ public class MainApplet extends JApplet {
 		c.stop();
 		if(!field.isGameOver())
 			submitScore("Quit");
+		try {
+			TetrevilSounds.setMusicPaused(true);
+			TetrevilSounds.getMusic().stop();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	@Override
