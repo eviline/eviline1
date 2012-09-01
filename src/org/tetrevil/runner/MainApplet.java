@@ -39,6 +39,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
+import org.tetrevil.AngelRandomizer;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
@@ -263,10 +264,12 @@ public class MainApplet extends JApplet {
 		final JButton evil = new JButton("Evil");
 		final JButton normal = new JButton("Aggressive");
 		final JButton easy = new JButton("Rude");
+		final JButton angelic = new JButton("Angelic");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
+		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
@@ -289,6 +292,8 @@ public class MainApplet extends JApplet {
 				setParameter("adaptive", "" + adaptive.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+				else if(angel.isSelected())
+					RandomizerFactory.setClazz(AngelRandomizer.class);
 				else
 					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
@@ -396,7 +401,26 @@ public class MainApplet extends JApplet {
 				setProvider();
 			}
 		});
-		
+
+		angelic.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				angel.setSelected(true);
+				depth.setText("1");
+				rfactor.setText("5");
+				fair.setEnabled(false);
+				unfair.setEnabled(false);
+				unfair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("1");
+				adaptive.setEnabled(false);
+				adaptive.setSelected(false);
+				set.doClick();
+				provText = "Rude";
+				setProvider();
+			}
+		});
+
 		malicious.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -436,17 +460,23 @@ public class MainApplet extends JApplet {
 		
 		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
 		presets.add(evil, c);
-		c.gridx++; presets.add(normal, c);
-		c.gridx++; presets.add(easy, c);
-		c.gridx = 0; c.gridy++; c.gridwidth = 3; presets.add(sadistic, c);
+		c.gridwidth = 2;
+		c.gridx += 2; presets.add(normal, c);
+		c.gridx += 2; presets.add(easy, c);
 		
-		c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
+		angelic.setPreferredSize(sadistic.getPreferredSize());
+		sadistic.setPreferredSize(sadistic.getPreferredSize());
+		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c); 
+		c.gridx += 4; presets.add(angelic, c);
+		
+		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
 		
 		JLabel l;
 		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
 		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(bag);
+		details.add(new JLabel("")); details.add(angel);
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);
