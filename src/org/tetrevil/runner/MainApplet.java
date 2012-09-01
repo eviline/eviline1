@@ -35,6 +35,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -86,9 +87,10 @@ public class MainApplet extends JApplet {
 					toggleSettings();
 			}
 		});
-//		field.addTetrevilListener(new TetrevilSoundListener());
 		field.setGhosting(true);
 	}}
+	protected boolean soundEnabled = false;
+	protected TetrevilSoundListener soundListener = new TetrevilSoundListener();
 	protected TetrevilComponent c;
 	protected JPanel right;
 	protected TetrevilKeyListener kl;
@@ -106,7 +108,7 @@ public class MainApplet extends JApplet {
 		
 		cookies.put("player_name", kp.getPlayerName());
 		int[] controls = new int[] {
-				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME
+				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME, soundEnabled ? 1 : 0
 		};
 		cookies.put("controls", Arrays.toString(controls));
 		
@@ -135,6 +137,10 @@ public class MainApplet extends JApplet {
 				kl.DROP = Integer.parseInt(controls[5]);
 				kl.DAS_TIME = Integer.parseInt(controls[6]);
 				kl.DOWN_TIME = Integer.parseInt(controls[7]);
+				if(controls.length >= 9)
+					soundEnabled = Integer.parseInt(controls[8]) != 0;
+				else
+					soundEnabled = true;
 			}
 
 			kp.update();
@@ -529,10 +535,25 @@ public class MainApplet extends JApplet {
 			}
 		}), BorderLayout.NORTH);
 		
+		JCheckBox sound = new JCheckBox("Sound");
+		sound.setHorizontalAlignment(SwingConstants.RIGHT);
+		sound.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent l) {
+				JCheckBox sound = (JCheckBox) l.getSource();
+				if(soundEnabled = sound.isSelected())
+					field.addTetrevilListener(soundListener);
+				else
+					field.removeTetrevilListener(soundListener);
+			}
+		});
+		kp.add(sound);
+		
 		ret.add(kp, BorderLayout.CENTER);
 		b.setSelected(true);
 		
 		loadCookies();
+		sound.setSelected(soundEnabled);
 		
 		return ret;
 	}
