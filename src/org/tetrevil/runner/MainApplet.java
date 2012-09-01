@@ -49,6 +49,7 @@ import org.tetrevil.ThreadedMaliciousRandomizer;
 import org.tetrevil.Version;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
+import org.tetrevil.sounds.TetrevilSoundListener;
 import org.tetrevil.swing.IntegerDocument;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
@@ -85,6 +86,7 @@ public class MainApplet extends JApplet {
 					toggleSettings();
 			}
 		});
+//		field.addTetrevilListener(new TetrevilSoundListener());
 		field.setGhosting(true);
 	}}
 	protected TetrevilComponent c;
