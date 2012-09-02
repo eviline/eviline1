@@ -29,13 +29,13 @@ import static org.tetrevil.Shape.Z_UP;
  *
  */
 public enum ShapeType {
-	O,
-	S,
-	Z,
-	J,
-	L,
 	I,
+	L,
+	O,
+	Z,
 	T,
+	J,
+	S,
 	;
 	
 	/**
