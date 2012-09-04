@@ -424,10 +424,10 @@ public class MainApplet extends JApplet {
 				angel.setSelected(true);
 				depth.setText("3");
 				rfactor.setText("0");
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				fair.setSelected(true);
-				distribution.setEnabled(true);
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+				unfair.setSelected(true);
+				distribution.setEnabled(false);
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
@@ -569,6 +569,7 @@ public class MainApplet extends JApplet {
 		});
 		
 		JPanel p = new JPanel(new GridLayout(0, 2));
+		p.setBackground(Color.WHITE);
 		p.setOpaque(false);
 		p.add(music);
 		p.add(sound);
