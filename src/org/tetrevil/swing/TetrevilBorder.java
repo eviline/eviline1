@@ -2,6 +2,8 @@ package org.tetrevil.swing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.Stroke;
 
 import org.tetrevil.Block;

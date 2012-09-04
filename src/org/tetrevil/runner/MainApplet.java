@@ -13,7 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -21,19 +23,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 
+import org.tetrevil.AngelRandomizer;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
@@ -43,6 +50,9 @@ import org.tetrevil.ThreadedMaliciousRandomizer;
 import org.tetrevil.Version;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
+import org.tetrevil.sounds.TetrevilMusicListener;
+import org.tetrevil.sounds.TetrevilSoundListener;
+import org.tetrevil.sounds.TetrevilSounds;
 import org.tetrevil.swing.IntegerDocument;
 import org.tetrevil.swing.TetrevilComponent;
 import org.tetrevil.swing.TetrevilKeyListener;
@@ -81,6 +91,10 @@ public class MainApplet extends JApplet {
 		});
 		field.setGhosting(true);
 	}}
+	protected boolean soundEnabled;
+	protected TetrevilSoundListener soundListener = new TetrevilSoundListener();
+	protected boolean musicEnabled;
+	protected TetrevilMusicListener musicListener = new TetrevilMusicListener();
 	protected TetrevilComponent c;
 	protected JPanel right;
 	protected TetrevilKeyListener kl;
@@ -98,7 +112,7 @@ public class MainApplet extends JApplet {
 		
 		cookies.put("player_name", kp.getPlayerName());
 		int[] controls = new int[] {
-				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME
+				kl.LEFT, kl.RIGHT, kl.ROTATE_LEFT, kl.ROTATE_RIGHT, kl.DOWN, kl.DROP, kl.DAS_TIME, kl.DOWN_TIME, soundEnabled ? 1 : 0, musicEnabled ? 1 : 0
 		};
 		cookies.put("controls", Arrays.toString(controls));
 		
@@ -127,6 +141,14 @@ public class MainApplet extends JApplet {
 				kl.DROP = Integer.parseInt(controls[5]);
 				kl.DAS_TIME = Integer.parseInt(controls[6]);
 				kl.DOWN_TIME = Integer.parseInt(controls[7]);
+				if(controls.length >= 9)
+					soundEnabled = Integer.parseInt(controls[8]) != 0;
+				else
+					soundEnabled = true;
+				if(controls.length >= 10)
+					musicEnabled = Integer.parseInt(controls[9]) != 0;
+				else
+					musicEnabled = true;
 			}
 
 			kp.update();
@@ -258,10 +280,12 @@ public class MainApplet extends JApplet {
 		final JButton evil = new JButton("Evil");
 		final JButton normal = new JButton("Aggressive");
 		final JButton easy = new JButton("Rude");
+		final JButton angelic = new JButton("Angelic");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
+		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
@@ -284,6 +308,8 @@ public class MainApplet extends JApplet {
 				setParameter("adaptive", "" + adaptive.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+				else if(angel.isSelected())
+					RandomizerFactory.setClazz(AngelRandomizer.class);
 				else
 					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
@@ -391,7 +417,26 @@ public class MainApplet extends JApplet {
 				setProvider();
 			}
 		});
-		
+
+		angelic.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				angel.setSelected(true);
+				depth.setText("3");
+				rfactor.setText("0");
+				fair.setEnabled(false);
+				unfair.setEnabled(false);
+				fair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("30");
+				adaptive.setEnabled(false);
+				adaptive.setSelected(false);
+				set.doClick();
+				provText = "Angelic";
+				setProvider();
+			}
+		});
+
 		malicious.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -431,17 +476,23 @@ public class MainApplet extends JApplet {
 		
 		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
 		presets.add(evil, c);
-		c.gridx++; presets.add(normal, c);
-		c.gridx++; presets.add(easy, c);
-		c.gridx = 0; c.gridy++; c.gridwidth = 3; presets.add(sadistic, c);
+		c.gridwidth = 2;
+		c.gridx += 2; presets.add(normal, c);
+		c.gridx += 2; presets.add(easy, c);
 		
-		c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
+		angelic.setPreferredSize(sadistic.getPreferredSize());
+		sadistic.setPreferredSize(sadistic.getPreferredSize());
+		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c); 
+		c.gridx += 4; presets.add(angelic, c);
+		
+		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
 		
 		JLabel l;
 		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
 		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(bag);
+		details.add(new JLabel("")); details.add(angel);
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);
@@ -460,7 +511,10 @@ public class MainApplet extends JApplet {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				normal.doClick();
+				if("true".equals(getParameter("angelic")))
+					angelic.doClick();
+				else
+					normal.doClick();
 			}
 		});
 		
@@ -489,10 +543,45 @@ public class MainApplet extends JApplet {
 			}
 		}), BorderLayout.NORTH);
 		
+		JCheckBox sound = new JCheckBox("Sound");
+		sound.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent l) {
+				JCheckBox sound = (JCheckBox) l.getSource();
+				if(soundEnabled = sound.isSelected())
+					field.addTetrevilListener(soundListener);
+				else
+					field.removeTetrevilListener(soundListener);
+			}
+		});
+		
+		JCheckBox music = new JCheckBox("Music");
+		music.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent l) {
+				JCheckBox sound = (JCheckBox) l.getSource();
+				if(musicEnabled = sound.isSelected()) {
+					field.addTetrevilListener(musicListener);
+				} else {
+					field.removeTetrevilListener(musicListener);
+				}
+			}
+		});
+		
+		JPanel p = new JPanel(new GridLayout(0, 2));
+		p.setOpaque(false);
+		p.add(music);
+		p.add(sound);
+		kp.add(p);
+		
 		ret.add(kp, BorderLayout.CENTER);
 		b.setSelected(true);
 		
 		loadCookies();
+		if(soundEnabled)
+			sound.doClick();
+		if(musicEnabled)
+			music.doClick();
 		
 		return ret;
 	}
@@ -709,6 +798,12 @@ public class MainApplet extends JApplet {
 		c.stop();
 		if(!field.isGameOver())
 			submitScore("Quit");
+		try {
+			TetrevilSounds.setMusicPaused(true);
+			TetrevilSounds.getMusic().stop();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	@Override

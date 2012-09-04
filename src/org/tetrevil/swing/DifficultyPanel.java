@@ -20,6 +20,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import org.tetrevil.AngelRandomizer;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
@@ -63,7 +66,11 @@ public class DifficultyPanel extends JPanel {
 		final JRadioButton bag = new JRadioButton("Bag"); 
 		bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE);
 		bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag);
+		
+		final JRadioButton angel = new JRadioButton("Angel");
+		angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE);
+		angel.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); 
 		fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); 
@@ -110,6 +117,8 @@ public class DifficultyPanel extends JPanel {
 				setParameter("adaptive", "" + adaptive.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+				else if(angel.isSelected())
+					RandomizerFactory.setClazz(AngelRandomizer.class);
 				else if(online.isSelected())
 					RandomizerFactory.setClazz(RemoteRandomizer.class);
 				else
@@ -270,7 +279,7 @@ public class DifficultyPanel extends JPanel {
 		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
 		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
-		details.add(new JLabel("")); details.add(bag);
+		details.add(new JLabel("")); details.add(bag); details.add(new JLabel("")); details.add(angel);
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);

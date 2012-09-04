@@ -6,11 +6,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import org.tetrevil.MaliciousRandomizer.Score;
 
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
@@ -116,7 +120,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 //					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 //					if(fair)
 //						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
-					permuteScore(typeScore);
+					child.permuteScore(typeScore);
 					typeScore.shape = type.orientations()[0];
 					return typeScore;
 				}

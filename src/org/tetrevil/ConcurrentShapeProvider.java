@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.SynchronousQueue;
+
 import org.tetrevil.MaliciousRandomizer.Score;
 
 /**
