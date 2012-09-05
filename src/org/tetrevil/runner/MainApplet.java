@@ -423,13 +423,13 @@ public class MainApplet extends JApplet {
 			public void actionPerformed(ActionEvent e) {
 				angel.setSelected(true);
 				depth.setText("3");
-				rfactor.setText("0");
+				rfactor.setText("1");
 				fair.setEnabled(true);
 				unfair.setEnabled(true);
-				unfair.setSelected(true);
-				distribution.setEnabled(false);
-				distribution.setText("30");
-				adaptive.setEnabled(false);
+				fair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("15");
+				adaptive.setEnabled(true);
 				adaptive.setSelected(false);
 				set.doClick();
 				provText = "Angelic";

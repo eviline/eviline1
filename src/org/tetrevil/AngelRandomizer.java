@@ -62,7 +62,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 							fc.clockTick();
 							paintImpossibles(fc);
 							double fscore = Fitness.score(fc);
-							fscore -= 1000 * (fc.getLines() - f.getLines());
+							fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 							if(fscore < typeScore.score) {
 								typeScore.score = fscore;
 								typeScore.field = fc.copyInto(typeScore.field);
@@ -143,7 +143,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 									fc.clockTick();
 									paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
-									fscore -= 1000 * (fc.getLines() - f.getLines());
+									fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 									if(fscore < typeScore.score) {
 										typeScore.score = fscore;
 										typeScore.field = fc.copyInto(typeScore.field);
@@ -153,7 +153,9 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 							}
 						}
 					}
+					double ts = typeScore.score;
 					typeScore = child.decide(typeScore.field, 1);
+					typeScore.score += ts;
 					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 					if(fair)
 						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
