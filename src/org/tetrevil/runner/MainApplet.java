@@ -41,6 +41,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import org.tetrevil.AngelRandomizer;
+import org.tetrevil.BipolarRandomizer;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
@@ -281,11 +282,13 @@ public class MainApplet extends JApplet {
 		final JButton normal = new JButton("Aggressive");
 		final JButton easy = new JButton("Rude");
 		final JButton angelic = new JButton("Angelic");
+		final JButton bipolarPreset = new JButton("Bipolar");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
-		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel);
+		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
+		final JRadioButton bipolar = new JRadioButton("Bipolar"); bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
@@ -310,6 +313,8 @@ public class MainApplet extends JApplet {
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else if(angel.isSelected())
 					RandomizerFactory.setClazz(AngelRandomizer.class);
+				else if(bipolar.isSelected())
+					RandomizerFactory.setClazz(BipolarRandomizer.class);
 				else
 					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
@@ -436,6 +441,25 @@ public class MainApplet extends JApplet {
 				setProvider();
 			}
 		});
+		
+		bipolarPreset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				bipolar.setSelected(true);
+				depth.setText("3");
+				rfactor.setText("1");
+				fair.setEnabled(true);
+				unfair.setEnabled(true);
+				fair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("15");
+				adaptive.setEnabled(true);
+				adaptive.setSelected(false);
+				set.doClick();
+				provText = "Bipolar";
+				setProvider();
+			}
+		});
 
 		malicious.addActionListener(new ActionListener() {
 			@Override
@@ -482,8 +506,9 @@ public class MainApplet extends JApplet {
 		
 		angelic.setPreferredSize(sadistic.getPreferredSize());
 		sadistic.setPreferredSize(sadistic.getPreferredSize());
-		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c); 
-		c.gridx += 4; presets.add(angelic, c);
+		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c);
+		c.gridx += 2; presets.add(bipolarPreset, c);
+		c.gridx += 2; presets.add(angelic, c);
 		
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
 		
@@ -493,6 +518,8 @@ public class MainApplet extends JApplet {
 		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(bag);
 		details.add(new JLabel("")); details.add(angel);
+		details.add(new JLabel("")); details.add(bipolar);
+		
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);
@@ -514,7 +541,7 @@ public class MainApplet extends JApplet {
 				if("true".equals(getParameter("angelic")))
 					angelic.doClick();
 				else
-					normal.doClick();
+					bipolarPreset.doClick();
 			}
 		});
 		
