@@ -60,7 +60,6 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 		ingame = false;
 		TetrevilSounds.setMusicPaused(true);
 		pause(TetrevilSounds.getMusic());
-		TetrevilSounds.getMusic().setFramePosition(0);
 	}
 	
 	@Override
@@ -68,7 +67,6 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 		ingame = false;
 		TetrevilSounds.setMusicPaused(true);
 		pause(TetrevilSounds.getMusic());
-		TetrevilSounds.getMusic().setFramePosition(0);
 	}
 	
 	@Override
