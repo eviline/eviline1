@@ -114,7 +114,7 @@ public class MainApplet extends JApplet {
 //			});
 				final Timer ticker = c.getTicker();
 				ticker.stop();
-				ticker.setInitialDelay(0);
+				ticker.setInitialDelay(ticker.getDelay());
 				threadPool.execute(new Runnable() {
 					@Override
 					public void run() {
