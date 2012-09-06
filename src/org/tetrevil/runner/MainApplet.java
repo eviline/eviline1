@@ -791,10 +791,12 @@ public class MainApplet extends JApplet {
 					@Override
 					public void run() {
 						if(field.getShape() == null) {
-							c.getTicker().stop();
+							Timer ticker = c.getTicker();
+							ticker.stop();
+							ticker.setInitialDelay(ticker.getDelay());
 							field.clockTick();
 							repaint();
-							c.getTicker().start();
+							ticker.start();
 						}
 					}
 				});

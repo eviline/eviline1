@@ -26,6 +26,9 @@ public class TetrevilComponent extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final int LOCK_DELAY = 1000;
+	
 	protected Field field;
 	protected TetrevilTable table;
 	protected TetrevilKeyListener tetrevilKeyListener;
@@ -70,32 +73,42 @@ public class TetrevilComponent extends JPanel {
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
 			public void clockTicked(TetrevilEvent e) {
-				if(field.isGrounded())
+				if(field.isGrounded()) {
+					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+				}
 			}
 
 			@Override
 			public void shiftedLeft(TetrevilEvent e) {
-				if(field.isGrounded())
+				if(field.isGrounded()) {
+					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+				}
 			}
 
 			@Override
 			public void shiftedRight(TetrevilEvent e) {
-				if(field.isGrounded())
+				if(field.isGrounded()) {
+					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+				}
 			}
 
 			@Override
 			public void rotatedLeft(TetrevilEvent e) {
-				if(field.isGrounded())
+				if(field.isGrounded()) {
+					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+				}
 			}
 
 			@Override
 			public void rotatedRight(TetrevilEvent e) {
-				if(field.isGrounded())
+				if(field.isGrounded()) {
+					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+				}
 			}
 			@Override
 			public void linesCleared(TetrevilEvent e) {
