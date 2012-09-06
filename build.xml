@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="dist" name="TETREVIL">
+<project default="dist" name="EVILINE">
 
 	<target name="compile">
 		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
@@ -9,7 +9,7 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="dist/tetrevil.jar" update="true" includes="**/*.class">
+		<jar destfile="dist/eviline.jar" update="true" includes="**/*.class">
 			<manifest>
 				<attribute name="Main-Class" value="org.tetrevil.runner.Main"/>
 			</manifest>
@@ -22,7 +22,7 @@
 			<fileset file="*.jnlp"/>
 		</copy>
 		<copy todir="../tetrevil_tomcat/WebContent/WEB-INF/lib/">
-			<fileset file="dist/tetrevil.jar"/>
+			<fileset file="dist/eviline.jar"/>
 		</copy>
 	</target>
 	
