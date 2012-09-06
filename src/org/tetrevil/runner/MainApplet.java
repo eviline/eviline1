@@ -828,7 +828,6 @@ public class MainApplet extends JApplet {
 			submitScore("Quit");
 		try {
 			TetrevilSounds.setMusicPaused(true);
-			TetrevilSounds.getMusic().stop();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
