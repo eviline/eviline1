@@ -170,7 +170,7 @@ public class Field implements Serializable {
 	 * Cause one clock tick.  One clock tick means one movement of gravity downwards.
 	 * Tetrevil does not keep a separate 60Hz clock, or some other such independent clock.
 	 */
-	public void clockTick() {
+	public synchronized void clockTick() {
 		if(paused)
 			return;
 		if(gameOver)

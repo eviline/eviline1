@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -64,6 +66,8 @@ import org.tetrevil.wobj.WebScore;
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
 	
+	protected ExecutorService threadPool = Executors.newCachedThreadPool();
+	
 	protected Map<String, String> parameters = new HashMap<String, String>();
 	
 	protected Field field = new Field(true);
@@ -88,6 +92,36 @@ public class MainApplet extends JApplet {
 				}
 				if(!right.isVisible())
 					toggleSettings();
+			}
+			@Override
+			public void shapeLocked(TetrevilEvent e) {
+//				SwingUtilities.invokeLater(new Runnable() {
+//				@Override
+//				public void run() {
+//					if(field.getShape() == null) {
+//						final Timer ticker = c.getTicker();
+//						ticker.stop();
+//						ticker.setInitialDelay(ticker.getDelay());
+//						threadPool.execute(new Runnable() {
+//							@Override
+//							public void run() {
+//								field.clockTick();
+//								ticker.start();
+//							}
+//						});
+//					}
+//				}
+//			});
+				final Timer ticker = c.getTicker();
+				ticker.stop();
+				ticker.setInitialDelay(0);
+				threadPool.execute(new Runnable() {
+					@Override
+					public void run() {
+						field.clockTick();
+						ticker.start();
+					}
+				});
 			}
 		});
 		field.setGhosting(true);
@@ -787,19 +821,6 @@ public class MainApplet extends JApplet {
 					});
 					e.consume();
 				}
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						if(field.getShape() == null) {
-							Timer ticker = c.getTicker();
-							ticker.stop();
-							ticker.setInitialDelay(ticker.getDelay());
-							field.clockTick();
-							repaint();
-							ticker.start();
-						}
-					}
-				});
 			}
 		};
 		c.getTable().addKeyListener(k);
