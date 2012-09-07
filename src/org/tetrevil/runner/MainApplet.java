@@ -121,13 +121,14 @@ public class MainApplet extends JApplet {
 				final Timer ticker = c.getTicker();
 				ticker.stop();
 				ticker.setInitialDelay(ticker.getDelay());
-				threadPool.execute(new Runnable() {
-					@Override
-					public void run() {
-						field.clockTick();
-						ticker.start();
-					}
-				});
+				ticker.start();
+//				threadPool.execute(new Runnable() {
+//					@Override
+//					public void run() {
+//						field.clockTick();
+//					}
+//				});
+//				field.clockTick();
 			}
 		});
 		field.setGhosting(true);

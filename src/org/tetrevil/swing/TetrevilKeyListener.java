@@ -113,6 +113,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 					while(f.getShape() != null) {
 						field.clockTick();
 					}
+					field.clockTick();
 				}
 			}
 		} else if(e.getKeyCode() == DOWN) {
