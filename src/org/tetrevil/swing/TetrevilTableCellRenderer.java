@@ -140,7 +140,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			if(m != null) {
 				if(m.shape != null && !m.ghost) {
 					g = (Graphics2D) gg.create();
-					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 					switch(m.shape.direction()) {
 					case UP: break;
 					case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
