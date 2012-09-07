@@ -71,8 +71,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
 		c.setText(" ");
 
-		if(column == 0 && row < "TETREVIL".length())
-			c.setText("TETREVIL".substring(row, row+1));
+		if(column == 0 && row < "EVILINE".length())
+			c.setText("EVILINE".substring(row, row+1));
 		if(row == Field.HEIGHT && column < "     LINES:".length())
 			c.setText("     LINES:".substring(column, column+1));
 		if(row == Field.HEIGHT && column == "     LINES:".length())
