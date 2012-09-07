@@ -27,6 +27,8 @@ import java.util.concurrent.Executors;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -69,6 +71,9 @@ public class MainApplet extends JApplet {
 	protected ExecutorService threadPool = Executors.newCachedThreadPool();
 	
 	protected Map<String, String> parameters = new HashMap<String, String>();
+	
+	protected Icon gear = new ImageIcon(getClass().getClassLoader().getResource("org/tetrevil/images/gear.png"));
+
 	
 	protected Field field = new Field(true);
 	{{
@@ -234,7 +239,7 @@ public class MainApplet extends JApplet {
 		if(getParameter("adaptive") != null)
 			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
 		
-		provider.setText("Settings: " + provText);
+		provider.setText("Difficulty Settings: " + provText);
 	}
 	
 	protected void saveKeys() {
@@ -603,6 +608,8 @@ public class MainApplet extends JApplet {
 				}
 			}
 		}), BorderLayout.NORTH);
+		b.setIcon(gear);
+		b.setSelectedIcon(gear);
 		
 		JCheckBox sound = new JCheckBox("Sound");
 		sound.addActionListener(new ActionListener() {
@@ -615,6 +622,7 @@ public class MainApplet extends JApplet {
 					field.removeTetrevilListener(soundListener);
 			}
 		});
+		sound.setBackground(Color.WHITE);
 		
 		JCheckBox music = new JCheckBox("Music");
 		music.addActionListener(new ActionListener() {
@@ -628,6 +636,7 @@ public class MainApplet extends JApplet {
 				}
 			}
 		});
+		music.setBackground(Color.WHITE);
 		
 		JPanel p = new JPanel(new GridLayout(0, 2));
 		p.setBackground(Color.WHITE);
@@ -637,6 +646,7 @@ public class MainApplet extends JApplet {
 		
 		ret.add(kp, BorderLayout.CENTER);
 		b.setSelected(true);
+		b.doClick();
 		
 		loadCookies();
 		if(soundEnabled)
@@ -740,7 +750,7 @@ public class MainApplet extends JApplet {
 			}
 		});
 
-		provider = new JButton("Settings");
+		provider = new JButton("Settings", gear);
 		provider.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
