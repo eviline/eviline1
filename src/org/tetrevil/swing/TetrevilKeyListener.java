@@ -108,8 +108,12 @@ public class TetrevilKeyListener extends KeyAdapter {
 		else if(e.getKeyCode() == ROTATE_RIGHT)
 			f.rotateRight();
 		else if(e.getKeyCode() == DROP) {
-			while(f.getShape() != null) {
-				field.clockTick();
+			if(!pressed.contains(DROP)) {
+				synchronized(field) {
+					while(f.getShape() != null) {
+						field.clockTick();
+					}
+				}
 			}
 		} else if(e.getKeyCode() == DOWN) {
 			if(!pressed.contains(DOWN)) {

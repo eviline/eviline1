@@ -46,6 +46,7 @@ import javax.swing.UIManager;
 
 import org.tetrevil.AngelRandomizer;
 import org.tetrevil.BipolarRandomizer;
+import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
@@ -213,7 +214,7 @@ public class MainApplet extends JApplet {
 			score.setRfactor(p.getRfactor());
 			score.setFair(p.isFair() ? 1 : 0);
 			score.setDistribution(p.getDistribution());
-			score.setRandomizer(p.getRandomizerName());
+			score.setRandomizer(field.getProvider().getRandomizerName());
 			score.setAdaptive(p.isAdaptive() ? 1 : 0);
 			score.setReason(reason);
 			WebScore.submit(score, getParameter("score_host"));
@@ -238,6 +239,9 @@ public class MainApplet extends JApplet {
 			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
 		if(getParameter("adaptive") != null)
 			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
+		
+		if("true".equals(getParameter("concurrent")))
+			field.setProvider(new ConcurrentShapeProvider(field.getProvider()));
 		
 		provider.setText("Difficulty Settings: " + provText);
 	}
@@ -284,13 +288,13 @@ public class MainApplet extends JApplet {
 		highScore.setScore(0);
 		highScore.setName("[no score for these settings]");
 		highScore.setTs(new Date());
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
+		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider().getMaliciousRandomizer();
 		highScore.setDepth(p.getDepth());
 		highScore.setRfactor(p.getRfactor());
 		highScore.setFair(p.isFair() ? 1 : 0);
 		highScore.setAdaptive(p.isAdaptive() ? 1 : 0);
 		highScore.setDistribution(p.getDistribution());
-		highScore.setRandomizer(RandomizerFactory.newRandomizer().getRandomizerName());
+		highScore.setRandomizer(field.getProvider().getRandomizerName());
 		try {
 			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
 			if(ws != null)
@@ -338,6 +342,7 @@ public class MainApplet extends JApplet {
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
 		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK);
+		final JCheckBox concurrent = new JCheckBox("Concurrent"); concurrent.setBackground(Color.WHITE);
 		
 		final JButton set = new JButton(new AbstractAction("Set") {
 			@Override
@@ -348,6 +353,7 @@ public class MainApplet extends JApplet {
 				setParameter("distribution", distribution.getText());
 				setParameter("fair", "" + fair.isSelected());
 				setParameter("adaptive", "" + adaptive.isSelected());
+				setParameter("concurrent", "" + concurrent.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else if(angel.isSelected())
@@ -475,6 +481,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("15");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(false);
+				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Angelic";
 				setProvider();
@@ -494,6 +501,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("15");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(false);
+				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Bipolar";
 				setProvider();
@@ -568,7 +576,7 @@ public class MainApplet extends JApplet {
 		
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
-		details.add(l = new JLabel("")); details.add(adaptive);
+		details.add(concurrent); details.add(adaptive);
 		
 		c.gridy++; c.weighty = 1; ret.add(details, c);
 

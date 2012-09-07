@@ -68,7 +68,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	
 	@Override
 	public MaliciousRandomizer getMaliciousRandomizer() {
-		return null;
+		return provider.getMaliciousRandomizer();
 	}
 	
 	private static Field bestDrop(Field field, ShapeType type) {
