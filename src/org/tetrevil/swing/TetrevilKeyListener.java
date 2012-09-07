@@ -97,24 +97,12 @@ public class TetrevilKeyListener extends KeyAdapter {
 		boolean consume = true;
 		if(e.getKeyCode() == LEFT && !pressed.contains(LEFT)) {
 			f.shiftLeft();
-			if(dasActive) {
-				dasDirection = ShapeDirection.LEFT;
-				field.setAutoShift(ShapeDirection.LEFT);
-				field.autoshift();
-			} else if(dasDirection != ShapeDirection.LEFT) {
-				dasDirection = ShapeDirection.LEFT;
-				dasTimer.restart();
-			}
+			dasDirection = ShapeDirection.LEFT;
+			dasTimer.restart();
 		} else if(e.getKeyCode() == RIGHT && !pressed.contains(RIGHT)) {
 			f.shiftRight();
-			if(dasActive) {
-				dasDirection = ShapeDirection.RIGHT;
-				field.setAutoShift(ShapeDirection.RIGHT);
-				field.autoshift();
-			} else if(dasDirection != ShapeDirection.RIGHT) {
-				dasDirection = ShapeDirection.RIGHT;
-				dasTimer.restart();
-			}
+			dasDirection = ShapeDirection.RIGHT;
+			dasTimer.restart();
 		} else if(e.getKeyCode() == ROTATE_LEFT)
 			f.rotateLeft();
 		else if(e.getKeyCode() == ROTATE_RIGHT)
@@ -145,34 +133,20 @@ public class TetrevilKeyListener extends KeyAdapter {
 		if(e.getKeyCode() == LEFT) {
 			if(dasDirection == ShapeDirection.LEFT) {
 				if(dasActive) {
-					if(pressed.contains(RIGHT)) {
-						field.setAutoShift(dasDirection = ShapeDirection.RIGHT);
-						field.autoshift();
-					} else {
-						field.setAutoShift(dasDirection = null);
-						dasActive = false;
-					}
+					field.setAutoShift(dasDirection = null);
+					dasActive = false;
 				}
 				dasTimer.stop();
 			}
-			if(!dasActive)
-				dasDirection = null;
 		}
 		if(e.getKeyCode() == RIGHT) {
 			if(dasDirection == ShapeDirection.RIGHT) {
 				if(dasActive) {
-					if(pressed.contains(LEFT)) {
-						field.setAutoShift(dasDirection = ShapeDirection.LEFT);
-						field.autoshift();
-					} else {
-						field.setAutoShift(dasDirection = null);
-						dasActive = false;
-					}
+					field.setAutoShift(dasDirection = null);
+					dasActive = false;
 				}
 				dasTimer.stop();
 			}
-			if(!dasActive)
-				dasDirection = null;
 		}
 		if(e.getKeyCode() == DOWN) {
 			downTimer.stop();
