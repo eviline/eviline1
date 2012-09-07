@@ -631,7 +631,6 @@ public class MainApplet extends JApplet {
 		
 		JPanel p = new JPanel(new GridLayout(0, 2));
 		p.setBackground(Color.WHITE);
-		p.setOpaque(false);
 		p.add(music);
 		p.add(sound);
 		kp.add(p);
