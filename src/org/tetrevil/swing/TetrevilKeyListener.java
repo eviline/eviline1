@@ -110,7 +110,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 		else if(e.getKeyCode() == DROP) {
 			if(!pressed.contains(DROP)) {
 				synchronized(field) {
-					while(f.getShape() != null) {
+					while(f.getShape() != null && !field.isGameOver()) {
 						field.clockTick();
 					}
 					field.clockTick();

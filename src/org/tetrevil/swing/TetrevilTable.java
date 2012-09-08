@@ -67,13 +67,13 @@ public class TetrevilTable extends JTable {
 			}
 		});
 		
-		Timer repainter = new Timer(150, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((TetrevilTableModel) getModel()).fireTableDataChanged();
-			}
-		});
-		repainter.start();
+//		Timer repainter = new Timer(150, new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				((TetrevilTableModel) getModel()).fireTableDataChanged();
+//			}
+//		});
+//		repainter.start();
 	}
 
 	public Field getField() {

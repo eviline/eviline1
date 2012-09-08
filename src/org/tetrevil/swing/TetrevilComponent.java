@@ -71,11 +71,14 @@ public class TetrevilComponent extends JPanel {
 		addKeyListener(tetrevilKeyListener);
 		
 		field.addTetrevilListener(new TetrevilAdapter() {
+			private boolean lockDelaying = false;
+			
 			@Override
 			public void clockTicked(TetrevilEvent e) {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+					lockDelaying = true;
 				}
 			}
 
@@ -84,6 +87,10 @@ public class TetrevilComponent extends JPanel {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+					lockDelaying = true;
+				} else if(lockDelaying) {
+					ticker.setInitialDelay(ticker.getDelay());
+					lockDelaying = false;
 				}
 			}
 
@@ -92,6 +99,10 @@ public class TetrevilComponent extends JPanel {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+					lockDelaying = true;
+				} else if(lockDelaying) {
+					ticker.setInitialDelay(ticker.getDelay());
+					lockDelaying = false;
 				}
 			}
 
@@ -100,6 +111,10 @@ public class TetrevilComponent extends JPanel {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+					lockDelaying = true;
+				} else if(lockDelaying) {
+					ticker.setInitialDelay(ticker.getDelay());
+					lockDelaying = false;
 				}
 			}
 
@@ -108,6 +123,10 @@ public class TetrevilComponent extends JPanel {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
+					lockDelaying = true;
+				} else if(lockDelaying) {
+					ticker.setInitialDelay(ticker.getDelay());
+					lockDelaying = false;
 				}
 			}
 			@Override
@@ -120,6 +139,7 @@ public class TetrevilComponent extends JPanel {
 			@Override
 			public void gameReset(TetrevilEvent e) {
 				ticker.setDelay(1000);
+				lockDelaying = false;
 			}
 		});
 	}

@@ -136,34 +136,34 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		}
 		g.setColor(bg);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		if(b != null && b != Block.X) {
-			if(m != null) {
-				if(m.shape != null && !m.ghost) {
-					g = (Graphics2D) gg.create();
-//					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-					switch(m.shape.direction()) {
-					case UP: break;
-					case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
-					case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
-					case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
-					}
-					g.translate(0, -(int)((System.currentTimeMillis() / 150) % getHeight()));
-					Color c = getBackground();
-					int STEP = 3;
-					for(int j = 0; j < STEP * 3; j += STEP) {
-						g.setColor(c = brighter(c));
-						for(int i = j; i < j+STEP; i++) {
-							g.drawLine(getWidth(), i, 0, getHeight() + i);
-							g.drawLine(0, i, getWidth(), getHeight() + i);
-							g.drawLine(getWidth(), getHeight() + i, 0, 2 * getHeight() + i);
-							g.drawLine(0, getHeight() + i, getWidth(), 2 * getHeight() + i);
-							g.drawLine(getWidth(), -getHeight() + i, 0, i);
-							g.drawLine(0, -getHeight() + i, getWidth(), i);
-						}
-					}
-				}
-			}
-		}
+//		if(b != null && b != Block.X) {
+//			if(m != null) {
+//				if(m.shape != null && !m.ghost) {
+//					g = (Graphics2D) gg.create();
+////					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//					switch(m.shape.direction()) {
+//					case UP: break;
+//					case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
+//					case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
+//					case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
+//					}
+//					g.translate(0, -(int)((System.currentTimeMillis() / 150) % getHeight()));
+//					Color c = getBackground();
+//					int STEP = 3;
+//					for(int j = 0; j < STEP * 3; j += STEP) {
+//						g.setColor(c = brighter(c));
+//						for(int i = j; i < j+STEP; i++) {
+//							g.drawLine(getWidth(), i, 0, getHeight() + i);
+//							g.drawLine(0, i, getWidth(), getHeight() + i);
+//							g.drawLine(getWidth(), getHeight() + i, 0, 2 * getHeight() + i);
+//							g.drawLine(0, getHeight() + i, getWidth(), 2 * getHeight() + i);
+//							g.drawLine(getWidth(), -getHeight() + i, 0, i);
+//							g.drawLine(0, -getHeight() + i, getWidth(), i);
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		g = (Graphics2D) gg.create();
 		super.paintComponent(g);
