@@ -79,6 +79,8 @@ public class TetrevilComponent extends JPanel {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
 					lockDelaying = true;
+				} else {
+					lockDelaying = false;
 				}
 			}
 
