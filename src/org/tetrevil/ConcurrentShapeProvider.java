@@ -92,6 +92,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 						fc.clockTick();
 						Fitness.paintImpossibles(fc);
 						double fscore = Fitness.score(fc);
+						fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 						if(fscore < typeScore.score) {
 							typeScore.score = fscore;
 							typeScore.field = fc.copyInto(typeScore.field);
