@@ -151,8 +151,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			Color c = getBackground().brighter().brighter();
 			g.setColor(c);
 			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() / 2, getHeight() * 3 / 4);
-			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 3 / 8, getHeight() / 2);
-			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 5 / 8, getHeight() / 2);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 3 / 8, getHeight() * 3 / 8);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 5 / 8, getHeight() * 3 / 8);
 		}
 //		if(b != null && b != Block.X) {
 //			if(m != null) {
