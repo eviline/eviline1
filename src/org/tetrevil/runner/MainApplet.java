@@ -3,6 +3,7 @@ package org.tetrevil.runner;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -145,7 +146,7 @@ public class MainApplet extends JApplet {
 	
 	protected JButton start;
 	protected String provText = "Aggressive";
-	protected JButton provider;
+	protected JToggleButton provider;
 	
 	protected JPanel difficulty;
 	
@@ -328,26 +329,30 @@ public class MainApplet extends JApplet {
 		final JButton angelic = new JButton("Angelic");
 		final JButton bipolarPreset = new JButton("Bipolar");
 		
-		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
-		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
+		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
 		final JRadioButton bipolar = new JRadioButton("Bipolar"); bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
 		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar);
 		
-		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
-		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
+		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
+		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK);
+		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE); 
 		final JCheckBox concurrent = new JCheckBox("Concurrent"); concurrent.setBackground(Color.WHITE);
 		
 		final JButton set = new JButton(new AbstractAction("Set") {
+			private boolean setting = false;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if(setting)
+					return;
+				setting = true;
 				provText = "Custom";
 				setParameter("depth", depth.getText());
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
@@ -370,6 +375,14 @@ public class MainApplet extends JApplet {
 				start.revalidate();
 				validate();
 				repaint();
+				setting = false;
+				EventQueue.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if(provider.isSelected())
+							provider.setSelected(false);
+					}
+				});
 			}
 		});
 		
@@ -558,6 +571,8 @@ public class MainApplet extends JApplet {
 		c.gridx += 2; presets.add(bipolarPreset, c);
 		c.gridx += 2; presets.add(angelic, c);
 		
+		presets.setBorder(BorderFactory.createTitledBorder("Presets"));
+		
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
 		
 		JLabel l;
@@ -581,7 +596,7 @@ public class MainApplet extends JApplet {
 		
 		c.gridy++; c.weighty = 1; ret.add(details, c);
 
-		c.gridy++; c.weighty = 0; ret.add(set, c);
+//		c.gridy++; c.weighty = 0; ret.add(set, c);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -590,6 +605,15 @@ public class MainApplet extends JApplet {
 					angelic.doClick();
 				else
 					bipolarPreset.doClick();
+			}
+		});
+		
+		provider.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!provider.isSelected() && (!field.isPlaying() || field.isGameOver())) {
+					set.doClick();
+				}
 			}
 		});
 		
@@ -759,16 +783,18 @@ public class MainApplet extends JApplet {
 			}
 		});
 
-		provider = new JButton("Settings", gear);
+		provider = new JToggleButton("Settings", gear);
 		provider.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!field.isPlaying() || field.isGameOver()) {
+				if(provider.isSelected() && (!field.isPlaying() || field.isGameOver())) {
 					right.remove(start);
 					right.add(difficulty, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 					difficulty.revalidate();
 					validate();
 					repaint();
+				} else if(provider.isSelected()) {
+					provider.setSelected(false);
 				}
 			}
 		});

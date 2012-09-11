@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Stroke;
 
 import org.tetrevil.Block;
+import org.tetrevil.BlockMetadata;
 import org.tetrevil.Field;
 
 public class TetrevilBorder extends MulticolorLineBorder {
@@ -32,6 +33,8 @@ public class TetrevilBorder extends MulticolorLineBorder {
 	public void set(ColorProvider colors, int x, int y) {
 
 		Block cb = field.getBlock(x, y);
+		BlockMetadata m;
+		int id = ((m = field.getMetadata(x, y)) != null) ? m.shapeId : 0;
 		boolean ca = cb != null && cb.isActive();
 		Color c = colors.provideColor(cb);
 		
@@ -40,12 +43,19 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		Block e = field.getBlock(x+1, y);
 		Block w = field.getBlock(x-1, y);
 		
+		int nid = ((m = field.getMetadata(x, y-1)) != null) ? m.shapeId : 0;
+		int sid = ((m = field.getMetadata(x, y+1)) != null) ? m.shapeId : 0;
+		int eid = ((m = field.getMetadata(x+1, y)) != null) ? m.shapeId : 0;
+		int wid = ((m = field.getMetadata(x-1, y)) != null) ? m.shapeId : 0;
+		
+//		System.out.println("id:" + id + ", nid:" + nid + ", m:" + m);
+		
 		boolean top = (y == Field.BUFFER);
 		
-		north = cb != n ? blend(c, colors.provideColor(n)) : null;
-		south = cb != s ? blend(c, colors.provideColor(s)) : null;
-		east = cb != e ? blend(c, colors.provideColor(e)) : null;
-		west = cb != w ? blend(c, colors.provideColor(w)) : null;
+		north = cb != n ? blend(c, colors.provideColor(n)) : id != nid ? blend(c, Color.WHITE) : null;
+		south = cb != s ? blend(c, colors.provideColor(s)) : id != sid ? blend(c, Color.WHITE) : null;
+		east = cb != e ? blend(c, colors.provideColor(e)) : id != eid ? blend(c, Color.WHITE) : null;
+		west = cb != w ? blend(c, colors.provideColor(w)) : id != wid ? blend(c, Color.WHITE) : null;
 
 		if(cb == Block.G) {
 			c = field.getShape().type().inactive().active().color();

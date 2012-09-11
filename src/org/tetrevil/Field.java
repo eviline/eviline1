@@ -89,6 +89,8 @@ public class Field implements Serializable {
 	
 	protected transient boolean multiplayer;
 	
+	protected transient int shapeId;
+	
 	/**
 	 * Event listeners
 	 */
@@ -177,6 +179,7 @@ public class Field implements Serializable {
 			return;
 		playing = true;
 		if(shape == null) { // Create a new shape if there is no active one
+			shapeId++;
 			shape = provider.provideShape(this);
 			if(shape == null)
 				return;
@@ -198,7 +201,7 @@ public class Field implements Serializable {
 				for(int x = 0; x < s[y].length; x++) {
 					if(s[y][x] != null) {
 						field[y + shapeY][x + shapeX] = s[y][x].inactive();
-						metadata[y + shapeY][x + shapeX] = new BlockMetadata(shape, false);
+						metadata[y + shapeY][x + shapeX] = new BlockMetadata(shape, false, shapeId);
 						if(y + shapeY >= BUFFER)
 							gameOver = false;
 					}
@@ -444,11 +447,11 @@ public class Field implements Serializable {
 			if(x - shapeX < s[0].length && y - shapeY < s.length) {
 				Block b;
 				if((b = s[y - shapeY][x - shapeX]) != null)
-					return new BlockMetadata(shape, false);
+					return new BlockMetadata(shape, false, -1);
 			}
 			if(x - shapeX < s[0].length && y >= ghostY && y - ghostY < s.length) {
 				if(s[y - ghostY][x - shapeX] != null)
-					return new BlockMetadata(shape, true);
+					return new BlockMetadata(shape, true, -1);
 			}
 		}
 //		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
