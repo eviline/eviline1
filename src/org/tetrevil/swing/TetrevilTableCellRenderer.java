@@ -139,6 +139,21 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(bg);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		
+		if(b != null && b != Block.X && m != null && m.shape != null && !m.ghost && !field.isPaused()) {
+			g = (Graphics2D) gg.create();
+			switch(m.shape.direction()) {
+			case UP: break;
+			case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
+			case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
+			case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
+			}
+			Color c = getBackground().brighter().brighter();
+			g.setColor(c);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() / 2, getHeight() * 3 / 4);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 3 / 8, getHeight() / 2);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 5 / 8, getHeight() / 2);
+		}
 //		if(b != null && b != Block.X) {
 //			if(m != null) {
 //				if(m.shape != null && !m.ghost) {
