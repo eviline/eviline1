@@ -52,10 +52,12 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		
 		boolean top = (y == Field.BUFFER);
 		
-		north = cb != n ? blend(c, colors.provideColor(n)) : id != nid ? blend(c, Color.WHITE) : null;
-		south = cb != s ? blend(c, colors.provideColor(s)) : id != sid ? blend(c, Color.WHITE) : null;
-		east = cb != e ? blend(c, colors.provideColor(e)) : id != eid ? blend(c, Color.WHITE) : null;
-		west = cb != w ? blend(c, colors.provideColor(w)) : id != wid ? blend(c, Color.WHITE) : null;
+		Color idc = field.isPaused() ? Color.BLACK : Color.WHITE;
+		
+		north = cb != n ? blend(c, colors.provideColor(n)) : id != nid ? blend(c, idc) : null;
+		south = cb != s ? blend(c, colors.provideColor(s)) : id != sid ? blend(c, idc) : null;
+		east = cb != e ? blend(c, colors.provideColor(e)) : id != eid ? blend(c, idc) : null;
+		west = cb != w ? blend(c, colors.provideColor(w)) : id != wid ? blend(c, idc) : null;
 
 		if(cb == Block.G) {
 			c = field.getShape().type().inactive().active().color();
