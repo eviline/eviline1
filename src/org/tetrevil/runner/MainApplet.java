@@ -541,7 +541,7 @@ public class MainApplet extends JApplet {
 				unfair.setEnabled(false);
 				unfair.setSelected(true);
 				distribution.setEnabled(true);
-				distribution.setText("2");
+				distribution.setText("1");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(false);
 				concurrent.setSelected(true);
