@@ -128,14 +128,17 @@ public class TetrevilSounds {
 			if(musicPaused)
 				return;
 		}
-		int length = Math.min(BUFFER_SIZE, musicBuffer.length - musicBufferPosition);
-		//		length = Math.min(music.available(), length);
-		int frames = length / frameSize;
-		length = frames * frameSize;
-		length = music.write(musicBuffer, musicBufferPosition, length);
-		musicBufferPosition += length;
-		if(musicBufferPosition >= musicBuffer.length)
-			musicBufferPosition = 0;
+		try {
+			int length = Math.min(BUFFER_SIZE, musicBuffer.length - musicBufferPosition);
+			//		length = Math.min(music.available(), length);
+			int frames = length / frameSize;
+			length = frames * frameSize;
+			length = music.write(musicBuffer, musicBufferPosition, length);
+			musicBufferPosition += length;
+			if(musicBufferPosition >= musicBuffer.length)
+				musicBufferPosition = 0;
+		} catch(RuntimeException re) {
+		}
 	}
 	
 	public static boolean isMusicPaused() {
