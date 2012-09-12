@@ -329,6 +329,7 @@ public class MainApplet extends JApplet {
 		final JButton easy = new JButton("Rude");
 		final JButton angelic = new JButton("Angelic");
 		final JButton bipolarPreset = new JButton("Bipolar");
+		final JButton myndziPreset = new JButton("myndzi");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
@@ -390,22 +391,22 @@ public class MainApplet extends JApplet {
 			}
 		});
 		
-		if(MaliciousBagRandomizer.class == RandomizerFactory.getClazz()) {
-			bag.setSelected(true);
-			fair.setEnabled(false);
-			unfair.setEnabled(false);
-			fair.setSelected(true);
-			adaptive.setEnabled(false);
-			adaptive.setSelected(false);
-		} else {
-			malicious.setSelected(true);
-			fair.setEnabled(true);
-			unfair.setEnabled(true);
-			fair.setSelected(p.isFair());
-			unfair.setSelected(!p.isFair());
-			adaptive.setEnabled(true);
-			adaptive.setSelected(p.isAdaptive());
-		}
+//		if(MaliciousBagRandomizer.class.isAssignableFrom(RandomizerFactory.getClazz())) {
+//			bag.setSelected(true);
+//			fair.setEnabled(false);
+//			unfair.setEnabled(false);
+//			fair.setSelected(true);
+//			adaptive.setEnabled(false);
+//			adaptive.setSelected(false);
+//		} else {
+//			malicious.setSelected(true);
+//			fair.setEnabled(true);
+//			unfair.setEnabled(true);
+//			fair.setSelected(p.isFair());
+//			unfair.setSelected(!p.isFair());
+//			adaptive.setEnabled(true);
+//			adaptive.setSelected(p.isAdaptive());
+//		}
 		
 		sadistic.addActionListener(new ActionListener() {
 			@Override
@@ -530,6 +531,26 @@ public class MainApplet extends JApplet {
 			}
 		});
 
+		myndziPreset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myndzi.setSelected(true);
+				depth.setText("3");
+				rfactor.setText("0");
+				fair.setEnabled(false);
+				unfair.setEnabled(false);
+				unfair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("2");
+				adaptive.setEnabled(true);
+				adaptive.setSelected(false);
+				concurrent.setSelected(true);
+				set.doClick();
+				provText = "myndzi";
+				setProvider();
+			}
+		});
+		
 		malicious.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -578,6 +599,7 @@ public class MainApplet extends JApplet {
 		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c);
 		c.gridx += 2; presets.add(bipolarPreset, c);
 		c.gridx += 2; presets.add(angelic, c);
+		c.gridx = 0; c.gridy++; presets.add(myndziPreset, c);
 		
 		presets.setBorder(BorderFactory.createTitledBorder("Presets"));
 		
