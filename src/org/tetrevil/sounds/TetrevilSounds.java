@@ -128,7 +128,6 @@ public class TetrevilSounds {
 			if(musicPaused)
 				return;
 		}
-		System.out.println("Buffer pos:" + musicBufferPosition);
 		int length = Math.min(BUFFER_SIZE, musicBuffer.length - musicBufferPosition);
 		//		length = Math.min(music.available(), length);
 		int frames = length / frameSize;
@@ -145,7 +144,6 @@ public class TetrevilSounds {
 	
 	public static void setMusicPaused(boolean musicPaused) {
 		synchronized(musicBuffer) {
-			System.out.println("Setting musicPaused to:" + musicPaused);
 			TetrevilSounds.musicPaused = musicPaused;
 			if(musicPaused)
 				music.stop();
