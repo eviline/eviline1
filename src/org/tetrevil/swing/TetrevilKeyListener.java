@@ -14,6 +14,8 @@ import javax.swing.Timer;
 import org.tetrevil.Field;
 import org.tetrevil.ShapeDirection;
 import org.tetrevil.ShapeType;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 
 /**
  * {@link KeyListener} that implements the controls for tetrevil
@@ -80,6 +82,12 @@ public class TetrevilKeyListener extends KeyAdapter {
 	
 	public TetrevilKeyListener(Field field) {
 		this.field = field;
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void shapeLocked(TetrevilEvent e) {
+				downTimer.stop();
+			}
+		});
 		updateTimers();
 	}
 	
