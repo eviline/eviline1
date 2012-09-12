@@ -50,8 +50,8 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 		} else {
 			if(!ingame) {
 				ingame = true;
-				TetrevilSounds.setMusicPaused(false);
 			}
+			TetrevilSounds.setMusicPaused(false);
 			ingame = true;
 		}
 	}
