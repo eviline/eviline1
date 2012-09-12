@@ -19,6 +19,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.tetrevil.Block;
 import org.tetrevil.BlockMetadata;
 import org.tetrevil.Field;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 
 /**
  * Cell renderer for a {@link TetrevilTable}
@@ -36,14 +38,12 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	protected Block b;
 	protected BlockMetadata m;
 	
-	protected JButton reset = new JButton("RESET");
-
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
 		this.border = new TetrevilBorder(field);
 
 		setOpaque(false);
-
+		
 		super.setBorder(BorderFactory.createEmptyBorder());
 	}
 
@@ -77,7 +77,15 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			c.setText("     LINES:".substring(column, column+1));
 		if(row == Field.HEIGHT && column == "     LINES:".length())
 			c.setText("" + field.getLines());
-
+		String taunt = field.getProvider().getTaunt();
+		if(taunt != null) {
+			if(taunt.length() > 0)
+				taunt = taunt.substring(1);
+			if(column == Field.WIDTH + 1 && row < taunt.length()) {
+				c.setText(taunt.substring(row, row+1));
+			}
+			
+		}
 
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
 		setFont(getFont().deriveFont((b != null && b.isActive()) ? Font.BOLD : Font.PLAIN));

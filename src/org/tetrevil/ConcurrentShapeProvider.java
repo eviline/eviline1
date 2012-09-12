@@ -25,6 +25,8 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	
 	protected transient RunnableFuture<?> future;
 	
+	protected transient String taunt;
+	
 	public ConcurrentShapeProvider(Randomizer p) {
 		this.provider = p;
 	}
@@ -41,6 +43,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 						while(true) {
 							Shape shape;
 							next = (Field) exchanger.exchange(shape = provider.provideShape(next));
+							taunt = provider.getTaunt();
 							next = bestDrop(next, shape.type());
 						}
 					} catch(InterruptedException ie) {
@@ -57,6 +60,11 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 		}
 	}
 
+	@Override
+	public String getTaunt() {
+		return taunt;
+	}
+	
 	@Override
 	public String getRandomizerName() {
 		return "Concurrent " + provider.getRandomizerName();

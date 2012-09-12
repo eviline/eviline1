@@ -18,7 +18,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 	}
 
 	@Override
-	protected Score worstFor(Field field, int depth) {
+	protected Score worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
 			omit = recent.get(0);
@@ -53,6 +53,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 				continue;
 			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
+			typeScore.taunt = taunt + type;
 
 			for(Shape shape : type.orientations()) {
 				for(int x = 0; x < Field.WIDTH; x++) {
@@ -89,7 +90,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 			}
 			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
 			if(depth < this.depth)
-				typeScore = decide(typeScore.field, depth + 1);
+				typeScore = decide(typeScore.field, typeScore.taunt, depth + 1);
 //			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 //			if(WEIGHTS.containsKey(type))
 //				typeScore.score *= WEIGHTS.get(type);
@@ -99,6 +100,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 				worst.score = typeScore.score;
 				worst.field = typeScore.field.copyInto(worst.field);
 				worst.shape = typeScore.shape;
+				worst.taunt = typeScore.taunt;
 			}
 			if(depth == 0) {
 				Score sortable = new Score();

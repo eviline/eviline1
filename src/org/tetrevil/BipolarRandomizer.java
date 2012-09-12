@@ -18,10 +18,15 @@ public class BipolarRandomizer extends MaliciousRandomizer {
 	@Override
 	public Shape provideShape(Field field) {
 		int level = field.getLines() / 10;
-		if((level % 3) == 0)
-			return angelic.provideShape(field);
-		else
-			return evil.provideShape(field);
+		if((level % 3) == 0) {
+			Shape ret = angelic.provideShape(field);
+			taunt = angelic.getTaunt();
+			return ret;
+		} else {
+			Shape ret = evil.provideShape(field);
+			taunt = evil.getTaunt();
+			return ret;
+		}
 	}
 	
 	public void setRfactor(double rfactor) {

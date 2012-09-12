@@ -90,7 +90,9 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 		}
 		cache.bag[0].clear(); cache.bag[0].addAll(this.bag);
 		field = field.copyInto(new Field());
-		Shape shape = decide(field, 0).shape;
+		Score score = decide(field, "", 0);
+		Shape shape = score.shape;
+		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
@@ -99,7 +101,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 	}
 
 	@Override
-	protected Score decide(Field field, int depth) {
+	protected Score decide(Field field, String taunt, int depth) {
 		if(depth > this.depth) {
 			Score score = cache.depestDecide;
 			score.field = field;
@@ -107,11 +109,11 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			return score;
 		}
 		
-		return worstFor(field, depth);
+		return worstFor(field, taunt, depth);
 	}
 
 	@Override
-	protected Score worstFor(Field field, int depth) {
+	protected Score worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
 			omit = recent.get(0);
@@ -142,6 +144,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 				continue;
 			Score typeScore = cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
+			typeScore.taunt = taunt + type;
 
 			for(Shape shape : type.orientations()) {
 				for(int x = 0; x < Field.WIDTH; x++) {
@@ -178,7 +181,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			}
 			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
 			if(depth < this.depth)
-				typeScore = decide(typeScore.field, depth + 1);
+				typeScore = decide(typeScore.field, typeScore.taunt, depth + 1);
 //			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 //			if(WEIGHTS.containsKey(type))
 //				typeScore.score *= WEIGHTS.get(type);
@@ -188,6 +191,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 				worst.score = typeScore.score;
 				worst.field = typeScore.field.copyInto(worst.field);
 				worst.shape = typeScore.shape;
+				worst.taunt = typeScore.taunt;
 			}
 		}
 		return worst;
