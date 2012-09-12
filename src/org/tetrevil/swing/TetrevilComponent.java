@@ -92,6 +92,7 @@ public class TetrevilComponent extends JPanel {
 					lockDelaying = true;
 				} else if(lockDelaying) {
 					ticker.setInitialDelay(ticker.getDelay());
+					ticker.restart();
 					lockDelaying = false;
 				}
 			}
@@ -104,6 +105,7 @@ public class TetrevilComponent extends JPanel {
 					lockDelaying = true;
 				} else if(lockDelaying) {
 					ticker.setInitialDelay(ticker.getDelay());
+					ticker.restart();
 					lockDelaying = false;
 				}
 			}
@@ -116,6 +118,7 @@ public class TetrevilComponent extends JPanel {
 					lockDelaying = true;
 				} else if(lockDelaying) {
 					ticker.setInitialDelay(ticker.getDelay());
+					ticker.restart();
 					lockDelaying = false;
 				}
 			}
@@ -128,6 +131,7 @@ public class TetrevilComponent extends JPanel {
 					lockDelaying = true;
 				} else if(lockDelaying) {
 					ticker.setInitialDelay(ticker.getDelay());
+					ticker.restart();
 					lockDelaying = false;
 				}
 			}
