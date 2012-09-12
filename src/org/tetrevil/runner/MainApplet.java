@@ -886,6 +886,18 @@ public class MainApplet extends JApplet {
 ////		add(c);
 //		add(right);
 		startupLayout();
+		
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Dimension cd = c.getPreferredSize();
+				Dimension rd = right.getPreferredSize();
+				double factor = ((double) rd.height) / ((double) cd.height);
+				cd.height = rd.height;
+				cd.width *= factor;
+				c.setPreferredSize(cd);
+			}
+		});
 	}
 	
 	@Override
