@@ -72,22 +72,25 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
 		c.setText(" ");
 
-		if(column == 0 && row < "EVILINE".length())
-			c.setText("EVILINE".substring(row, row+1));
-		if(row == Field.HEIGHT && column < "     LINES:".length())
-			c.setText("     LINES:".substring(column, column+1));
-		if(row == Field.HEIGHT && column == "     LINES:".length())
-			c.setText("" + field.getLines());
 		c.setIcon(null);
 		String taunt = field.getProvider().getTaunt();
-		if(taunt != null) {
+		if(column == 0 && row < "EVILINE".length())
+			c.setText("EVILINE".substring(row, row+1));
+		else if(row == Field.HEIGHT && column < "     LINES:".length())
+			c.setText("     LINES:".substring(column, column+1));
+		else if(row == Field.HEIGHT && column == "     LINES:".length())
+			c.setText("" + field.getLines());
+		else if(taunt != null) {
 			if(taunt.length() > 0)
 				taunt = taunt.substring(1);
 			if(column == Field.WIDTH + 1 && row < taunt.length()) {
-				String shape = taunt.substring(row, row+1);
-				ShapeType type = ShapeType.valueOf(shape);
-				c.setText(null);
-				c.setIcon(type.icon());
+//				if(row > 0) {
+					String shape = taunt.substring(row, row+1);
+					ShapeType type = ShapeType.valueOf(shape);
+					c.setText(null);
+					c.setIcon(type.icon());
+//				} else
+//					c.setText("?");
 			}
 		}
 

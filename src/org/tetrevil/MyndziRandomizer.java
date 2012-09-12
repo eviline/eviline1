@@ -16,6 +16,21 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 		super(depth, distribution);
 		WEIGHTS.clear();
 	}
+	
+	@Override
+	public Shape provideShape(Field field) {
+		Shape shape = super.provideShape(field);
+		
+		taunt = shape.type().toString();
+		for(int d = 0; d < bag.size() + nextBag.size(); d++) {
+			if(d < bag.size())
+				taunt += bag.get(d);
+			else
+				taunt += nextBag.get(d - bag.size());
+		}
+		
+		return shape;
+	}
 
 	@Override
 	protected Score worstFor(Field field, String taunt, int depth) {
@@ -35,6 +50,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 				for(int i = 1; i < distribution; i++)
 					bag.add(type);
 			}
+			Collections.shuffle(bag);
 		}
 		
 		Score worst = cache.worst[depth];
@@ -118,16 +134,24 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 				if(delta1 > 2*delta2) { // The worst is significantly the worst, use it
 					return worst;
 				} else { // Pick a shape at random from the bag
-					Score random = sorted.get((int)(Math.random() * sorted.size()));
+//					Score random = sorted.get((int)(Math.random() * sorted.size()));
+					Score next = null;
+					for(Score s : sorted) {
+						if(this.bag.get(0) == s.shape.type())
+							next = s;
+					}
 					Collections.reverse(sorted);
-					if(random == sorted.get(0)) { // We grabbed the best!
+					if(next == sorted.get(0)) { // We grabbed the best!
 						delta1 = sorted.get(1).score - sorted.get(0).score;
 						delta2 = sorted.get(2).score - sorted.get(1).score;
 						if(delta1 > 3*delta2) { // Was the best significantly the best?
-							return sorted.get((int)(Math.random() * sorted.size())); // Pick again
+							for(Score s : sorted) {
+								if(this.bag.get(1) == s.shape.type())
+									next = s;
+							}
 						}
 					}
-					return random; // Return the selected shape
+					return next; // Return the selected shape
 				}
 			}
 		}

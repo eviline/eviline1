@@ -1,6 +1,7 @@
 package org.tetrevil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 	protected Cache cache;
 	
 	protected List<ShapeType> bag = new ArrayList<ShapeType>();
+	protected List<ShapeType> nextBag = new ArrayList<ShapeType>();
 
 	public MaliciousBagRandomizer() {
 		this(DEFAULT_DEPTH, DEFAULT_DIST);
@@ -59,9 +61,14 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 		this.cache = new Cache();
 		for(ShapeType type : ShapeType.values()) {
 			bag.add(type);
-			for(int i = 1; i < distribution; i++)
+			nextBag.add(type);
+			for(int i = 1; i < distribution; i++) {
 				bag.add(type);
+				nextBag.add(type);
+			}
 		}
+		Collections.shuffle(bag);
+		Collections.shuffle(nextBag);
 	}
 	
 	@Override
@@ -82,11 +89,14 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 			return s;
 		}
 		if(this.bag.size() == 0) {
+			this.bag.addAll(nextBag);
+			nextBag.clear();
 			for(ShapeType type : ShapeType.values()) {
-				bag.add(type);
+				nextBag.add(type);
 				for(int i = 1; i < distribution; i++)
-					bag.add(type);
+					nextBag.add(type);
 			}
+			Collections.shuffle(nextBag);
 		}
 		cache.bag[0].clear(); cache.bag[0].addAll(this.bag);
 		field = field.copyInto(new Field());
