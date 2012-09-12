@@ -113,13 +113,19 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 			if(sorted.size() >= 3) {
 				double delta1 = sorted.get(0).score - sorted.get(1).score;
 				double delta2 = sorted.get(1).score - sorted.get(2).score;
-//				System.out.print("delta1:" + delta1 + ", delta2:" + delta2);
-				if(delta1 > 2*delta2) {
-//					System.out.println(", returning worst");
+				if(delta1 > 2*delta2) { // The worst is significantly the worst, use it
 					return worst;
-				} else {
-//					System.out.println(", returning random");
-					return sorted.get((int)(Math.random() * sorted.size()));
+				} else { // Pick a shape at random from the bag
+					Score random = sorted.get((int)(Math.random() * sorted.size()));
+					Collections.reverse(sorted);
+					if(random == sorted.get(0)) { // We grabbed the best!
+						delta1 = sorted.get(1).score - sorted.get(0).score;
+						delta2 = sorted.get(2).score - sorted.get(1).score;
+						if(delta1 > 3*delta2) { // Was the best significantly the best?
+							return sorted.get((int)(Math.random() * sorted.size())); // Pick again
+						}
+					}
+					return random; // Return the selected shape
 				}
 			}
 		}
