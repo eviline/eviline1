@@ -1,5 +1,6 @@
 package org.tetrevil.swing;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -113,7 +114,12 @@ public class TetrevilKeyListener extends KeyAdapter {
 					while(f.getShape() != null && !field.isGameOver()) {
 						field.clockTick();
 					}
-					field.clockTick();
+					EventQueue.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							field.clockTick();
+						}
+					});
 				}
 			}
 		} else if(e.getKeyCode() == DOWN) {

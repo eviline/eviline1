@@ -20,10 +20,15 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
-	public static class Score implements Serializable {
+	public static class Score implements Serializable, Comparable<Score> {
 		public double score;
 		public Shape shape;
 		public Field field = new Field();
+		
+		@Override
+		public int compareTo(Score o) {
+			return -((Double) score).compareTo(o.score);
+		}
 	}
 
 //	protected class Cache implements Serializable {

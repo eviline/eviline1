@@ -51,6 +51,7 @@ import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
+import org.tetrevil.MyndziRandomizer;
 import org.tetrevil.RandomizerFactory;
 import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.ThreadedMaliciousRandomizer;
@@ -333,7 +334,8 @@ public class MainApplet extends JApplet {
 		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
 		final JRadioButton bipolar = new JRadioButton("Bipolar"); bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar);
+		final JRadioButton myndzi = new JRadioButton("myndzi"); myndzi.setForeground(Color.BLACK); myndzi.setBackground(Color.WHITE); myndzi.setPreferredSize(new Dimension(80, myndzi.getPreferredSize().height));
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar); g.add(myndzi);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
@@ -366,6 +368,8 @@ public class MainApplet extends JApplet {
 					RandomizerFactory.setClazz(AngelRandomizer.class);
 				else if(bipolar.isSelected())
 					RandomizerFactory.setClazz(BipolarRandomizer.class);
+				else if(myndzi.isSelected())
+					RandomizerFactory.setClazz(MyndziRandomizer.class);
 				else
 					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
@@ -417,8 +421,9 @@ public class MainApplet extends JApplet {
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				concurrent.setSelected(false);
 				set.doClick();
-				RandomizerFactory.setClazz(RemoteRandomizer.class);
+//				RandomizerFactory.setClazz(RemoteRandomizer.class);
 				provText = "Sadistic";
 				setProvider();
 			}
@@ -438,6 +443,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				concurrent.setSelected(false);
 				set.doClick();
 				provText = "Evil";
 				setProvider();
@@ -457,6 +463,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("30");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(true);
+				concurrent.setSelected(false);
 				set.doClick();
 				provText = "Aggressive";
 				setProvider();
@@ -476,6 +483,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("3");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				concurrent.setSelected(false);
 				set.doClick();
 				provText = "Rude";
 				setProvider();
@@ -582,6 +590,7 @@ public class MainApplet extends JApplet {
 		details.add(new JLabel("")); details.add(bag);
 		details.add(new JLabel("")); details.add(angel);
 		details.add(new JLabel("")); details.add(bipolar);
+		details.add(new JLabel("")); details.add(myndzi);
 		
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);

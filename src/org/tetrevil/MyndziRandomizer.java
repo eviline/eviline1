@@ -1,0 +1,133 @@
+package org.tetrevil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.tetrevil.MaliciousRandomizer.Score;
+
+public class MyndziRandomizer extends MaliciousBagRandomizer {
+	public MyndziRandomizer() {
+		super();
+		WEIGHTS.clear();
+	}
+
+	public MyndziRandomizer(int depth, int distribution) {
+		super(depth, distribution);
+		WEIGHTS.clear();
+	}
+
+	@Override
+	protected Score worstFor(Field field, int depth) {
+		ShapeType omit = null;
+		if(depth == 0 && recent.size() > 0) {
+			omit = recent.get(0);
+			for(ShapeType t : recent) {
+				if(omit != t)
+					omit = null;
+			}
+		}
+		
+		List<ShapeType> bag = cache.bag[depth];
+		if(bag.size() == 0) {
+			for(ShapeType type : ShapeType.values()) {
+				bag.add(type);
+				for(int i = 1; i < distribution; i++)
+					bag.add(type);
+			}
+		}
+		
+		Score worst = cache.worst[depth];
+		worst.score = Double.NEGATIVE_INFINITY;
+		
+		List<Score> sorted = null;
+		if(depth == 0)
+			sorted = new ArrayList<Score>();
+		
+		paintImpossibles(field);
+		
+		Field f = cache.f[depth];
+		Field fc = cache.fc[depth];
+		for(ShapeType type : ShapeType.values()) {
+			if(!bag.contains(type))
+				continue;
+			Score typeScore = cache.typeScore[depth];
+			typeScore.score = Double.POSITIVE_INFINITY;
+
+			for(Shape shape : type.orientations()) {
+				for(int x = 0; x < Field.WIDTH; x++) {
+					field.copyInto(f);
+					f.setShape(shape);
+//					f.setShapeY(0);
+					f.setShapeX(x);
+//					for(int i = 0; i < Field.WIDTH / 2 + 1; i++)
+//						f.shiftLeft();
+//					for(int i = 0; i < x; i++)
+//						f.shiftRight();
+//					while(f.getShape() != null && !f.isGameOver())
+//						f.clockTick();
+//					double fscore = score(f);
+//					if(fscore < typeScore.score) {
+//						typeScore.score = fscore;
+//						typeScore.field = f.copyInto(typeScore.field);
+//						typeScore.shape = shape;
+//					}
+					for(int y = 0; y < Field.HEIGHT + Field.BUFFER; y++) {
+						f.setShapeY(y);
+						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+							f.copyInto(fc);
+							fc.clockTick();
+							double fscore = Fitness.score(fc);
+							if(fscore < typeScore.score) {
+								typeScore.score = fscore;
+								typeScore.field = fc.copyInto(typeScore.field);
+								typeScore.shape = shape;
+							}
+						}
+					}
+				}
+			}
+			cache.bag[depth+1].clear(); cache.bag[depth+1].addAll(bag); cache.bag[depth+1].remove(type);
+			if(depth < this.depth)
+				typeScore = decide(typeScore.field, depth + 1);
+//			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+//			if(WEIGHTS.containsKey(type))
+//				typeScore.score *= WEIGHTS.get(type);
+			permuteScore(typeScore);
+			typeScore.shape = type.orientations()[0];
+			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
+				worst.score = typeScore.score;
+				worst.field = typeScore.field.copyInto(worst.field);
+				worst.shape = typeScore.shape;
+			}
+			if(depth == 0) {
+				Score sortable = new Score();
+				sortable.shape = typeScore.shape;
+				sortable.score = typeScore.score;
+				sortable.field = typeScore.field.copyInto(new Field());
+				sorted.add(sortable);
+			}
+		}
+		if(depth == 0) {
+			Collections.sort(sorted);
+			if(sorted.size() >= 3) {
+				double delta1 = sorted.get(0).score - sorted.get(1).score;
+				double delta2 = sorted.get(1).score - sorted.get(2).score;
+//				System.out.print("delta1:" + delta1 + ", delta2:" + delta2);
+				if(delta1 > 2*delta2) {
+//					System.out.println(", returning worst");
+					return worst;
+				} else {
+//					System.out.println(", returning random");
+					return sorted.get((int)(Math.random() * sorted.size()));
+				}
+			}
+		}
+		return worst;
+	}
+
+	@Override
+	public String getRandomizerName() {
+		return getClass().getName();
+	}
+}

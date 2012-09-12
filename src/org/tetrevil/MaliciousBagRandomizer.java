@@ -21,8 +21,8 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 //		public Field field = new Field();
 //	}
 	
-	protected static Map<ShapeType, Double> WEIGHTS = new EnumMap<ShapeType, Double>(ShapeType.class);
-	static {
+	protected Map<ShapeType, Double> WEIGHTS = new EnumMap<ShapeType, Double>(ShapeType.class);
+	{
 		WEIGHTS.put(ShapeType.I, 1.1);
 	}
 
