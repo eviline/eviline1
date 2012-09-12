@@ -22,7 +22,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 		Shape shape = super.provideShape(field);
 		
 		taunt = shape.type().toString();
-		for(int d = 0; d < bag.size() + nextBag.size(); d++) {
+		for(int d = 0; d < bag.size() + nextBag.size() && d < depth; d++) {
 			if(d < bag.size())
 				taunt += bag.get(d);
 			else
