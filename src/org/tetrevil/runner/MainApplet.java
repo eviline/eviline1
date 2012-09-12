@@ -698,6 +698,19 @@ public class MainApplet extends JApplet {
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 			c.setPreferredSize(new Dimension(260, 500));
 			c.setMaximumSize(c.getPreferredSize());
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					Dimension cd = c.getSize();
+					Dimension rd = right.getSize();
+					double factor = ((double) rd.height) / ((double) cd.height);
+					cd.height = rd.height;
+					cd.width *= factor;
+					c.setPreferredSize(cd);
+					c.revalidate();
+				}
+			});
+//			setLayout(new FlowLayout());
 			add(c);
 		} else {
 			remove(c);
@@ -887,17 +900,6 @@ public class MainApplet extends JApplet {
 //		add(right);
 		startupLayout();
 		
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				Dimension cd = c.getPreferredSize();
-				Dimension rd = right.getPreferredSize();
-				double factor = ((double) rd.height) / ((double) cd.height);
-				cd.height = rd.height;
-				cd.width *= factor;
-				c.setPreferredSize(cd);
-			}
-		});
 	}
 	
 	@Override
