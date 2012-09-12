@@ -634,6 +634,8 @@ public class MainApplet extends JApplet {
 			public void run() {
 				if("true".equals(getParameter("angelic")))
 					angelic.doClick();
+				else if("true".equals(getParameter("myndzi")))
+					myndziPreset.doClick();
 				else
 					bipolarPreset.doClick();
 			}
