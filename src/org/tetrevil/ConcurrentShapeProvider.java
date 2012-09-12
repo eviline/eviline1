@@ -41,9 +41,9 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 					Field next = initial;
 					try {
 						while(true) {
-							Shape shape;
-							next = (Field) exchanger.exchange(shape = provider.provideShape(next));
-							taunt = provider.getTaunt();
+							Shape shape = provider.provideShape(next);
+							taunt = shape.type() + provider.getTaunt();
+							next = (Field) exchanger.exchange(shape);
 							next = bestDrop(next, shape.type());
 						}
 					} catch(InterruptedException ie) {
