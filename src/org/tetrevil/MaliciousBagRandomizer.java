@@ -178,6 +178,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 						f.setShapeY(y);
 						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 							f.copyInto(fc);
+							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();
 							double fscore = Fitness.score(fc);
 							if(fscore < typeScore.score) {
