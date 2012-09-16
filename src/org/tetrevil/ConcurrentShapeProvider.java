@@ -89,16 +89,16 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 		for(Shape shape : type.orientations()) {
 			for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
 				Field f = new Field();
-				Field fc = new Field();
 				field.copyInto(f);
 				f.setShape(shape);
 				for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
 					f.setShapeX(x);
 					f.setShapeY(y);
 					if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+						Field fc = new Field();
 						f.copyInto(fc);
+						Fitness.unpaintImpossibles(fc);
 						fc.clockTick();
-						Fitness.paintImpossibles(fc);
 						double fscore = Fitness.score(fc);
 						fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 						if(fscore < typeScore.score) {
