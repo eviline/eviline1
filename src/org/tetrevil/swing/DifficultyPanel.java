@@ -32,6 +32,9 @@ import org.tetrevil.MyndziRandomizer;
 import org.tetrevil.RandomizerFactory;
 import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.ThreadedMaliciousRandomizer;
+import org.tetrevil.sounds.TetrevilMusicListener;
+import org.tetrevil.sounds.TetrevilSoundListener;
+import org.tetrevil.sounds.TetrevilSounds;
 
 public class DifficultyPanel extends JPanel {
 	protected Field field;
@@ -103,6 +106,13 @@ public class DifficultyPanel extends JPanel {
 		
 		final JCheckBox concurrent = new JCheckBox("Concurrent"); 
 		concurrent.setForeground(Color.BLACK); concurrent.setBackground(Color.WHITE);
+
+		
+		final JCheckBox music = new JCheckBox("Music");
+		music.setForeground(Color.BLACK); music.setBackground(Color.WHITE);
+
+		final JCheckBox sounds = new JCheckBox("Sounds");
+		sounds.setForeground(Color.BLACK); sounds.setBackground(Color.WHITE);
 
 		
 		set = new JButton(new AbstractAction("Set Custom Difficulty") {
@@ -309,6 +319,34 @@ public class DifficultyPanel extends JPanel {
 				adaptive.setEnabled(!unfair.isSelected());
 			}
 		});
+		
+		music.addActionListener(new ActionListener() {
+			private TetrevilMusicListener tml;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				TetrevilSounds.setMusicPaused(true);
+				if(music.isSelected()) {
+					tml = new TetrevilMusicListener();
+					field.addTetrevilListener(tml);
+				} else {
+					field.removeTetrevilListener(tml);
+				}
+				setParameter("music", "" + music.isSelected());
+			}
+		});
+		
+		sounds.addActionListener(new ActionListener() {
+			private TetrevilSoundListener tsl = new TetrevilSoundListener();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(sounds.isSelected()) {
+					field.addTetrevilListener(tsl);
+				} else {
+					field.removeTetrevilListener(tsl);
+				}
+				setParameter("sounds", "" + sounds.isSelected());
+			}
+		});
 
 		setBackground(Color.WHITE);
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
@@ -340,7 +378,7 @@ public class DifficultyPanel extends JPanel {
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
 		details.add(concurrent); details.add(adaptive);
-		
+		details.add(music); details.add(sounds);
 		
 		
 		c.gridy++; c.weighty = 1; add(details, c);
@@ -350,7 +388,12 @@ public class DifficultyPanel extends JPanel {
 		
 		c.gridy++; add(provText, c);
 		
-		normal.doClick();
+		bipolarPreset.doClick();
+		
+		if("true".equals(getParameter("music")))
+			music.doClick();
+		if("true".equals(getParameter("sounds")))
+			sounds.doClick();
 	}
 	
 	public void addActionListener(ActionListener l) {
