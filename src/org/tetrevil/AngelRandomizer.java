@@ -27,6 +27,29 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		return getClass().getName();
 	}
 	
+	@Override
+	public Shape provideShape(Field field) {
+		if(randomFirst) {
+			randomFirst = false;
+			ShapeType type;
+			do {
+				type = ShapeType.values()[(int)(random.nextDouble() * ShapeType.values().length)];
+			} while(type == ShapeType.S || type == ShapeType.Z);
+			return type.starter();
+		}
+		field = field.copyInto(new Field());
+		Score score = decideThreaded(field);
+		Shape shape = score.shape;
+		taunt = score.taunt;
+		if(taunt.length() > 0)
+			taunt = taunt.substring(0, 1);
+		recent.add(shape.type());
+		while(recent.size() > HISTORY_SIZE)
+			recent.remove(0);
+		typeCounts[shape.type().ordinal()]++;
+		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		return shape;
+	}
 	
 	protected Score worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;

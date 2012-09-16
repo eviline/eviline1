@@ -40,7 +40,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		field = field.copyInto(new Field());
 		Score score = decideThreaded(field);
 		Shape shape = score.shape;
-		taunt = score.taunt;
+//		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
@@ -147,7 +147,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			}
 		}
 		
-		taunt = worst.taunt;
+//		taunt = worst.taunt;
 		
 		return worst;
 	}

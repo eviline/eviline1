@@ -75,25 +75,26 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		c.setIcon(null);
 		
 //		String taunt = field.getProvider().getTaunt();
+		String taunt;
 		if(column == 0 && row < "EVILINE".length())
 			c.setText("EVILINE".substring(row, row+1));
 		else if(row == Field.HEIGHT && column < "     LINES:".length())
 			c.setText("     LINES:".substring(column, column+1));
 		else if(row == Field.HEIGHT && column == "     LINES:".length())
 			c.setText("" + field.getLines());
-//		else if(taunt != null) {
-//			if(taunt.length() > 0)
-//				taunt = taunt.substring(1);
-//			if(column == Field.WIDTH + 1 && row < taunt.length()) {
-////				if(row > 0) {
-//					String shape = taunt.substring(row, row+1);
-//					ShapeType type = ShapeType.valueOf(shape);
-//					c.setText(null);
-//					c.setIcon(type.icon());
-////				} else
-////					c.setText("?");
-//			}
-//		}
+		else if(field.getProvider() != null && (taunt = field.getProvider().getTaunt()) != null) {
+			if(taunt.length() > 0)
+				taunt = taunt.substring(1);
+			if(column == Field.WIDTH + 1 && row < taunt.length()) {
+//				if(row > 0) {
+					String shape = taunt.substring(row, row+1);
+					ShapeType type = ShapeType.valueOf(shape);
+					c.setText(null);
+					c.setIcon(type.icon());
+//				} else
+//					c.setText("?");
+			}
+		}
 
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
 		setFont(getFont().deriveFont((b != null && b.isActive()) ? Font.BOLD : Font.PLAIN));

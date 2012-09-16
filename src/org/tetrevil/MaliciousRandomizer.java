@@ -110,7 +110,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		field = field.copyInto(new Field());
 		Score score = decide(field, "", 0);
 		Shape shape = score.shape;
-		taunt = score.taunt;
+//		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);

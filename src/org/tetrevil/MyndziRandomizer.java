@@ -21,13 +21,13 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 	public Shape provideShape(Field field) {
 		Shape shape = super.provideShape(field);
 		
-		taunt = shape.type().toString();
-		for(int d = 0; d < bag.size() + nextBag.size() && d < depth; d++) {
-			if(d < bag.size())
-				taunt += bag.get(d);
-			else
-				taunt += nextBag.get(d - bag.size());
-		}
+//		taunt = shape.type().toString();
+//		for(int d = 0; d < bag.size() + nextBag.size() && d < depth; d++) {
+//			if(d < bag.size())
+//				taunt += bag.get(d);
+//			else
+//				taunt += nextBag.get(d - bag.size());
+//		}
 		
 		return shape;
 	}

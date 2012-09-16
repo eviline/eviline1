@@ -102,7 +102,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 		field = field.copyInto(new Field());
 		Score score = decide(field, "", 0);
 		Shape shape = score.shape;
-		taunt = score.taunt;
+//		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
