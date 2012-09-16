@@ -107,6 +107,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 								f.setShapeY(y);
 								if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 									f.copyInto(fc);
+									Fitness.unpaintImpossibles(fc);
 									fc.clockTick();
 									paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
