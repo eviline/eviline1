@@ -81,17 +81,17 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		else if(row == Field.HEIGHT && column == "     LINES:".length())
 			c.setText("" + field.getLines());
 		else if(taunt != null) {
-			if(taunt.length() > 0)
-				taunt = taunt.substring(1);
-			if(column == Field.WIDTH + 1 && row < taunt.length()) {
-//				if(row > 0) {
-					String shape = taunt.substring(row, row+1);
-					ShapeType type = ShapeType.valueOf(shape);
-					c.setText(null);
-					c.setIcon(type.icon());
-//				} else
-//					c.setText("?");
-			}
+//			if(taunt.length() > 0)
+//				taunt = taunt.substring(1);
+//			if(column == Field.WIDTH + 1 && row < taunt.length()) {
+////				if(row > 0) {
+//					String shape = taunt.substring(row, row+1);
+//					ShapeType type = ShapeType.valueOf(shape);
+//					c.setText(null);
+//					c.setIcon(type.icon());
+////				} else
+////					c.setText("?");
+//			}
 		}
 
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
