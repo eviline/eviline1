@@ -54,7 +54,6 @@ public enum ShapeType {
 			for(int y = 0; y < buf.getHeight(); y++) {
 				int rgb = buf.getRGB(x, y);
 				if(rgb != 0) {
-					System.out.println(Integer.toHexString(rgb));
 					if((rgb & 0xFFFFFF) == 0)
 						buf.setRGB(x, y, b.color().darker().getRGB());
 					else
