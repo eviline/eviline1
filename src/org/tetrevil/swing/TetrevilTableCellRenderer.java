@@ -73,14 +73,15 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		c.setText(" ");
 
 		c.setIcon(null);
-		String taunt = field.getProvider().getTaunt();
+		
+//		String taunt = field.getProvider().getTaunt();
 		if(column == 0 && row < "EVILINE".length())
 			c.setText("EVILINE".substring(row, row+1));
 		else if(row == Field.HEIGHT && column < "     LINES:".length())
 			c.setText("     LINES:".substring(column, column+1));
 		else if(row == Field.HEIGHT && column == "     LINES:".length())
 			c.setText("" + field.getLines());
-		else if(taunt != null) {
+//		else if(taunt != null) {
 //			if(taunt.length() > 0)
 //				taunt = taunt.substring(1);
 //			if(column == Field.WIDTH + 1 && row < taunt.length()) {
@@ -92,7 +93,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 ////				} else
 ////					c.setText("?");
 //			}
-		}
+//		}
 
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
 		setFont(getFont().deriveFont((b != null && b.isActive()) ? Font.BOLD : Font.PLAIN));

@@ -82,14 +82,18 @@ public class TetrevilFrame extends JFrame {
 			tc.setSize(d);
 			
 			d = new Dimension(psize);
-			d.height /= 3;
+			d.height /= 4;
 			d.width = Math.max(d.height, 300);
-			tkp.setSize(d); dp.setSize(d); start.setSize(d);
+			tkp.setSize(d); 
+			d.height *= 2;
+			dp.setSize(d); 
+			d.height /= 2;
+			start.setSize(d);
 			
 			Point p = new Point(psize.width - d.width, 0);
 			tkp.setLocation(p);
 			p.y += d.height; dp.setLocation(p);
-			p.y += d.height; start.setLocation(p);
+			p.y += d.height * 2; start.setLocation(p);
 			
 			d = new Dimension(psize.width - tc.getSize().width - d.width, psize.height);
 			p = new Point(tc.getSize().width, 0);
@@ -203,13 +207,13 @@ public class TetrevilFrame extends JFrame {
 		highScore.setScore(0);
 		highScore.setName("[nobody]");
 		highScore.setTs(new Date());
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
+		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider().getMaliciousRandomizer();
 		highScore.setDepth(p.getDepth());
 		highScore.setRfactor(p.getRfactor());
 		highScore.setFair(p.isFair() ? 1 : 0);
 		highScore.setAdaptive(p.isAdaptive() ? 1 : 0);
 		highScore.setDistribution(p.getDistribution());
-		highScore.setRandomizer(RandomizerFactory.newRandomizer().getRandomizerName());
+		highScore.setRandomizer(field.getProvider().getRandomizerName());
 		try {
 			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
 			if(ws != null)
