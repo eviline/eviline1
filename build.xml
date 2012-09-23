@@ -2,7 +2,7 @@
 <project default="dist" name="TETREVIL">
 
 	<target name="compile">
-		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
+		<javac srcdir="src" destdir="bin" includeantruntime="false" classpath="/home/robin/plugin.jar"/>
 		<copy todir="bin">
 			<fileset dir="src" excludes="**/*.java"/>
 		</copy>
