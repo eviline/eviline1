@@ -24,4 +24,9 @@ public class RandomRandomizer implements Randomizer, Serializable {
 	public MaliciousRandomizer getMaliciousRandomizer() {
 		return null;
 	}
+	
+	@Override
+	public String getTaunt() {
+		return "";
+	}
 }

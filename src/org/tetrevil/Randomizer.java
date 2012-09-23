@@ -16,4 +16,6 @@ public interface Randomizer {
 	public String getRandomizerName();
 	
 	public MaliciousRandomizer getMaliciousRandomizer();
+	
+	public String getTaunt();
 }

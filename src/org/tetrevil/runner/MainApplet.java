@@ -3,6 +3,7 @@ package org.tetrevil.runner;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,10 +22,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -42,9 +47,11 @@ import javax.swing.UIManager;
 
 import org.tetrevil.AngelRandomizer;
 import org.tetrevil.BipolarRandomizer;
+import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
+import org.tetrevil.MyndziRandomizer;
 import org.tetrevil.RandomizerFactory;
 import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.ThreadedMaliciousRandomizer;
@@ -64,7 +71,12 @@ import org.tetrevil.wobj.WebScore;
 public class MainApplet extends JApplet {
 	private static final long serialVersionUID = 0;
 	
+	protected ExecutorService threadPool = Executors.newCachedThreadPool();
+	
 	protected Map<String, String> parameters = new HashMap<String, String>();
+	
+	protected Icon gear = new ImageIcon(getClass().getClassLoader().getResource("org/tetrevil/images/gear.png"));
+
 	
 	protected Field field = new Field(true);
 	{{
@@ -89,6 +101,37 @@ public class MainApplet extends JApplet {
 				if(!right.isVisible())
 					toggleSettings();
 			}
+			@Override
+			public void shapeLocked(TetrevilEvent e) {
+//				SwingUtilities.invokeLater(new Runnable() {
+//				@Override
+//				public void run() {
+//					if(field.getShape() == null) {
+//						final Timer ticker = c.getTicker();
+//						ticker.stop();
+//						ticker.setInitialDelay(ticker.getDelay());
+//						threadPool.execute(new Runnable() {
+//							@Override
+//							public void run() {
+//								field.clockTick();
+//								ticker.start();
+//							}
+//						});
+//					}
+//				}
+//			});
+				final Timer ticker = c.getTicker();
+				ticker.stop();
+				ticker.setInitialDelay(ticker.getDelay());
+				ticker.start();
+//				threadPool.execute(new Runnable() {
+//					@Override
+//					public void run() {
+//						field.clockTick();
+//					}
+//				});
+//				field.clockTick();
+			}
 		});
 		field.setGhosting(true);
 	}}
@@ -104,7 +147,7 @@ public class MainApplet extends JApplet {
 	
 	protected JButton start;
 	protected String provText = "Aggressive";
-	protected JButton provider;
+	protected JToggleButton provider;
 	
 	protected JPanel difficulty;
 	
@@ -174,7 +217,7 @@ public class MainApplet extends JApplet {
 			score.setRfactor(p.getRfactor());
 			score.setFair(p.isFair() ? 1 : 0);
 			score.setDistribution(p.getDistribution());
-			score.setRandomizer(p.getRandomizerName());
+			score.setRandomizer(field.getProvider().getRandomizerName());
 			score.setAdaptive(p.isAdaptive() ? 1 : 0);
 			score.setReason(reason);
 			WebScore.submit(score, getParameter("score_host"));
@@ -200,7 +243,10 @@ public class MainApplet extends JApplet {
 		if(getParameter("adaptive") != null)
 			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
 		
-		provider.setText("Settings: " + provText);
+		if("true".equals(getParameter("concurrent")))
+			field.setProvider(new ConcurrentShapeProvider(field.getProvider()));
+		
+		provider.setText("Difficulty Settings: " + provText);
 	}
 	
 	protected void saveKeys() {
@@ -245,13 +291,13 @@ public class MainApplet extends JApplet {
 		highScore.setScore(0);
 		highScore.setName("[no score for these settings]");
 		highScore.setTs(new Date());
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
+		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider().getMaliciousRandomizer();
 		highScore.setDepth(p.getDepth());
 		highScore.setRfactor(p.getRfactor());
 		highScore.setFair(p.isFair() ? 1 : 0);
 		highScore.setAdaptive(p.isAdaptive() ? 1 : 0);
 		highScore.setDistribution(p.getDistribution());
-		highScore.setRandomizer(RandomizerFactory.newRandomizer().getRandomizerName());
+		highScore.setRandomizer(field.getProvider().getRandomizerName());
 		try {
 			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
 			if(ws != null)
@@ -283,38 +329,48 @@ public class MainApplet extends JApplet {
 		final JButton easy = new JButton("Rude");
 		final JButton angelic = new JButton("Angelic");
 		final JButton bipolarPreset = new JButton("Bipolar");
+		final JButton myndziPreset = new JButton("myndzi");
 		
-		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
-		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
+		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
 		final JRadioButton bipolar = new JRadioButton("Bipolar"); bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar);
+		final JRadioButton myndzi = new JRadioButton("myndzi"); myndzi.setForeground(Color.BLACK); myndzi.setBackground(Color.WHITE); myndzi.setPreferredSize(new Dimension(80, myndzi.getPreferredSize().height));
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar); g.add(myndzi);
 		
-		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
-		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
+		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
+		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
 		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK);
+		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE); 
+		final JCheckBox concurrent = new JCheckBox("Concurrent"); concurrent.setBackground(Color.WHITE);
 		
 		final JButton set = new JButton(new AbstractAction("Set") {
+			private boolean setting = false;
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if(setting)
+					return;
+				setting = true;
 				provText = "Custom";
 				setParameter("depth", depth.getText());
 				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
 				setParameter("distribution", distribution.getText());
 				setParameter("fair", "" + fair.isSelected());
 				setParameter("adaptive", "" + adaptive.isSelected());
+				setParameter("concurrent", "" + concurrent.isSelected());
 				if(bag.isSelected())
 					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
 				else if(angel.isSelected())
 					RandomizerFactory.setClazz(AngelRandomizer.class);
 				else if(bipolar.isSelected())
 					RandomizerFactory.setClazz(BipolarRandomizer.class);
+				else if(myndzi.isSelected())
+					RandomizerFactory.setClazz(MyndziRandomizer.class);
 				else
 					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 				setProvider();
@@ -324,25 +380,33 @@ public class MainApplet extends JApplet {
 				start.revalidate();
 				validate();
 				repaint();
+				setting = false;
+				EventQueue.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if(provider.isSelected())
+							provider.setSelected(false);
+					}
+				});
 			}
 		});
 		
-		if(MaliciousBagRandomizer.class == RandomizerFactory.getClazz()) {
-			bag.setSelected(true);
-			fair.setEnabled(false);
-			unfair.setEnabled(false);
-			fair.setSelected(true);
-			adaptive.setEnabled(false);
-			adaptive.setSelected(false);
-		} else {
-			malicious.setSelected(true);
-			fair.setEnabled(true);
-			unfair.setEnabled(true);
-			fair.setSelected(p.isFair());
-			unfair.setSelected(!p.isFair());
-			adaptive.setEnabled(true);
-			adaptive.setSelected(p.isAdaptive());
-		}
+//		if(MaliciousBagRandomizer.class.isAssignableFrom(RandomizerFactory.getClazz())) {
+//			bag.setSelected(true);
+//			fair.setEnabled(false);
+//			unfair.setEnabled(false);
+//			fair.setSelected(true);
+//			adaptive.setEnabled(false);
+//			adaptive.setSelected(false);
+//		} else {
+//			malicious.setSelected(true);
+//			fair.setEnabled(true);
+//			unfair.setEnabled(true);
+//			fair.setSelected(p.isFair());
+//			unfair.setSelected(!p.isFair());
+//			adaptive.setEnabled(true);
+//			adaptive.setSelected(p.isAdaptive());
+//		}
 		
 		sadistic.addActionListener(new ActionListener() {
 			@Override
@@ -358,8 +422,9 @@ public class MainApplet extends JApplet {
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				concurrent.setSelected(false);
 				set.doClick();
-				RandomizerFactory.setClazz(RemoteRandomizer.class);
+//				RandomizerFactory.setClazz(RemoteRandomizer.class);
 				provText = "Sadistic";
 				setProvider();
 			}
@@ -379,6 +444,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				concurrent.setSelected(false);
 				set.doClick();
 				provText = "Evil";
 				setProvider();
@@ -398,6 +464,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("30");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(true);
+				concurrent.setSelected(false);
 				set.doClick();
 				provText = "Aggressive";
 				setProvider();
@@ -417,6 +484,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("3");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
+				concurrent.setSelected(false);
 				set.doClick();
 				provText = "Rude";
 				setProvider();
@@ -436,6 +504,7 @@ public class MainApplet extends JApplet {
 				distribution.setText("15");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(false);
+				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Angelic";
 				setProvider();
@@ -455,12 +524,33 @@ public class MainApplet extends JApplet {
 				distribution.setText("15");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(false);
+				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Bipolar";
 				setProvider();
 			}
 		});
 
+		myndziPreset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myndzi.setSelected(true);
+				depth.setText("3");
+				rfactor.setText("0");
+				fair.setEnabled(false);
+				unfair.setEnabled(false);
+				unfair.setSelected(true);
+				distribution.setEnabled(true);
+				distribution.setText("2");
+				adaptive.setEnabled(true);
+				adaptive.setSelected(false);
+				concurrent.setSelected(true);
+				set.doClick();
+				provText = "myndzi";
+				setProvider();
+			}
+		});
+		
 		malicious.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -509,6 +599,9 @@ public class MainApplet extends JApplet {
 		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c);
 		c.gridx += 2; presets.add(bipolarPreset, c);
 		c.gridx += 2; presets.add(angelic, c);
+		c.gridx = 0; c.gridy++; presets.add(myndziPreset, c);
+		
+		presets.setBorder(BorderFactory.createTitledBorder("Presets"));
 		
 		c.gridx = 0; c.gridy = 0; c.gridwidth = 1;  ret.add(presets, c);
 		
@@ -519,6 +612,7 @@ public class MainApplet extends JApplet {
 		details.add(new JLabel("")); details.add(bag);
 		details.add(new JLabel("")); details.add(angel);
 		details.add(new JLabel("")); details.add(bipolar);
+		details.add(new JLabel("")); details.add(myndzi);
 		
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
@@ -529,19 +623,30 @@ public class MainApplet extends JApplet {
 		
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
-		details.add(l = new JLabel("")); details.add(adaptive);
+		details.add(concurrent); details.add(adaptive);
 		
 		c.gridy++; c.weighty = 1; ret.add(details, c);
 
-		c.gridy++; c.weighty = 0; ret.add(set, c);
+//		c.gridy++; c.weighty = 0; ret.add(set, c);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				if("true".equals(getParameter("angelic")))
 					angelic.doClick();
+				else if("true".equals(getParameter("myndzi")))
+					myndziPreset.doClick();
 				else
 					bipolarPreset.doClick();
+			}
+		});
+		
+		provider.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!provider.isSelected() && (!field.isPlaying() || field.isGameOver())) {
+					set.doClick();
+				}
 			}
 		});
 		
@@ -569,6 +674,8 @@ public class MainApplet extends JApplet {
 				}
 			}
 		}), BorderLayout.NORTH);
+		b.setIcon(gear);
+		b.setSelectedIcon(gear);
 		
 		JCheckBox sound = new JCheckBox("Sound");
 		sound.addActionListener(new ActionListener() {
@@ -581,6 +688,7 @@ public class MainApplet extends JApplet {
 					field.removeTetrevilListener(soundListener);
 			}
 		});
+		sound.setBackground(Color.WHITE);
 		
 		JCheckBox music = new JCheckBox("Music");
 		music.addActionListener(new ActionListener() {
@@ -594,16 +702,17 @@ public class MainApplet extends JApplet {
 				}
 			}
 		});
+		music.setBackground(Color.WHITE);
 		
 		JPanel p = new JPanel(new GridLayout(0, 2));
 		p.setBackground(Color.WHITE);
-		p.setOpaque(false);
 		p.add(music);
 		p.add(sound);
 		kp.add(p);
 		
 		ret.add(kp, BorderLayout.CENTER);
 		b.setSelected(true);
+		b.doClick();
 		
 		loadCookies();
 		if(soundEnabled)
@@ -622,6 +731,19 @@ public class MainApplet extends JApplet {
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 			c.setPreferredSize(new Dimension(260, 500));
 			c.setMaximumSize(c.getPreferredSize());
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					Dimension cd = c.getSize();
+					Dimension rd = right.getSize();
+					double factor = ((double) rd.height) / ((double) cd.height);
+					cd.height = rd.height;
+					cd.width *= factor;
+					c.setPreferredSize(cd);
+					c.revalidate();
+				}
+			});
+//			setLayout(new FlowLayout());
 			add(c);
 		} else {
 			remove(c);
@@ -707,16 +829,18 @@ public class MainApplet extends JApplet {
 			}
 		});
 
-		provider = new JButton("Settings");
+		provider = new JToggleButton("Settings", gear);
 		provider.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!field.isPlaying() || field.isGameOver()) {
+				if(provider.isSelected() && (!field.isPlaying() || field.isGameOver())) {
 					right.remove(start);
 					right.add(difficulty, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 					difficulty.revalidate();
 					validate();
 					repaint();
+				} else if(provider.isSelected()) {
+					provider.setSelected(false);
 				}
 			}
 		});
@@ -787,17 +911,6 @@ public class MainApplet extends JApplet {
 					});
 					e.consume();
 				}
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						if(field.getShape() == null) {
-							c.getTicker().stop();
-							field.clockTick();
-							repaint();
-							c.getTicker().start();
-						}
-					}
-				});
 			}
 		};
 		c.getTable().addKeyListener(k);
@@ -819,6 +932,7 @@ public class MainApplet extends JApplet {
 ////		add(c);
 //		add(right);
 		startupLayout();
+		
 	}
 	
 	@Override
@@ -828,7 +942,6 @@ public class MainApplet extends JApplet {
 			submitScore("Quit");
 		try {
 			TetrevilSounds.setMusicPaused(true);
-			TetrevilSounds.getMusic().stop();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

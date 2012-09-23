@@ -20,10 +20,16 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
-	public static class Score implements Serializable {
+	public static class Score implements Serializable, Comparable<Score> {
 		public double score;
 		public Shape shape;
+		public String taunt;
 		public Field field = new Field();
+		
+		@Override
+		public int compareTo(Score o) {
+			return -((Double) score).compareTo(o.score);
+		}
 	}
 
 //	protected class Cache implements Serializable {
@@ -58,6 +64,8 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	protected int distAdjustment = 0;
 	
 	protected Random random = new Random();
+	
+	protected transient String taunt = "";
 	
 	protected TetrevilListener adaptiveListener = new TetrevilAdapter() {
 		@Override
@@ -100,7 +108,9 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			return type.starter();
 		}
 		field = field.copyInto(new Field());
-		Shape shape = decide(field, 0).shape;
+		Score score = decide(field, "", 0);
+		Shape shape = score.shape;
+//		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
@@ -109,7 +119,12 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		return shape;
 	}
 	
-	protected Score decide(Field field, int depth) {
+	@Override
+	public String getTaunt() {
+		return taunt;
+	}
+	
+	protected Score decide(Field field, String taunt, int depth) {
 //		if(depth > this.depth) {
 ////			Score score = cache.depestDecide;
 //			Score score = new Score();
@@ -118,10 +133,10 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 //			return score;
 //		}
 		
-		return worstFor(field, depth);
+		return worstFor(field, taunt, depth);
 	}
 	
-	protected Score worstFor(Field field, int depth) {
+	protected Score worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
 			omit = recent.get(0);
@@ -141,6 +156,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		for(ShapeType type : ShapeType.values()) {
 			Score typeScore = new Score(); // cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
+			typeScore.taunt = taunt + type;
 
 			for(Shape shape : type.orientations()) {
 				for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
@@ -151,6 +167,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 						f.setShapeY(y);
 						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 							f.copyInto(fc);
+							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();
 							paintImpossibles(fc);
 							double fscore = Fitness.score(fc);
@@ -164,7 +181,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				}
 			}
 			if(depth < this.depth)
-				typeScore = decide(typeScore.field, depth + 1);
+				typeScore = decide(typeScore.field, typeScore.taunt, depth + 1);
 //			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 //			if(fair)
 //				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
@@ -174,6 +191,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				worst.score = typeScore.score;
 				worst.field = typeScore.field.copyInto(worst.field);
 				worst.shape = typeScore.shape;
+				worst.taunt = typeScore.taunt;
 			}
 		}
 		return worst;

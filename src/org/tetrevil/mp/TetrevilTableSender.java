@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.tetrevil.Field;
 import org.tetrevil.event.TetrevilAdapter;
@@ -11,6 +16,21 @@ import org.tetrevil.event.TetrevilEvent;
 
 public class TetrevilTableSender extends TetrevilAdapter {
 	protected ObjectOutputStream out;
+	
+	protected ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+	protected Runnable flusher = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				out.flush();
+			} catch(IOException ioe) {
+				ioe.printStackTrace();
+			} finally {
+				flusherFuture = null;
+			}
+		}
+	};
+	protected Future<?> flusherFuture = null;
 	
 	public TetrevilTableSender(ObjectOutputStream out) throws IOException {
 		this.out = out;
@@ -23,7 +43,10 @@ public class TetrevilTableSender extends TetrevilAdapter {
 		try {
 			out.reset();
 			out.writeObject(f);
-			out.flush();
+			if(flusherFuture == null) {
+				out.flush();
+				flusherFuture = executor.schedule(flusher, 150, TimeUnit.MILLISECONDS);
+			}
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 			e.getField().removeTetrevilListener(this);
@@ -34,7 +57,10 @@ public class TetrevilTableSender extends TetrevilAdapter {
 		try {
 			out.reset();
 			out.writeObject(e.getField());
-			out.flush();
+			if(flusherFuture == null) {
+				out.flush();
+				flusherFuture = executor.schedule(flusher, 150, TimeUnit.MILLISECONDS);
+			}
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 			e.getField().removeTetrevilListener(this);

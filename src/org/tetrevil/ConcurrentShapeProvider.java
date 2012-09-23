@@ -25,6 +25,8 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	
 	protected transient RunnableFuture<?> future;
 	
+	protected transient String taunt;
+	
 	public ConcurrentShapeProvider(Randomizer p) {
 		this.provider = p;
 	}
@@ -39,8 +41,9 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 					Field next = initial;
 					try {
 						while(true) {
-							Shape shape;
-							next = (Field) exchanger.exchange(shape = provider.provideShape(next));
+							Shape shape = provider.provideShape(next);
+							taunt = shape.type() + provider.getTaunt();
+							next = (Field) exchanger.exchange(shape);
 							next = bestDrop(next, shape.type());
 						}
 					} catch(InterruptedException ie) {
@@ -58,6 +61,11 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	}
 
 	@Override
+	public String getTaunt() {
+		return taunt;
+	}
+	
+	@Override
 	public String getRandomizerName() {
 		return "Concurrent " + provider.getRandomizerName();
 	}
@@ -68,7 +76,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	
 	@Override
 	public MaliciousRandomizer getMaliciousRandomizer() {
-		return null;
+		return provider.getMaliciousRandomizer();
 	}
 	
 	private static Field bestDrop(Field field, ShapeType type) {
@@ -77,21 +85,22 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 
 		field = field.copyInto(new Field());
 		Fitness.paintImpossibles(field);
-		Field f = new Field();
-		Field fc = new Field();
 		
 		for(Shape shape : type.orientations()) {
 			for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
+				Field f = new Field();
 				field.copyInto(f);
 				f.setShape(shape);
 				for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
 					f.setShapeX(x);
 					f.setShapeY(y);
 					if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+						Field fc = new Field();
 						f.copyInto(fc);
+						Fitness.unpaintImpossibles(fc);
 						fc.clockTick();
-						Fitness.paintImpossibles(fc);
 						double fscore = Fitness.score(fc);
+						fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 						if(fscore < typeScore.score) {
 							typeScore.score = fscore;
 							typeScore.field = fc.copyInto(typeScore.field);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.0+" codebase="http://www.tetrevil.org/">
+<jnlp spec="1.0+" codebase="http://www.eviline.org/">
     <information>
-        <title>TETREVIL</title>
+        <title>EVILINE</title>
         <vendor>Robin Kirkman</vendor>
     </information>
     <security>
@@ -11,7 +11,7 @@
         <!-- Application Resources -->
         <j2se version="1.6+"
             href="http://java.sun.com/products/autodl/j2se" />
-        <jar href="http://www.tetrevil.org/tetrevil_signed.jar" main="true" />
+        <jar href="http://www.eviline.org/eviline_signed.jar" main="true" />
 
     </resources>
      <application-desc>

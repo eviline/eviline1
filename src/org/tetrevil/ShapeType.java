@@ -23,6 +23,11 @@ import static org.tetrevil.Shape.Z_DOWN;
 import static org.tetrevil.Shape.Z_LEFT;
 import static org.tetrevil.Shape.Z_UP;
 
+import java.awt.image.BufferedImage;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 /**
  * Possible types of {@link Shape}s.
  * @author robin
@@ -37,6 +42,28 @@ public enum ShapeType {
 	J,
 	S,
 	;
+	
+	private ImageIcon icon;
+	
+	private ShapeType() {
+		icon = new ImageIcon(ShapeType.class.getResource("images/shapetype/" + name() + ".png"));
+		BufferedImage buf = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		buf.getGraphics().drawImage(icon.getImage(), 0, 0, null);
+		Block b = Block.valueOf(name());
+		for(int x = 0; x < buf.getWidth(); x++) {
+			for(int y = 0; y < buf.getHeight(); y++) {
+				int rgb = buf.getRGB(x, y);
+				if(rgb != 0) {
+					if((rgb & 0xFFFFFF) == 0)
+						buf.setRGB(x, y, b.color().darker().getRGB());
+					else
+						buf.setRGB(x, y, b.color().getRGB());
+				}
+			}
+		}
+		icon = new ImageIcon(buf);
+	}
+	
 	
 	/**
 	 * Returns the {@link Shape}s for this {@link ShapeType} that are distinct.
@@ -146,5 +173,9 @@ public enum ShapeType {
 	
 	public Shape down() {
 		return up().rotateRight().rotateRight();
+	}
+	
+	public Icon icon() {
+		return icon;
 	}
 }

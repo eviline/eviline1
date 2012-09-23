@@ -27,8 +27,31 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		return getClass().getName();
 	}
 	
+	@Override
+	public Shape provideShape(Field field) {
+		if(randomFirst) {
+			randomFirst = false;
+			ShapeType type;
+			do {
+				type = ShapeType.values()[(int)(random.nextDouble() * ShapeType.values().length)];
+			} while(type == ShapeType.S || type == ShapeType.Z);
+			return type.starter();
+		}
+		field = field.copyInto(new Field());
+		Score score = decideThreaded(field);
+		Shape shape = score.shape;
+		taunt = score.taunt;
+		if(taunt.length() > 0)
+			taunt = taunt.substring(0, 1);
+		recent.add(shape.type());
+		while(recent.size() > HISTORY_SIZE)
+			recent.remove(0);
+		typeCounts[shape.type().ordinal()]++;
+		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		return shape;
+	}
 	
-	protected Score worstFor(Field field, int depth) {
+	protected Score worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
 			omit = recent.get(0);
@@ -49,6 +72,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		for(ShapeType type : ShapeType.values()) {
 			Score typeScore = new Score(); // cache.typeScore[depth];
 			typeScore.score = Double.POSITIVE_INFINITY;
+			typeScore.taunt = taunt + type;
 
 			for(Shape shape : type.orientations()) {
 				for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
@@ -59,6 +83,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 						f.setShapeY(y);
 						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 							f.copyInto(fc);
+							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();
 							paintImpossibles(fc);
 							double fscore = Fitness.score(fc);
@@ -73,7 +98,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				}
 			}
 			if(depth < this.depth)
-				typeScore = decide(typeScore.field, depth + 1);
+				typeScore = decide(typeScore.field, typeScore.taunt, depth + 1);
 			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 			if(fair)
 				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
@@ -83,6 +108,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				worst.score = typeScore.score;
 				worst.field = typeScore.field.copyInto(worst.field);
 				worst.shape = typeScore.shape;
+				worst.taunt = typeScore.taunt;
 			}
 		}
 		
@@ -130,6 +156,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 					
 					Score typeScore = new Score();
 					typeScore.score = Double.POSITIVE_INFINITY;
+					typeScore.taunt = "" + type;
 
 					for(Shape shape : type.orientations()) {
 						for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
@@ -154,7 +181,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 						}
 					}
 					double ts = typeScore.score;
-					typeScore = child.decide(typeScore.field, 1);
+					typeScore = child.decide(typeScore.field, typeScore.taunt, 1);
 					typeScore.score += ts;
 					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 					if(fair)

@@ -9,12 +9,14 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
+import javax.sound.sampled.SourceDataLine;
 
 import org.tetrevil.ShapeType;
 
@@ -84,54 +86,73 @@ public class TetrevilSounds {
 		return lock;
 	}
 	
-	private static Clip music;
+	private static SourceDataLine music;
 	private static byte[] musicBuffer;
 	private static int BUFFER_SIZE = 65536 * 4;
-	private static int musicBufferPosition = BUFFER_SIZE;
-	private static boolean musicPaused = false;
+	private static int frameSize;
+	private static int musicBufferPosition = 0;
+	private static boolean musicPaused = true;
 	static {
 		try {
-			music = AudioSystem.getClip();
 			ByteArrayOutputStream bout = new ByteArrayOutputStream();
 			byte[] buf = new byte[8192];
 			final AudioInputStream in = AudioSystem.getAudioInputStream(TetrevilSounds.class.getResource("Tetris.wav"));
 			for(int r = in.read(buf); r != -1; r = in.read(buf))
 				bout.write(buf, 0, r);
 			musicBuffer = bout.toByteArray();
-			music.open(in.getFormat(), musicBuffer, 0, BUFFER_SIZE);
-			music.addLineListener(new LineListener() {
+
+			frameSize = in.getFormat().getFrameSize();
+			
+			DataLine.Info info = new DataLine.Info(SourceDataLine.class, in.getFormat());
+			music = (SourceDataLine) AudioSystem.getLine(info);
+			music.open(in.getFormat());
+			new Thread(new Runnable() {
 				@Override
-				public void update(LineEvent e) {
-					if(e.getType() != LineEvent.Type.STOP)
-						return;
-					if(e.getType() == LineEvent.Type.STOP && musicPaused)
-						return;
-					try {
-						music.close();
-						music.open(in.getFormat(), musicBuffer, musicBufferPosition, Math.min(BUFFER_SIZE, musicBuffer.length - musicBufferPosition));
-						music.start();
-						musicBufferPosition += BUFFER_SIZE;
-						if(musicBufferPosition > musicBuffer.length)
-							musicBufferPosition = 0;
-					} catch(Exception ex) {
-						ex.printStackTrace();
+				public void run() {
+					while(true) {
+						while(musicPaused) {
+							try { Thread.sleep(100); }
+							catch(InterruptedException ie) {}
+						}
+						fillMusicLine();
 					}
 				}
-			});
+			}).start();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	public static Clip getMusic() {
-		return music;
-	};
+	private static void fillMusicLine() {
+		synchronized(musicBuffer) {
+			if(musicPaused)
+				return;
+		}
+		try {
+			int length = Math.min(BUFFER_SIZE, musicBuffer.length - musicBufferPosition);
+			//		length = Math.min(music.available(), length);
+			int frames = length / frameSize;
+			length = frames * frameSize;
+			length = music.write(musicBuffer, musicBufferPosition, length);
+			musicBufferPosition += length;
+			if(musicBufferPosition >= musicBuffer.length)
+				musicBufferPosition = 0;
+		} catch(RuntimeException re) {
+		}
+	}
 	
 	public static boolean isMusicPaused() {
 		return musicPaused;
 	}
 	
 	public static void setMusicPaused(boolean musicPaused) {
-		TetrevilSounds.musicPaused = musicPaused;
+		synchronized(musicBuffer) {
+			TetrevilSounds.musicPaused = musicPaused;
+			if(musicPaused)
+				music.stop();
+			else {
+				music.start();
+			}
+		}
 	}
 }

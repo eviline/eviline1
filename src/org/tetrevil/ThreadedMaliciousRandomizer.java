@@ -38,7 +38,9 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			return type.starter();
 		}
 		field = field.copyInto(new Field());
-		Shape shape = decideThreaded(field).shape;
+		Score score = decideThreaded(field);
+		Shape shape = score.shape;
+//		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
@@ -94,6 +96,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 					
 					Score typeScore = new Score();
 					typeScore.score = Double.POSITIVE_INFINITY;
+					typeScore.taunt = "" + type;
 
 					for(Shape shape : type.orientations()) {
 						for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
@@ -104,6 +107,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 								f.setShapeY(y);
 								if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 									f.copyInto(fc);
+									Fitness.unpaintImpossibles(fc);
 									fc.clockTick();
 									paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
@@ -116,7 +120,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 							}
 						}
 					}
-					typeScore = child.decide(typeScore.field, 1);
+					typeScore = child.decide(typeScore.field, typeScore.taunt, 1);
 //					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 //					if(fair)
 //						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
@@ -143,6 +147,8 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				highestScore = score.score;
 			}
 		}
+		
+//		taunt = worst.taunt;
 		
 		return worst;
 	}

@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.SourceDataLine;
 
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
@@ -20,37 +21,11 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 	
 	protected boolean ingame = false;
 	
-	public void play(final Clip clip) {
-		if(!ingame)
-			return;
-		if(clip == null)
-			return;
-		
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				clip.start();
-			}
-		});
-	}
-	
-	public void pause(final Clip clip) {
-		if(clip == null)
-			return;
-		executor.execute(new Runnable() {
-			@Override
-			public void run() {
-				clip.stop();
-			}
-		});
-	}
-	
 	@Override
 	public void clockTicked(TetrevilEvent e) {
 		if(!ingame) {
 			ingame = true;
 			TetrevilSounds.setMusicPaused(false);
-			play(TetrevilSounds.getMusic());
 		}
 		ingame = true;
 	}
@@ -59,14 +34,12 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 	public void gameReset(TetrevilEvent e) {
 		ingame = false;
 		TetrevilSounds.setMusicPaused(true);
-		pause(TetrevilSounds.getMusic());
 	}
 	
 	@Override
 	public void gameOver(TetrevilEvent e) {
 		ingame = false;
 		TetrevilSounds.setMusicPaused(true);
-		pause(TetrevilSounds.getMusic());
 	}
 	
 	@Override
@@ -74,13 +47,11 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 		if(e.getField().isPaused()) {
 			ingame = false;
 			TetrevilSounds.setMusicPaused(true);
-			pause(TetrevilSounds.getMusic());
 		} else {
 			if(!ingame) {
 				ingame = true;
-				TetrevilSounds.setMusicPaused(false);
-				play(TetrevilSounds.getMusic());
 			}
+			TetrevilSounds.setMusicPaused(false);
 			ingame = true;
 		}
 	}

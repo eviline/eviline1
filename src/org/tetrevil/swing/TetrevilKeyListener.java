@@ -1,5 +1,6 @@
 package org.tetrevil.swing;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -13,6 +14,8 @@ import javax.swing.Timer;
 import org.tetrevil.Field;
 import org.tetrevil.ShapeDirection;
 import org.tetrevil.ShapeType;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 
 /**
  * {@link KeyListener} that implements the controls for tetrevil
@@ -79,6 +82,12 @@ public class TetrevilKeyListener extends KeyAdapter {
 	
 	public TetrevilKeyListener(Field field) {
 		this.field = field;
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void shapeLocked(TetrevilEvent e) {
+				downTimer.stop();
+			}
+		});
 		updateTimers();
 	}
 	
@@ -97,31 +106,29 @@ public class TetrevilKeyListener extends KeyAdapter {
 		boolean consume = true;
 		if(e.getKeyCode() == LEFT && !pressed.contains(LEFT)) {
 			f.shiftLeft();
-			if(dasActive) {
-				dasDirection = ShapeDirection.LEFT;
-				field.setAutoShift(ShapeDirection.LEFT);
-				field.autoshift();
-			} else if(dasDirection != ShapeDirection.LEFT) {
-				dasDirection = ShapeDirection.LEFT;
-				dasTimer.restart();
-			}
+			dasDirection = ShapeDirection.LEFT;
+			dasTimer.restart();
 		} else if(e.getKeyCode() == RIGHT && !pressed.contains(RIGHT)) {
 			f.shiftRight();
-			if(dasActive) {
-				dasDirection = ShapeDirection.RIGHT;
-				field.setAutoShift(ShapeDirection.RIGHT);
-				field.autoshift();
-			} else if(dasDirection != ShapeDirection.RIGHT) {
-				dasDirection = ShapeDirection.RIGHT;
-				dasTimer.restart();
-			}
+			dasDirection = ShapeDirection.RIGHT;
+			dasTimer.restart();
 		} else if(e.getKeyCode() == ROTATE_LEFT)
 			f.rotateLeft();
 		else if(e.getKeyCode() == ROTATE_RIGHT)
 			f.rotateRight();
 		else if(e.getKeyCode() == DROP) {
-			while(f.getShape() != null) {
-				field.clockTick();
+			if(!pressed.contains(DROP)) {
+				synchronized(field) {
+					while(f.getShape() != null && !field.isGameOver()) {
+						field.clockTick();
+					}
+					EventQueue.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							field.clockTick();
+						}
+					});
+				}
 			}
 		} else if(e.getKeyCode() == DOWN) {
 			if(!pressed.contains(DOWN)) {
@@ -145,34 +152,20 @@ public class TetrevilKeyListener extends KeyAdapter {
 		if(e.getKeyCode() == LEFT) {
 			if(dasDirection == ShapeDirection.LEFT) {
 				if(dasActive) {
-					if(pressed.contains(RIGHT)) {
-						field.setAutoShift(dasDirection = ShapeDirection.RIGHT);
-						field.autoshift();
-					} else {
-						field.setAutoShift(dasDirection = null);
-						dasActive = false;
-					}
+					field.setAutoShift(dasDirection = null);
+					dasActive = false;
 				}
 				dasTimer.stop();
 			}
-			if(!dasActive)
-				dasDirection = null;
 		}
 		if(e.getKeyCode() == RIGHT) {
 			if(dasDirection == ShapeDirection.RIGHT) {
 				if(dasActive) {
-					if(pressed.contains(LEFT)) {
-						field.setAutoShift(dasDirection = ShapeDirection.LEFT);
-						field.autoshift();
-					} else {
-						field.setAutoShift(dasDirection = null);
-						dasActive = false;
-					}
+					field.setAutoShift(dasDirection = null);
+					dasActive = false;
 				}
 				dasTimer.stop();
 			}
-			if(!dasActive)
-				dasDirection = null;
 		}
 		if(e.getKeyCode() == DOWN) {
 			downTimer.stop();

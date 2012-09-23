@@ -19,6 +19,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.tetrevil.Block;
 import org.tetrevil.BlockMetadata;
 import org.tetrevil.Field;
+import org.tetrevil.ShapeType;
+import org.tetrevil.event.TetrevilAdapter;
+import org.tetrevil.event.TetrevilEvent;
 
 /**
  * Cell renderer for a {@link TetrevilTable}
@@ -36,14 +39,12 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	protected Block b;
 	protected BlockMetadata m;
 	
-	protected JButton reset = new JButton("RESET");
-
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
 		this.border = new TetrevilBorder(field);
 
 		setOpaque(false);
-
+		
 		super.setBorder(BorderFactory.createEmptyBorder());
 	}
 
@@ -71,13 +72,29 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
 		c.setText(" ");
 
-		if(column == 0 && row < "TETREVIL".length())
-			c.setText("TETREVIL".substring(row, row+1));
-		if(row == Field.HEIGHT && column < "     LINES:".length())
+		c.setIcon(null);
+		
+//		String taunt = field.getProvider().getTaunt();
+		String taunt;
+		if(column == 0 && row < "EVILINE".length())
+			c.setText("EVILINE".substring(row, row+1));
+		else if(row == Field.HEIGHT && column < "     LINES:".length())
 			c.setText("     LINES:".substring(column, column+1));
-		if(row == Field.HEIGHT && column == "     LINES:".length())
+		else if(row == Field.HEIGHT && column == "     LINES:".length())
 			c.setText("" + field.getLines());
-
+		else if(field.getProvider() != null && (taunt = field.getProvider().getTaunt()) != null) {
+			if(taunt.length() > 0)
+				taunt = taunt.substring(1);
+			if(column == Field.WIDTH + 1 && row < taunt.length()) {
+//				if(row > 0) {
+					String shape = taunt.substring(row, row+1);
+					ShapeType type = ShapeType.valueOf(shape);
+					c.setText(null);
+					c.setIcon(type.icon());
+//				} else
+//					c.setText("?");
+			}
+		}
 
 		setFont(getFont().deriveFont(getFont().getSize2D() / 1.25f));
 		setFont(getFont().deriveFont((b != null && b.isActive()) ? Font.BOLD : Font.PLAIN));
@@ -130,40 +147,58 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		Color bg = getBackground();
 		
 		if(m != null && m.ghostClearable) {
+			bg = b.color();
 			if(b != null && b != Block.G)
-				setBackground(bg = b.color());
-			bg = Color.WHITE;
+				setBackground(Color.WHITE);
+			bg = new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), 64);
 		}
+		g.setColor(getBackground());
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(bg);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		if(b != null && b != Block.X) {
-			if(m != null) {
-				if(m.shape != null && !m.ghost) {
-					g = (Graphics2D) gg.create();
-					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-					switch(m.shape.direction()) {
-					case UP: break;
-					case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
-					case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
-					case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
-					}
-					g.translate(0, -(int)((System.currentTimeMillis() / 150) % getHeight()));
-					Color c = getBackground();
-					int STEP = 3;
-					for(int j = 0; j < STEP * 3; j += STEP) {
-						g.setColor(c = brighter(c));
-						for(int i = j; i < j+STEP; i++) {
-							g.drawLine(getWidth(), i, 0, getHeight() + i);
-							g.drawLine(0, i, getWidth(), getHeight() + i);
-							g.drawLine(getWidth(), getHeight() + i, 0, 2 * getHeight() + i);
-							g.drawLine(0, getHeight() + i, getWidth(), 2 * getHeight() + i);
-							g.drawLine(getWidth(), -getHeight() + i, 0, i);
-							g.drawLine(0, -getHeight() + i, getWidth(), i);
-						}
-					}
-				}
+		
+		if(b != null && b != Block.X && m != null && m.shape != null && !m.ghost && !field.isPaused()) {
+			g = (Graphics2D) gg.create();
+			switch(m.shape.direction()) {
+			case UP: break;
+			case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
+			case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
+			case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
 			}
+			Color c = getBackground().brighter().brighter();
+			g.setColor(c);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() / 2, getHeight() * 3 / 4);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 3 / 8, getHeight() * 3 / 8);
+			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 5 / 8, getHeight() * 3 / 8);
 		}
+//		if(b != null && b != Block.X) {
+//			if(m != null) {
+//				if(m.shape != null && !m.ghost) {
+//					g = (Graphics2D) gg.create();
+////					g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//					switch(m.shape.direction()) {
+//					case UP: break;
+//					case DOWN: g.rotate(Math.PI, getWidth() / 2, getHeight() / 2); break;
+//					case RIGHT: g.rotate(Math.PI / 2, getWidth() / 2, getHeight() / 2); break;
+//					case LEFT: g.rotate(Math.PI / -2, getWidth() / 2, getHeight() / 2); break;
+//					}
+//					g.translate(0, -(int)((System.currentTimeMillis() / 150) % getHeight()));
+//					Color c = getBackground();
+//					int STEP = 3;
+//					for(int j = 0; j < STEP * 3; j += STEP) {
+//						g.setColor(c = brighter(c));
+//						for(int i = j; i < j+STEP; i++) {
+//							g.drawLine(getWidth(), i, 0, getHeight() + i);
+//							g.drawLine(0, i, getWidth(), getHeight() + i);
+//							g.drawLine(getWidth(), getHeight() + i, 0, 2 * getHeight() + i);
+//							g.drawLine(0, getHeight() + i, getWidth(), 2 * getHeight() + i);
+//							g.drawLine(getWidth(), -getHeight() + i, 0, i);
+//							g.drawLine(0, -getHeight() + i, getWidth(), i);
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		g = (Graphics2D) gg.create();
 		super.paintComponent(g);
