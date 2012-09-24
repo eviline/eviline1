@@ -503,7 +503,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.CLOCK_TICKED, this);
 			dispatcher.clockTicked(ll[i], e);
 		}
 	}
@@ -517,7 +517,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.GAME_OVER, this);
 			dispatcher.gameOver(ll[i], e);
 		}
 	}
@@ -531,7 +531,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.GAME_PAUSED, this);
 			dispatcher.gamePaused(ll[i], e);
 		}
 	}
@@ -545,7 +545,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.GAME_RESET, this);
 			dispatcher.gameReset(ll[i], e);
 		}
 	}
@@ -559,7 +559,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.SHIFTED_LEFT, this);
 			dispatcher.shiftedLeft(ll[i], e);
 		}
 	}
@@ -573,7 +573,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.SHIFTED_RIGHT, this);
 			dispatcher.shiftedRight(ll[i], e);
 		}
 	}
@@ -587,7 +587,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.ROTATED_LEFT, this);
 			dispatcher.rotatedLeft(ll[i], e);
 		}
 	}
@@ -601,7 +601,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this);
+				e = new TetrevilEvent(this, TetrevilEvent.ROTATED_RIGHT, this);
 			dispatcher.rotatedRight(ll[i], e);
 		}
 	}
@@ -615,7 +615,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this, lines);
+				e = new TetrevilEvent(this, TetrevilEvent.LINES_CLEARED, this, lines);
 			dispatcher.linesCleared(ll[i], e);
 		}
 	}
@@ -629,7 +629,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this, lines);
+				e = new TetrevilEvent(this, TetrevilEvent.GARBAGE_RECEIVED, this, lines);
 			dispatcher.garbageReceived(ll[i], e);
 		}
 	}
@@ -643,7 +643,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this, lines);
+				e = new TetrevilEvent(this, TetrevilEvent.SHAPE_SPAWNED, this, lines);
 			dispatcher.shapeSpawned(ll[i], e);
 		}
 	}
@@ -657,7 +657,7 @@ public class Field implements Serializable {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, this, lines);
+				e = new TetrevilEvent(this, TetrevilEvent.SHAPE_LOCKED, this, lines);
 			dispatcher.shapeLocked(ll[i], e);
 		}
 	}

@@ -24,19 +24,26 @@ public class TetrevilEvent extends EventObject {
 	public static final int LINES_CLEARED = 8;
 	public static final int GARBAGE_RECEIVED = 9;
 	public static final int SHAPE_SPAWNED = 10;
+	public static final int SHAPE_LOCKED = 11;
 	
+	protected int id;
 	protected Field field;
 	protected int lines;
 	protected Shape shape;
 	
-	public TetrevilEvent(Object source, Field field) {
+	public TetrevilEvent(Object source, int id, Field field) {
 		super(source);
+		this.id = id;
 		this.field = field;
 	}
 	
-	public TetrevilEvent(Object source, Field field, int lines) {
-		this(source, field);
+	public TetrevilEvent(Object source, int id, Field field, int lines) {
+		this(source, id, field);
 		this.lines = lines;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	/**
