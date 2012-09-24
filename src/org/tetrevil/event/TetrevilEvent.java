@@ -30,11 +30,18 @@ public class TetrevilEvent extends EventObject {
 	protected Field field;
 	protected int lines;
 	protected Shape shape;
+	protected int x;
+	protected int y;
+	protected int ghostY;
 	
 	public TetrevilEvent(Object source, int id, Field field) {
 		super(source);
 		this.id = id;
 		this.field = field;
+		this.shape = field.getShape();
+		this.x = field.getShapeX();
+		this.y = field.getShapeY();
+		this.ghostY = field.getGhostY();
 	}
 	
 	public TetrevilEvent(Object source, int id, Field field, int lines) {
@@ -44,6 +51,22 @@ public class TetrevilEvent extends EventObject {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
+	public Shape getShape() {
+		return shape;
+	}
+	
+	public int getGhostY() {
+		return ghostY;
 	}
 	
 	/**

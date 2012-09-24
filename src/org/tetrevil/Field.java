@@ -316,7 +316,7 @@ public class Field implements Serializable {
 	/**
 	 * Recalculate the ghost location
 	 */
-	protected void reghost() {
+	public void reghost() {
 		if(!ghosting)
 			return;
 		for(int y = 0; y < HEIGHT + 2 * BUFFER; y++) {
@@ -682,6 +682,10 @@ public class Field implements Serializable {
 		return shapeY;
 	}
 
+	public int getGhostY() {
+		return ghostY;
+	}
+	
 	public boolean isGameOver() {
 		return gameOver;
 	}
