@@ -2,7 +2,10 @@
 <project default="dist" name="EVILINE">
 
 	<target name="compile">
+<!--
 		<javac srcdir="src" destdir="bin" includeantruntime="false" classpath="/home/robin/plugin.jar"/>
+-->
+		<javac srcdir="src" destdir="bin" includeantruntime="false"/>
 		<copy todir="bin">
 			<fileset dir="src" excludes="**/*.java"/>
 		</copy>
