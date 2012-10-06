@@ -23,7 +23,10 @@ public class RandomizerFactory {
 	public Randomizer newRandomizer(PropertySource props) {
 		Randomizer ret;
 		try {
-			Class<? extends Randomizer> clazz = Class.forName(props.get("class")).asSubclass(Randomizer.class);
+			String className = props.get("class");
+			if(className == null)
+				className = MaliciousRandomizer.class.getName();
+			Class<? extends Randomizer> clazz = Class.forName(className).asSubclass(Randomizer.class);
 			if(MaliciousRandomizer.class.isAssignableFrom(clazz) && props.containsKey("distribution")) {
 				int dist = Integer.parseInt(props.get("distribution"));
 				ret = clazz.getConstructor(int.class, int.class).newInstance(MaliciousRandomizer.DEFAULT_DEPTH, dist);

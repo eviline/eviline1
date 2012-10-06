@@ -751,6 +751,7 @@ public class MainApplet extends JApplet implements PropertySource {
 					}
 				});
 			} catch(Exception ex) {
+				ex.printStackTrace();
 			}
 			return;
 		}
