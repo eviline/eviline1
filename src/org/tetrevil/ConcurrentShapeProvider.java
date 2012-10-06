@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
+
+import org.tetrevil.AIKernel.Context;
+import org.tetrevil.AIKernel.Decision;
 import org.tetrevil.MaliciousRandomizer.Score;
 
 /**
@@ -81,6 +84,12 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	}
 
 	private static Field bestDrop(Field field, ShapeType type) {
+		
+		Context context = new Context(null, field, 1);
+		Decision decision = AIKernel.bestFor(context, type);
+		return decision.field;
+		
+		/*
 		Score typeScore = new Score(); // cache.typeScore[depth];
 		typeScore.score = Double.POSITIVE_INFINITY;
 
@@ -117,5 +126,6 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 
 		Fitness.unpaintImpossibles(typeScore.field);
 		return typeScore.field;
+		*/
 	}
 }

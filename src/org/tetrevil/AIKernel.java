@@ -66,6 +66,7 @@ public class AIKernel {
 						possibility.copyInto(paintedPossibility);
 						Fitness.paintImpossibles(paintedPossibility);
 						double score = Fitness.score(paintedPossibility);
+						score -= 100 * Math.pow(possibility.lines - context.original.lines, 1.5);
 						if(score < best.score) {
 							best.score = score;
 							possibility.copyInto(best.field);
@@ -92,7 +93,7 @@ public class AIKernel {
 			}
 		}
 		
-		best.score *= context.remainingDepth;
+		best.score *= context.remainingDepth * context.remainingDepth;
 		best.score += originalScore;
 		
 		return best;
