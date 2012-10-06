@@ -29,18 +29,22 @@ public class BipolarRandomizer extends MaliciousRandomizer {
 		}
 	}
 	
+	@Override
 	public void setRfactor(double rfactor) {
 		angelic.setRfactor(rfactor);
 		evil.setRfactor(rfactor);
 	}
+	@Override
 	public void setDepth(int depth) {
 		angelic.setDepth(depth);
 		evil.setDepth(depth);
 	}
+	@Override
 	public void setFair(boolean fair) {
 		angelic.setFair(fair);
 		evil.setFair(fair);
 	}
+	@Override
 	public void setAdaptive(Field field, boolean adaptive) {
 		angelic.setAdaptive(field, adaptive);
 		evil.setAdaptive(field, adaptive);

@@ -49,6 +49,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		return shape;
 	}
 	
+	@Override
 	protected Score worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
@@ -116,6 +117,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		return worst;
 	}
 
+	@Override
 	protected Score worstForThreaded(final Field field) {
 		ShapeType omit = null;
 		if(recent.size() > 0) {
@@ -211,6 +213,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		return worst;
 	}
 
+	@Override
 	protected void permuteScore(Score typeScore) {
 		if(typeScore.score == Double.POSITIVE_INFINITY)
 			return;

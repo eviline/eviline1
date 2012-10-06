@@ -76,6 +76,7 @@ public class MainApplet extends JApplet {
 	protected Field field = new Field(true);
 	{{
 		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
 			public void gameReset(TetrevilEvent e) {
 				if(!field.isGameOver())
 					submitScore("Reset");
