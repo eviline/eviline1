@@ -173,6 +173,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 								grounded = f.isGrounded();
 								if(!groundedAbove && grounded) {
 									f.copyInto(fc);
+									Fitness.unpaintImpossibles(fc);
 									fc.clockTick();
 									Fitness.paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
