@@ -18,17 +18,17 @@ import org.tetrevil.MaliciousRandomizer.Score;
 public class ConcurrentShapeProvider implements Randomizer, Serializable {
 
 	protected Randomizer provider;
-	
+
 	protected transient Exchanger<Object> exchanger = new Exchanger<Object>();
-	
+
 	protected transient RunnableFuture<?> future;
-	
+
 	protected transient String taunt;
-	
+
 	public ConcurrentShapeProvider(Randomizer p) {
 		this.provider = p;
 	}
-	
+
 	@Override
 	public Shape provideShape(Field f) {
 		if(future == null) {
@@ -36,7 +36,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 			this.future = new FutureTask<Object>(new Runnable() {
 				@Override
 				public void run() {
-					Field next = initial;
+					Field next = initial.copyInto(new Field());
 					try {
 						while(true) {
 							Shape shape = provider.provideShape(next);
@@ -62,28 +62,28 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 	public String getTaunt() {
 		return taunt;
 	}
-	
+
 	@Override
 	public String getRandomizerName() {
 		return "Concurrent " + provider.getRandomizerName();
 	}
-	
+
 	public Object writeReplace() throws ObjectStreamException {
 		return provider;
 	}
-	
+
 	@Override
 	public MaliciousRandomizer getMaliciousRandomizer() {
 		return provider.getMaliciousRandomizer();
 	}
-	
+
 	private static Field bestDrop(Field field, ShapeType type) {
 		Score typeScore = new Score(); // cache.typeScore[depth];
 		typeScore.score = Double.POSITIVE_INFINITY;
 
 		field = field.copyInto(new Field());
 		Fitness.paintImpossibles(field);
-		
+
 		for(Shape shape : type.orientations()) {
 			for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
 				Field f = new Field();
@@ -108,7 +108,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 				}
 			}
 		}
-		
+
 		Fitness.unpaintImpossibles(typeScore.field);
 		return typeScore.field;
 	}

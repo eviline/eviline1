@@ -229,17 +229,7 @@ public enum Shape {
 	}
 	
 	public boolean intersects(Block[][] field, int x, int y) {
-		Block[][] shape = this.shape();
-//		for(int iy = 0; iy < shape.length; iy++) {
-//			for(int ix = 0; ix < shape[iy].length; ix++) {
-//				Block sb = shape[iy][ix];
-//				Block fb;
-//				if(sb != null && y + iy >= 0 && (fb = field[y + iy][x + ix]) != null && fb != Block.G)
-//					return true;
-//				if(sb != null && y + iy < 0)
-//					return true;
-//			}
-//		}
+		/*
 		for(int i = 0; i < 4; i++) {
 			if(y+by[i] < 0)
 				return true;
@@ -248,6 +238,23 @@ public enum Shape {
 				return true;
 		}
 		return false;
+		*/
+		int y0 = y + by[0];
+		int y1 = y + by[1];
+		int y2 = y + by[2];
+		int y3 = y + by[3];
+		if((y0 | y1 | y2 | y3) < 0)
+			return true;
+		Block b0 = field[y0][x + bx[0]];
+		Block b1 = field[y1][x + bx[1]];
+		Block b2 = field[y2][x + bx[2]];
+		Block b3 = field[y3][x + bx[3]];
+		if(b0 == null && b1 == null && b2 == null && b3 == null)
+			return false;
+		if((b0 == null || b0 == Block.G) && (b1 == null || b1 == Block.G) && (b2 == null || b2 == Block.G) && (b3 == null || b3 == Block.G))
+			return false;
+		else
+			return true;
 	}
 	
 	public int x(int i) {
