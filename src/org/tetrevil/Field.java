@@ -141,6 +141,10 @@ public class Field implements Serializable {
 		return target;
 	}
 	
+	public Field copy() {
+		return copyInto(new Field());
+	}
+	
 	/**
 	 * Reset the field
 	 */
