@@ -203,21 +203,10 @@ public class MainApplet extends JApplet implements PropertySource {
 		if(!field.isPlaying() && !field.isGameOver())
 			return;
 		try {
-			WebScore score = new WebScore();
-			score.setScore(field.getLines());
+			WebScore score = new WebScore(field);
 			score.setName(kp.getPlayerName());
-			score.setTs(new Date());
-			MaliciousRandomizer p = field.getProvider().getMaliciousRandomizer();
-			if(p == null)
-				return;
-			score.setDepth(p.getDepth());
-			score.setRfactor(p.getRfactor());
-			score.setFair(p.isFair() ? 1 : 0);
-			score.setDistribution(p.getDistribution());
-			score.setRandomizer(field.getProvider().getRandomizerName());
-			score.setAdaptive(p.isAdaptive() ? 1 : 0);
 			score.setReason(reason);
-			WebScore.submit(score, getParameter("score_host"));
+			score.submit(getParameter("score_host"));
 		} catch(Exception ioe) {
 			ioe.printStackTrace();
 		}
@@ -266,19 +255,11 @@ public class MainApplet extends JApplet implements PropertySource {
 	}
 	
 	protected void setStartText() {
-		WebScore highScore = new WebScore();
+		WebScore highScore = new WebScore(field);
 		highScore.setScore(0);
 		highScore.setName("[no score for these settings]");
-		highScore.setTs(new Date());
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider().getMaliciousRandomizer();
-		highScore.setDepth(p.getDepth());
-		highScore.setRfactor(p.getRfactor());
-		highScore.setFair(p.isFair() ? 1 : 0);
-		highScore.setAdaptive(p.isAdaptive() ? 1 : 0);
-		highScore.setDistribution(p.getDistribution());
-		highScore.setRandomizer(field.getProvider().getRandomizerName());
 		try {
-			WebScore ws = WebScore.highScore(highScore, getParameter("score_host"));
+			WebScore ws = highScore.highScore(getParameter("score_host"));
 			if(ws != null)
 				highScore = ws;
 		} catch(IOException ioe) {

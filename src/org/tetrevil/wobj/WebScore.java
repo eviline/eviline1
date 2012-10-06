@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.tetrevil.Field;
+import org.tetrevil.MaliciousRandomizer;
+
 /**
  * A score that gets submitted to the tetrevil score server
  * @author robin
@@ -40,9 +43,29 @@ public class WebScore implements Serializable {
 	
 	protected String reason;
 	
+	public WebScore() {}
+	
+	public WebScore(Field field) {
+		score = field.getLines();
+		ts = new Date();
+		MaliciousRandomizer r = field.getProvider().getMaliciousRandomizer();
+		if(r != null) {
+			depth = r.getDepth();
+			rfactor = r.getRfactor();
+			fair = r.isFair() ? 1 : 0;
+			distribution = r.getDistribution();
+			adaptive = r.isAdaptive() ? 1 : 0;
+		}
+		randomizer = field.getProvider().getRandomizerName();
+	}
+	
 	@Override
 	public String toString() {
 		return "WebScore[" + score + "," + name + "," + ts + "]";
+	}
+	
+	public void submit(String host) throws IOException {
+		submit(this, host);
 	}
 	
 	/**
@@ -51,7 +74,7 @@ public class WebScore implements Serializable {
 	 * @param host
 	 * @throws IOException
 	 */
-	public static void submit(WebScore score, String host) throws IOException {
+	private static void submit(WebScore score, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, SUBMIT_SCORE);
 		mreq.put(SCORE, score);
@@ -82,6 +105,10 @@ public class WebScore implements Serializable {
 		http.connect();
 	}
 	
+	public WebScore highScore(String host) throws IOException {
+		return highScore(this, host);
+	}
+	
 	/**
 	 * Return the high score matching the argument score parameters
 	 * @param params
@@ -89,7 +116,7 @@ public class WebScore implements Serializable {
 	 * @return
 	 * @throws IOException
 	 */
-	public static WebScore highScore(WebScore params, String host) throws IOException {
+	private static WebScore highScore(WebScore params, String host) throws IOException {
 		Map<String, Object> mreq = new HashMap<String, Object>();
 		mreq.put(COMMAND, HIGH_SCORE);
 		mreq.put(SCORE, params);
