@@ -89,10 +89,13 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 				Field f = new Field();
 				field.copyInto(f);
 				f.setShape(shape);
+				boolean grounded = shape.intersects(f.getField(), x, 0);
 				for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
 					f.setShapeX(x);
 					f.setShapeY(y);
-					if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+					boolean groundedAbove = grounded;
+					grounded = shape.intersects(f.getField(), x, y+1);
+					if(!groundedAbove && grounded) {
 						Field fc = new Field();
 						f.copyInto(fc);
 						Fitness.unpaintImpossibles(fc);

@@ -167,7 +167,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 						f.setShapeX(x);
 						f.setShapeY(y);
 						boolean groundedAbove = grounded;
-						grounded = f.isGrounded();
+						grounded = shape.intersects(f.getField(), x, y+1);
 						if(!groundedAbove && grounded) {
 							f.copyInto(fc);
 							Fitness.unpaintImpossibles(fc);

@@ -82,7 +82,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 						f.setShapeX(x);
 						f.setShapeY(y);
 						boolean groundedAbove = grounded;
-						grounded = f.isGrounded();
+						grounded = shape.intersects(f.getField(), x, y+1);
 						if(!groundedAbove && grounded) {
 							f.copyInto(fc);
 							Fitness.unpaintImpossibles(fc);
@@ -170,7 +170,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 								f.setShapeX(x);
 								f.setShapeY(y);
 								boolean groundedAbove = grounded;
-								grounded = f.isGrounded();
+								grounded = shape.intersects(f.getField(), x, y+1);
 								if(!groundedAbove && grounded) {
 									f.copyInto(fc);
 									Fitness.unpaintImpossibles(fc);
