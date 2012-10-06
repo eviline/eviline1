@@ -434,23 +434,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	}
 	
 	public void setProvider() {
-//		if(getParameter("distribution") != null)
-//			field.setProvider(RandomizerFactory.newRandomizer(
-//					MaliciousRandomizer.DEFAULT_DEPTH,
-//					Integer.parseInt(getParameter("distribution"))));
-//		else
-//			field.setProvider(RandomizerFactory.newRandomizer());
-//
-//		if(getParameter("depth") != null)
-//			((MaliciousRandomizer) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
-//		if(getParameter("rfactor") != null)
-//			((MaliciousRandomizer) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
-//		if(getParameter("fair") != null)
-//			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
-//		if(getParameter("adaptive") != null)
-//			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
-//		if("true".equals(getParameter("concurrent")))
-//			field.setProvider(new ConcurrentShapeProvider(field.getProvider()));
 		field.setProvider(new RandomizerFactory(field).newRandomizer(this));
 		fireActionPerformed("difficulty");
 	}
