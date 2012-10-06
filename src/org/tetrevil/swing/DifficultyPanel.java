@@ -20,8 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
 import org.tetrevil.AngelRandomizer;
 import org.tetrevil.BipolarRandomizer;
 import org.tetrevil.ConcurrentShapeProvider;
@@ -30,7 +28,6 @@ import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.MyndziRandomizer;
 import org.tetrevil.RandomizerFactory;
-import org.tetrevil.RemoteRandomizer;
 import org.tetrevil.ThreadedMaliciousRandomizer;
 import org.tetrevil.sounds.TetrevilMusicListener;
 import org.tetrevil.sounds.TetrevilSoundListener;

@@ -2,9 +2,6 @@ package org.tetrevil;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.tetrevil.event.EventDispatcher;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.event.TetrevilListener;

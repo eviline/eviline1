@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.tetrevil.MaliciousRandomizer.Score;
-
 public class MyndziRandomizer extends MaliciousBagRandomizer {
 	public MyndziRandomizer() {
 		super();

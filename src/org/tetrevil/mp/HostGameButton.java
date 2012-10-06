@@ -3,17 +3,11 @@ package org.tetrevil.mp;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import org.tetrevil.swing.TetrevilFrame;
-import org.tetrevil.swing.TetrevilTable;
 
 public class HostGameButton extends JButton implements ActionListener, Runnable {
 	protected TetrevilFrame frame;

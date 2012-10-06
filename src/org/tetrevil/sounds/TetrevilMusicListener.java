@@ -3,9 +3,6 @@ package org.tetrevil.sounds;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.SourceDataLine;
-
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 

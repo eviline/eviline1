@@ -13,7 +13,6 @@ import javax.swing.Timer;
 
 import org.tetrevil.Field;
 import org.tetrevil.ShapeDirection;
-import org.tetrevil.ShapeType;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 

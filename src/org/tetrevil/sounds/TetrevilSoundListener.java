@@ -4,9 +4,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.Control.Type;
-import javax.sound.sampled.FloatControl;
-
 import org.tetrevil.ShapeType;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;

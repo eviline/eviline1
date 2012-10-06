@@ -5,11 +5,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.font.TextLayout;
-
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -20,8 +16,6 @@ import org.tetrevil.Block;
 import org.tetrevil.BlockMetadata;
 import org.tetrevil.Field;
 import org.tetrevil.ShapeType;
-import org.tetrevil.event.TetrevilAdapter;
-import org.tetrevil.event.TetrevilEvent;
 
 /**
  * Cell renderer for a {@link TetrevilTable}
