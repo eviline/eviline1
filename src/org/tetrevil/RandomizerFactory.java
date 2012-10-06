@@ -1,6 +1,8 @@
 package org.tetrevil;
 
 import java.lang.reflect.Constructor;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.tetrevil.runner.MainApplet;
 
@@ -12,30 +14,37 @@ import org.tetrevil.runner.MainApplet;
  *
  */
 public class RandomizerFactory {
-	private static Class<? extends MaliciousRandomizer> clazz = MaliciousRandomizer.class;
+	private Field field;
 	
-	public static MaliciousRandomizer newRandomizer() {
+	public RandomizerFactory(Field field) {
+		this.field = field;
+	}
+	
+	public Randomizer newRandomizer(PropertySource props) {
+		Randomizer ret;
 		try {
-			return clazz.newInstance();
+			Class<? extends Randomizer> clazz = Class.forName(props.get("class")).asSubclass(Randomizer.class);
+			if(MaliciousRandomizer.class.isAssignableFrom(clazz) && props.containsKey("distribution")) {
+				int dist = Integer.parseInt(props.get("distribution"));
+				ret = clazz.getConstructor(int.class, int.class).newInstance(MaliciousRandomizer.DEFAULT_DEPTH, dist);
+			} else
+				ret = clazz.newInstance();
 		} catch(Exception ex) {
 			throw new RuntimeException(ex);
 		}
-	}
-	
-	public static MaliciousRandomizer newRandomizer(int depth, int dist) {
-		try {
-			Constructor<? extends MaliciousRandomizer> c = clazz.getConstructor(int.class, int.class);
-			return c.newInstance(depth, dist);
-		} catch(Exception ex) {
-			throw new RuntimeException(ex);
+		if(ret instanceof MaliciousRandomizer) {
+			MaliciousRandomizer mr = (MaliciousRandomizer) ret;
+			if(props.containsKey("depth"))
+				mr.setDepth(Integer.parseInt(props.get("depth")));
+			if(props.containsKey("rfactor"))
+				mr.setRfactor(Double.parseDouble(props.get("rfactor")));
+			if(props.containsKey("fair"))
+				mr.setFair(Boolean.parseBoolean(props.get("fair")));
+			if(props.containsKey("adaptive"))
+				mr.setAdaptive(field, Boolean.parseBoolean(props.get("adaptive")));
 		}
-	}
-	
-	public static Class<? extends MaliciousRandomizer> getClazz() {
-		return clazz;
-	}
-	
-	public static void setClazz(Class<? extends MaliciousRandomizer> clazz) {
-		RandomizerFactory.clazz = clazz;
+		if(Boolean.parseBoolean(props.get("concurrent")))
+			ret = new ConcurrentShapeProvider(ret);
+		return ret;
 	}
 }

@@ -27,13 +27,14 @@ import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
 import org.tetrevil.MyndziRandomizer;
+import org.tetrevil.PropertySource;
 import org.tetrevil.RandomizerFactory;
 import org.tetrevil.ThreadedMaliciousRandomizer;
 import org.tetrevil.sounds.TetrevilMusicListener;
 import org.tetrevil.sounds.TetrevilSoundListener;
 import org.tetrevil.sounds.TetrevilSounds;
 
-public class DifficultyPanel extends JPanel {
+public class DifficultyPanel extends JPanel implements PropertySource {
 	protected Field field;
 	protected JLabel provText = new JLabel("Aggressive");
 	{{
@@ -124,15 +125,20 @@ public class DifficultyPanel extends JPanel {
 				setParameter("adaptive", "" + adaptive.isSelected());
 				setParameter("concurrent", "" + concurrent.isSelected());
 				if(bag.isSelected())
-					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+//					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
+					setParameter("class", MaliciousBagRandomizer.class.getName());
 				else if(angel.isSelected())
-					RandomizerFactory.setClazz(AngelRandomizer.class);
+//					RandomizerFactory.setClazz(AngelRandomizer.class);
+					setParameter("class", AngelRandomizer.class.getName());
 				else if(bipolar.isSelected())
-					RandomizerFactory.setClazz(BipolarRandomizer.class);
+//					RandomizerFactory.setClazz(BipolarRandomizer.class);
+					setParameter("class", BipolarRandomizer.class.getName());
 				else if(myndzi.isSelected())
-					RandomizerFactory.setClazz(MyndziRandomizer.class);
+//					RandomizerFactory.setClazz(MyndziRandomizer.class);
+					setParameter("class", MyndziRandomizer.class.getName());
 				else
-					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
+//					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
+					setParameter("class", ThreadedMaliciousRandomizer.class.getName());
 				setProvider();
 				provText.setText(field.getProvider().toString());
 			}
@@ -428,23 +434,24 @@ public class DifficultyPanel extends JPanel {
 	}
 	
 	public void setProvider() {
-		if(getParameter("distribution") != null)
-			field.setProvider(RandomizerFactory.newRandomizer(
-					MaliciousRandomizer.DEFAULT_DEPTH,
-					Integer.parseInt(getParameter("distribution"))));
-		else
-			field.setProvider(RandomizerFactory.newRandomizer());
-
-		if(getParameter("depth") != null)
-			((MaliciousRandomizer) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
-		if(getParameter("rfactor") != null)
-			((MaliciousRandomizer) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
-		if(getParameter("fair") != null)
-			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
-		if(getParameter("adaptive") != null)
-			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
-		if("true".equals(getParameter("concurrent")))
-			field.setProvider(new ConcurrentShapeProvider(field.getProvider()));
+//		if(getParameter("distribution") != null)
+//			field.setProvider(RandomizerFactory.newRandomizer(
+//					MaliciousRandomizer.DEFAULT_DEPTH,
+//					Integer.parseInt(getParameter("distribution"))));
+//		else
+//			field.setProvider(RandomizerFactory.newRandomizer());
+//
+//		if(getParameter("depth") != null)
+//			((MaliciousRandomizer) field.getProvider()).setDepth(Integer.parseInt(getParameter("depth")));
+//		if(getParameter("rfactor") != null)
+//			((MaliciousRandomizer) field.getProvider()).setRfactor(Double.parseDouble(getParameter("rfactor")));
+//		if(getParameter("fair") != null)
+//			((MaliciousRandomizer) field.getProvider()).setFair(Boolean.parseBoolean(getParameter("fair")));
+//		if(getParameter("adaptive") != null)
+//			((MaliciousRandomizer) field.getProvider()).setAdaptive(field, Boolean.parseBoolean(getParameter("adaptive")));
+//		if("true".equals(getParameter("concurrent")))
+//			field.setProvider(new ConcurrentShapeProvider(field.getProvider()));
+		field.setProvider(new RandomizerFactory(field).newRandomizer(this));
 		fireActionPerformed("difficulty");
 	}
 	
@@ -454,6 +461,16 @@ public class DifficultyPanel extends JPanel {
 	
 	protected String getParameter(String key) {
 		return props.getProperty(key);
+	}
+
+	@Override
+	public boolean containsKey(String key) {
+		return getParameter(key) != null;
+	}
+
+	@Override
+	public String get(String key) {
+		return getParameter(key);
 	}
 
 }
