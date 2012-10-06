@@ -44,6 +44,7 @@ public enum ShapeType {
 	;
 	
 	private ImageIcon icon;
+	private Block inactive;
 	
 	private ShapeType() {
 		icon = new ImageIcon(ShapeType.class.getResource("images/shapetype/" + name() + ".png"));
@@ -62,6 +63,7 @@ public enum ShapeType {
 			}
 		}
 		icon = new ImageIcon(buf);
+		inactive = b;
 	}
 	
 	
@@ -138,16 +140,7 @@ public enum ShapeType {
 	 * @return
 	 */
 	public Block inactive() {
-		switch(this) {
-		case O: return Block.O;
-		case S: return Block.S;
-		case Z: return Block.Z;
-		case I: return Block.I;
-		case T: return Block.T;
-		case J: return Block.J;
-		case L: return Block.L;
-		}
-		throw new InternalError("Fell through to default when all enums covered");
+		return inactive;
 	}
 	
 	public Shape up() {

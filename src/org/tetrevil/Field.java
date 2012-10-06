@@ -197,17 +197,14 @@ public class Field implements Serializable {
 			 * Copy this shape to the field, assuming a game over.  If any of the shape
 			 * is within the playable field then un-game-over.
 			 */
-			Block[][] s = shape.shape();
 			gameOver = true;
-			for(int y = 0; y < s.length; y++) {
-				for(int x = 0; x < s[y].length; x++) {
-					if(s[y][x] != null) {
-						field[y + shapeY][x + shapeX] = s[y][x].inactive();
-						metadata[y + shapeY][x + shapeX] = new BlockMetadata(shape, false, shapeId);
-						if(y + shapeY >= BUFFER)
-							gameOver = false;
-					}
-				}
+			for(int i = 0; i < 4; i++) {
+				int y = shape.y(i);
+				int x = shape.x(i);
+				field[y + shapeY][x + shapeX] = shape.type().inactive();
+				metadata[y + shapeY][x + shapeX] = new BlockMetadata(shape, false, shapeId);
+				if(y + shapeY >= BUFFER)
+					gameOver = false;
 			}
 			shape = null; // No active shape
 			reghost();
@@ -238,9 +235,13 @@ public class Field implements Serializable {
 					multilines++;
 					// Shift down the field
 					for(int z = y - 1; z >= 0; z--) {
-						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
-						System.arraycopy(metadata[z], 0, metadata[z+1], 0, metadata[z].length);
+//						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
+//						System.arraycopy(metadata[z], 0, metadata[z+1], 0, metadata[z].length);
+						field[z+1] = field[z];
+						metadata[z+1] = metadata[z];
 					}
+					field[0] = new Block[WIDTH + 2 * BUFFER];
+					metadata[0] = new BlockMetadata[WIDTH + 2 * BUFFER];
 					// Fill in the top row with nulls
 					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
 					Arrays.fill(metadata[0], BUFFER, metadata[0].length - BUFFER, null);

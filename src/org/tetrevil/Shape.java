@@ -125,6 +125,8 @@ public enum Shape {
 
 	private Block[][] shape;
 	
+	private ShapeType type;
+	
 	private int[] bx = new int[4];
 	private int[] by = new int[4];
 	
@@ -140,6 +142,7 @@ public enum Shape {
 				}
 			}
 		}
+		type = ShapeType.valueOf(name().substring(0, 1));
 	}
 	
 	public Block[][] shape() {
@@ -147,16 +150,7 @@ public enum Shape {
 	}
 	
 	public ShapeType type() {
-		switch(this) {
-		case O_DOWN: case O_LEFT: case O_RIGHT: case O_UP: return ShapeType.O;
-		case I_DOWN: case I_LEFT: case I_RIGHT: case I_UP: return ShapeType.I;
-		case J_DOWN: case J_LEFT: case J_RIGHT: case J_UP: return ShapeType.J;
-		case L_DOWN: case L_LEFT: case L_RIGHT: case L_UP: return ShapeType.L;
-		case S_DOWN: case S_LEFT: case S_RIGHT: case S_UP: return ShapeType.S;
-		case T_DOWN: case T_LEFT: case T_RIGHT: case T_UP: return ShapeType.T;
-		case Z_DOWN: case Z_LEFT: case Z_RIGHT: case Z_UP: return ShapeType.Z;
-		}
-		throw new InternalError("Fell through to default when all enum cases were covered");
+		return type;
 	}
 	
 	public Shape rotateRight() {
