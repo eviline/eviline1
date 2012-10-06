@@ -149,7 +149,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		Score worst = new Score(); // cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
 		
-		paintImpossibles(field);
+		Fitness.paintImpossibles(field);
 		
 		Field f = new Field(false); // cache.f[depth];
 		Field fc = new Field(false); // cache.fc[depth];
@@ -169,7 +169,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 							f.copyInto(fc);
 							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();
-							paintImpossibles(fc);
+							Fitness.paintImpossibles(fc);
 							double fscore = Fitness.score(fc);
 							if(fscore < typeScore.score) {
 								typeScore.score = fscore;
@@ -208,25 +208,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		}
 	}
 	
-	protected void paintImpossibles(Field field) {
-		Block[][] f = field.getField();
-		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
-			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if(f[y][x] == null)
-					f[y][x] = Block.X;
-			}
-		}
-		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
-			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == Block.X)
-					f[y][x] = null;
-			}
-			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
-				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == Block.X)
-					f[y][x] = null;
-			}
-		}
-	}
 
 	public double getRfactor() {
 		return rfactor;

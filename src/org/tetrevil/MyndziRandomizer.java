@@ -58,7 +58,7 @@ public class MyndziRandomizer extends MaliciousBagRandomizer {
 		if(depth == 0)
 			sorted = new ArrayList<Score>();
 		
-		paintImpossibles(field);
+		Fitness.paintImpossibles(field);
 		
 		Field f = cache.f[depth];
 		Field fc = cache.fc[depth];

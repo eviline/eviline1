@@ -145,7 +145,7 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 		Score worst = cache.worst[depth];
 		worst.score = Double.NEGATIVE_INFINITY;
 		
-		paintImpossibles(field);
+		Fitness.paintImpossibles(field);
 		
 		Field f = cache.f[depth];
 		Field fc = cache.fc[depth];

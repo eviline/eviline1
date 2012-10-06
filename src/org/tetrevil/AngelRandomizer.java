@@ -63,7 +63,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		Score worst = new Score(); // cache.worst[depth];
 		worst.score = Double.POSITIVE_INFINITY;
 		
-		paintImpossibles(field);
+		Fitness.paintImpossibles(field);
 		double startScore = Fitness.score(field);
 		
 		Field f = new Field(false); // cache.f[depth];
@@ -84,7 +84,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 							f.copyInto(fc);
 							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();
-							paintImpossibles(fc);
+							Fitness.paintImpossibles(fc);
 							double fscore = Fitness.score(fc);
 							fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 							if(fscore < typeScore.score) {
@@ -128,7 +128,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			}
 		}
 		
-		paintImpossibles(field);
+		Fitness.paintImpossibles(field);
 
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -168,7 +168,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 								if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
 									f.copyInto(fc);
 									fc.clockTick();
-									paintImpossibles(fc);
+									Fitness.paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
 									fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
 									if(fscore < typeScore.score) {

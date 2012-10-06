@@ -64,7 +64,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			}
 		}
 		
-		paintImpossibles(field);
+		Fitness.paintImpossibles(field);
 
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -105,7 +105,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 									f.copyInto(fc);
 									Fitness.unpaintImpossibles(fc);
 									fc.clockTick();
-									paintImpossibles(fc);
+									Fitness.paintImpossibles(fc);
 									double fscore = Fitness.score(fc);
 									if(fscore < typeScore.score) {
 										typeScore.score = fscore;
