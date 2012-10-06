@@ -3,7 +3,7 @@ package org.tetrevil;
 public class AIKernel {
 
 	public static interface DecisionModifier {
-		public void modifyDecision(Context context, Decision decision);
+		public void modifyPlannedDecision(Context context, Decision decision);
 	}
 	
 	public static class Context {
@@ -78,13 +78,40 @@ public class AIKernel {
 		return best;
 	}
 	
+	public static Decision bestFor(Context context) {
+		Decision best = new Decision(null, Double.POSITIVE_INFINITY, context.original.copy());
+		double originalScore = Fitness.scoreWithPaint(best.field);
+		
+		for(ShapeType type : ShapeType.values()) {
+			Decision bestForType = bestFor(context, type);
+			Decision bestPlannable = planBest(context.deeper(bestForType.field), bestForType);
+			context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
+			if(bestPlannable.score < best.score) {
+				best = bestPlannable;
+				best.type = type;
+			}
+		}
+		
+		best.score *= context.remainingDepth;
+		best.score += originalScore;
+		
+		return best;
+	}
+	
+	public static Decision planBest(Context context, Decision defaultDecision) {
+		if(context.remainingDepth <= 0)
+			return defaultDecision;
+		
+		return bestFor(context);
+	}
+	
 	public static Decision worstFor(Context context) {
 		Decision worst = new Decision(null, Double.NEGATIVE_INFINITY, context.original.copy());
 		
 		for(ShapeType type : ShapeType.values()) {
 			Decision best = bestFor(context, type);
 			Decision worstPlannable = planWorst(context.deeper(best.field), best);
-			context.decisionModifier.modifyDecision(context, worstPlannable);
+			context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
 			if(worstPlannable.score > worst.score) {
 				worst = worstPlannable;
 				worst.type = type;

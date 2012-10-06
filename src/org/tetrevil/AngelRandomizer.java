@@ -10,6 +10,11 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.tetrevil.AIKernel.Context;
+import org.tetrevil.AIKernel.Decision;
+import org.tetrevil.AIKernel.DecisionModifier;
+import org.tetrevil.MaliciousRandomizer.Score;
+
 public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 
 	public AngelRandomizer() {
@@ -59,65 +64,28 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 					omit = null;
 			}
 		}
+		final ShapeType fomit = omit;
 
-		Score worst = new Score(); // cache.worst[depth];
-		worst.score = Double.POSITIVE_INFINITY;
-		
-		Fitness.paintImpossibles(field);
-		double startScore = Fitness.score(field);
-		
-		Field f = new Field(false); // cache.f[depth];
-		Field fc = new Field(false); // cache.fc[depth];
-		for(ShapeType type : ShapeType.values()) {
-			Score typeScore = new Score(); // cache.typeScore[depth];
-			typeScore.score = Double.POSITIVE_INFINITY;
-			typeScore.taunt = taunt + type;
-
-			for(Shape shape : type.orientations()) {
-				for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
-					field.copyInto(f);
-					f.setShape(shape);
-					boolean grounded = !shape.intersects(f.getField(), x, 0);
-					for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
-						f.setShapeX(x);
-						f.setShapeY(y);
-						boolean groundedAbove = grounded;
-						grounded = shape.intersects(f.getField(), x, y+1);
-						if(!groundedAbove && grounded) {
-							f.copyInto(fc);
-							Fitness.unpaintImpossibles(fc);
-							fc.clockTick();
-							Fitness.paintImpossibles(fc);
-							double fscore = Fitness.score(fc);
-							fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
-							if(fscore < typeScore.score) {
-								typeScore.score = fscore;
-								typeScore.field = fc.copyInto(typeScore.field);
-								typeScore.shape = shape;
-							}
-						}
-					}
+		DecisionModifier decisionModifier = new DecisionModifier() {
+			@Override
+			public void modifyPlannedDecision(Context context, Decision decision) {
+				if(decision.type == fomit) {
+					decision.score = Double.POSITIVE_INFINITY;
+					return;
 				}
+				Score s = new Score(decision);
+				permuteScore(s);
+				decision.score = s.score;
 			}
-			if(depth < this.depth)
-				typeScore = decide(typeScore.field, typeScore.taunt, depth + 1);
-			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-			if(fair)
-				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
-			permuteScore(typeScore);
-			typeScore.shape = type.orientations()[0];
-			if(typeScore.score < worst.score && omit != typeScore.shape.type()) {
-				worst.score = typeScore.score;
-				worst.field = typeScore.field.copyInto(worst.field);
-				worst.shape = typeScore.shape;
-				worst.taunt = typeScore.taunt;
-			}
-		}
+		};
+		Context context = new Context(decisionModifier, field, this.depth - depth);
+		Decision defaultDecision = new Decision();
+		defaultDecision.field = field.copy();
+		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
+		Decision decision = AIKernel.planBest(context, defaultDecision);
 		
-		worst.score /= depth + 1;
-		worst.score += startScore;
-		
-		return worst;
+		return new Score(decision);
+
 	}
 
 	@Override
@@ -131,7 +99,15 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			}
 		}
 		
-		Fitness.paintImpossibles(field);
+		DecisionModifier decisionModifier = new DecisionModifier() {
+			@Override
+			public void modifyPlannedDecision(Context context, Decision decision) {
+				Score s = new Score(decision);
+				AngelRandomizer.this.permuteScore(s);
+				decision.score = s.score;
+			}
+		};
+		final Context context = new Context(decisionModifier, field, depth);
 
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -140,62 +116,12 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			futures.add(EXECUTOR.submit(new Callable<Score>() {
 				@Override
 				public Score call() throws Exception {
-//					MaliciousRandomizer child = new MaliciousRandomizer(depth, distribution);
-//					child.setFair(fair);
-//					child.setRfactor(rfactor);
 					
-					ThreadedMaliciousRandomizer child;
-					
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					ObjectOutputStream out = new ObjectOutputStream(bout);
-					out.writeObject(AngelRandomizer.this);
-					out.close();
-					ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-					ObjectInputStream in = new ObjectInputStream(bin);
-					child = (ThreadedMaliciousRandomizer) in.readObject();
-					
-					Field f = new Field();
-					Field fc = new Field();
-					
-					Score typeScore = new Score();
-					typeScore.score = Double.POSITIVE_INFINITY;
-					typeScore.taunt = "" + type;
+					Decision best = AIKernel.bestFor(context, type);
+					Decision bestPlannable = AIKernel.planBest(context.deeper(best.field), best);
+					context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
+					return new Score(bestPlannable);
 
-					for(Shape shape : type.orientations()) {
-						for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
-							field.copyInto(f);
-							f.setShape(shape);
-							boolean grounded = !shape.intersects(f.getField(), x, 0);
-							for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
-								f.setShapeX(x);
-								f.setShapeY(y);
-								boolean groundedAbove = grounded;
-								grounded = shape.intersects(f.getField(), x, y+1);
-								if(!groundedAbove && grounded) {
-									f.copyInto(fc);
-									Fitness.unpaintImpossibles(fc);
-									fc.clockTick();
-									Fitness.paintImpossibles(fc);
-									double fscore = Fitness.score(fc);
-									fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
-									if(fscore < typeScore.score) {
-										typeScore.score = fscore;
-										typeScore.field = fc.copyInto(typeScore.field);
-										typeScore.shape = shape;
-									}
-								}
-							}
-						}
-					}
-					double ts = typeScore.score;
-					typeScore = child.decide(typeScore.field, typeScore.taunt, 1);
-					typeScore.score += ts;
-					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-					if(fair)
-						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
-					permuteScore(typeScore);
-					typeScore.shape = type.orientations()[0];
-					return typeScore;
 				}
 			}));
 		}
@@ -216,6 +142,8 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				highestScore = score.score;
 			}
 		}
+		
+		worst.taunt = "";
 		
 		return worst;
 	}

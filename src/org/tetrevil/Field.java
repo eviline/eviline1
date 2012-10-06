@@ -247,8 +247,8 @@ public class Field implements Serializable {
 					field[0] = new Block[WIDTH + 2 * BUFFER];
 					metadata[0] = new BlockMetadata[WIDTH + 2 * BUFFER];
 					// Fill in the top row with nulls
-					Arrays.fill(field[0], BUFFER, field[0].length - BUFFER, null);
-					Arrays.fill(metadata[0], BUFFER, metadata[0].length - BUFFER, null);
+					Arrays.fill(field[0], 0, BUFFER, Block.X);
+					Arrays.fill(field[0], WIDTH + BUFFER, WIDTH + 2*BUFFER, Block.X);
 					y = field.length - BUFFER;
 				}
 			}

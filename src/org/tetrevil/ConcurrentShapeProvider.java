@@ -45,6 +45,9 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 							next = bestDrop(next, shape.type());
 						}
 					} catch(InterruptedException ie) {
+					} catch(RuntimeException re) {
+						re.printStackTrace();
+						throw re;
 					}
 				}
 			}, null);

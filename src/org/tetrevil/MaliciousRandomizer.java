@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.tetrevil.AIKernel.Context;
+import org.tetrevil.AIKernel.Decision;
+import org.tetrevil.AIKernel.DecisionModifier;
 import org.tetrevil.event.TetrevilAdapter;
 import org.tetrevil.event.TetrevilEvent;
 import org.tetrevil.event.TetrevilListener;
@@ -25,6 +28,14 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		public Shape shape;
 		public String taunt;
 		public Field field = new Field();
+		
+		public Score() {}
+		
+		public Score(Decision d) {
+			score = d.score;
+			shape = d.type.starter();
+			field = d.field;
+		}
 		
 		@Override
 		public int compareTo(Score o) {
@@ -125,14 +136,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	}
 	
 	protected Score decide(Field field, String taunt, int depth) {
-//		if(depth > this.depth) {
-////			Score score = cache.depestDecide;
-//			Score score = new Score();
-//			score.field = field;
-//			score.score = Fitness.score(field);
-//			return score;
-//		}
-		
 		return worstFor(field, taunt, depth);
 	}
 	
@@ -145,59 +148,27 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 					omit = null;
 			}
 		}
-
-		Score worst = new Score(); // cache.worst[depth];
-		worst.score = Double.NEGATIVE_INFINITY;
+		final ShapeType fomit = omit;
 		
-		Fitness.paintImpossibles(field);
-		
-		Field f = new Field(false); // cache.f[depth];
-		Field fc = new Field(false); // cache.fc[depth];
-		for(ShapeType type : ShapeType.values()) {
-			Score typeScore = new Score(); // cache.typeScore[depth];
-			typeScore.score = Double.POSITIVE_INFINITY;
-			typeScore.taunt = taunt + type;
-
-			for(Shape shape : type.orientations()) {
-				for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
-					field.copyInto(f);
-					f.setShape(shape);
-					boolean grounded = !shape.intersects(f.getField(), x, 0);
-					for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
-						f.setShapeX(x);
-						f.setShapeY(y);
-						boolean groundedAbove = grounded;
-						grounded = shape.intersects(f.getField(), x, y+1);
-						if(!groundedAbove && grounded) {
-							f.copyInto(fc);
-							Fitness.unpaintImpossibles(fc);
-							fc.clockTick();
-							Fitness.paintImpossibles(fc);
-							double fscore = Fitness.score(fc);
-							if(fscore < typeScore.score) {
-								typeScore.score = fscore;
-								typeScore.field = fc.copyInto(typeScore.field);
-								typeScore.shape = shape;
-							}
-						}
-					}
+		DecisionModifier decisionModifier = new DecisionModifier() {
+			@Override
+			public void modifyPlannedDecision(Context context, Decision decision) {
+				if(decision.type == fomit) {
+					decision.score = Double.NEGATIVE_INFINITY;
+					return;
 				}
+				Score s = new Score(decision);
+				permuteScore(s);
+				decision.score = s.score;
 			}
-			if(depth < this.depth)
-				typeScore = decide(typeScore.field, typeScore.taunt, depth + 1);
-//			typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-//			if(fair)
-//				typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
-			permuteScore(typeScore);
-			typeScore.shape = type.orientations()[0];
-			if(typeScore.score > worst.score && omit != typeScore.shape.type()) {
-				worst.score = typeScore.score;
-				worst.field = typeScore.field.copyInto(worst.field);
-				worst.shape = typeScore.shape;
-				worst.taunt = typeScore.taunt;
-			}
-		}
-		return worst;
+		};
+		Context context = new Context(decisionModifier, field, this.depth - depth);
+		Decision defaultDecision = new Decision();
+		defaultDecision.field = field.copy();
+		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
+		Decision decision = AIKernel.planWorst(context, defaultDecision);
+		
+		return new Score(decision);
 	}
 	
 	protected void permuteScore(Score typeScore) {

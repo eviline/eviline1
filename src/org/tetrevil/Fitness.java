@@ -1,6 +1,14 @@
 package org.tetrevil;
 
 public class Fitness {
+	
+	public static double scoreWithPaint(Field field) {
+		paintImpossibles(field);
+		double ret = score(field);
+		unpaintImpossibles(field);
+		return ret;
+	}
+	
 	/**
 	 * Fitness function used to score a board.  Higher score is worse for the player.
 	 * @param field

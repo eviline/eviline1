@@ -12,6 +12,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.tetrevil.AIKernel.Context;
+import org.tetrevil.AIKernel.Decision;
+import org.tetrevil.AIKernel.DecisionModifier;
+
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 	private static final long serialVersionUID = -2530461350140162944L;
@@ -64,8 +68,16 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			}
 		}
 		
-		Fitness.paintImpossibles(field);
-
+		DecisionModifier decisionModifier = new DecisionModifier() {
+			@Override
+			public void modifyPlannedDecision(Context context, Decision decision) {
+				Score s = new Score(decision);
+				ThreadedMaliciousRandomizer.this.permuteScore(s);
+				decision.score = s.score;
+			}
+		};
+		final Context context = new Context(decisionModifier, field, depth);
+		
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
 			if(type == omit)
@@ -73,59 +85,12 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			futures.add(EXECUTOR.submit(new Callable<Score>() {
 				@Override
 				public Score call() throws Exception {
-//					MaliciousRandomizer child = new MaliciousRandomizer(depth, distribution);
-//					child.setFair(fair);
-//					child.setRfactor(rfactor);
 					
-					ThreadedMaliciousRandomizer child;
+					Decision best = AIKernel.bestFor(context, type);
+					Decision worstPlannable = AIKernel.planWorst(context.deeper(best.field), best);
+					context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
+					return new Score(worstPlannable);
 					
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					ObjectOutputStream out = new ObjectOutputStream(bout);
-					out.writeObject(ThreadedMaliciousRandomizer.this);
-					out.close();
-					ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-					ObjectInputStream in = new ObjectInputStream(bin);
-					child = (ThreadedMaliciousRandomizer) in.readObject();
-					
-					Field f = new Field();
-					Field fc = new Field();
-					
-					Score typeScore = new Score();
-					typeScore.score = Double.POSITIVE_INFINITY;
-					typeScore.taunt = "" + type;
-
-					for(Shape shape : type.orientations()) {
-						for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
-							field.copyInto(f);
-							f.setShape(shape);
-							boolean grounded = !shape.intersects(f.getField(), x, 0);
-							for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
-								f.setShapeX(x);
-								f.setShapeY(y);
-								boolean groundedAbove = grounded;
-								grounded = shape.intersects(f.getField(), x, y+1);
-								if(!groundedAbove && grounded) {
-									f.copyInto(fc);
-									Fitness.unpaintImpossibles(fc);
-									fc.clockTick();
-									Fitness.paintImpossibles(fc);
-									double fscore = Fitness.score(fc);
-									if(fscore < typeScore.score) {
-										typeScore.score = fscore;
-										typeScore.field = fc.copyInto(typeScore.field);
-										typeScore.shape = shape;
-									}
-								}
-							}
-						}
-					}
-					typeScore = child.decide(typeScore.field, typeScore.taunt, 1);
-//					typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-//					if(fair)
-//						typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[type.ordinal()];
-					child.permuteScore(typeScore);
-					typeScore.shape = type.orientations()[0];
-					return typeScore;
 				}
 			}));
 		}
