@@ -174,9 +174,12 @@ public class MaliciousBagRandomizer extends MaliciousRandomizer implements Rando
 //						typeScore.field = f.copyInto(typeScore.field);
 //						typeScore.shape = shape;
 //					}
+					boolean grounded = !shape.intersects(f.getField(), x, 0);
 					for(int y = 0; y < Field.HEIGHT + Field.BUFFER; y++) {
 						f.setShapeY(y);
-						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+						boolean groundedAbove = grounded;
+						grounded = f.isGrounded();
+						if(!groundedAbove && grounded) {
 							f.copyInto(fc);
 							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();

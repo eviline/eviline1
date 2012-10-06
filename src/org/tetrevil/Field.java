@@ -28,7 +28,7 @@ public class Field implements Serializable {
 	/**
 	 * The size of the buffer area around the matrix in each direction
 	 */
-	public static final int BUFFER = 5;
+	public static final int BUFFER = 6;
 	
 	/**
 	 * The matrix itself

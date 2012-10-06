@@ -162,10 +162,13 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
 					field.copyInto(f);
 					f.setShape(shape);
+					boolean grounded = !shape.intersects(f.getField(), x, 0);
 					for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
 						f.setShapeX(x);
 						f.setShapeY(y);
-						if(!shape.intersects(f.getField(), x, y) && f.isGrounded()) {
+						boolean groundedAbove = grounded;
+						grounded = f.isGrounded();
+						if(!groundedAbove && grounded) {
 							f.copyInto(fc);
 							Fitness.unpaintImpossibles(fc);
 							fc.clockTick();
