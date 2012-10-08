@@ -108,7 +108,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				decision.score = s.score;
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth - 1);
+		final Context context = new Context(decisionModifier, field, depth);
 		context.omit = omit;
 
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
@@ -120,7 +120,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				public Score call() throws Exception {
 					
 					Decision best = AIKernel.getInstance().bestFor(context, type);
-					Decision bestPlannable = AIKernel.getInstance().planBest(context, best);
+					Decision bestPlannable = AIKernel.getInstance().planBest(context.deeper(best.field), best);
 					context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
 					return new Score(bestPlannable);
 
