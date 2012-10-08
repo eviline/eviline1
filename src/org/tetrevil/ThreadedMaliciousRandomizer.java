@@ -86,8 +86,8 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				@Override
 				public Score call() throws Exception {
 					
-					Decision best = AIKernel.bestFor(context, type);
-					Decision worstPlannable = AIKernel.planWorst(context.deeper(best.field), best);
+					Decision best = AIKernel.getInstance().bestFor(context, type);
+					Decision worstPlannable = AIKernel.getInstance().planWorst(context.deeper(best.field), best);
 					context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
 					return new Score(worstPlannable);
 					

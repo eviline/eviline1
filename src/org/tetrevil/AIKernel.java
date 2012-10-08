@@ -45,7 +45,16 @@ public class AIKernel {
 		}
 	}
 	
-	public static Decision bestFor(Context context, ShapeType type) {
+	private static AIKernel instance;
+	public static AIKernel getInstance() {
+		if(instance == null)
+			instance = new AIKernel();
+		return instance;
+	}
+	
+	private AIKernel() {}
+	
+	public Decision bestFor(Context context, ShapeType type) {
 		Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
 		
 		Field possibility = new Field();
@@ -79,7 +88,7 @@ public class AIKernel {
 		return best;
 	}
 	
-	public static Decision bestFor(Context context) {
+	public Decision bestFor(Context context) {
 		Decision best = new Decision(null, Double.POSITIVE_INFINITY, context.original.copy());
 		double originalScore = Fitness.scoreWithPaint(best.field);
 		
@@ -99,14 +108,14 @@ public class AIKernel {
 		return best;
 	}
 	
-	public static Decision planBest(Context context, Decision defaultDecision) {
+	public Decision planBest(Context context, Decision defaultDecision) {
 		if(context.remainingDepth < 0)
 			return defaultDecision;
 		
 		return bestFor(context);
 	}
 	
-	public static Decision worstFor(Context context) {
+	public Decision worstFor(Context context) {
 		Decision worst = new Decision(null, Double.NEGATIVE_INFINITY, context.original.copy());
 		
 		for(ShapeType type : ShapeType.values()) {
@@ -122,7 +131,7 @@ public class AIKernel {
 		return worst;
 	}
 	
-	public static Decision planWorst(Context context, Decision defaultDecision) {
+	public Decision planWorst(Context context, Decision defaultDecision) {
 		if(context.remainingDepth < 0)
 			return defaultDecision;
 		
