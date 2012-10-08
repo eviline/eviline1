@@ -8,7 +8,6 @@ import java.util.concurrent.RunnableFuture;
 
 import org.tetrevil.AIKernel.Context;
 import org.tetrevil.AIKernel.Decision;
-import org.tetrevil.MaliciousRandomizer.Score;
 
 /**
  * {@link Randomizer} which runs concurrently with game play.  This {@link Randomizer} doesn't

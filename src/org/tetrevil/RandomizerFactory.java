@@ -1,9 +1,5 @@
 package org.tetrevil;
 
-import java.lang.reflect.Constructor;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.tetrevil.runner.MainApplet;
 
 /**

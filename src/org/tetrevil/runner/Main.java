@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 
-import org.tetrevil.Block;
 import org.tetrevil.Field;
 import org.tetrevil.mp.ClientGameButton;
 import org.tetrevil.mp.ClientSocketFactory;

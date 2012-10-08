@@ -15,7 +15,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;

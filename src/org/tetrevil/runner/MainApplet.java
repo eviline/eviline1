@@ -17,7 +17,6 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -43,7 +42,6 @@ import javax.swing.UIManager;
 
 import org.tetrevil.AngelRandomizer;
 import org.tetrevil.BipolarRandomizer;
-import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;

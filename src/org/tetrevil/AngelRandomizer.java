@@ -1,9 +1,5 @@
 package org.tetrevil;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Callable;
@@ -13,9 +9,9 @@ import java.util.concurrent.Future;
 import org.tetrevil.AIKernel.Context;
 import org.tetrevil.AIKernel.Decision;
 import org.tetrevil.AIKernel.DecisionModifier;
-import org.tetrevil.MaliciousRandomizer.Score;
 
 public class AngelRandomizer extends ThreadedMaliciousRandomizer {
+	private static final long serialVersionUID = 0;
 
 	public AngelRandomizer() {
 		super();

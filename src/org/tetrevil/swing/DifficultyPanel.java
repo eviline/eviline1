@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.tetrevil.AngelRandomizer;
 import org.tetrevil.BipolarRandomizer;
-import org.tetrevil.ConcurrentShapeProvider;
 import org.tetrevil.Field;
 import org.tetrevil.MaliciousBagRandomizer;
 import org.tetrevil.MaliciousRandomizer;
