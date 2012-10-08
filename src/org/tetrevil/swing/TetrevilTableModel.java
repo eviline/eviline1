@@ -91,6 +91,10 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 			});
 			return;
 		}
+		e.getField().copyInto(last);
+		last.reghost();
+		fireTableDataChanged();
+		/*
 		if(e == null || e.getShape() == null) {
 			e.getField().copyInto(last);
 			last.reghost();
@@ -143,6 +147,7 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 
 		e.getField().copyInto(last);
 		last.reghost();
+		*/
 	}
 	
 	@Override
