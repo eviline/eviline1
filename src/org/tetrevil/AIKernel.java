@@ -24,12 +24,18 @@ public class AIKernel {
 		public Context deeper(Field deeperOriginal) {
 			return new Context(decisionModifier, deeperOriginal, remainingDepth - 1);
 		}
+		
+		@Override
+		public String toString() {
+			return String.valueOf(original);
+		}
 	}
 	
 	public static class Decision {
 		public double score;
 		public ShapeType type;
 		public Field field;
+		public Decision deeper;
 		
 		public Decision() {}
 		public Decision(ShapeType type) {
@@ -43,6 +49,30 @@ public class AIKernel {
 			this.type = type;
 			this.score = score;
 			this.field = field;
+		}
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder("[");
+			sb.append(score);
+			sb.append(":");
+			sb.append(type);
+			Decision d = deeper;
+			while(d != null) {
+				sb.append(" -> ");
+				sb.append(d.type);
+				if(d == d.deeper)
+					break;
+				d = d.deeper;
+			}
+			sb.append("]");
+			return sb.toString();
+		}
+		public String taunt() {
+			if(deeper == this)
+				return String.valueOf(type);
+			if(deeper != null)
+				return type + deeper.taunt();
+			return String.valueOf(type);
 		}
 	}
 	
@@ -98,10 +128,11 @@ public class AIKernel {
 				continue;
 			Decision bestForType = bestFor(context, type);
 			Decision bestPlannable = planBest(context.deeper(bestForType.field), bestForType);
-			bestPlannable.type = type;
+			bestForType.deeper = bestPlannable;
+			bestForType.score = bestPlannable.score;
 			context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
-			if(bestPlannable.score < best.score) {
-				best = bestPlannable;
+			if(bestForType.score < best.score) {
+				best = bestForType;
 			}
 		}
 		
@@ -126,10 +157,12 @@ public class AIKernel {
 				continue;
 			Decision best = bestFor(context, type);
 			Decision worstPlannable = planWorst(context.deeper(best.field), best);
-			worstPlannable.type = type;
+//			worstPlannable.type = type;
+			best.deeper = worstPlannable;
+			best.score = worstPlannable.score;
 			context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
-			if(worstPlannable.score > worst.score) {
-				worst = worstPlannable;
+			if(best.score > worst.score) {
+				worst = best;
 			}
 		}
 		

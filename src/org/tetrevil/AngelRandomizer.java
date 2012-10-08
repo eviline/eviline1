@@ -146,7 +146,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			}
 		}
 		
-		worst.taunt = "";
+//		worst.taunt = "";
 		
 		return worst;
 	}

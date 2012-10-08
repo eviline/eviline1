@@ -35,6 +35,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			score = d.score;
 			shape = d.type.starter();
 			field = d.field;
+			taunt = d.taunt();
 		}
 		
 		@Override
