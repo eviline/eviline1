@@ -163,6 +163,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			}
 		};
 		Context context = new Context(decisionModifier, field, this.depth - depth);
+		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
 		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
@@ -172,7 +173,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	}
 	
 	protected void permuteScore(Score typeScore) {
-		if(typeScore.score == Double.POSITIVE_INFINITY)
+		if(typeScore.score == Double.POSITIVE_INFINITY || typeScore.score == Double.NEGATIVE_INFINITY)
 			return;
 		typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 		if(fair)

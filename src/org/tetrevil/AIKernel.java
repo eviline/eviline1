@@ -11,6 +11,7 @@ public class AIKernel {
 		public Field original;
 		public Field paintedImpossible;
 		public int remainingDepth;
+		public ShapeType omit;
 		
 		public Context(DecisionModifier decisionModifier, Field original, int remainingDepth) {
 			this.decisionModifier = decisionModifier;
@@ -93,12 +94,14 @@ public class AIKernel {
 		double originalScore = Fitness.scoreWithPaint(best.field);
 		
 		for(ShapeType type : ShapeType.values()) {
+			if(type == context.omit)
+				continue;
 			Decision bestForType = bestFor(context, type);
 			Decision bestPlannable = planBest(context.deeper(bestForType.field), bestForType);
+			bestPlannable.type = type;
 			context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
 			if(bestPlannable.score < best.score) {
 				best = bestPlannable;
-				best.type = type;
 			}
 		}
 		
@@ -109,7 +112,7 @@ public class AIKernel {
 	}
 	
 	public Decision planBest(Context context, Decision defaultDecision) {
-		if(context.remainingDepth < 0)
+		if(context.remainingDepth <= 0)
 			return defaultDecision;
 		
 		return bestFor(context);
@@ -119,12 +122,14 @@ public class AIKernel {
 		Decision worst = new Decision(null, Double.NEGATIVE_INFINITY, context.original.copy());
 		
 		for(ShapeType type : ShapeType.values()) {
+			if(type == context.omit)
+				continue;
 			Decision best = bestFor(context, type);
 			Decision worstPlannable = planWorst(context.deeper(best.field), best);
+			worstPlannable.type = type;
 			context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
 			if(worstPlannable.score > worst.score) {
 				worst = worstPlannable;
-				worst.type = type;
 			}
 		}
 		
@@ -132,9 +137,10 @@ public class AIKernel {
 	}
 	
 	public Decision planWorst(Context context, Decision defaultDecision) {
-		if(context.remainingDepth < 0)
+		if(context.remainingDepth <= 0)
 			return defaultDecision;
 		
-		return worstFor(context);
+		Decision worst = worstFor(context);
+		return worst;
 	}
 }

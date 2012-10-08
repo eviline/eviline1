@@ -77,6 +77,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			}
 		};
 		final Context context = new Context(decisionModifier, field, depth);
+		context.omit = omit;
 		
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -87,9 +88,10 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				public Score call() throws Exception {
 					
 					Decision best = AIKernel.getInstance().bestFor(context, type);
-					Decision worstPlannable = AIKernel.getInstance().planWorst(context.deeper(best.field), best);
+					Decision worstPlannable = AIKernel.getInstance().planWorst(context, best);
 					context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
-					return new Score(worstPlannable);
+					Score score = new Score(worstPlannable);
+					return score;
 					
 				}
 			}));

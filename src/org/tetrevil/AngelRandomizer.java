@@ -79,6 +79,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			}
 		};
 		Context context = new Context(decisionModifier, field, this.depth - depth);
+		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
 		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
@@ -108,6 +109,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			}
 		};
 		final Context context = new Context(decisionModifier, field, depth);
+		context.omit = omit;
 
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -118,7 +120,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				public Score call() throws Exception {
 					
 					Decision best = AIKernel.getInstance().bestFor(context, type);
-					Decision bestPlannable = AIKernel.getInstance().planBest(context.deeper(best.field), best);
+					Decision bestPlannable = AIKernel.getInstance().planBest(context, best);
 					context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
 					return new Score(bestPlannable);
 
