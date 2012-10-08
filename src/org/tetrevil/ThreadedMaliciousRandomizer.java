@@ -76,7 +76,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				decision.score = s.score;
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth);
+		final Context context = new Context(decisionModifier, field, depth - 1);
 		context.omit = omit;
 		
 		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();

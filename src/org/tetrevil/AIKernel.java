@@ -112,7 +112,7 @@ public class AIKernel {
 	}
 	
 	public Decision planBest(Context context, Decision defaultDecision) {
-		if(context.remainingDepth <= 0)
+		if(context.remainingDepth < 0)
 			return defaultDecision;
 		
 		return bestFor(context);
@@ -137,7 +137,7 @@ public class AIKernel {
 	}
 	
 	public Decision planWorst(Context context, Decision defaultDecision) {
-		if(context.remainingDepth <= 0)
+		if(context.remainingDepth < 0)
 			return defaultDecision;
 		
 		Decision worst = worstFor(context);
