@@ -17,7 +17,7 @@
     </resources>
     <applet-desc 
          name="EVILINE"
-         main-class="org.tetrevil.runner.MainApplet"
+         main-class="org.eviline.runner.MainApplet"
          width="550"
          height="550">
      </applet-desc>

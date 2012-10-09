@@ -14,7 +14,7 @@
 	<target name="jar" depends="compile">
 		<jar destfile="dist/eviline.jar" update="true" includes="**/*.class">
 			<manifest>
-				<attribute name="Main-Class" value="org.tetrevil.runner.Main"/>
+				<attribute name="Main-Class" value="org.eviline.runner.Main"/>
 			</manifest>
 			<fileset dir="bin"/>
 		</jar>
@@ -24,12 +24,12 @@
 		<copy todir="dist">
 			<fileset file="*.jnlp"/>
 		</copy>
-		<copy todir="../tetrevil_tomcat/WebContent/WEB-INF/lib/">
+		<copy todir="../eviline_tomcat/WebContent/WEB-INF/lib/">
 			<fileset file="dist/eviline.jar"/>
 		</copy>
 	</target>
 	
 	<target name="run" depends="compile">
-		<java classpath="bin" classname="org.tetrevil.runner.Main" fork="true"/>
+		<java classpath="bin" classname="org.eviline.runner.Main" fork="true"/>
 	</target>
 </project>
