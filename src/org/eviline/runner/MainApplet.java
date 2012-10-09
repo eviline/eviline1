@@ -495,8 +495,6 @@ public class MainApplet extends JApplet implements PropertySource {
 		presets.add(evil, c);
 		c.gridx += 3; presets.add(normal, c);
 		
-		angelic.setPreferredSize(sadistic.getPreferredSize());
-		sadistic.setPreferredSize(sadistic.getPreferredSize());
 		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c);
 		c.gridx += 2; presets.add(bipolarPreset, c);
 		c.gridx += 2; presets.add(angelic, c);
