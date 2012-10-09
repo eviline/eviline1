@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
@@ -26,7 +28,9 @@ import org.eviline.PropertySource;
 import org.eviline.randomizer.AngelRandomizer;
 import org.eviline.randomizer.BipolarRandomizer;
 import org.eviline.randomizer.MaliciousRandomizer;
+import org.eviline.randomizer.Randomizer;
 import org.eviline.randomizer.RandomizerFactory;
+import org.eviline.randomizer.RandomizerPresets;
 import org.eviline.randomizer.ThreadedMaliciousRandomizer;
 import org.eviline.sounds.TetrevilMusicListener;
 import org.eviline.sounds.TetrevilSoundListener;
@@ -41,63 +45,58 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		provText.setBorder(BorderFactory.createTitledBorder("Difficulty Setting"));
 	}}
 	protected JButton set;
-	protected JButton worst = new JButton("Sadistic");;
-	protected JButton evil = new JButton("Evil");
-	protected JButton normal = new JButton("Aggressive");
-	protected JButton angelic = new JButton("Angelic");
-	protected JButton bipolarPreset = new JButton("Bipolar");
-
+	
+	protected List<JButton> presetButtons = new ArrayList<JButton>();
+	
 	protected Properties props;
+
+	protected JRadioButton malicious = new JRadioButton("Malicious"); 
+	protected JRadioButton angel = new JRadioButton("Angel");
+	protected JRadioButton bipolar = new JRadioButton("Bipolar"); 
+
+	protected JRadioButton fair = new JRadioButton("Fair"); 
+	protected JRadioButton unfair = new JRadioButton("Unfair"); 
+
+	protected JTextField depth = new JTextField(new IntegerDocument(), "", 5);
+	protected JTextField rfactor = new JTextField(new IntegerDocument(), "", 5);
+	protected JTextField distribution = new JTextField(new IntegerDocument(), "", 5);
+
+	protected JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
+	protected JCheckBox concurrent = new JCheckBox("Concurrent"); 
+	protected JCheckBox music = new JCheckBox("Music");
+	protected JCheckBox sounds = new JCheckBox("Sounds");
 
 	public DifficultyPanel(Field f, Properties props) {
 		super(new GridBagLayout());
 		this.field = f;
 		this.props = props;
 		
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
-		
-		
-		
-		
-		
-		final JRadioButton malicious = new JRadioButton("Malicious"); 
 		malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); 
 		malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		
-		final JRadioButton angel = new JRadioButton("Angel");
 		angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE);
 		angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
 		
-		final JRadioButton bipolar = new JRadioButton("Bipolar"); 
 		bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); 
 		bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
 		
 		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(angel); g.add(bipolar);
 		
-		final JRadioButton fair = new JRadioButton("Fair"); 
 		fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); 
 		fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		
-		final JRadioButton unfair = new JRadioButton("Unfair"); 
 		unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE);
 		unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
-		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
-		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
-		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
 		
-		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
 		adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE);
 		
-		final JCheckBox concurrent = new JCheckBox("Concurrent"); 
 		concurrent.setForeground(Color.BLACK); concurrent.setBackground(Color.WHITE);
 
 		
-		final JCheckBox music = new JCheckBox("Music");
 		music.setForeground(Color.BLACK); music.setBackground(Color.WHITE);
 
-		final JCheckBox sounds = new JCheckBox("Sounds");
 		sounds.setForeground(Color.BLACK); sounds.setBackground(Color.WHITE);
 
 		
@@ -106,137 +105,23 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!DifficultyPanel.this.isEnabled())
 					return;
-				setParameter("depth", depth.getText());
-				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
-				setParameter("distribution", distribution.getText());
-				setParameter("fair", "" + fair.isSelected());
-				setParameter("adaptive", "" + adaptive.isSelected());
-				setParameter("concurrent", "" + concurrent.isSelected());
-				if(angel.isSelected())
-//					RandomizerFactory.setClazz(AngelRandomizer.class);
-					setParameter("class", AngelRandomizer.class.getName());
-				else if(bipolar.isSelected())
-//					RandomizerFactory.setClazz(BipolarRandomizer.class);
-					setParameter("class", BipolarRandomizer.class.getName());
-				else
-//					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
-					setParameter("class", ThreadedMaliciousRandomizer.class.getName());
-				setProvider();
-				provText.setText(field.getProvider().toString());
-			}
-		});
-		
-		worst.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(!DifficultyPanel.this.isEnabled())
-					return;
-				malicious.setSelected(true);
-				depth.setText("5");
-				rfactor.setText("0");
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				unfair.setSelected(true);
-				distribution.setEnabled(false);
-				distribution.setText("30");
-				adaptive.setEnabled(false);
-				adaptive.setSelected(false);
-				set.doClick();
-				provText.setText("Sadistic");
+				updateProperties();
 				setProvider();
 			}
 		});
 		
-		evil.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(!DifficultyPanel.this.isEnabled())
-					return;
-				malicious.setSelected(true);
-				depth.setText("3");
-				rfactor.setText("0");
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				unfair.setSelected(true);
-				distribution.setEnabled(false);
-				distribution.setText("30");
-				adaptive.setEnabled(false);
-				adaptive.setSelected(false);
-				set.doClick();
-				provText.setText("Evil");
-				setProvider();
-			}
-		});
-		
-		normal.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(!DifficultyPanel.this.isEnabled())
-					return;
-				malicious.setSelected(true);
-				depth.setText("3");
-				rfactor.setText("2");
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				fair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("30");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(true);
-				set.doClick();
-				provText.setText("Aggressive");
-				setProvider();
-			}
-		});
-		
-		angelic.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				angel.setSelected(true);
-				depth.setText("3");
-				rfactor.setText("1");
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				fair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("15");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(false);
-				concurrent.setSelected(true);
-				set.doClick();
-				provText.setText("Angelic");
-				setProvider();
-			}
-		});
-		
-		bipolarPreset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				bipolar.setSelected(true);
-				depth.setText("3");
-				rfactor.setText("1");
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				fair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("15");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(false);
-				concurrent.setSelected(true);
-				set.doClick();
-				provText.setText("Bipolar");
-				setProvider();
-			}
-		});
-
-		malicious.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				adaptive.setEnabled(true);
-			}
-		});
+		for(final RandomizerPresets preset : RandomizerPresets.values()) {
+			JButton b = new JButton(new AbstractAction(preset.getName()) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					DifficultyPanel.this.props.putAll(preset.getProperties());
+					updateFields();
+					setProvider();
+					provText.setText(preset.getName());
+				}
+			});
+			presetButtons.add(b);
+		}
 		
 		fair.addActionListener(new ActionListener() {
 			@Override
@@ -285,12 +170,14 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		setBackground(Color.WHITE);
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 		
-		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
-		presets.add(worst, c); 
-		c.gridx++; presets.add(evil, c);
-		c.gridx++; presets.add(normal, c);
-		c.gridx = 0; c.gridy++; presets.add(angelic, c);
-		c.gridx++; presets.add(bipolarPreset, c);
+		JPanel presets = new JPanel(new GridLayout(0, 3)); presets.setBackground(Color.WHITE);
+//		presets.add(worst, c); 
+//		c.gridx++; presets.add(evil, c);
+//		c.gridx++; presets.add(normal, c);
+//		c.gridx = 0; c.gridy++; presets.add(angelic, c);
+//		c.gridx++; presets.add(bipolarPreset, c);
+		for(JButton b : presetButtons)
+			presets.add(b);
 		
 		c.gridx = 0; c.gridy = 0; add(presets, c);
 		
@@ -319,8 +206,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		c.gridy++; add(set, c);
 		
 		c.gridy++; add(provText, c);
-		
-		bipolarPreset.doClick();
+
+		presetButtons.get(RandomizerPresets.BIPOLAR.ordinal()).doClick();
 		
 		if("true".equals(getParameter("music")))
 			music.doClick();
@@ -352,16 +239,14 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		set.setEnabled(enabled);
-		worst.setEnabled(enabled);
-		evil.setEnabled(enabled);
-		normal.setEnabled(enabled);
-		angelic.setEnabled(enabled);
-		bipolarPreset.setEnabled(enabled);
+		for(JButton b : presetButtons)
+			b.setEnabled(enabled);
 		
 	}
 	
 	public void setProvider() {
 		field.setProvider(new RandomizerFactory(field).newRandomizer(this));
+		provText.setText(field.getProvider().toString());
 		fireActionPerformed("difficulty");
 	}
 	
@@ -383,4 +268,38 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		return getParameter(key);
 	}
 
+	protected String nnget(String key) {
+		String val = get(key);
+		return val == null ? "" : val;
+	}
+	
+	public void updateFields() {
+		depth.setText(nnget("depth"));
+		rfactor.setText("" + (int)(100 * Double.parseDouble(nnget("rfactor"))));
+		distribution.setText(nnget("distribution"));
+		fair.setSelected("true".equals(get("fair")));
+		adaptive.setSelected("true".equals(get("adaptive")));
+		concurrent.setSelected("true".equals(get("concurrent")));
+		if(AngelRandomizer.class.getName().equals(get("class")))
+			angel.setSelected(true);
+		else if(BipolarRandomizer.class.getName().equals(get("class")))
+			bipolar.setSelected(true);
+		else
+			malicious.setSelected(true);
+	}
+	
+	public void updateProperties() {
+		setParameter("depth", depth.getText());
+		setParameter("rfactor", "" + Double.parseDouble(rfactor.getText()) / 100);
+		setParameter("distribution", distribution.getText());
+		setParameter("fair", "" + fair.isSelected());
+		setParameter("adaptive", "" + adaptive.isSelected());
+		setParameter("concurrent", "" + concurrent.isSelected());
+		if(angel.isSelected())
+			setParameter("class", AngelRandomizer.class.getName());
+		else if(bipolar.isSelected())
+			setParameter("class", BipolarRandomizer.class.getName());
+		else
+			setParameter("class", ThreadedMaliciousRandomizer.class.getName());
+	}
 }
