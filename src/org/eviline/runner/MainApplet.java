@@ -67,7 +67,7 @@ public class MainApplet extends JApplet implements PropertySource {
 	
 	protected Map<String, String> parameters = new HashMap<String, String>();
 	
-	protected Icon gear = new ImageIcon(getClass().getClassLoader().getResource("org/tetrevil/images/gear.png"));
+	protected Icon gear = new ImageIcon(getClass().getClassLoader().getResource("org/eviline/images/gear.png"));
 
 	
 	protected Field field = new Field(true);
