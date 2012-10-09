@@ -1,4 +1,4 @@
-package org.tetrevil.servlet;
+package org.eviline.servlet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.session.SqlSession;
-import org.tetrevil.srv.db.DbInterface;
-import org.tetrevil.srv.db.ScoreMapper;
+import org.eviline.srv.db.DbInterface;
+import org.eviline.srv.db.ScoreMapper;
 import org.tetrevil.wobj.WebScore;
 
 /**

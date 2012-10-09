@@ -1,4 +1,4 @@
-package org.tetrevil.srv.db;
+package org.eviline.srv.db;
 
 import org.tetrevil.wobj.WebScore;
 

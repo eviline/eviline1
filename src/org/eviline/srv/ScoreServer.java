@@ -1,4 +1,4 @@
-package org.tetrevil.srv;
+package org.eviline.srv;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.ibatis.session.SqlSession;
-import org.tetrevil.srv.db.DbInterface;
-import org.tetrevil.srv.db.ScoreMapper;
+import org.eviline.srv.db.DbInterface;
+import org.eviline.srv.db.ScoreMapper;
 import org.tetrevil.wobj.WebScore;
 
 public class ScoreServer {
