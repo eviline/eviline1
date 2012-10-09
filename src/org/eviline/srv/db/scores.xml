@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.tetrevil.srv.db.ScoreMapper">
+<mapper namespace="org.eviline.srv.db.ScoreMapper">
 	<insert id="insert" parameterType="Score">
 INSERT INTO tvscore ( score, name, ts, depth, rfactor, fair, distribution, randomizer, adaptive, reason )
 VALUES ( #{score}, #{name}, #{ts}, #{depth}, #{rfactor}, #{fair}, #{distribution}, #{randomizer}, #{adaptive}, #{reason});

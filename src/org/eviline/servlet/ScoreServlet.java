@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.ibatis.session.SqlSession;
 import org.eviline.srv.db.DbInterface;
 import org.eviline.srv.db.ScoreMapper;
-import org.tetrevil.wobj.WebScore;
+import org.eviline.wobj.WebScore;
 
 /**
  * Servlet implementation class ScoreServlet

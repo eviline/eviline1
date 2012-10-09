@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.tetrevil.MaliciousRandomizer;
+import org.eviline.MaliciousRandomizer;
 
 /**
  * Servlet implementation class MultiplayerServlet

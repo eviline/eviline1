@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.tetrevil.Field;
-import org.tetrevil.RemoteRandomizer;
-import org.tetrevil.Shape;
+import org.eviline.Field;
+import org.eviline.RemoteRandomizer;
+import org.eviline.Shape;
 
 /**
  * Servlet implementation class RandomizerServlet

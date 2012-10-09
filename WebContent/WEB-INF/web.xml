@@ -6,21 +6,21 @@
 		</description>
 		<display-name>score</display-name>
 		<servlet-name>score</servlet-name>
-		<servlet-class>org.tetrevil.servlet.ScoreServlet</servlet-class>
+		<servlet-class>org.eviline.servlet.ScoreServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<description>
 		</description>
 		<display-name>randomizer</display-name>
 		<servlet-name>randomizer</servlet-name>
-		<servlet-class>org.tetrevil.servlet.RandomizerServlet</servlet-class>
+		<servlet-class>org.eviline.servlet.RandomizerServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<description>
 		</description>
 		<display-name>multiplayer</display-name>
 		<servlet-name>multiplayer</servlet-name>
-		<servlet-class>org.tetrevil.servlet.MultiplayerServlet</servlet-class>
+		<servlet-class>org.eviline.servlet.MultiplayerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>score</servlet-name>

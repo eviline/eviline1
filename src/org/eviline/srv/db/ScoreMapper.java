@@ -1,6 +1,6 @@
 package org.eviline.srv.db;
 
-import org.tetrevil.wobj.WebScore;
+import org.eviline.wobj.WebScore;
 
 public interface ScoreMapper {
 	public void insert(WebScore score);
