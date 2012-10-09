@@ -83,7 +83,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 					best.deeper = bestPlannable;
 					best.score = bestPlannable.score;
 					context.decisionModifier.modifyPlannedDecision(context, best);
-					return bestPlannable;
+					return best;
 
 				}
 			}));
