@@ -395,7 +395,7 @@ public class MainApplet extends JApplet implements PropertySource {
 				distribution.setText("30");
 				adaptive.setEnabled(false);
 				adaptive.setSelected(false);
-				concurrent.setSelected(false);
+				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Evil";
 				setProvider();
@@ -415,7 +415,7 @@ public class MainApplet extends JApplet implements PropertySource {
 				distribution.setText("30");
 				adaptive.setEnabled(true);
 				adaptive.setSelected(true);
-				concurrent.setSelected(false);
+				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Aggressive";
 				setProvider();
