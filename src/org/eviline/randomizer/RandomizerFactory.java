@@ -45,7 +45,7 @@ public class RandomizerFactory {
 				mr.setAdaptive(field, Boolean.parseBoolean(props.get("adaptive")));
 		}
 		if(Boolean.parseBoolean(props.get("concurrent")))
-			ret = new ConcurrentShapeProvider(ret);
+			ret = new ConcurrentDelegatingRandomizer(ret);
 		return ret;
 	}
 }

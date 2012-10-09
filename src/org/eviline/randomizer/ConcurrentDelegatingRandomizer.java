@@ -21,7 +21,7 @@ import org.eviline.AIKernel.Decision;
  * @author robin
  *
  */
-public class ConcurrentShapeProvider implements Randomizer, Serializable {
+public class ConcurrentDelegatingRandomizer implements Randomizer, Serializable {
 
 	protected Randomizer provider;
 
@@ -31,7 +31,7 @@ public class ConcurrentShapeProvider implements Randomizer, Serializable {
 
 	protected transient String taunt;
 
-	public ConcurrentShapeProvider(Randomizer p) {
+	public ConcurrentDelegatingRandomizer(Randomizer p) {
 		this.provider = p;
 	}
 

@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
 
 import org.eviline.event.TetrevilAdapter;
 import org.eviline.event.TetrevilEvent;
-import org.eviline.randomizer.ConcurrentShapeProvider;
+import org.eviline.randomizer.ConcurrentDelegatingRandomizer;
 import org.eviline.swing.TetrevilFrame;
 
 public class MultiplayerConnection {
@@ -55,7 +55,7 @@ public class MultiplayerConnection {
 		frame.getField().setUnpausable(true);
 		frame.getField().setMultiplayer(true);
 		
-		frame.getField().setProvider(new ConcurrentShapeProvider(frame.getField().getProvider()));
+		frame.getField().setProvider(new ConcurrentDelegatingRandomizer(frame.getField().getProvider()));
 		if(host)
 			out.writeObject(frame.getField().getProvider());
 		
