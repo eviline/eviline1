@@ -113,10 +113,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		DecisionModifier decisionModifier = new DecisionModifier() {
 			@Override
 			public void modifyPlannedDecision(Context context, Decision decision) {
-				if(decision.type == fomit) {
-					decision.score = Double.NEGATIVE_INFINITY;
-					return;
-				}
 				permuteDecision(decision);
 			}
 		};

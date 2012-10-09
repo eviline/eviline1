@@ -81,7 +81,8 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 					Decision best = AIKernel.getInstance().bestFor(context, type);
 					Decision bestPlannable = AIKernel.getInstance().planBest(context.deeper(best.field), best);
 					best.deeper = bestPlannable;
-					context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
+					best.score = bestPlannable.score;
+					context.decisionModifier.modifyPlannedDecision(context, best);
 					return bestPlannable;
 
 				}

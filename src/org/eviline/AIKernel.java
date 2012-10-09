@@ -130,7 +130,7 @@ public class AIKernel {
 			Decision bestPlannable = planBest(context.deeper(bestForType.field), bestForType);
 			bestForType.deeper = bestPlannable;
 			bestForType.score = bestPlannable.score;
-			context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
+			context.decisionModifier.modifyPlannedDecision(context, bestForType);
 			if(bestForType.score < best.score) {
 				best = bestForType;
 			}
@@ -160,7 +160,7 @@ public class AIKernel {
 //			worstPlannable.type = type;
 			best.deeper = worstPlannable;
 			best.score = worstPlannable.score;
-			context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
+			context.decisionModifier.modifyPlannedDecision(context, best);
 			if(best.score > worst.score) {
 				worst = best;
 			}
