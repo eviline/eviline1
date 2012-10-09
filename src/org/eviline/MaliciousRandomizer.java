@@ -23,46 +23,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
-	public static class Score implements Serializable, Comparable<Score> {
-		public double score;
-		public Shape shape;
-		public String taunt;
-		public Field field = new Field();
-		
-		public Score() {}
-		
-		public Score(Decision d) {
-			score = d.score;
-			shape = d.type.starter();
-			field = d.field;
-			taunt = d.taunt();
-		}
-		
-		@Override
-		public int compareTo(Score o) {
-			return -((Double) score).compareTo(o.score);
-		}
-	}
-
-//	protected class Cache implements Serializable {
-//		public Score depestDecide = new Score();
-//		public Score[] worst = new Score[depth + 1];
-//		public Field[] f = new Field[depth + 1];
-//		public Field[] fc = new Field[depth + 1];
-//		public Score[] typeScore = new Score[depth + 1];
-//		
-//		public Cache() {
-//			for(int i = 0; i < depth + 1; i++) {
-//				worst[i] = new Score();
-//				f[i] = new Field();
-//				fc[i] = new Field();
-//				typeScore[i] = new Score();
-//			}
-//		}
-//	}
-	
-//	protected Cache cache;
-	
 	protected int depth = 3;
 	protected double rfactor = 0.05;
 	protected boolean fair = false;
@@ -93,7 +53,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public MaliciousRandomizer(int depth, int distribution) {
 		this.depth = depth;
 		this.distribution = distribution;
-//		this.cache = new Cache();
 		for(int i = 0; i < typeCounts.length; i++) {
 			typeCounts[i] = distribution;
 		}
@@ -120,13 +79,13 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			return type.starter();
 		}
 		field = field.copyInto(new Field());
-		Score score = decide(field, "", 0);
-		Shape shape = score.shape;
+		Decision decision = decide(field, "", 0);
+		Shape shape = decision.type.starter();
 //		taunt = score.taunt;
-		recent.add(shape.type());
+		recent.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
-		typeCounts[shape.type().ordinal()]++;
+		typeCounts[decision.type.ordinal()]++;
 		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
 		return shape;
 	}
@@ -136,11 +95,11 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		return taunt;
 	}
 	
-	protected Score decide(Field field, String taunt, int depth) {
+	protected Decision decide(Field field, String taunt, int depth) {
 		return worstFor(field, taunt, depth);
 	}
 	
-	protected Score worstFor(Field field, String taunt, int depth) {
+	protected Decision worstFor(Field field, String taunt, int depth) {
 		ShapeType omit = null;
 		if(depth == 0 && recent.size() > 0) {
 			omit = recent.get(0);
@@ -158,9 +117,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 					decision.score = Double.NEGATIVE_INFINITY;
 					return;
 				}
-				Score s = new Score(decision);
-				permuteScore(s);
-				decision.score = s.score;
+				permuteDecision(decision);
 			}
 		};
 		Context context = new Context(decisionModifier, field, this.depth - depth);
@@ -170,17 +127,17 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
 		Decision decision = AIKernel.getInstance().planWorst(context, defaultDecision);
 		
-		return new Score(decision);
+		return decision;
 	}
 	
-	protected void permuteScore(Score typeScore) {
-		if(typeScore.score == Double.POSITIVE_INFINITY || typeScore.score == Double.NEGATIVE_INFINITY)
+	protected void permuteDecision(Decision typeDecision) {
+		if(typeDecision.score == Double.POSITIVE_INFINITY || typeDecision.score == Double.NEGATIVE_INFINITY)
 			return;
-		typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+		typeDecision.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 		if(fair)
-			typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[typeScore.shape.type().ordinal()];
-		if(typeScore.shape.type() == ShapeType.O) {
-			typeScore.score -= 0.2 * Math.abs(typeScore.score);
+			typeDecision.score *= (distribution + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		if(typeDecision.type == ShapeType.O) {
+			typeDecision.score -= 0.2 * Math.abs(typeDecision.score);
 		}
 	}
 	

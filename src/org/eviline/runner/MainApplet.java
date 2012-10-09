@@ -43,9 +43,7 @@ import javax.swing.UIManager;
 import org.eviline.AngelRandomizer;
 import org.eviline.BipolarRandomizer;
 import org.eviline.Field;
-import org.eviline.MaliciousBagRandomizer;
 import org.eviline.MaliciousRandomizer;
-import org.eviline.MyndziRandomizer;
 import org.eviline.PropertySource;
 import org.eviline.RandomizerFactory;
 import org.eviline.ThreadedMaliciousRandomizer;
@@ -284,17 +282,13 @@ public class MainApplet extends JApplet implements PropertySource {
 		final JButton sadistic = new JButton("Sadistic");
 		final JButton evil = new JButton("Evil");
 		final JButton normal = new JButton("Aggressive");
-		final JButton easy = new JButton("Rude");
 		final JButton angelic = new JButton("Angelic");
 		final JButton bipolarPreset = new JButton("Bipolar");
-		final JButton myndziPreset = new JButton("myndzi");
 		
 		final JRadioButton malicious = new JRadioButton("Malicious"); malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
-		final JRadioButton bag = new JRadioButton("Bag"); bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE); bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
 		final JRadioButton angel = new JRadioButton("Angel"); angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE); angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
 		final JRadioButton bipolar = new JRadioButton("Bipolar"); bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
-		final JRadioButton myndzi = new JRadioButton("myndzi"); myndzi.setForeground(Color.BLACK); myndzi.setBackground(Color.WHITE); myndzi.setPreferredSize(new Dimension(80, myndzi.getPreferredSize().height));
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar); g.add(myndzi);
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(angel); g.add(bipolar);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); fair.setPreferredSize(new Dimension(80, fair.getPreferredSize().height));
 		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
@@ -321,18 +315,12 @@ public class MainApplet extends JApplet implements PropertySource {
 				setParameter("fair", "" + fair.isSelected());
 				setParameter("adaptive", "" + adaptive.isSelected());
 				setParameter("concurrent", "" + concurrent.isSelected());
-				if(bag.isSelected())
-//					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
-					setParameter("class", MaliciousBagRandomizer.class.getName());
-				else if(angel.isSelected())
+				if(angel.isSelected())
 //					RandomizerFactory.setClazz(AngelRandomizer.class);
 					setParameter("class", AngelRandomizer.class.getName());
 				else if(bipolar.isSelected())
 //					RandomizerFactory.setClazz(BipolarRandomizer.class);
 					setParameter("class", BipolarRandomizer.class.getName());
-				else if(myndzi.isSelected())
-//					RandomizerFactory.setClazz(MyndziRandomizer.class);
-					setParameter("class", MyndziRandomizer.class.getName());
 				else
 //					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 					setParameter("class", ThreadedMaliciousRandomizer.class.getName());
@@ -434,26 +422,6 @@ public class MainApplet extends JApplet implements PropertySource {
 			}
 		});
 		
-		easy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				bag.setSelected(true);
-				depth.setText("4");
-				rfactor.setText("5");
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				fair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("3");
-				adaptive.setEnabled(false);
-				adaptive.setSelected(false);
-				concurrent.setSelected(false);
-				set.doClick();
-				provText = "Rude";
-				setProvider();
-			}
-		});
-
 		angelic.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -494,26 +462,6 @@ public class MainApplet extends JApplet implements PropertySource {
 			}
 		});
 
-		myndziPreset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				myndzi.setSelected(true);
-				depth.setText("3");
-				rfactor.setText("0");
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				unfair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("2");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(false);
-				concurrent.setSelected(true);
-				set.doClick();
-				provText = "myndzi";
-				setProvider();
-			}
-		});
-		
 		malicious.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -523,15 +471,6 @@ public class MainApplet extends JApplet implements PropertySource {
 			}
 		});
 		
-		bag.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				adaptive.setEnabled(false);
-			}
-		});
-				
 		fair.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -552,17 +491,15 @@ public class MainApplet extends JApplet implements PropertySource {
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
 		
 		JPanel presets = new JPanel(new GridBagLayout()); presets.setBackground(Color.WHITE);
+		c.gridwidth = 3;
 		presets.add(evil, c);
-		c.gridwidth = 2;
-		c.gridx += 2; presets.add(normal, c);
-		c.gridx += 2; presets.add(easy, c);
+		c.gridx += 3; presets.add(normal, c);
 		
 		angelic.setPreferredSize(sadistic.getPreferredSize());
 		sadistic.setPreferredSize(sadistic.getPreferredSize());
 		c.gridx = 0; c.gridy++; c.gridwidth = 2; presets.add(sadistic, c);
 		c.gridx += 2; presets.add(bipolarPreset, c);
 		c.gridx += 2; presets.add(angelic, c);
-		c.gridx = 0; c.gridy++; presets.add(myndziPreset, c);
 		
 		presets.setBorder(BorderFactory.createTitledBorder("Presets"));
 		
@@ -572,10 +509,8 @@ public class MainApplet extends JApplet implements PropertySource {
 		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
 		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
-		details.add(new JLabel("")); details.add(bag);
 		details.add(new JLabel("")); details.add(angel);
 		details.add(new JLabel("")); details.add(bipolar);
-		details.add(new JLabel("")); details.add(myndzi);
 		
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
@@ -597,8 +532,6 @@ public class MainApplet extends JApplet implements PropertySource {
 			public void run() {
 				if("true".equals(getParameter("angelic")))
 					angelic.doClick();
-				else if("true".equals(getParameter("myndzi")))
-					myndziPreset.doClick();
 				else
 					bipolarPreset.doClick();
 			}

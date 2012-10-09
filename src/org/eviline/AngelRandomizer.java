@@ -37,9 +37,9 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			return type.starter();
 		}
 		field = field.copyInto(new Field());
-		Score score = decideThreaded(field);
-		Shape shape = score.shape;
-		taunt = score.taunt;
+		Decision decision = decideThreaded(field);
+		Shape shape = decision.type.starter();
+		taunt = decision.taunt();
 		if(taunt.length() > 0)
 			taunt = taunt.substring(0, 1);
 		recent.add(shape.type());
@@ -49,44 +49,9 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
 		return shape;
 	}
-	
-	@Override
-	protected Score worstFor(Field field, String taunt, int depth) {
-		ShapeType omit = null;
-		if(depth == 0 && recent.size() > 0) {
-			omit = recent.get(0);
-			for(ShapeType t : recent) {
-				if(omit != t)
-					omit = null;
-			}
-		}
-		final ShapeType fomit = omit;
-
-		DecisionModifier decisionModifier = new DecisionModifier() {
-			@Override
-			public void modifyPlannedDecision(Context context, Decision decision) {
-				if(decision.type == fomit) {
-					decision.score = Double.POSITIVE_INFINITY;
-					return;
-				}
-				Score s = new Score(decision);
-				permuteScore(s);
-				decision.score = s.score;
-			}
-		};
-		Context context = new Context(decisionModifier, field, this.depth - depth);
-		context.omit = omit;
-		Decision defaultDecision = new Decision();
-		defaultDecision.field = field.copy();
-		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
-		Decision decision = AIKernel.getInstance().planBest(context, defaultDecision);
-		
-		return new Score(decision);
-
-	}
 
 	@Override
-	protected Score worstForThreaded(final Field field) {
+	protected Decision worstForThreaded(final Field field) {
 		ShapeType omit = null;
 		if(recent.size() > 0) {
 			omit = recent.get(0);
@@ -99,36 +64,34 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		DecisionModifier decisionModifier = new DecisionModifier() {
 			@Override
 			public void modifyPlannedDecision(Context context, Decision decision) {
-				Score s = new Score(decision);
-				AngelRandomizer.this.permuteScore(s);
-				decision.score = s.score;
+				AngelRandomizer.this.permuteDecision(decision);
 			}
 		};
 		final Context context = new Context(decisionModifier, field, depth);
 		context.omit = omit;
 
-		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
+		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
 		for(final ShapeType type : ShapeType.values()) {
 			if(type == omit)
 				continue;
-			futures.add(EXECUTOR.submit(new Callable<Score>() {
+			futures.add(EXECUTOR.submit(new Callable<Decision>() {
 				@Override
-				public Score call() throws Exception {
+				public Decision call() throws Exception {
 					
 					Decision best = AIKernel.getInstance().bestFor(context, type);
 					Decision bestPlannable = AIKernel.getInstance().planBest(context.deeper(best.field), best);
-					bestPlannable.type = type;
+					best.deeper = bestPlannable;
 					context.decisionModifier.modifyPlannedDecision(context, bestPlannable);
-					return new Score(bestPlannable);
+					return bestPlannable;
 
 				}
 			}));
 		}
 		
-		double highestScore = Double.POSITIVE_INFINITY;
-		Score worst = null;
-		for(Future<Score> f : futures) {
-			Score score;
+		double highestDecision = Double.POSITIVE_INFINITY;
+		Decision worst = null;
+		for(Future<Decision> f : futures) {
+			Decision score;
 			try {
 				score = f.get();
 			} catch(InterruptedException ie) {
@@ -136,9 +99,9 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 			} catch(ExecutionException ee) {
 				throw new RuntimeException(ee);
 			}
-			if(score.score < highestScore) {
+			if(score.score < highestDecision) {
 				worst = score;
-				highestScore = score.score;
+				highestDecision = score.score;
 			}
 		}
 		
@@ -148,14 +111,14 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 	}
 
 	@Override
-	protected void permuteScore(Score typeScore) {
-		if(typeScore.score == Double.POSITIVE_INFINITY)
+	protected void permuteDecision(Decision typeDecision) {
+		if(typeDecision.score == Double.POSITIVE_INFINITY)
 			return;
-		typeScore.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
+		typeDecision.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
 		if(fair)
-			typeScore.score *= (distribution + distAdjustment) / (double) typeCounts[typeScore.shape.type().ordinal()];
-		if(typeScore.shape.type() == ShapeType.O) {
-			typeScore.score += 0.2 * Math.abs(typeScore.score);
+			typeDecision.score *= (distribution + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		if(typeDecision.type == ShapeType.O) {
+			typeDecision.score += 0.2 * Math.abs(typeDecision.score);
 		}
 	}
 	

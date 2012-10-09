@@ -24,9 +24,7 @@ import javax.swing.SwingConstants;
 import org.eviline.AngelRandomizer;
 import org.eviline.BipolarRandomizer;
 import org.eviline.Field;
-import org.eviline.MaliciousBagRandomizer;
 import org.eviline.MaliciousRandomizer;
-import org.eviline.MyndziRandomizer;
 import org.eviline.PropertySource;
 import org.eviline.RandomizerFactory;
 import org.eviline.ThreadedMaliciousRandomizer;
@@ -46,10 +44,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	protected JButton worst = new JButton("Sadistic");;
 	protected JButton evil = new JButton("Evil");
 	protected JButton normal = new JButton("Aggressive");
-	protected JButton easy = new JButton("Rude");
 	protected JButton angelic = new JButton("Angelic");
 	protected JButton bipolarPreset = new JButton("Bipolar");
-	protected JButton myndziPreset = new JButton("myndzi");
 
 	protected Properties props;
 
@@ -68,23 +64,15 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		malicious.setForeground(Color.BLACK); malicious.setBackground(Color.WHITE); 
 		malicious.setPreferredSize(new Dimension(80, malicious.getPreferredSize().height));
 		
-		final JRadioButton bag = new JRadioButton("Bag"); 
-		bag.setForeground(Color.BLACK); bag.setBackground(Color.WHITE);
-		bag.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
-		
 		final JRadioButton angel = new JRadioButton("Angel");
 		angel.setForeground(Color.BLACK); angel.setBackground(Color.WHITE);
-		angel.setPreferredSize(new Dimension(80, bag.getPreferredSize().height));
+		angel.setPreferredSize(new Dimension(80, angel.getPreferredSize().height));
 		
 		final JRadioButton bipolar = new JRadioButton("Bipolar"); 
 		bipolar.setForeground(Color.BLACK); bipolar.setBackground(Color.WHITE); 
 		bipolar.setPreferredSize(new Dimension(80, bipolar.getPreferredSize().height));
 		
-		final JRadioButton myndzi = new JRadioButton("myndzi"); 
-		myndzi.setForeground(Color.BLACK); myndzi.setBackground(Color.WHITE); 
-		myndzi.setPreferredSize(new Dimension(80, myndzi.getPreferredSize().height));
-
-		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(bag); g.add(angel); g.add(bipolar); g.add(myndzi);
+		ButtonGroup g = new ButtonGroup(); g.add(malicious); g.add(angel); g.add(bipolar);
 		
 		final JRadioButton fair = new JRadioButton("Fair"); 
 		fair.setForeground(Color.BLACK); fair.setBackground(Color.WHITE); 
@@ -124,18 +112,12 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 				setParameter("fair", "" + fair.isSelected());
 				setParameter("adaptive", "" + adaptive.isSelected());
 				setParameter("concurrent", "" + concurrent.isSelected());
-				if(bag.isSelected())
-//					RandomizerFactory.setClazz(MaliciousBagRandomizer.class);
-					setParameter("class", MaliciousBagRandomizer.class.getName());
-				else if(angel.isSelected())
+				if(angel.isSelected())
 //					RandomizerFactory.setClazz(AngelRandomizer.class);
 					setParameter("class", AngelRandomizer.class.getName());
 				else if(bipolar.isSelected())
 //					RandomizerFactory.setClazz(BipolarRandomizer.class);
 					setParameter("class", BipolarRandomizer.class.getName());
-				else if(myndzi.isSelected())
-//					RandomizerFactory.setClazz(MyndziRandomizer.class);
-					setParameter("class", MyndziRandomizer.class.getName());
 				else
 //					RandomizerFactory.setClazz(ThreadedMaliciousRandomizer.class);
 					setParameter("class", ThreadedMaliciousRandomizer.class.getName());
@@ -207,27 +189,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			}
 		});
 		
-		easy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(!DifficultyPanel.this.isEnabled())
-					return;
-				bag.setSelected(true);
-				depth.setText("4");
-				rfactor.setText("5");
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				fair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("3");
-				adaptive.setEnabled(false);
-				adaptive.setSelected(false);
-				set.doClick();
-				provText.setText("Rude");
-				setProvider();
-			}
-		});
-		
 		angelic.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -268,27 +229,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			}
 		});
 
-		myndziPreset.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				myndzi.setSelected(true);
-				depth.setText("3");
-				rfactor.setText("0");
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				unfair.setSelected(true);
-				distribution.setEnabled(true);
-				distribution.setText("2");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(false);
-				concurrent.setSelected(true);
-				set.doClick();
-				provText.setText("myndzi");
-				setProvider();
-			}
-		});
-
-		
 		malicious.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -298,15 +238,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			}
 		});
 		
-		bag.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fair.setEnabled(false);
-				unfair.setEnabled(false);
-				adaptive.setEnabled(false);
-			}
-		});
-				
 		fair.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -358,10 +289,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		presets.add(worst, c); 
 		c.gridx++; presets.add(evil, c);
 		c.gridx++; presets.add(normal, c);
-		c.gridx++; presets.add(easy, c);
 		c.gridx = 0; c.gridy++; presets.add(angelic, c);
 		c.gridx++; presets.add(bipolarPreset, c);
-		c.gridx++; presets.add(myndziPreset, c);
 		
 		c.gridx = 0; c.gridy = 0; add(presets, c);
 		
@@ -369,8 +298,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		JPanel details = new JPanel(new GridLayout(0, 2)); details.setBackground(Color.WHITE);
 		
 		details.add(l = new JLabel("Randomizer:")); details.add(malicious); l.setForeground(Color.BLACK);
-		details.add(new JLabel("")); details.add(bag); details.add(new JLabel("")); details.add(angel);
-		details.add(new JLabel("")); details.add(bipolar); details.add(new JLabel("")); details.add(myndzi);
+		details.add(new JLabel("")); details.add(angel);
+		details.add(new JLabel("")); details.add(bipolar);
 		
 		details.add(l = new JLabel("Distribution:")); details.add(unfair); l.setForeground(Color.BLACK);
 		details.add(new JLabel("")); details.add(fair);
@@ -426,10 +355,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		worst.setEnabled(enabled);
 		evil.setEnabled(enabled);
 		normal.setEnabled(enabled);
-		easy.setEnabled(enabled);
 		angelic.setEnabled(enabled);
 		bipolarPreset.setEnabled(enabled);
-		myndziPreset.setEnabled(enabled);
 		
 	}
 	

@@ -34,8 +34,8 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			return type.starter();
 		}
 		field = field.copyInto(new Field());
-		Score score = decideThreaded(field);
-		Shape shape = score.shape;
+		Decision decision = decideThreaded(field);
+		Shape shape = decision.type.starter();
 //		taunt = score.taunt;
 		recent.add(shape.type());
 		while(recent.size() > HISTORY_SIZE)
@@ -50,11 +50,11 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		return MaliciousRandomizer.class.getName();
 	}
 
-	protected Score decideThreaded(Field field) {
+	protected Decision decideThreaded(Field field) {
 		return worstForThreaded(field);
 	}
 	
-	protected Score worstForThreaded(final Field field) {
+	protected Decision worstForThreaded(final Field field) {
 		ShapeType omit = null;
 		if(recent.size() > 0) {
 			omit = recent.get(0);
@@ -67,36 +67,33 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		DecisionModifier decisionModifier = new DecisionModifier() {
 			@Override
 			public void modifyPlannedDecision(Context context, Decision decision) {
-				Score s = new Score(decision);
-				ThreadedMaliciousRandomizer.this.permuteScore(s);
-				decision.score = s.score;
+				ThreadedMaliciousRandomizer.this.permuteDecision(decision);
 			}
 		};
 		final Context context = new Context(decisionModifier, field, depth);
 		
-		Collection<Future<Score>> futures = new ArrayList<Future<Score>>();
+		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
 		for(final ShapeType type : ShapeType.values()) {
 			if(type == omit)
 				continue;
-			futures.add(EXECUTOR.submit(new Callable<Score>() {
+			futures.add(EXECUTOR.submit(new Callable<Decision>() {
 				@Override
-				public Score call() throws Exception {
+				public Decision call() throws Exception {
 					
 					Decision best = AIKernel.getInstance().bestFor(context, type);
 					Decision worstPlannable = AIKernel.getInstance().planWorst(context.deeper(best.field), best);
-					worstPlannable.type = type;
+					best.deeper = worstPlannable;
 					context.decisionModifier.modifyPlannedDecision(context, worstPlannable);
-					Score score = new Score(worstPlannable);
-					return score;
+					return best;
 					
 				}
 			}));
 		}
 		
-		double highestScore = Double.NEGATIVE_INFINITY;
-		Score worst = null;
-		for(Future<Score> f : futures) {
-			Score score;
+		double highestDecision = Double.NEGATIVE_INFINITY;
+		Decision worst = null;
+		for(Future<Decision> f : futures) {
+			Decision score;
 			try {
 				score = f.get();
 			} catch(InterruptedException ie) {
@@ -104,9 +101,9 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 			} catch(ExecutionException ee) {
 				throw new RuntimeException(ee);
 			}
-			if(score.score > highestScore) {
+			if(score.score > highestDecision) {
 				worst = score;
-				highestScore = score.score;
+				highestDecision = score.score;
 			}
 		}
 		
