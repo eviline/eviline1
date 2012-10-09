@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eviline.MaliciousRandomizer;
+import org.eviline.randomizer.MaliciousRandomizer;
 
 public class ClientSocketFactory {
 	protected String server;

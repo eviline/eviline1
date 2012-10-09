@@ -21,13 +21,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import org.eviline.AngelRandomizer;
-import org.eviline.BipolarRandomizer;
 import org.eviline.Field;
-import org.eviline.MaliciousRandomizer;
 import org.eviline.PropertySource;
-import org.eviline.RandomizerFactory;
-import org.eviline.ThreadedMaliciousRandomizer;
+import org.eviline.randomizer.AngelRandomizer;
+import org.eviline.randomizer.BipolarRandomizer;
+import org.eviline.randomizer.MaliciousRandomizer;
+import org.eviline.randomizer.RandomizerFactory;
+import org.eviline.randomizer.ThreadedMaliciousRandomizer;
 import org.eviline.sounds.TetrevilMusicListener;
 import org.eviline.sounds.TetrevilSoundListener;
 import org.eviline.sounds.TetrevilSounds;

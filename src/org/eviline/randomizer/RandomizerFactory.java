@@ -1,5 +1,7 @@
-package org.eviline;
+package org.eviline.randomizer;
 
+import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.runner.MainApplet;
 
 /**

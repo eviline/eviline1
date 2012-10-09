@@ -1,4 +1,4 @@
-package org.eviline;
+package org.eviline.randomizer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.eviline.AIKernel;
+import org.eviline.Field;
+import org.eviline.Shape;
+import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
 import org.eviline.AIKernel.Decision;
 import org.eviline.AIKernel.DecisionModifier;

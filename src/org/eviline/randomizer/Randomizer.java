@@ -1,4 +1,7 @@
-package org.eviline;
+package org.eviline.randomizer;
+
+import org.eviline.Field;
+import org.eviline.Shape;
 
 /**
  * Interface for objects which can provide {@link Shape}s to a {@link Field}.

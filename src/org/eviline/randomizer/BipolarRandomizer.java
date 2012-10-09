@@ -1,4 +1,7 @@
-package org.eviline;
+package org.eviline.randomizer;
+
+import org.eviline.Field;
+import org.eviline.Shape;
 
 public class BipolarRandomizer extends MaliciousRandomizer {
 	protected AngelRandomizer angelic;

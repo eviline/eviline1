@@ -5,9 +5,9 @@ import java.io.ObjectInputStream;
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
-import org.eviline.ConcurrentShapeProvider;
 import org.eviline.Field;
-import org.eviline.Randomizer;
+import org.eviline.randomizer.ConcurrentShapeProvider;
+import org.eviline.randomizer.Randomizer;
 import org.eviline.swing.TetrevilTable;
 
 public class TetrevilTableReceiver extends TetrevilTable implements Runnable {

@@ -23,10 +23,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.eviline.Field;
-import org.eviline.MaliciousRandomizer;
 import org.eviline.Version;
 import org.eviline.event.TetrevilAdapter;
 import org.eviline.event.TetrevilEvent;
+import org.eviline.randomizer.MaliciousRandomizer;
 import org.eviline.wobj.WebScore;
 
 public class TetrevilFrame extends JFrame {

@@ -1,4 +1,4 @@
-package org.eviline;
+package org.eviline.randomizer;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -6,6 +6,10 @@ import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
+import org.eviline.AIKernel;
+import org.eviline.Field;
+import org.eviline.Shape;
+import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
 import org.eviline.AIKernel.Decision;
 

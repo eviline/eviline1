@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eviline.Field;
-import org.eviline.MaliciousRandomizer;
+import org.eviline.randomizer.MaliciousRandomizer;
 
 /**
  * A score that gets submitted to the tetrevil score server

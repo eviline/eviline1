@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
 
-import org.eviline.MaliciousRandomizer;
+import org.eviline.randomizer.MaliciousRandomizer;
 
 public class HostSocketFactory {
 	protected String server;

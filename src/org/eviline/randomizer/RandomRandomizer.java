@@ -1,6 +1,9 @@
-package org.eviline;
+package org.eviline.randomizer;
 
 import java.io.Serializable;
+
+import org.eviline.Field;
+import org.eviline.Shape;
 
 /**
  * {@link Randomizer} that chooses at random, not using a bag.

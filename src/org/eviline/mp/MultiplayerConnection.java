@@ -11,9 +11,9 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import org.eviline.ConcurrentShapeProvider;
 import org.eviline.event.TetrevilAdapter;
 import org.eviline.event.TetrevilEvent;
+import org.eviline.randomizer.ConcurrentShapeProvider;
 import org.eviline.swing.TetrevilFrame;
 
 public class MultiplayerConnection {
