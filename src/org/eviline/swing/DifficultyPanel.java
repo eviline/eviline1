@@ -9,8 +9,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -301,5 +303,15 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			setParameter("class", BipolarRandomizer.class.getName());
 		else
 			setParameter("class", ThreadedMaliciousRandomizer.class.getName());
+	}
+
+	@Override
+	public String put(String key, String value) {
+		return (String) props.put(key, value);
+	}
+
+	@Override
+	public Set<String> keys() {
+		return props.stringPropertyNames();
 	}
 }

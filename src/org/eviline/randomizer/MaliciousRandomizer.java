@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Random;
 
 import org.eviline.AIKernel;
+import org.eviline.ExtendedPropertySource;
 import org.eviline.Field;
 import org.eviline.Fitness;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
@@ -28,11 +30,45 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
-	protected int depth = 3;
-	protected double rfactor = 0.05;
-	protected boolean fair = false;
-	protected int distribution = 100;
-	protected boolean adaptive = false;
+	public static class MaliciousRandomizerProperties extends ExtendedPropertySource {
+		public static final String DEPTH = "depth";
+		public static final String RFACTOR = "rfactor";
+		public static final String FAIR = "fair";
+		public static final String DISTRIBUTION = "distribution";
+		public static final String ADAPTIVE = "adaptive";
+		
+		public MaliciousRandomizerProperties(PropertySource p) {
+			super(p);
+		}
+		
+		public int depth() {
+			return getInt(DEPTH);
+		}
+		
+		public double rfactor() {
+			return getDouble(RFACTOR);
+		}
+		
+		public boolean fair() {
+			return getBoolean(FAIR);
+		}
+		
+		public int distribution() {
+			return getInt(DISTRIBUTION);
+		}
+		
+		public boolean adaptive() {
+			return getBoolean(ADAPTIVE);
+		}
+	}
+	
+	protected MaliciousRandomizerProperties config;
+	
+	public int depth() { return config.depth(); }
+	public double rfactor() { return config.rfactor(); }
+	public boolean fair() { return config.fair(); }
+	public int distribution() { return config.distribution(); }
+	public boolean adaptive() { return config.adaptive(); }
 	
 	protected boolean randomFirst = true;
 	
@@ -44,22 +80,10 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	
 	protected transient String taunt = "";
 	
-	protected TetrevilListener adaptiveListener = new TetrevilAdapter() {
-		@Override
-		public void linesCleared(TetrevilEvent e) {
-			adjustDistribution(e.getLines());
-		}
-	};
-
-	public MaliciousRandomizer() {
-		this(DEFAULT_DEPTH, DEFAULT_DIST);
-	}
-	
-	public MaliciousRandomizer(int depth, int distribution) {
-		this.depth = depth;
-		this.distribution = distribution;
+	public MaliciousRandomizer(PropertySource p) {
+		config = new MaliciousRandomizerProperties(p);
 		for(int i = 0; i < typeCounts.length; i++) {
-			typeCounts[i] = distribution;
+			typeCounts[i] = distribution();
 		}
 	}
 	
@@ -70,7 +94,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	
 	@Override
 	public String toString() {
-		return "mal, d=" + depth +", rf=" + (int)(100 * rfactor) + "%, f=" + fair + ", ds=" + distribution;
+		return "mal, d=" + depth() +", rf=" + (int)(100 * rfactor()) + "%, f=" + fair() + ", ds=" + distribution();
 	}
 	
 	@Override
@@ -121,7 +145,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				permuteDecision(decision);
 			}
 		};
-		Context context = new Context(decisionModifier, field, this.depth - depth);
+		Context context = new Context(decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
@@ -134,69 +158,14 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	protected void permuteDecision(Decision typeDecision) {
 		if(typeDecision.score == Double.POSITIVE_INFINITY || typeDecision.score == Double.NEGATIVE_INFINITY)
 			return;
-		typeDecision.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-		if(fair)
-			typeDecision.score *= (distribution + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		typeDecision.score *= 1 + rfactor() - 2 * rfactor() * random.nextDouble();
+		if(fair())
+			typeDecision.score *= (distribution() + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
 		if(typeDecision.type == ShapeType.O) {
 			typeDecision.score -= 0.2 * Math.abs(typeDecision.score);
 		}
 	}
 	
-
-	public double getRfactor() {
-		return rfactor;
-	}
-
-	public void setRfactor(double rfactor) {
-		this.rfactor = rfactor;
-	}
-
-	public int getDepth() {
-		return depth;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-//		cache = new Cache();
-	}
-
-	public boolean isFair() {
-		return fair;
-	}
-
-	public void setFair(boolean fair) {
-		this.fair = fair;
-	}
-
-	public int getDistribution() {
-		return distribution;
-	}
-
-	public boolean isAdaptive() {
-		return adaptive;
-	}
-
-	public void setAdaptive(Field field, boolean adaptive) {
-		if(this.adaptive != adaptive) {
-			if(adaptive)
-				field.addTetrevilListener(adaptiveListener);
-			else
-				field.removeTetrevilListener(adaptiveListener);
-		}
-		this.adaptive = adaptive;
-	}
-	
-	public void adjustDistribution(int adjustment) {
-		for(int i = 0; i < typeCounts.length; i++) {
-			typeCounts[i] += adjustment;
-		}
-		distAdjustment += adjustment;
-	}
-	
-	@Override
-	public MaliciousRandomizer getMaliciousRandomizer() {
-		return this;
-	}
 
 	public Random getRandom() {
 		return random;
@@ -204,5 +173,10 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 
 	public void setRandom(Random random) {
 		this.random = random;
+	}
+	
+	@Override
+	public PropertySource config() {
+		return config;
 	}
 }

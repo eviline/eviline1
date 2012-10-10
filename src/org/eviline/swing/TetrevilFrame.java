@@ -196,7 +196,6 @@ public class TetrevilFrame extends JFrame {
 		WebScore highScore = new WebScore(field);
 		highScore.setScore(0);
 		highScore.setName("[nobody]");
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider().getMaliciousRandomizer();
 		try {
 			WebScore ws = highScore.highScore(getParameter("score_host"));
 			if(ws != null)

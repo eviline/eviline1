@@ -1,6 +1,8 @@
 package org.eviline.randomizer;
 
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eviline.Field;
 import org.eviline.PropertySource;
@@ -45,5 +47,15 @@ public enum RandomizerPresets implements PropertySource {
 	
 	public Randomizer newRandomizer(Field field) {
 		return new RandomizerFactory(field).newRandomizer(this);
+	}
+
+	@Override
+	public String put(String key, String value) {
+		throw new UnsupportedOperationException("presets are read only");
+	}
+
+	@Override
+	public Set<String> keys() {
+		return props.stringPropertyNames();
 	}
 }

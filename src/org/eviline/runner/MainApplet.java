@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -866,5 +868,17 @@ public class MainApplet extends JApplet implements PropertySource {
 	@Override
 	public String get(String key) {
 		return getParameter(key);
+	}
+
+	@Override
+	public String put(String key, String value) {
+		String ret = get(key);
+		setParameter(key, value);
+		return ret;
+	}
+
+	@Override
+	public Set<String> keys() {
+		return parameters.keySet();
 	}
 }

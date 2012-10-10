@@ -2,12 +2,14 @@ package org.eviline.randomizer;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.Properties;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import org.eviline.AIKernel;
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
@@ -82,8 +84,8 @@ public class ConcurrentDelegatingRandomizer implements Randomizer, Serializable 
 	}
 
 	@Override
-	public MaliciousRandomizer getMaliciousRandomizer() {
-		return provider.getMaliciousRandomizer();
+	public PropertySource config() {
+		return provider.config();
 	}
 
 	private static Field bestDrop(Field field, ShapeType type) {

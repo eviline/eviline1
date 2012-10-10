@@ -1,6 +1,9 @@
 package org.eviline.randomizer;
 
+import java.util.Properties;
+
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 
 /**
@@ -18,7 +21,7 @@ public interface Randomizer {
 	
 	public String getRandomizerName();
 	
-	public MaliciousRandomizer getMaliciousRandomizer();
-	
 	public String getTaunt();
+	
+	public PropertySource config();
 }
