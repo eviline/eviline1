@@ -46,7 +46,7 @@ public enum KickTable {
 	 */
 	public static KickTable forShape(ShapeType type, ShapeDirection start, ShapeDirection end) {
 		String prefix = (type == ShapeType.I ? "I" : "");
-		String name = prefix + start + "_" + end;
+		String name = prefix + start.name() + "_" + end.name();
 		try {
 			return KickTable.valueOf(name);
 		} catch(IllegalArgumentException e) {
