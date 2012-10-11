@@ -39,16 +39,32 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 			return get(DEPTH) == null ? 3 : getInt(DEPTH);
 		}
 		
+		public void depth(int depth) {
+			putInt(DEPTH, depth);
+		}
+		
 		public double rfactor() {
 			return get(RFACTOR) == null ? 0.05 : getDouble(RFACTOR);
+		}
+		
+		public void rfactor(double rfactor) {
+			putDouble(RFACTOR, rfactor);
 		}
 		
 		public boolean fair() {
 			return get(FAIR) == null ? true : getBoolean(FAIR);
 		}
 		
+		public void fair(boolean fair) {
+			putBoolean(FAIR, fair);
+		}
+		
 		public int distribution() {
 			return get(DISTRIBUTION) == null ? 30 : getInt(DISTRIBUTION);
+		}
+		
+		public void distribution(int distribution) {
+			putInt(DISTRIBUTION, distribution);
 		}
 	}
 	
