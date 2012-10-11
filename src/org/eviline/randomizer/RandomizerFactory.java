@@ -13,6 +13,7 @@ import org.eviline.runner.MainApplet;
  *
  */
 public class RandomizerFactory {
+	public static final String CLASS = "class";
 	public static final String DEPTH = "depth";
 	public static final String RFACTOR = "rfactor";
 	public static final String FAIR = "fair";
@@ -23,7 +24,7 @@ public class RandomizerFactory {
 		ExtendedPropertySource eps = new ExtendedPropertySource(props);
 		Randomizer ret;
 		try {
-			String className = props.get("class");
+			String className = props.get(CLASS);
 			if(className == null)
 				className = MaliciousRandomizer.class.getName();
 			Class<? extends Randomizer> clazz = Class.forName(className).asSubclass(Randomizer.class);

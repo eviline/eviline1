@@ -38,6 +38,8 @@ import org.eviline.sounds.TetrevilMusicListener;
 import org.eviline.sounds.TetrevilSoundListener;
 import org.eviline.sounds.TetrevilSounds;
 
+import static org.eviline.randomizer.RandomizerFactory.*;
+
 public class DifficultyPanel extends JPanel implements PropertySource {
 	protected Field field;
 	protected JLabel provText = new JLabel("Aggressive");
@@ -63,7 +65,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	protected JTextField rfactor = new JTextField(new IntegerDocument(), "", 5);
 	protected JTextField distribution = new JTextField(new IntegerDocument(), "", 5);
 
-	protected JCheckBox adaptive = new JCheckBox("Adaptive dist"); 
 	protected JCheckBox concurrent = new JCheckBox("Concurrent"); 
 	protected JCheckBox music = new JCheckBox("Music");
 	protected JCheckBox sounds = new JCheckBox("Sounds");
@@ -91,8 +92,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
-		
-		adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE);
 		
 		concurrent.setForeground(Color.BLACK); concurrent.setBackground(Color.WHITE);
 
@@ -129,7 +128,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				distribution.setEnabled(fair.isSelected());
-				adaptive.setEnabled(fair.isSelected());
 			}
 		});
 		
@@ -137,7 +135,6 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				distribution.setEnabled(!unfair.isSelected());
-				adaptive.setEnabled(!unfair.isSelected());
 			}
 		});
 		
@@ -198,7 +195,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
-		details.add(concurrent); details.add(adaptive);
+		details.add(concurrent); details.add(new JLabel(""));
 		details.add(music); details.add(sounds);
 		
 		
@@ -276,33 +273,31 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	}
 	
 	public void updateFields() {
-		depth.setText(nnget("depth"));
-		rfactor.setText("" + (int)(100 * Double.parseDouble(nnget("rfactor"))));
-		distribution.setText(nnget("distribution"));
-		fair.setSelected("true".equals(get("fair")));
-		adaptive.setSelected("true".equals(get("adaptive")));
-		concurrent.setSelected("true".equals(get("concurrent")));
-		if(AngelRandomizer.class.getName().equals(get("class")))
+		depth.setText(nnget(DEPTH));
+		rfactor.setText("" + (int)(100 * Double.parseDouble(nnget(RFACTOR))));
+		distribution.setText(nnget(DISTRIBUTION));
+		fair.setSelected("true".equals(get(FAIR)));
+		concurrent.setSelected("true".equals(get(CONCURRENT)));
+		if(AngelRandomizer.class.getName().equals(get(CLASS)))
 			angel.setSelected(true);
-		else if(BipolarRandomizer.class.getName().equals(get("class")))
+		else if(BipolarRandomizer.class.getName().equals(get(CLASS)))
 			bipolar.setSelected(true);
 		else
 			malicious.setSelected(true);
 	}
 	
 	public void updateProperties() {
-		setParameter("depth", depth.getText());
-		setParameter("rfactor", "" + Double.parseDouble(rfactor.getText()) / 100);
-		setParameter("distribution", distribution.getText());
-		setParameter("fair", "" + fair.isSelected());
-		setParameter("adaptive", "" + adaptive.isSelected());
-		setParameter("concurrent", "" + concurrent.isSelected());
+		setParameter(DEPTH, depth.getText());
+		setParameter(RFACTOR, "" + Double.parseDouble(rfactor.getText()) / 100);
+		setParameter(DISTRIBUTION, distribution.getText());
+		setParameter(FAIR, "" + fair.isSelected());
+		setParameter(CONCURRENT, "" + concurrent.isSelected());
 		if(angel.isSelected())
-			setParameter("class", AngelRandomizer.class.getName());
+			setParameter(CLASS, AngelRandomizer.class.getName());
 		else if(bipolar.isSelected())
-			setParameter("class", BipolarRandomizer.class.getName());
+			setParameter(CLASS, BipolarRandomizer.class.getName());
 		else
-			setParameter("class", ThreadedMaliciousRandomizer.class.getName());
+			setParameter(CLASS, ThreadedMaliciousRandomizer.class.getName());
 	}
 
 	@Override
