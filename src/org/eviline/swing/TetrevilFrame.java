@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.Version;
 import org.eviline.event.TetrevilAdapter;
@@ -126,7 +127,7 @@ public class TetrevilFrame extends JFrame {
 		kl = tc.getTetrevilKeyListener();
 		setKeysFromParams();
 		tkp = new TetrevilKeyPanel(kl);
-		dp = new DifficultyPanel(field, parameters);
+		dp = new DifficultyPanel(field, new BasicPropertySource(parameters));
 		center.setBackground(Color.WHITE);
 		center.setOpaque(true);
 		

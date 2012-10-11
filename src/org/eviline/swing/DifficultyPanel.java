@@ -26,6 +26,8 @@ import javax.swing.SwingConstants;
 
 import org.eviline.Field;
 import org.eviline.PropertySource;
+import org.eviline.event.TetrevilAdapter;
+import org.eviline.event.TetrevilEvent;
 import org.eviline.randomizer.AngelRandomizer;
 import org.eviline.randomizer.BipolarRandomizer;
 import org.eviline.randomizer.RandomizerFactory;
@@ -49,7 +51,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	
 	protected List<JButton> presetButtons = new ArrayList<JButton>();
 	
-	protected Properties props;
+	protected PropertySource props;
 
 	protected JRadioButton malicious = new JRadioButton("Malicious"); 
 	protected JRadioButton angel = new JRadioButton("Angel");
@@ -68,7 +70,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	protected JCheckBox music = new JCheckBox("Music");
 	protected JCheckBox sounds = new JCheckBox("Sounds");
 
-	public DifficultyPanel(Field f, Properties props) {
+	public DifficultyPanel(Field f, PropertySource props) {
 		super(new GridBagLayout());
 		this.field = f;
 		this.props = props;
@@ -106,6 +108,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 				if(!DifficultyPanel.this.isEnabled())
 					return;
 				updateProperties();
+				provText.setText(field.getProvider().toString());
 				setProvider();
 			}
 		});
@@ -114,10 +117,12 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			JButton b = new JButton(new AbstractAction(preset.getName()) {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					DifficultyPanel.this.props.putAll(preset.getProperties());
+//					DifficultyPanel.this.props.putAll(preset.getProperties());
+					for(String key : preset.keys())
+						DifficultyPanel.this.props.put(key, preset.get(key));
 					updateFields();
-					setProvider();
 					provText.setText(preset.getName());
+					setProvider();
 				}
 			});
 			presetButtons.add(b);
@@ -212,6 +217,13 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			music.doClick();
 		if("true".equals(getParameter("sounds")))
 			sounds.doClick();
+		
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void gameReset(TetrevilEvent e) {
+				setProvider();
+			}
+		});
 	}
 	
 	public void addActionListener(ActionListener l) {
@@ -245,16 +257,15 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	
 	public void setProvider() {
 		field.setProvider(new RandomizerFactory().newRandomizer(this));
-		provText.setText(field.getProvider().toString());
 		fireActionPerformed("difficulty");
 	}
 	
 	protected void setParameter(String key, String value) {
-		props.setProperty(key, value);
+		props.put(key, value);
 	}
 	
 	protected String getParameter(String key) {
-		return props.getProperty(key);
+		return props.get(key);
 	}
 
 	@Override
@@ -309,6 +320,10 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 
 	@Override
 	public Set<String> keys() {
-		return props.stringPropertyNames();
+		return props.keys();
+	}
+
+	public String getProvText() {
+		return provText.getText();
 	}
 }
