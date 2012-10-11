@@ -6,7 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
 
 import org.eviline.Field;
-import org.eviline.randomizer.ConcurrentDelegatingRandomizer;
+import org.eviline.randomizer.ConcurrentRandomizer;
 import org.eviline.randomizer.Randomizer;
 import org.eviline.swing.TetrevilTable;
 
@@ -58,7 +58,7 @@ public class TetrevilTableReceiver extends TetrevilTable implements Runnable {
 				}
 				if(obj instanceof Randomizer) {
 					local.setProvider((Randomizer) obj);
-					local.setProvider(new ConcurrentDelegatingRandomizer(local.getProvider()));
+					local.setProvider(new ConcurrentRandomizer(local.getProvider()));
 				}
 			}
 		} catch(Exception ex) {

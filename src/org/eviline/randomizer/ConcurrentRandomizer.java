@@ -22,7 +22,7 @@ import org.eviline.AIKernel.Decision;
  * @author robin
  *
  */
-public class ConcurrentDelegatingRandomizer implements Randomizer, Serializable {
+public class ConcurrentRandomizer implements Randomizer, Serializable {
 
 	protected Randomizer provider;
 
@@ -32,7 +32,7 @@ public class ConcurrentDelegatingRandomizer implements Randomizer, Serializable 
 
 	protected transient String taunt;
 
-	public ConcurrentDelegatingRandomizer(Randomizer p) {
+	public ConcurrentRandomizer(Randomizer p) {
 		this.provider = p;
 	}
 

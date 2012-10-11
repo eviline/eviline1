@@ -32,7 +32,7 @@ public class RandomizerFactory {
 			throw new RuntimeException(ex);
 		}
 		if(eps.get(CONCURRENT) == null ? false : eps.getBoolean(CONCURRENT))
-			ret = new ConcurrentDelegatingRandomizer(ret);
+			ret = new ConcurrentRandomizer(ret);
 		return ret;
 	}
 }
