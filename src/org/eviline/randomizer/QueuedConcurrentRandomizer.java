@@ -42,14 +42,18 @@ public class QueuedConcurrentRandomizer implements Randomizer {
 					try {
 						while(true) {
 							
-							while(queue.size() < size) {
-								Field best = bestDrop(next, queue);
-								queue.offerLast(provider.provideShape(best).type());
+							synchronized(queue) {
+								while(queue.size() < size) {
+									Field best = bestDrop(next, queue);
+									queue.offerLast(provider.provideShape(best).type());
+								}
 							}
 							
 							Shape shape = queue.peekFirst().starter();
 							next = (Field) exchanger.exchange(shape);
-							queue.pollFirst();
+							synchronized(queue) {
+								queue.pollFirst();
+							}
 						}
 					} catch(InterruptedException ie) {
 					} catch(RuntimeException re) {
@@ -70,9 +74,11 @@ public class QueuedConcurrentRandomizer implements Randomizer {
 
 	@Override
 	public String getTaunt() {
-		StringBuilder sb = new StringBuilder();
-		for(ShapeType type : queue)
-			sb.append(type.name());
+		StringBuilder sb = new StringBuilder(" ");
+		synchronized(queue) {
+			for(ShapeType type : queue)
+				sb.append(type.name());
+		}
 		return sb.toString();
 	}
 
