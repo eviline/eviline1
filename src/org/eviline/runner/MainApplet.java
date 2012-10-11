@@ -62,6 +62,8 @@ import org.eviline.swing.TetrevilKeyPanel;
 import org.eviline.wobj.CookieAccess;
 import org.eviline.wobj.WebScore;
 
+import static org.eviline.randomizer.RandomizerFactory.*;
+
 public class MainApplet extends JApplet implements PropertySource {
 	private static final long serialVersionUID = 0;
 	
@@ -298,7 +300,6 @@ public class MainApplet extends JApplet implements PropertySource {
 		final JTextField rfactor = new JTextField(new IntegerDocument(), "", 5);
 		final JTextField distribution = new JTextField(new IntegerDocument(), "", 5);
 		
-		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE); 
 		final JCheckBox concurrent = new JCheckBox("Concurrent"); concurrent.setBackground(Color.WHITE);
 		
 		final JButton set = new JButton(new AbstractAction("Set") {
@@ -309,12 +310,11 @@ public class MainApplet extends JApplet implements PropertySource {
 					return;
 				setting = true;
 				provText = "Custom";
-				setParameter("depth", depth.getText());
-				setParameter("rfactor", "" + (Double.parseDouble(rfactor.getText()) / 100));
-				setParameter("distribution", distribution.getText());
-				setParameter("fair", "" + fair.isSelected());
-				setParameter("adaptive", "" + adaptive.isSelected());
-				setParameter("concurrent", "" + concurrent.isSelected());
+				setParameter(DEPTH, depth.getText());
+				setParameter(RFACTOR, "" + (Double.parseDouble(rfactor.getText()) / 100));
+				setParameter(DISTRIBUTION, distribution.getText());
+				setParameter(FAIR, "" + fair.isSelected());
+				setParameter(CONCURRENT, "" + concurrent.isSelected());
 				if(angel.isSelected())
 //					RandomizerFactory.setClazz(AngelRandomizer.class);
 					setParameter("class", AngelRandomizer.class.getName());
@@ -371,8 +371,6 @@ public class MainApplet extends JApplet implements PropertySource {
 				unfair.setSelected(true);
 				distribution.setEnabled(false);
 				distribution.setText("30");
-				adaptive.setEnabled(false);
-				adaptive.setSelected(false);
 				concurrent.setSelected(false);
 				set.doClick();
 //				RandomizerFactory.setClazz(RemoteRandomizer.class);
@@ -393,8 +391,6 @@ public class MainApplet extends JApplet implements PropertySource {
 				unfair.setSelected(true);
 				distribution.setEnabled(false);
 				distribution.setText("30");
-				adaptive.setEnabled(false);
-				adaptive.setSelected(false);
 				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Evil";
@@ -413,8 +409,6 @@ public class MainApplet extends JApplet implements PropertySource {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("30");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(true);
 				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Aggressive";
@@ -433,8 +427,6 @@ public class MainApplet extends JApplet implements PropertySource {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("15");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(false);
 				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Angelic";
@@ -453,8 +445,6 @@ public class MainApplet extends JApplet implements PropertySource {
 				fair.setSelected(true);
 				distribution.setEnabled(true);
 				distribution.setText("15");
-				adaptive.setEnabled(true);
-				adaptive.setSelected(false);
 				concurrent.setSelected(true);
 				set.doClick();
 				provText = "Bipolar";
@@ -462,20 +452,10 @@ public class MainApplet extends JApplet implements PropertySource {
 			}
 		});
 
-		malicious.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				fair.setEnabled(true);
-				unfair.setEnabled(true);
-				adaptive.setEnabled(true);
-			}
-		});
-		
 		fair.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				distribution.setEnabled(fair.isSelected());
-				adaptive.setEnabled(fair.isSelected());
 			}
 		});
 		
@@ -483,7 +463,6 @@ public class MainApplet extends JApplet implements PropertySource {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				distribution.setEnabled(!unfair.isSelected());
-				adaptive.setEnabled(!unfair.isSelected());
 			}
 		});
 
@@ -519,7 +498,7 @@ public class MainApplet extends JApplet implements PropertySource {
 		
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
-		details.add(concurrent); details.add(adaptive);
+		details.add(concurrent); details.add(new JLabel(""));
 		
 		c.gridy++; c.weighty = 1; ret.add(details, c);
 
