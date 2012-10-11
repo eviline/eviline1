@@ -6,12 +6,14 @@ import java.util.Set;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 
+import static org.eviline.randomizer.RandomizerFactory.*;
+
 public enum RandomizerPresets implements PropertySource {
-	SADISTIC("Sadistic", ThreadedMaliciousRandomizer.class, "depth=5", "rfactor=0", "fair=false", "distribution=0", "adaptive=false", "concurrent=false"),
-	EVIL("Evil", ThreadedMaliciousRandomizer.class, "depth=3", "rfactor=0", "fair=false", "distribution=0", "adaptive=false", "concurrent=false"),
-	AGGRESSIVE("Aggressive", ThreadedMaliciousRandomizer.class, "depth=3", "rfactor=0.02", "fair=true", "distribution=30", "adaptive=true", "concurrent=true"),
-	ANGELIC("Angelic", AngelRandomizer.class, "depth=3", "rfactor=0.01", "fair=true", "distribution=15", "adaptive=false", "concurrent=true"),
-	BIPOLAR("Bipolar", BipolarRandomizer.class, "depth=3", "rfactor=0.01", "fair=true", "distribution=15", "adaptive=false", "concurrent=true"),
+	SADISTIC("Sadistic", ThreadedMaliciousRandomizer.class, DEPTH+"=5", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false"),
+	EVIL("Evil", ThreadedMaliciousRandomizer.class, DEPTH+"=3", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false"),
+	AGGRESSIVE("Aggressive", ThreadedMaliciousRandomizer.class, DEPTH+"=3", RFACTOR+"=0.02", FAIR+"=true", DISTRIBUTION+"=30", CONCURRENT+"=true"),
+	ANGELIC("Angelic", AngelRandomizer.class, DEPTH+"=3", RFACTOR+"=0.01", FAIR+"=true", DISTRIBUTION+"=15", CONCURRENT+"=true"),
+	BIPOLAR("Bipolar", BipolarRandomizer.class, DEPTH+"=3", RFACTOR+"=0.01", FAIR+"=true", DISTRIBUTION+"=15", CONCURRENT+"=true"),
 	;
 	
 	private String name;
@@ -19,7 +21,7 @@ public enum RandomizerPresets implements PropertySource {
 	
 	private RandomizerPresets(String name, Class<? extends Randomizer> clazz, String... properties) {
 		this.name = name;
-		props.setProperty("class", clazz.getName());
+		props.setProperty(CLASS, clazz.getName());
 		for(String p : properties) {
 			String[] pp = p.split("=", 2);
 			props.setProperty(pp[0], pp[1]);
