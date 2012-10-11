@@ -1,7 +1,6 @@
 package org.eviline.randomizer;
 
 import java.io.ObjectStreamException;
-import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.Exchanger;
@@ -16,23 +15,42 @@ import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
 import org.eviline.AIKernel.Decision;
 
-public class QueuedConcurrentRandomizer implements Randomizer {
+public class QueuedRandomizer implements Randomizer {
 	protected Randomizer provider;
 
-	protected Exchanger<Object> exchanger = new Exchanger<Object>();
-
-	protected RunnableFuture<?> future;
-
+	protected boolean concurrent;
 	protected int size;
 	protected Deque<ShapeType> queue = new ArrayDeque<ShapeType>();
+	
+	protected Exchanger<Object> exchanger = new Exchanger<Object>();
+	protected RunnableFuture<?> future;
 
-	public QueuedConcurrentRandomizer(Randomizer p, int size) {
+	public QueuedRandomizer(Randomizer p, int size, boolean concurrent) {
 		this.provider = p;
 		this.size = size;
+		this.concurrent = concurrent;
+	}
+	
+	@Override
+	public Shape provideShape(Field field) {
+		return concurrent ? concurrentProvideShape(field) : sequentialProvideShape(field);
 	}
 
-	@Override
-	public Shape provideShape(Field f) {
+	public Shape sequentialProvideShape(Field f) {
+		synchronized(queue) {
+			while(queue.size() < size) {
+				Field best = bestDrop(f, queue);
+				queue.offerLast(provider.provideShape(best).type());
+			}
+		}
+		
+		if(size > 0)
+			return queue.pollFirst().starter();
+		else
+			return provider.provideShape(f);
+	}
+	
+	public Shape concurrentProvideShape(Field f) {
 		if(future == null) {
 			final Field initial = f;
 			this.future = new FutureTask<Object>(new Runnable() {
@@ -49,7 +67,11 @@ public class QueuedConcurrentRandomizer implements Randomizer {
 								}
 							}
 							
-							Shape shape = queue.peekFirst().starter();
+							Shape shape;
+							if(size > 0)
+								shape = queue.peekFirst().starter();
+							else
+								shape = provider.provideShape(next);
 							next = (Field) exchanger.exchange(shape);
 							synchronized(queue) {
 								queue.pollFirst();

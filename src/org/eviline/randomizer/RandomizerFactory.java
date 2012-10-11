@@ -18,6 +18,7 @@ public class RandomizerFactory {
 	public static final String FAIR = "fair";
 	public static final String DISTRIBUTION = "distribution";
 	public static final String CONCURRENT = "concurrent";
+	public static final String NEXT = "next";
 	
 	public Randomizer newRandomizer(PropertySource props) {
 		ExtendedPropertySource eps = new ExtendedPropertySource(props);
@@ -31,8 +32,10 @@ public class RandomizerFactory {
 		} catch(Exception ex) {
 			throw new RuntimeException(ex);
 		}
-		if(eps.get(CONCURRENT) == null ? false : eps.getBoolean(CONCURRENT))
-			ret = new ConcurrentRandomizer(ret);
+		boolean concurrency = eps.get(CONCURRENT) == null ? false : eps.getBoolean(CONCURRENT);
+		int nextSize = eps.get(NEXT) == null ? 0 : eps.getInt(NEXT);
+		if(concurrency || nextSize > 0)
+			ret = new QueuedRandomizer(ret, nextSize, concurrency);
 		return ret;
 	}
 }
