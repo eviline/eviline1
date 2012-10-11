@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 
 import org.eviline.AIKernel;
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
@@ -20,11 +21,8 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 	private static final long serialVersionUID = -2530461350140162944L;
 	
-	public ThreadedMaliciousRandomizer() {
-	}
-	
-	public ThreadedMaliciousRandomizer(int depth, int distribution) {
-		super(depth, distribution);
+	public ThreadedMaliciousRandomizer(PropertySource p) {
+		super(p);
 	}
 	
 	@Override
@@ -49,11 +47,6 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		return shape;
 	}
 	
-	@Override
-	public String getRandomizerName() {
-		return MaliciousRandomizer.class.getName();
-	}
-
 	protected Decision decideThreaded(Field field) {
 		return worstForThreaded(field);
 	}
@@ -74,7 +67,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				ThreadedMaliciousRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth);
+		final Context context = new Context(decisionModifier, field, depth());
 		
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
 		for(final ShapeType type : ShapeType.values()) {

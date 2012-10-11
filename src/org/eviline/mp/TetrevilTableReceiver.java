@@ -15,7 +15,7 @@ public class TetrevilTableReceiver extends TetrevilTable implements Runnable {
 	protected Field local;
 	
 	public TetrevilTableReceiver(ObjectInputStream in, Field local) {
-		super(new Field(false));
+		super(new Field());
 		this.in = in;
 		this.local = local;
 		

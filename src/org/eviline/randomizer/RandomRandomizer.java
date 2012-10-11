@@ -3,6 +3,7 @@ package org.eviline.randomizer;
 import java.io.Serializable;
 
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 
 /**
@@ -12,6 +13,12 @@ import org.eviline.Shape;
  */
 public class RandomRandomizer implements Randomizer, Serializable {
 
+	protected PropertySource config;
+	
+	public RandomRandomizer(PropertySource p) {
+		this.config = p;
+	}
+	
 	@Override
 	public Shape provideShape(Field field) {
 		Shape[] shapes = Shape.values();
@@ -19,17 +26,17 @@ public class RandomRandomizer implements Randomizer, Serializable {
 	}
 
 	@Override
-	public String getRandomizerName() {
-		return getClass().getName();
-	}
-	
-	@Override
-	public MaliciousRandomizer getMaliciousRandomizer() {
-		return null;
-	}
-	
-	@Override
 	public String getTaunt() {
 		return "";
+	}
+
+	@Override
+	public PropertySource config() {
+		return config;
+	}
+	
+	@Override
+	public String name() {
+		return getClass().getName();
 	}
 }

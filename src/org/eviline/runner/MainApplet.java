@@ -72,7 +72,7 @@ public class MainApplet extends JApplet implements PropertySource {
 	protected Icon gear = new ImageIcon(getClass().getClassLoader().getResource("org/eviline/images/gear.png"));
 
 	
-	protected Field field = new Field(true);
+	protected Field field = new Field();
 	{{
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
@@ -211,7 +211,7 @@ public class MainApplet extends JApplet implements PropertySource {
 	}
 	
 	protected void setProvider() {
-		field.setProvider(new RandomizerFactory(field).newRandomizer(this));
+		field.setProvider(new RandomizerFactory().newRandomizer(this));
 		provider.setText("Difficulty Settings: " + provText);
 	}
 	
@@ -279,8 +279,6 @@ public class MainApplet extends JApplet implements PropertySource {
 	}
 	
 	protected JPanel createDifficultyPanel() {
-		MaliciousRandomizer p = (MaliciousRandomizer) field.getProvider();
-		
 		final JButton sadistic = new JButton("Sadistic");
 		final JButton evil = new JButton("Evil");
 		final JButton normal = new JButton("Aggressive");
@@ -296,9 +294,9 @@ public class MainApplet extends JApplet implements PropertySource {
 		final JRadioButton unfair = new JRadioButton("Unfair"); unfair.setForeground(Color.BLACK); unfair.setBackground(Color.WHITE); unfair.setPreferredSize(new Dimension(80, unfair.getPreferredSize().height));
 		g = new ButtonGroup(); g.add(fair); g.add(unfair);
 
-		final JTextField depth = new JTextField(new IntegerDocument(), "" + p.getDepth(), 5);
-		final JTextField rfactor = new JTextField(new IntegerDocument(), "" + (int)(100 * p.getRfactor()), 5);
-		final JTextField distribution = new JTextField(new IntegerDocument(), "" + p.getDistribution(), 5);
+		final JTextField depth = new JTextField(new IntegerDocument(), "", 5);
+		final JTextField rfactor = new JTextField(new IntegerDocument(), "", 5);
+		final JTextField distribution = new JTextField(new IntegerDocument(), "", 5);
 		
 		final JCheckBox adaptive = new JCheckBox("Adaptive dist"); adaptive.setForeground(Color.BLACK); adaptive.setBackground(Color.WHITE); 
 		final JCheckBox concurrent = new JCheckBox("Concurrent"); concurrent.setBackground(Color.WHITE);

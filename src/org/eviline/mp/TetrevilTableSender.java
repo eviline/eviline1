@@ -34,7 +34,7 @@ public class TetrevilTableSender extends TetrevilAdapter {
 	}
 	
 	protected void writePartialField(TetrevilEvent e) {
-		Field f = e.getField().copyInto(new Field(false));
+		Field f = e.getField().copyInto(new Field());
 		f.setField(null);
 		f.setProvider(null);
 		try {

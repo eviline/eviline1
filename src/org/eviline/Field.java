@@ -42,7 +42,7 @@ public class Field implements Serializable {
 	/**
 	 * The source of shapes
 	 */
-	protected Randomizer provider = new RandomRandomizer();
+	protected Randomizer provider;
 	/**
 	 * The current shape
 	 */
@@ -103,10 +103,6 @@ public class Field implements Serializable {
 	protected transient EventDispatcher dispatcher = null;
 	
 	public Field() {
-		this(false);
-	}
-	
-	public Field(boolean evil) {
 		for(int y = 0; y < BUFFER; y++) {
 			Arrays.fill(field[y], 0, BUFFER, Block.X);
 //			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
@@ -119,10 +115,6 @@ public class Field implements Serializable {
 		for(int y = field.length - BUFFER; y < field.length; y++) {
 			Arrays.fill(field[y], Block.X);
 		}
-		if(evil)
-			provider = new MaliciousRandomizer();
-		else
-			provider = new RandomRandomizer();
 	}
 	
 	/**

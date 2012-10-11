@@ -247,7 +247,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	}
 	
 	public void setProvider() {
-		field.setProvider(new RandomizerFactory(field).newRandomizer(this));
+		field.setProvider(new RandomizerFactory().newRandomizer(this));
 		provText.setText(field.getProvider().toString());
 		fireActionPerformed("difficulty");
 	}

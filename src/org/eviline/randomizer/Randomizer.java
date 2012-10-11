@@ -19,9 +19,9 @@ public interface Randomizer {
 	 */
 	public Shape provideShape(Field field);
 	
-	public String getRandomizerName();
-	
 	public String getTaunt();
 	
 	public PropertySource config();
+	
+	public String name();
 }

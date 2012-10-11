@@ -46,7 +46,7 @@ public enum RandomizerPresets implements PropertySource {
 	}
 	
 	public Randomizer newRandomizer(Field field) {
-		return new RandomizerFactory(field).newRandomizer(this);
+		return new RandomizerFactory().newRandomizer(this);
 	}
 
 	@Override

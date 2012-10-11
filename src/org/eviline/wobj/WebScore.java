@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.eviline.Field;
 import org.eviline.randomizer.MaliciousRandomizer;
+import org.eviline.randomizer.MaliciousRandomizer.MaliciousRandomizerProperties;
 
 /**
  * A score that gets submitted to the tetrevil score server
@@ -48,15 +49,12 @@ public class WebScore implements Serializable {
 	public WebScore(Field field) {
 		score = field.getLines();
 		ts = new Date();
-		MaliciousRandomizer r = field.getProvider().getMaliciousRandomizer();
-		if(r != null) {
-			depth = r.getDepth();
-			rfactor = r.getRfactor();
-			fair = r.isFair() ? 1 : 0;
-			distribution = r.getDistribution();
-			adaptive = r.isAdaptive() ? 1 : 0;
-		}
-		randomizer = field.getProvider().getRandomizerName();
+		MaliciousRandomizerProperties mp = new MaliciousRandomizerProperties(field.getProvider().config());
+		depth = mp.depth();
+		rfactor = mp.rfactor();
+		fair = mp.fair() ? 1 : 0;
+		distribution = mp.distribution();
+		randomizer = field.getProvider().name();
 	}
 	
 	@Override

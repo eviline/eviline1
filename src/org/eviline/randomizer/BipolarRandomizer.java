@@ -1,21 +1,20 @@
 package org.eviline.randomizer;
 
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 
-public class BipolarRandomizer extends MaliciousRandomizer {
+public class BipolarRandomizer implements Randomizer {
 	protected AngelRandomizer angelic;
 	protected ThreadedMaliciousRandomizer evil;
 	
-	public BipolarRandomizer() {
-		super();
-		angelic = new AngelRandomizer();
-		evil = new ThreadedMaliciousRandomizer();
-	}
-	public BipolarRandomizer(int depth, int distribution) {
-		super(depth, distribution);
-		angelic = new AngelRandomizer(depth, distribution);
-		evil = new ThreadedMaliciousRandomizer(depth, distribution);
+	protected PropertySource config;
+	protected String taunt;
+	
+	public BipolarRandomizer(PropertySource p) {
+		this.config = p;
+		angelic = new AngelRandomizer(p);
+		evil = new ThreadedMaliciousRandomizer(p);
 	}
 	
 	@Override
@@ -31,31 +30,19 @@ public class BipolarRandomizer extends MaliciousRandomizer {
 			return ret;
 		}
 	}
-	
+
 	@Override
-	public void setRfactor(double rfactor) {
-		angelic.setRfactor(rfactor);
-		evil.setRfactor(rfactor);
+	public String getTaunt() {
+		return taunt;
 	}
+
 	@Override
-	public void setDepth(int depth) {
-		angelic.setDepth(depth);
-		evil.setDepth(depth);
-	}
-	@Override
-	public void setFair(boolean fair) {
-		angelic.setFair(fair);
-		evil.setFair(fair);
-	}
-	@Override
-	public void setAdaptive(Field field, boolean adaptive) {
-		angelic.setAdaptive(field, adaptive);
-		evil.setAdaptive(field, adaptive);
+	public PropertySource config() {
+		return config;
 	}
 	
 	@Override
-	public String getRandomizerName() {
+	public String name() {
 		return getClass().getName();
 	}
-	
 }

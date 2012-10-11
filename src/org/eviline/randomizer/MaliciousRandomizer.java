@@ -19,6 +19,8 @@ import org.eviline.event.TetrevilAdapter;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
 
+import static org.eviline.randomizer.RandomizerFactory.*;
+
 /**
  * {@link Randomizer} that looks a few moves ahead in the future to come up with the worst
  * {@link Shape} to return.
@@ -31,12 +33,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int HISTORY_SIZE = 3;
 
 	public static class MaliciousRandomizerProperties extends ExtendedPropertySource {
-		public static final String DEPTH = "depth";
-		public static final String RFACTOR = "rfactor";
-		public static final String FAIR = "fair";
-		public static final String DISTRIBUTION = "distribution";
-		public static final String ADAPTIVE = "adaptive";
-		
 		public MaliciousRandomizerProperties(PropertySource p) {
 			super(p);
 		}
@@ -56,10 +52,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		public int distribution() {
 			return getInt(DISTRIBUTION);
 		}
-		
-		public boolean adaptive() {
-			return getBoolean(ADAPTIVE);
-		}
 	}
 	
 	protected MaliciousRandomizerProperties config;
@@ -68,7 +60,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public double rfactor() { return config.rfactor(); }
 	public boolean fair() { return config.fair(); }
 	public int distribution() { return config.distribution(); }
-	public boolean adaptive() { return config.adaptive(); }
 	
 	protected boolean randomFirst = true;
 	
@@ -85,16 +76,6 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		for(int i = 0; i < typeCounts.length; i++) {
 			typeCounts[i] = distribution();
 		}
-	}
-	
-	@Override
-	public String getRandomizerName() {
-		return getClass().getName();
-	}
-	
-	@Override
-	public String toString() {
-		return "mal, d=" + depth() +", rf=" + (int)(100 * rfactor()) + "%, f=" + fair() + ", ds=" + distribution();
 	}
 	
 	@Override
@@ -178,5 +159,10 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	@Override
 	public PropertySource config() {
 		return config;
+	}
+	
+	@Override
+	public String name() {
+		return getClass().getName();
 	}
 }

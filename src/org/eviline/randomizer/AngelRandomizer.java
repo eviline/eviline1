@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 
 import org.eviline.AIKernel;
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
@@ -17,19 +18,10 @@ import org.eviline.AIKernel.DecisionModifier;
 public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 	private static final long serialVersionUID = 0;
 
-	public AngelRandomizer() {
-		super();
+	public AngelRandomizer(PropertySource p) {
+		super(p);
 	}
 
-	public AngelRandomizer(int depth, int distribution) {
-		super(depth, distribution);
-	}
-
-	@Override
-	public String getRandomizerName() {
-		return getClass().getName();
-	}
-	
 	@Override
 	public Shape provideShape(Field field) {
 		if(randomFirst) {
@@ -71,7 +63,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				AngelRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth);
+		final Context context = new Context(decisionModifier, field, depth());
 		context.omit = omit;
 
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
@@ -119,9 +111,9 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 	protected void permuteDecision(Decision typeDecision) {
 		if(typeDecision.score == Double.POSITIVE_INFINITY)
 			return;
-		typeDecision.score *= 1 + rfactor - 2 * rfactor * random.nextDouble();
-		if(fair)
-			typeDecision.score *= (distribution + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		typeDecision.score *= 1 + rfactor() - 2 * rfactor() * random.nextDouble();
+		if(fair())
+			typeDecision.score *= (distribution() + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
 		if(typeDecision.type == ShapeType.O) {
 			typeDecision.score += 0.2 * Math.abs(typeDecision.score);
 		}

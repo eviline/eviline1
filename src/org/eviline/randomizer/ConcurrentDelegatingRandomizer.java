@@ -74,11 +74,6 @@ public class ConcurrentDelegatingRandomizer implements Randomizer, Serializable 
 		return taunt;
 	}
 
-	@Override
-	public String getRandomizerName() {
-		return "Concurrent " + provider.getRandomizerName();
-	}
-
 	public Object writeReplace() throws ObjectStreamException {
 		return provider;
 	}
@@ -88,49 +83,15 @@ public class ConcurrentDelegatingRandomizer implements Randomizer, Serializable 
 		return provider.config();
 	}
 
+	@Override
+	public String name() {
+		return getClass().getName() + ":" + provider.name();
+	}
+	
 	private static Field bestDrop(Field field, ShapeType type) {
 		
 		Context context = new Context(null, field, 1);
 		Decision decision = AIKernel.getInstance().bestFor(context, type);
 		return decision.field;
-		
-		/*
-		Score typeScore = new Score(); // cache.typeScore[depth];
-		typeScore.score = Double.POSITIVE_INFINITY;
-
-		field = field.copyInto(new Field());
-		Fitness.paintImpossibles(field);
-
-		for(Shape shape : type.orientations()) {
-			for(int x = Field.BUFFER-2; x < Field.WIDTH + Field.BUFFER+2; x++) {
-				Field f = new Field();
-				field.copyInto(f);
-				f.setShape(shape);
-				boolean grounded = shape.intersects(f.getField(), x, 0);
-				for(int y = 0; y < Field.HEIGHT + Field.BUFFER+2; y++) {
-					f.setShapeX(x);
-					f.setShapeY(y);
-					boolean groundedAbove = grounded;
-					grounded = shape.intersects(f.getField(), x, y+1);
-					if(!groundedAbove && grounded) {
-						Field fc = new Field();
-						f.copyInto(fc);
-						Fitness.unpaintImpossibles(fc);
-						fc.clockTick();
-						double fscore = Fitness.score(fc);
-						fscore -= 1000 * Math.pow(fc.getLines() - f.getLines(), 3);
-						if(fscore < typeScore.score) {
-							typeScore.score = fscore;
-							typeScore.field = fc.copyInto(typeScore.field);
-							typeScore.shape = shape;
-						}
-					}
-				}
-			}
-		}
-
-		Fitness.unpaintImpossibles(typeScore.field);
-		return typeScore.field;
-		*/
 	}
 }

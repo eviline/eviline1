@@ -33,7 +33,7 @@ public class Main {
 			ex.printStackTrace();
 		}
 		
-		final Field field = new Field(true);
+		final Field field = new Field();
 		
 		field.setGhosting(true);
 
