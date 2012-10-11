@@ -6,8 +6,6 @@ import java.util.Arrays;
 import org.eviline.event.EventDispatcher;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
-import org.eviline.randomizer.MaliciousRandomizer;
-import org.eviline.randomizer.RandomRandomizer;
 import org.eviline.randomizer.Randomizer;
 import org.eviline.swing.TetrevilTableModel;
 

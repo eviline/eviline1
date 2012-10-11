@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eviline.Field;
-import org.eviline.randomizer.MaliciousRandomizer;
 import org.eviline.randomizer.MaliciousRandomizer.MaliciousRandomizerProperties;
 
 /**

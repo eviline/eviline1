@@ -15,10 +15,6 @@ import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
 import org.eviline.AIKernel.Decision;
 import org.eviline.AIKernel.DecisionModifier;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
-import org.eviline.event.TetrevilListener;
-
 import static org.eviline.randomizer.RandomizerFactory.*;
 
 /**

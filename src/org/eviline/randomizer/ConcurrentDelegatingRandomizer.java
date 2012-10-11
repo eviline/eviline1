@@ -2,7 +2,6 @@ package org.eviline.randomizer;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.Properties;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;

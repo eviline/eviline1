@@ -1,7 +1,5 @@
 package org.eviline;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 public interface PropertySource {

@@ -1,6 +1,5 @@
 package org.eviline.randomizer;
 
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 

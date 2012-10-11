@@ -1,7 +1,5 @@
 package org.eviline.randomizer;
 
-import java.util.Properties;
-
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
