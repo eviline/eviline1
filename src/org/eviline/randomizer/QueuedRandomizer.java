@@ -4,6 +4,9 @@ import java.io.ObjectStreamException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.Exchanger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
@@ -22,9 +25,12 @@ public class QueuedRandomizer implements Randomizer {
 	protected int size;
 	protected Deque<ShapeType> queue = new ArrayDeque<ShapeType>();
 	
+	protected ExecutorService executor = Executors.newSingleThreadExecutor();
 	protected Exchanger<Object> exchanger = new Exchanger<Object>();
-	protected RunnableFuture<?> future;
+	protected Future<?> future;
 
+	protected volatile String taunt = "";
+	
 	public QueuedRandomizer(Randomizer p, int size, boolean concurrent) {
 		this.provider = p;
 		this.size = size;
@@ -53,38 +59,42 @@ public class QueuedRandomizer implements Randomizer {
 	public Shape concurrentProvideShape(Field f) {
 		if(future == null) {
 			final Field initial = f;
-			this.future = new FutureTask<Object>(new Runnable() {
+			Runnable task = new Runnable() {
+				private Field next = initial.copyInto(new Field());
+				
 				@Override
 				public void run() {
-					Field next = initial.copyInto(new Field());
 					try {
-						while(true) {
-							
+						while(queue.size() < size) {
 							synchronized(queue) {
-								while(queue.size() < size) {
-									Field best = bestDrop(next, queue);
-									queue.offerLast(provider.provideShape(best).type());
-								}
-							}
-							
-							Shape shape;
-							if(size > 0)
-								shape = queue.peekFirst().starter();
-							else
-								shape = provider.provideShape(next);
-							next = (Field) exchanger.exchange(shape);
-							synchronized(queue) {
-								queue.pollFirst();
+								Field best = bestDrop(next, queue);
+								queue.offerLast(provider.provideShape(best).type());
+								taunt = " ";
+								for(ShapeType type : queue)
+									taunt += type.name();
 							}
 						}
+
+						Shape shape;
+						if(size > 0)
+							shape = queue.peekFirst().starter();
+						else
+							shape = provider.provideShape(next);
+						next = (Field) exchanger.exchange(shape);
+						synchronized(queue) {
+							queue.pollFirst();
+						}
+						if(taunt.length() > 0)
+							taunt = taunt.substring(1);
+						future = executor.submit(this);
 					} catch(InterruptedException ie) {
 					} catch(RuntimeException re) {
 						re.printStackTrace();
 						throw re;
 					}
 				}
-			}, null);
-			new Thread(future).start();
+			};
+			future = executor.submit(task);
 		}
 		try {
 			return (Shape) exchanger.exchange(f);
@@ -96,12 +106,7 @@ public class QueuedRandomizer implements Randomizer {
 
 	@Override
 	public String getTaunt() {
-		StringBuilder sb = new StringBuilder(" ");
-		synchronized(queue) {
-			for(ShapeType type : queue)
-				sb.append(type.name());
-		}
-		return sb.toString();
+		return taunt;
 	}
 
 	public Object writeReplace() throws ObjectStreamException {

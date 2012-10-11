@@ -9,11 +9,11 @@ import org.eviline.PropertySource;
 import static org.eviline.randomizer.RandomizerFactory.*;
 
 public enum RandomizerPresets implements PropertySource {
-	SADISTIC("Sadistic", ThreadedMaliciousRandomizer.class, DEPTH+"=5", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false"),
-	EVIL("Evil", ThreadedMaliciousRandomizer.class, DEPTH+"=3", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false"),
-	AGGRESSIVE("Aggressive", ThreadedMaliciousRandomizer.class, DEPTH+"=3", RFACTOR+"=0.02", FAIR+"=true", DISTRIBUTION+"=30", CONCURRENT+"=true"),
-	ANGELIC("Angelic", AngelRandomizer.class, DEPTH+"=3", RFACTOR+"=0.01", FAIR+"=true", DISTRIBUTION+"=15", CONCURRENT+"=true"),
-	BIPOLAR("Bipolar", BipolarRandomizer.class, DEPTH+"=3", RFACTOR+"=0.01", FAIR+"=true", DISTRIBUTION+"=15", CONCURRENT+"=true"),
+	SADISTIC("Sadistic", ThreadedMaliciousRandomizer.class, DEPTH+"=5", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false", NEXT+"=0"),
+	EVIL("Evil", ThreadedMaliciousRandomizer.class, DEPTH+"=3", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false", NEXT+"=0"),
+	AGGRESSIVE("Aggressive", ThreadedMaliciousRandomizer.class, DEPTH+"=3", RFACTOR+"=0.02", FAIR+"=true", DISTRIBUTION+"=30", CONCURRENT+"=true", NEXT+"=0"),
+	ANGELIC("Angelic", AngelRandomizer.class, DEPTH+"=3", RFACTOR+"=0.01", FAIR+"=true", DISTRIBUTION+"=15", CONCURRENT+"=true", NEXT+"=4"),
+	BIPOLAR("Bipolar", BipolarRandomizer.class, DEPTH+"=3", RFACTOR+"=0.01", FAIR+"=true", DISTRIBUTION+"=15", CONCURRENT+"=true", NEXT+"=4"),
 	;
 	
 	private String name;

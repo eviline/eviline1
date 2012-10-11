@@ -63,6 +63,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	protected JTextField distribution = new JTextField(new IntegerDocument(), "", 5);
 
 	protected JCheckBox concurrent = new JCheckBox("Concurrent"); 
+	protected JTextField nextSize = new JTextField(new IntegerDocument(), "", 5);
+	
 	protected JCheckBox music = new JCheckBox("Music");
 	protected JCheckBox sounds = new JCheckBox("Sounds");
 
@@ -192,7 +194,8 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		
 		details.add(l = new JLabel("Dist factor:")); details.add(distribution); l.setForeground(Color.BLACK);
 		
-		details.add(concurrent); details.add(new JLabel(""));
+		details.add(new JLabel("")); details.add(concurrent);
+		details.add(new JLabel("Next Pieces:")); details.add(nextSize);
 		details.add(music); details.add(sounds);
 		
 		
@@ -281,6 +284,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			bipolar.setSelected(true);
 		else
 			malicious.setSelected(true);
+		nextSize.setText(nnget(NEXT));
 	}
 	
 	public void updateProperties() {
@@ -289,6 +293,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		setParameter(DISTRIBUTION, distribution.getText());
 		setParameter(FAIR, "" + fair.isSelected());
 		setParameter(CONCURRENT, "" + concurrent.isSelected());
+		setParameter(NEXT, "" + Integer.parseInt(nextSize.getText()));
 		if(angel.isSelected())
 			setParameter(CLASS, AngelRandomizer.class.getName());
 		else if(bipolar.isSelected())
