@@ -1,5 +1,7 @@
 package org.eviline.randomizer;
 
+import java.util.Random;
+
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
@@ -29,6 +31,11 @@ public class BipolarRandomizer implements Randomizer {
 			taunt = evil.getTaunt();
 			return ret;
 		}
+	}
+	
+	public void setRandom(Random random) {
+		angelic.setRandom(random);
+		evil.setRandom(random);
 	}
 
 	@Override

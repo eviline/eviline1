@@ -31,8 +31,18 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public static final int HISTORY_SIZE = 3;
 
 	public static class MaliciousRandomizerProperties extends ExtendedPropertySource {
+		public MaliciousRandomizerProperties() {
+		}
+		
 		public MaliciousRandomizerProperties(PropertySource p) {
 			super(p);
+		}
+		
+		public MaliciousRandomizerProperties(int depth, double rfactor, boolean fair, int distribution) {
+			depth(depth);
+			rfactor(rfactor);
+			fair(fair);
+			distribution(distribution);
 		}
 		
 		public int depth() {
