@@ -28,8 +28,6 @@ import static org.eviline.randomizer.RandomizerFactory.*;
  *
  */
 public class MaliciousRandomizer implements Randomizer, Serializable {
-	public static final int DEFAULT_DEPTH = 3;
-	public static final int DEFAULT_DIST = 30;
 	public static final int HISTORY_SIZE = 3;
 
 	public static class MaliciousRandomizerProperties extends ExtendedPropertySource {
@@ -38,19 +36,19 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		}
 		
 		public int depth() {
-			return getInt(DEPTH);
+			return get(DEPTH) == null ? 3 : getInt(DEPTH);
 		}
 		
 		public double rfactor() {
-			return getDouble(RFACTOR);
+			return get(RFACTOR) == null ? 0.05 : getDouble(RFACTOR);
 		}
 		
 		public boolean fair() {
-			return getBoolean(FAIR);
+			return get(FAIR) == null ? true : getBoolean(FAIR);
 		}
 		
 		public int distribution() {
-			return getInt(DISTRIBUTION);
+			return get(DISTRIBUTION) == null ? 30 : getInt(DISTRIBUTION);
 		}
 	}
 	

@@ -53,6 +53,7 @@ public class WebScore implements Serializable {
 		depth = mp.depth();
 		rfactor = mp.rfactor();
 		fair = mp.fair() ? 1 : 0;
+		adaptive = 0;
 		distribution = mp.distribution();
 		randomizer = field.getProvider().name();
 	}
