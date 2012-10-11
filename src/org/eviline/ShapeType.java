@@ -47,7 +47,7 @@ public enum ShapeType {
 	private Block inactive;
 	
 	private ShapeType() {
-		icon = new ImageIcon(ShapeType.class.getResource("images/shapetype/" + name() + ".png"));
+		icon = new ImageIcon(ShapeType.class.getResource("images/" + name() + ".png"));
 		BufferedImage buf = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		buf.getGraphics().drawImage(icon.getImage(), 0, 0, null);
 		Block b = Block.valueOf(name());
