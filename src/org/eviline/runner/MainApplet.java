@@ -289,11 +289,13 @@ public class MainApplet extends JApplet implements PropertySource {
 			public void actionPerformed(ActionEvent e) {
 				provText = ret.getProvText();
 				setProvider();
+				setStartText();
 			}
 		});
 		
 		provText = ret.getProvText();
 		setProvider();
+		setStartText();
 		
 		return ret;
 	}
