@@ -1,5 +1,7 @@
 package org.eviline;
 
+import java.util.Arrays;
+
 public class AIKernel {
 
 	public static interface DecisionModifier {
@@ -31,6 +33,39 @@ public class AIKernel {
 		}
 	}
 	
+	public static class QueueContext extends Context {
+		public ShapeType[] queue;
+		public QueueContext deeper;
+		public QueueContext shallower;
+		public ShapeType type;
+		
+		public QueueContext(Field original, ShapeType[] queue) {
+			super(null, original, queue.length);
+			this.queue = queue;
+			if(remainingDepth > 0) {
+				type = queue[0];
+				deeper = new QueueContext(original, Arrays.copyOfRange(queue, 1, queue.length));
+				deeper.shallower = this;
+			}
+		}
+		
+		@Override
+		public QueueContext deeper(Field deeperOriginal) {
+			deeperOriginal.copyInto(deeper.original);
+			deeper.paintedImpossible = deeper.original.copy();
+			Fitness.paintImpossibles(deeper.paintedImpossible);
+			return deeper;
+		}
+		
+		public QueueContext shallowest() {
+			return shallower == null ? this : shallower.shallowest();
+		}
+		
+		public QueueContext deepest() {
+			return deeper == null ? this : deeper.deepest();
+		}
+	}
+	
 	public static class Decision {
 		public double score;
 		public ShapeType type;
@@ -44,6 +79,10 @@ public class AIKernel {
 		public Decision(ShapeType type, double score) {
 			this.type = type;
 			this.score = score;
+		}
+		public Decision(ShapeType type, Field field) {
+			this.type = type;
+			this.field = field;
 		}
 		public Decision(ShapeType type, double score, Field field) {
 			this.type = type;
@@ -74,6 +113,9 @@ public class AIKernel {
 				return type + deeper.taunt();
 			return String.valueOf(type);
 		}
+		public Decision deepest() {
+			return (deeper == null || deeper == this) ? this : deeper.deepest();
+		}
 	}
 	
 	private static AIKernel instance;
@@ -84,6 +126,41 @@ public class AIKernel {
 	}
 	
 	private AIKernel() {}
+	
+	public Decision bestFor(QueueContext context) {
+		Decision best = new Decision(context.type, context.original);
+		if(context.remainingDepth == 0) {
+			double score = Fitness.score(context.paintedImpossible);
+			score -= 100 * Math.pow(context.original.lines - context.shallowest().original.lines, 1.5);
+			best.score = score;
+			return best;
+		}
+		
+		Field possibility = new Field();
+		for(Shape shape : context.type.orientations()) {
+			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
+				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
+				for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
+					boolean groundedAbove = grounded;
+					grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
+					if(!groundedAbove && grounded) {
+						context.original.copyInto(possibility);
+						possibility.shape = shape;
+						possibility.shapeX = x;
+						possibility.shapeY = y;
+						possibility.clockTick();
+						Decision option = bestFor(context.deeper(possibility));
+						if(best.deeper == null || option.score < best.score) {
+							best.deeper = option;
+							best.score = option.score;
+						}
+					}
+				}
+			}
+		}
+		
+		return best;
+	}
 	
 	public Decision bestFor(Context context, ShapeType type) {
 		Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
