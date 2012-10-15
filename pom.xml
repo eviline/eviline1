@@ -40,6 +40,7 @@
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-tomcat</artifactId>
 				<version>${eviline.version}</version>
+				<type>war</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
