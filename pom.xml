@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eviline</groupId>
   <artifactId>eviline</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.5-SNAPSHOT</version>
   <build>
     <directory>target</directory>
     <outputDirectory>target/classes</outputDirectory>
-    <finalName>${artifactId}-${version}</finalName>
+    <finalName>${artifactId}</finalName>
     <testOutputDirectory>target/test-classes</testOutputDirectory>
     <sourceDirectory>src/main/java</sourceDirectory>
     <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
@@ -30,6 +30,19 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-jar-plugin</artifactId>
+         <configuration>
+      	   <archive>
+	         <manifest>
+	           <mainClass>org.eviline.runner.Main</mainClass>
+	           <packageName>org.eviline</packageName>
+	         </manifest>
+           </archive>
+         </configuration>
+     </plugin>
     </plugins>
   </build>
   <dependencies>
