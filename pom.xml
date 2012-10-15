@@ -48,10 +48,11 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>netscape</groupId>
+			<groupId>sun.plugin</groupId>
 			<artifactId>plugin</artifactId>
-			<version>0.0.0</version>
-			<scope>provided</scope>
+			<version>1.6</version>
+			<scope>system</scope>
+			<systemPath>${java.home}/lib/plugin.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>
