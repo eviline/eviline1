@@ -20,7 +20,7 @@ public class ClientSocketFactory {
 	
 	public List<String> listGames() throws IOException {
 		List<String> ret = new ArrayList<String>();
-		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/tetrevil_tomcat/multiplayer").openConnection();
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/eviline-tomcat/multiplayer").openConnection();
 		
 		http.setChunkedStreamingMode(1024);
 		http.setRequestMethod("POST");
@@ -55,7 +55,7 @@ public class ClientSocketFactory {
 	}
 	
 	public Socket newClientSocket(String name) throws IOException {
-		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/tetrevil_tomcat/multiplayer").openConnection();
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/eviline-tomcat/multiplayer").openConnection();
 		
 		http.setChunkedStreamingMode(1024);
 		http.setRequestMethod("POST");

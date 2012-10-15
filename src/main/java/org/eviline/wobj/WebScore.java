@@ -86,7 +86,7 @@ public class WebScore implements Serializable {
 //			socket.close();
 //		}
 		
-		HttpURLConnection http = (HttpURLConnection) new URL("http://" + host + "/tetrevil_tomcat/score").openConnection();
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + host + "/eviline-tomcat/score").openConnection();
 		
 		http.setChunkedStreamingMode(1024);
 		http.setRequestMethod("POST");
@@ -133,7 +133,7 @@ public class WebScore implements Serializable {
 //			socket.close();
 //		}
 		
-		HttpURLConnection http = (HttpURLConnection) new URL("http://" + host + "/tetrevil_tomcat/score").openConnection();
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + host + "/eviline-tomcat/score").openConnection();
 		
 		http.setChunkedStreamingMode(1024);
 		http.setRequestMethod("POST");

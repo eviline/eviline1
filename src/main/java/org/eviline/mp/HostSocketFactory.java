@@ -17,7 +17,7 @@ public class HostSocketFactory {
 	}
 	
 	public Socket newHostSocket(String name, MaliciousRandomizer randomizer, boolean privateGame) throws IOException {
-		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/tetrevil_tomcat/multiplayer").openConnection();
+		HttpURLConnection http = (HttpURLConnection) new URL("http://" + server + "/eviline-tomcat/multiplayer").openConnection();
 		
 		http.setChunkedStreamingMode(1024);
 		http.setRequestMethod("POST");
