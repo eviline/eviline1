@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+
+* { color: #888; margin: 0; }
+
+body {
+	background-color: #fff;
+	background-image: url('images/tile.png');
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+div#top {
+	left: 0; top: 0; right: 0;
+	border-bottom-style: solid;
+	border-width: 2px;
+	border-color: #888;
+	padding: 5px;
+	background-color: #ddd;
+	font-size: 75%;
+	letter-spacing: 3pt;
+}
+
+h1#title {
+	letter-spacing: 20px;
+}
+h1#title > a { 
+	text-decoration: none;
+}
+
+a#play {
+	display: block;
+	text-decoration: none;
+	padding-top: 250px;
+	padding-bottom: 250px;
+	width: 550px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+}
+
+a#play, applet {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #888;
+}
