@@ -2,7 +2,10 @@
 <project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="tetrevil_tomcat">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
         <property name="context-root" value="tetrevil_tomcat"/>
         <property name="java-output-path" value="/tetrevil_tomcat/build/classes"/>
     </wb-module>
