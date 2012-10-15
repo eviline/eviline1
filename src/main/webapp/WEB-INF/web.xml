@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>tetrevil_tomcat</display-name>
+	<servlet>
+		<description>
+		</description>
+		<display-name>score</display-name>
+		<servlet-name>score</servlet-name>
+		<servlet-class>org.eviline.servlet.ScoreServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>randomizer</display-name>
+		<servlet-name>randomizer</servlet-name>
+		<servlet-class>org.eviline.servlet.RandomizerServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>multiplayer</display-name>
+		<servlet-name>multiplayer</servlet-name>
+		<servlet-class>org.eviline.servlet.MultiplayerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>score</servlet-name>
+		<url-pattern>/score</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>randomizer</servlet-name>
+		<url-pattern>/randomizer</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>multiplayer</servlet-name>
+		<url-pattern>/multiplayer</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
