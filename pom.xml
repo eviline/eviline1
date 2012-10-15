@@ -2,10 +2,30 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eviline</groupId>
   <artifactId>eviline-pom</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.6-SNAPSHOT</version>
   <packaging>pom</packaging>
+  
+  <properties>
+  	<eviline.version>${project.version}</eviline.version>
+  </properties>
+  
   <modules>
   	<module>eviline</module>
   	<module>eviline-tomcat</module>
+  	<module>eviline-test</module>
   </modules>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>org.eviline</groupId>
+  			<artifactId>eviline</artifactId>
+  			<version>${eviline.version}</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.eviline</groupId>
+  			<artifactId>eviline-tomcat</artifactId>
+  			<version>${eviline.version}</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>

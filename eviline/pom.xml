@@ -3,7 +3,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>eviline</artifactId>
-	<version>1.0.6-SNAPSHOT</version>
 
 	<build>
 		<directory>target</directory>
@@ -141,7 +140,7 @@
 	<parent>
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
+		<version>1.0.6-SNAPSHOT</version>
 	</parent>
 </project>
