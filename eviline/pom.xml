@@ -144,6 +144,6 @@
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
 		<relativePath>..</relativePath>
-		<version>1.0.7</version>
+		<version>1.0.8-SNAPSHOT</version>
 	</parent>
 </project>
