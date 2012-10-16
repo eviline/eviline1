@@ -25,6 +25,7 @@ import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
 import org.eviline.AIKernel.Decision;
+import org.eviline.AIKernel.QueueContext;
 
 public class QueuedRandomizer implements Randomizer {
 	protected Randomizer provider;
@@ -166,9 +167,13 @@ public class QueuedRandomizer implements Randomizer {
 	}
 	
 	private static Field bestDrop(Field field, Queue<ShapeType> queue) {
-		for(ShapeType type : queue)
-			field = bestDrop(field, type);
-		return field;
+//		for(ShapeType type : queue)
+//			field = bestDrop(field, type);
+//		return field;
+		ShapeType[] sq = queue.toArray(new ShapeType[queue.size()]);
+		QueueContext context = new QueueContext(field, sq);
+		Decision best = AIKernel.getInstance().bestFor(context);
+		return best.deepest().field;
 	}
 
 }
