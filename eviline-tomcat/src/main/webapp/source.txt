@@ -1,13 +1,7 @@
 The EVILINE source code is released under a BSD-style license.  You can check it out using git.
-  
-*) The client component is the only component required to play the game itself.  
-*) The server is used for things like keeping track of high scores.
-*) The nullpo mod is a small app that provides a EVILINE mode in NullpoMino,
-   if you have NullpoMino installed already.
 
-EVILINE client: git://git.eviline.org/eviline.git
-EVILINE server: git://git.eviline.org/eviline_tomcat.git
-EVILINE nullpo: git://git.eviline.org/eviline_nullpo.git
+EVILINE maven: git://git.eviline.org/eviline-pom.git
+EVILINE nullpo mod: git://git.eviline.org/eviline_nullpo.git
 
 Copyright (c) 2012, Robin Kirkman
 All rights reserved.
