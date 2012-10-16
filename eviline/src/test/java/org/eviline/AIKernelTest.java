@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class AIKernelTest extends AbstractTest {
-	private static final Logger log = Logger.getLogger(AIKernelTest.class);
-	
 	@Test
 	public void bestForQueueClearsPossibleLine() {
 		ShapeType[] queue = new ShapeType[] { ShapeType.I, ShapeType.L, ShapeType.J };

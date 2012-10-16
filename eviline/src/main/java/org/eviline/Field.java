@@ -776,8 +776,8 @@ public class Field implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(220);
-		for(int y = 0; y < field.length; y++) {
-			for(int x = 0; x < field[y].length; x++) {
+		for(int y = 0; y < field.length - BUFFER + 1; y++) {
+			for(int x = BUFFER - 1; x < field[y].length - BUFFER + 1; x++) {
 				sb.append(field[y][x] == null ? " " : field[y][x]);
 			}
 			sb.append("\n");
