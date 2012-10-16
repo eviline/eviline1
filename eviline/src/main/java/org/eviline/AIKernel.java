@@ -51,7 +51,7 @@ public class AIKernel {
 		
 		@Override
 		public QueueContext deeper(Field deeperOriginal) {
-			deeperOriginal.copyInto(deeper.original);
+			deeper.original = deeperOriginal.copy();
 			deeper.paintedImpossible = deeper.original.copy();
 			Fitness.paintImpossibles(deeper.paintedImpossible);
 			return deeper;
@@ -88,6 +88,11 @@ public class AIKernel {
 			this.type = type;
 			this.score = score;
 			this.field = field;
+		}
+		public Decision copy() {
+			Decision c = new Decision(type, score, field);
+			c.deeper = deeper;
+			return c;
 		}
 		@Override
 		public String toString() {
@@ -131,7 +136,8 @@ public class AIKernel {
 		Decision best = new Decision(context.type, context.original);
 		if(context.remainingDepth == 0) {
 			double score = Fitness.score(context.paintedImpossible);
-			score -= 100 * Math.pow(context.original.lines - context.shallowest().original.lines, 1.5);
+			if(context.original.lines != context.shallowest().original.lines)
+				score -= 100 * Math.pow(context.original.lines - context.shallowest().original.lines, 1.5);
 			best.score = score;
 			return best;
 		}
@@ -151,7 +157,7 @@ public class AIKernel {
 						possibility.clockTick();
 						Decision option = bestFor(context.deeper(possibility));
 						if(best.deeper == null || option.score < best.score) {
-							best.deeper = option;
+							best.deeper = option.copy();
 							best.score = option.score;
 						}
 					}
@@ -159,7 +165,7 @@ public class AIKernel {
 			}
 		}
 		
-		return best;
+		return best.copy();
 	}
 	
 	public Decision bestFor(Context context, ShapeType type) {
