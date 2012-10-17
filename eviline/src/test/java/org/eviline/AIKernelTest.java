@@ -57,9 +57,9 @@ public class AIKernelTest extends AbstractTest {
 		PropertiedField pf = fieldNamed("quadruple");
 		QueueContext qc = new QueueContext(pf, sequence(pf));
 		Decision best = AIKernel.getInstance().bestFor(qc);
-		PropertiedField deepest = pf.copy();
-		best.deepest().field.copyInto(deepest);
-		log.trace(deepest);
-		Assert.assertTrue((Boolean) deepest.evalRuby(pf.get("assert")));
+		PropertiedField df = pf.copy();
+		best.deepest().field.copyInto(df);
+		log.trace(df);
+		Assert.assertTrue((Boolean) df.evalRuby(df.get("assert")));
 	}
 }
