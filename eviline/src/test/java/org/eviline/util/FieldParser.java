@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,7 @@ public class FieldParser {
 	public static Pattern CONTINUED = Pattern.compile("(.*)\\\\$");
 	public static Pattern MULTILINE_BEGIN = Pattern.compile("<<<<");
 	public static Pattern MULTILINE_END = Pattern.compile(">>>>");
+	public static Pattern BLANK = Pattern.compile("^[\\s\\n]*$");
 	
 	public static String EMPTY_ROW = "|          |";
 	public static List<String> EMPTY_FIELD = Collections.nCopies(20, EMPTY_ROW);
@@ -75,6 +77,7 @@ public class FieldParser {
 	}
 	
 	public Field next() throws ParseException {
+		boolean blank = true;
 		List<String> rows = new ArrayList<String>();
 		for(String line = lines.next(); lines.hasNext(); line = lines.next()) {
 			Matcher m;
@@ -86,15 +89,21 @@ public class FieldParser {
 					line = line + "\n" + lines.next();
 				line = line.substring(0, m.start()) + line.substring(m.end());
 			}
+			if(!(m = BLANK.matcher(line)).matches())
+				blank = false;
 			if(lineHandler != null && lineHandler.handleLine(line))
 				;
 			else if(TERMINATOR.matcher(line).matches())
 				break;
 			else if((m = ROW.matcher(line)).matches())
 				rows.add(m.group());
+			else if((m = BLANK.matcher(line)).matches())
+				;
 			else 
 				throw new ParseException(line, 0);
 		}
+		if(blank)
+			throw new NoSuchElementException();
 		while(rows.size() > 20)
 			rows.remove(0);
 		Field ret = newField();

@@ -10,3 +10,10 @@ sequence=LI
 >>>>
 postcondition=lines == 4
 ****
+name=clear a line
+sequence=LIJ
+body=ai.best_for(sequence).deepest.field.copy_into copy
+postcondition=lines == 1
+****
+
+	
