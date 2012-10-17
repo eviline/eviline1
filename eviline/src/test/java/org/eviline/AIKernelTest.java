@@ -1,6 +1,5 @@
 package org.eviline;
 
-import org.apache.log4j.Logger;
 import org.eviline.AIKernel.Decision;
 import org.eviline.AIKernel.QueueContext;
 import org.junit.Assert;

@@ -1,9 +1,7 @@
 package org.eviline.util;
 
-import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
-import org.eviline.Field;
 import org.junit.Test;
 
 public class FieldParserTest extends AbstractUtilTest {

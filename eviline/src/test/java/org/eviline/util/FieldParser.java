@@ -54,6 +54,10 @@ public class FieldParser {
 		this(new InputStreamReader(resource.openStream()));
 	}
 	
+	protected Field newField() {
+		return new Field();
+	}
+	
 	public Field next() {
 		List<String> rows = new ArrayList<String>();
 		for(String line = lines.next(); lines.hasNext(); line = lines.next()) {
@@ -62,13 +66,19 @@ public class FieldParser {
 			Matcher rm = ROW.matcher(line);
 			if(rm.find())
 				rows.add(rm.group());
+			else
+				unrecognized(line);
 		}
 		while(rows.size() > 20)
 			rows.remove(0);
-		Field ret = new Field();
+		Field ret = newField();
 		for(int y = Field.BUFFER + Field.HEIGHT - rows.size(); y < Field.BUFFER + Field.HEIGHT; y++) {
 			ret.getField()[y] = createRow(rows.remove(0));
 		}
 		return ret;
+	}
+	
+	protected boolean unrecognized(String line) {
+		return false;
 	}
 }
