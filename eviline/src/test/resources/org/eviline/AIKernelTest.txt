@@ -1,0 +1,8 @@
+name=quadruple
+sequence=LI
+|IIIIIII   |
+|IIIIIIII  |
+|IIIIIIII  |
+|IIIIIIIII |
+assert=lines == 4
+*

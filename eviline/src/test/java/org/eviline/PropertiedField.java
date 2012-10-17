@@ -26,7 +26,8 @@ public class PropertiedField extends Field implements PropertySource {
         DynamicScope currentScope = context.getCurrentScope();
         ManyVarsDynamicScope newScope = new ManyVarsDynamicScope(new EvalStaticScope(currentScope.getStaticScope()), currentScope);
 
-        return ruby.evalScriptlet(s, newScope);
+        IRubyObject jret = ruby.evalScriptlet(s, newScope);
+        return JavaUtil.convertRubyToJava(jret);
 	}
 	
 	@Override
