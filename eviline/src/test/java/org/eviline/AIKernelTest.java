@@ -59,7 +59,6 @@ public class AIKernelTest extends AbstractTest {
 		Decision best = AIKernel.getInstance().bestFor(qc);
 		PropertiedField df = pf.copy();
 		best.deepest().field.copyInto(df);
-		log.trace(df);
 		Assert.assertTrue((Boolean) df.evalRuby(df.get("assert")));
 	}
 }

@@ -3,4 +3,4 @@ name=test
 |IIIIIIIII |
 |IIIIIIIII |
 |IIIIIIIII |
-*
+****

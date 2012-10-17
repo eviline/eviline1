@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -16,9 +17,19 @@ import org.eviline.Block;
 import org.eviline.Field;
 
 public class FieldParser {
+	public static interface LineHandler {
+		public boolean handleLine(String line);
+	}
+	public static interface FieldFactory {
+		public Field newField();
+	}
+	
 	public static Pattern BLOCK = Pattern.compile("[ IJLTSZOijltszoXxGg]");
 	public static Pattern ROW = Pattern.compile("\\|" + BLOCK.pattern() + "{10}\\|");
-	public static Pattern TERMINATOR = Pattern.compile("\\*");
+	public static Pattern TERMINATOR = Pattern.compile("\\*\\*\\*\\*");
+	public static Pattern CONTINUED = Pattern.compile("(.*)\\\\$");
+	public static Pattern MULTILINE_BEGIN = Pattern.compile("<<<<");
+	public static Pattern MULTILINE_END = Pattern.compile(">>>>");
 	
 	public static String EMPTY_ROW = "|          |";
 	public static List<String> EMPTY_FIELD = Collections.nCopies(20, EMPTY_ROW);
@@ -35,7 +46,10 @@ public class FieldParser {
 		return ret;
 	}
 	
-	protected Iterator<String> lines;
+	public Iterator<String> lines;
+	
+	public LineHandler lineHandler;
+	public FieldFactory fieldFactory;
 	
 	public FieldParser(Iterator<String> lines) {
 		this.lines = lines;
@@ -55,19 +69,31 @@ public class FieldParser {
 	}
 	
 	protected Field newField() {
+		if(fieldFactory != null)
+			return fieldFactory.newField();
 		return new Field();
 	}
 	
-	public Field next() {
+	public Field next() throws ParseException {
 		List<String> rows = new ArrayList<String>();
 		for(String line = lines.next(); lines.hasNext(); line = lines.next()) {
-			if(TERMINATOR.matcher(line).find())
+			Matcher m;
+			while((m = CONTINUED.matcher(line)).matches())
+				line = line.substring(0, line.length() - 1) + lines.next();
+			if((m = MULTILINE_BEGIN.matcher(line)).find()) {
+				line = line.substring(0, m.start()) + line.substring(m.end());
+				while(!(m = MULTILINE_END.matcher(line)).find())
+					line = line + "\n" + lines.next();
+				line = line.substring(0, m.start()) + line.substring(m.end());
+			}
+			if(lineHandler != null && lineHandler.handleLine(line))
+				;
+			else if(TERMINATOR.matcher(line).matches())
 				break;
-			Matcher rm = ROW.matcher(line);
-			if(rm.find())
-				rows.add(rm.group());
-			else
-				unrecognized(line);
+			else if((m = ROW.matcher(line)).matches())
+				rows.add(m.group());
+			else 
+				throw new ParseException(line, 0);
 		}
 		while(rows.size() > 20)
 			rows.remove(0);
@@ -76,9 +102,5 @@ public class FieldParser {
 			ret.getField()[y] = createRow(rows.remove(0));
 		}
 		return ret;
-	}
-	
-	protected boolean unrecognized(String line) {
-		return false;
 	}
 }

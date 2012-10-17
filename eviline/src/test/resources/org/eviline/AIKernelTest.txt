@@ -5,4 +5,4 @@ sequence=LI
 |IIIIIIII  |
 |IIIIIIIII |
 assert=lines == 4
-*
+****
