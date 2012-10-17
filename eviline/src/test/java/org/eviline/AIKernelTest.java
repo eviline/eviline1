@@ -35,14 +35,6 @@ public class AIKernelTest extends AbstractTest {
 		throw new IllegalArgumentException();
 	}
 	
-	protected static ShapeType[] sequence(TestableField pf) {
-		char[] chars = pf.get("sequence").toCharArray();
-		ShapeType[] ret = new ShapeType[chars.length];
-		for(int i = 0; i < chars.length; i++)
-			ret[i] = ShapeType.valueOf("" + chars[i]);
-		return ret;
-	}
-	
 	@Test
 	public void bestForQueueClearsPossibleLine() {
 		ShapeType[] queue = new ShapeType[] { ShapeType.I, ShapeType.L, ShapeType.J };
@@ -54,11 +46,7 @@ public class AIKernelTest extends AbstractTest {
 	
 	@Test
 	public void quadruple() throws Exception {
-		TestableField pf = fieldNamed("quadruple");
-		QueueContext qc = new QueueContext(pf, sequence(pf));
-		Decision best = AIKernel.getInstance().bestFor(qc);
-		TestableField df = pf.copy();
-		best.deepest().field.copyInto(df);
-		Assert.assertTrue((Boolean) df.evalRuby(df.get("assert")));
+		TestableField tf = fieldNamed("quadruple");
+		tf.test();
 	}
 }

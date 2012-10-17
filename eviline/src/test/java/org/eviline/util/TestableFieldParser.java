@@ -17,7 +17,7 @@ import org.eviline.util.FieldParser.FieldFactory;
 import org.eviline.util.FieldParser.LineHandler;
 
 public class TestableFieldParser {
-	protected static Pattern PROPERTY = Pattern.compile("(\\w+)=(.*)");
+	protected static Pattern PROPERTY = Pattern.compile("(\\w+)=(.*)", Pattern.DOTALL);
 	protected static FieldFactory fieldFactory = new FieldFactory() {
 		@Override
 		public Field newField() {

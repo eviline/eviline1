@@ -4,5 +4,9 @@ sequence=LI
 |IIIIIIII  |
 |IIIIIIII  |
 |IIIIIIIII |
-assert=lines == 4
+<<<<body=
+	best = ai.best_for sequence
+	best.deepest.field.copy_into copy
+>>>>
+postcondition=lines == 4
 ****
