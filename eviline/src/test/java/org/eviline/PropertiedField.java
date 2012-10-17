@@ -18,24 +18,24 @@ public class PropertiedField extends Field implements PropertySource {
 	
 	protected PropertySource props = new BasicPropertySource();
 
-	public Object evalRuby(String s) {
-		ScriptingContainer cnt = new ScriptingContainer();
-		Ruby ruby = cnt.getProvider().getRuntime();
-		ThreadContext context = ruby.getCurrentContext();
-		context.getCurrentFrame().setSelf(JavaUtil.convertJavaToRuby(ruby, this));
-        DynamicScope currentScope = context.getCurrentScope();
-        ManyVarsDynamicScope newScope = new ManyVarsDynamicScope(new EvalStaticScope(currentScope.getStaticScope()), currentScope);
-
-        IRubyObject jret = ruby.evalScriptlet(s, newScope);
-        return JavaUtil.convertRubyToJava(jret);
+	@Override
+	public PropertiedField newInstance() {
+		return new PropertiedField();
+	}
+	
+	@Override
+	public Field copyInto(Field target) {
+		super.copyInto(target);
+		if(target instanceof PropertiedField) {
+			for(String key : keys())
+				((PropertiedField) target).put(key, get(key));
+		}
+		return target;
 	}
 	
 	@Override
 	public PropertiedField copy() {
-		PropertiedField c = (PropertiedField) copyInto(new PropertiedField());
-		for(String key : keys())
-			c.put(key, get(key));
-		return c;
+		return (PropertiedField) super.copy();
 	}
 	
 	@Override

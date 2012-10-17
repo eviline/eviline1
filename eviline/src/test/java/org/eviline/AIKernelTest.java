@@ -7,17 +7,17 @@ import java.util.Set;
 
 import org.eviline.AIKernel.Decision;
 import org.eviline.AIKernel.QueueContext;
-import org.eviline.util.PropertiedFieldParser;
+import org.eviline.util.TestableFieldParser;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AIKernelTest extends AbstractTest {
-	protected static List<PropertiedField> fields = new ArrayList<PropertiedField>();
+	protected static List<TestableField> fields = new ArrayList<TestableField>();
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		PropertiedFieldParser pfp = new PropertiedFieldParser(AIKernelTest.class.getResource("AIKernelTest.txt"));
+		TestableFieldParser pfp = new TestableFieldParser(AIKernelTest.class.getResource("AIKernelTest.txt"));
 		while(true) {
 			try {
 				fields.add(pfp.next());
@@ -27,15 +27,15 @@ public class AIKernelTest extends AbstractTest {
 		}
 	}
 	
-	protected static PropertiedField fieldNamed(String name) {
-		for(PropertiedField pf : fields) {
+	protected static TestableField fieldNamed(String name) {
+		for(TestableField pf : fields) {
 			if(name.equals(pf.get("name")))
 				return pf;
 		}
 		throw new IllegalArgumentException();
 	}
 	
-	protected static ShapeType[] sequence(PropertiedField pf) {
+	protected static ShapeType[] sequence(TestableField pf) {
 		char[] chars = pf.get("sequence").toCharArray();
 		ShapeType[] ret = new ShapeType[chars.length];
 		for(int i = 0; i < chars.length; i++)
@@ -54,10 +54,10 @@ public class AIKernelTest extends AbstractTest {
 	
 	@Test
 	public void quadruple() throws Exception {
-		PropertiedField pf = fieldNamed("quadruple");
+		TestableField pf = fieldNamed("quadruple");
 		QueueContext qc = new QueueContext(pf, sequence(pf));
 		Decision best = AIKernel.getInstance().bestFor(qc);
-		PropertiedField df = pf.copy();
+		TestableField df = pf.copy();
 		best.deepest().field.copyInto(df);
 		Assert.assertTrue((Boolean) df.evalRuby(df.get("assert")));
 	}

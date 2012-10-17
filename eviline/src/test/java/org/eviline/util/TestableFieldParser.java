@@ -12,15 +12,16 @@ import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.PropertiedField;
 import org.eviline.PropertySource;
+import org.eviline.TestableField;
 import org.eviline.util.FieldParser.FieldFactory;
 import org.eviline.util.FieldParser.LineHandler;
 
-public class PropertiedFieldParser {
+public class TestableFieldParser {
 	protected static Pattern PROPERTY = Pattern.compile("(\\w+)=(.*)");
 	protected static FieldFactory fieldFactory = new FieldFactory() {
 		@Override
 		public Field newField() {
-			return new PropertiedField();
+			return new TestableField();
 		}
 	};
 	
@@ -38,29 +39,29 @@ public class PropertiedFieldParser {
 	
 	protected FieldParser parser;
 	
-	public PropertiedFieldParser(FieldParser fparser) {
+	public TestableFieldParser(FieldParser fparser) {
 		this.parser = fparser;
 		parser.fieldFactory = fieldFactory;
 		parser.lineHandler = lineHandler;
 	}
 	
-	public PropertiedFieldParser(Iterator<String> lines) {
+	public TestableFieldParser(Iterator<String> lines) {
 		this(new FieldParser(lines));
 	}
 	
-	public PropertiedFieldParser(Reader r) throws IOException {
+	public TestableFieldParser(Reader r) throws IOException {
 		this(new FieldParser(r));
 	}
 	
-	public PropertiedFieldParser(URL resource) throws IOException {
+	public TestableFieldParser(URL resource) throws IOException {
 		this(new FieldParser(resource));
 	}
 	
 	protected PropertySource fdprops;
 	
-	public PropertiedField next() throws ParseException {
+	public TestableField next() throws ParseException {
 		fdprops = new BasicPropertySource();
-		PropertiedField field = (PropertiedField) parser.next();
+		TestableField field = (TestableField) parser.next();
 		for(String key : fdprops.keys()) {
 			field.put(key, fdprops.get(key));
 		}

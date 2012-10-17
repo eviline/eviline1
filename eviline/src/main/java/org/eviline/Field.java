@@ -115,6 +115,10 @@ public class Field implements Serializable {
 		}
 	}
 	
+	public Field newInstance() {
+		return new Field();
+	}
+	
 	/**
 	 * Copy this {@link Field} into a target and return the target.
 	 * @param target The destination and return {@link Field}
@@ -136,7 +140,7 @@ public class Field implements Serializable {
 	}
 	
 	public Field copy() {
-		return copyInto(new Field());
+		return copyInto(newInstance());
 	}
 	
 	/**
