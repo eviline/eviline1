@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eviline</groupId>
 	<artifactId>eviline-pom</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -16,11 +16,24 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -30,12 +43,12 @@
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-tomcat</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8-SNAPSHOT</version>
 				<type>war</type>
 			</dependency>
 		</dependencies>

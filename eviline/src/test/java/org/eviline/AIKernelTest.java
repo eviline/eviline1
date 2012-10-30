@@ -1,20 +1,21 @@
 package org.eviline;
 
-import org.apache.log4j.Logger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+
 import org.eviline.AIKernel.Decision;
 import org.eviline.AIKernel.QueueContext;
+import org.eviline.TestableFieldRunner.FieldResource;
+import org.eviline.util.TestableFieldParser;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(TestableFieldRunner.class)
+@FieldResource("AIKernelTest.txt")
 public class AIKernelTest extends AbstractTest {
-	private static final Logger log = Logger.getLogger(AIKernelTest.class);
-	
-	@Test
-	public void bestForQueueClearsPossibleLine() {
-		ShapeType[] queue = new ShapeType[] { ShapeType.I, ShapeType.L, ShapeType.J };
-		Field empty = new Field();
-		Decision best = AIKernel.getInstance().bestFor(new QueueContext(empty, queue));
-		Decision result = best.deepest();
-		Assert.assertEquals(1, result.field.lines - empty.lines);
-	}
+
 }

@@ -1,41 +1,63 @@
 package org.eviline;
 
-import java.io.Serializable;
 import java.util.Set;
 
-public class ExtendedPropertySource implements PropertySource, Serializable {
+import org.jruby.Ruby;
+import org.jruby.RubyObject;
+import org.jruby.embed.ScriptingContainer;
+import org.jruby.javasupport.JavaObject;
+import org.jruby.javasupport.JavaUtil;
+import org.jruby.parser.EvalStaticScope;
+import org.jruby.runtime.DynamicScope;
+import org.jruby.runtime.ThreadContext;
+import org.jruby.runtime.builtin.IRubyObject;
+import org.jruby.runtime.scope.ManyVarsDynamicScope;
+
+public class PropertiedField extends Field implements PropertySource {
 	private static final long serialVersionUID = 0;
 	
-	protected PropertySource p;
-	
-	public ExtendedPropertySource(PropertySource p) {
-		this.p = p;
-	}
-	
-	public ExtendedPropertySource() {
-		this(new BasicPropertySource());
-	}
+	protected PropertySource props = new BasicPropertySource();
 
 	@Override
+	public PropertiedField newInstance() {
+		return new PropertiedField();
+	}
+	
+	@Override
+	public Field copyInto(Field target) {
+		super.copyInto(target);
+		if(target instanceof PropertiedField) {
+			for(String key : keys())
+				((PropertiedField) target).put(key, get(key));
+		}
+		return target;
+	}
+	
+	@Override
+	public PropertiedField copy() {
+		return (PropertiedField) super.copy();
+	}
+	
+	@Override
 	public boolean containsKey(String key) {
-		return p.containsKey(key);
+		return props.containsKey(key);
 	}
 
 	@Override
 	public String get(String key) {
-		return p.get(key);
+		return props.get(key);
 	}
 
 	@Override
 	public String put(String key, String value) {
-		return p.put(key, value);
+		return props.put(key, value);
 	}
 
 	@Override
 	public Set<String> keys() {
-		return p.keys();
+		return props.keys();
 	}
-	
+
 	public Boolean getBoolean(String key) {
 		return get(key) == null ? null : Boolean.parseBoolean(get(key));
 	}
