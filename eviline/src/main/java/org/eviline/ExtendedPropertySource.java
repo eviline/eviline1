@@ -1,8 +1,11 @@
 package org.eviline;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class ExtendedPropertySource implements PropertySource {
+public class ExtendedPropertySource implements PropertySource, Serializable {
+	private static final long serialVersionUID = 0;
+	
 	protected PropertySource p;
 	
 	public ExtendedPropertySource(PropertySource p) {

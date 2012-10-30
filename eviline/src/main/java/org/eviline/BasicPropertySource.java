@@ -1,11 +1,14 @@
 package org.eviline;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class BasicPropertySource implements PropertySource {
+public class BasicPropertySource implements PropertySource, Serializable {
+	private static final long serialVersionUID = 0;
+	
 	protected Map<String, String> map;
 	
 	public BasicPropertySource() {
