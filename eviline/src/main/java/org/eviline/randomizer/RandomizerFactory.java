@@ -4,13 +4,6 @@ import org.eviline.ExtendedPropertySource;
 import org.eviline.PropertySource;
 import org.eviline.runner.MainApplet;
 
-/**
- * Class with factory methods for constructing a {@link MaliciousRandomizer}.
- * Needs to be extended to cover all randomizers, but {@link MainApplet} is too tied
- * to {@link MaliciousRandomizer} right now.
- * @author robin
- *
- */
 public class RandomizerFactory {
 	public static final String CLASS = "class";
 	public static final String DEPTH = "depth";
