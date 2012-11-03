@@ -7,9 +7,7 @@ import java.util.Properties;
 
 public class Version {
 	public static String getVersion() {
-		URL url = Version.class.getClassLoader().getResource("META-INF/maven/org.eviline/eviline/pom.properties");
-		if(url == null)
-			return "0.0.0-DEVEL";
+		URL url = Version.class.getResource("version.properties");
 		try {
 			Properties p = new Properties();
 			InputStream in = url.openStream();
@@ -18,7 +16,7 @@ public class Version {
 			} finally {
 				in.close();
 			}
-			return p.getProperty("version");
+			return p.getProperty("project.version");
 		} catch(IOException ioe) {
 			return "0.0.0-ERROR";
 		}

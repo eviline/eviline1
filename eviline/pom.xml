@@ -6,6 +6,24 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>org/eviline/version.properties</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>org/eviline/version.properties</exclude>
+				</excludes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -134,6 +152,6 @@
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
 		<relativePath>..</relativePath>
-		<version>1.0.8</version>
+		<version>1.0.9-SNAPSHOT</version>
 	</parent>
 </project>
