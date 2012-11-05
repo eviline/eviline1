@@ -10,6 +10,7 @@
 		<module>eviline</module>
 		<module>eviline-tomcat</module>
 		<module>eviline-test</module>
+		<module>eviline-console</module>
 	</modules>
 
 	<build>
