@@ -6,6 +6,12 @@
 	<version>1.0.10-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<modules>
 		<module>eviline</module>
 		<module>eviline-tomcat</module>
