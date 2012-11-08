@@ -12,6 +12,19 @@
 		<version>7</version>
 	</parent>
 
+	<scm>
+		<connection>scm:git:git.eviline.org/eviline-pom.git</connection>
+		<url>git://git.eviline.org/eviline-pom.git</url>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>BSD License</name>
+			<distribution>repo</distribution>
+			<url>http://www.eviline.org/license.txt</url>
+		</license>
+	</licenses>
+
 	<modules>
 		<module>eviline</module>
 		<module>eviline-tomcat</module>
@@ -59,4 +72,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<name>eviline</name>
+	<url>http://www.eviline.org/</url>
+	<description>A block-stacking game that uses an AI to work against you.</description>
 </project>
