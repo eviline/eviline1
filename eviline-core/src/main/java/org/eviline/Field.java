@@ -7,7 +7,6 @@ import org.eviline.event.EventDispatcher;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
 import org.eviline.randomizer.Randomizer;
-import org.eviline.swing.TetrevilTableModel;
 
 /**
  * Object which keeps track of the tetris matrix itself.  It keeps an array of {@link Block} enums
