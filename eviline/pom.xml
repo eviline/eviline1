@@ -71,6 +71,7 @@
 							<exclude>sun.plugin:plugin:*</exclude>
 						</excludes>
 					</artifactSet>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>
 			</plugin>
 
