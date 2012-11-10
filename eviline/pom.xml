@@ -4,6 +4,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>eviline</artifactId>
 
+	<parent>
+		<groupId>org.eviline</groupId>
+		<artifactId>eviline-pom</artifactId>
+		<relativePath>..</relativePath>
+		<version>1.0.11-SNAPSHOT</version>
+	</parent>
+	<name>eviline</name>
+	<url>http://www.eviline.org/</url>
+	<description>
+		Primary runnable artifact for eviline.  Eviline is a block-stacking
+		game that uses an AI to work against you.
+	</description>
+	
 	<build>
 		<finalName>${project.artifactId}</finalName>
 
@@ -179,10 +192,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>org.eviline</groupId>
-		<artifactId>eviline-pom</artifactId>
-		<relativePath>..</relativePath>
-		<version>1.0.11-SNAPSHOT</version>
-	</parent>
+	
 </project>

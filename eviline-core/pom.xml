@@ -7,6 +7,12 @@
 		<version>1.0.11-SNAPSHOT</version>
 	</parent>
 	<artifactId>eviline-core</artifactId>
+	<name>eviline-core</name>
+	<url>http://www.eviline.org/</url>
+	<description>
+		AI and game engine core for eviline.  Eviline is a block-stacking
+		game that uses an AI to work against you.
+	</description>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>

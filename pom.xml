@@ -118,7 +118,10 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<name>eviline</name>
+	<name>eviline-pom</name>
 	<url>http://www.eviline.org/</url>
-	<description>A block-stacking game that uses an AI to work against you.</description>
+	<description>
+		Parent pom for the eviline artifacts.  Eviline is a block-stacking
+		game that uses an AI to work against you.
+	</description>
 </project>
