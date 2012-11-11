@@ -3,6 +3,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>eviline-tomcat</artifactId>
 	<packaging>war</packaging>
+	<parent>
+		<groupId>org.eviline</groupId>
+		<artifactId>eviline-pom</artifactId>
+		<relativePath>..</relativePath>
+		<version>1.0.11-SNAPSHOT</version>
+	</parent>
+
+	<name>eviline-tomcat</name>
+	<url>http://www.eviline.org/</url>
+	<description>
+		Webapp that handles high scores and multiplayer.  Eviline is a block-stacking
+		game that uses an AI to work against you.
+	</description>
+	
+	
 	<build>
 		<directory>target</directory>
 		<outputDirectory>target/classes</outputDirectory>
@@ -38,6 +53,7 @@
 					<outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 	<dependencies>
@@ -62,10 +78,5 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	<parent>
-		<groupId>org.eviline</groupId>
-		<artifactId>eviline-pom</artifactId>
-		<relativePath>..</relativePath>
-		<version>1.0.10</version>
-	</parent>
+	
 </project>

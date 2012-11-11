@@ -2,19 +2,67 @@ package org.eviline;
 
 import java.util.Arrays;
 
+/**
+ * Class which holds the AI algorithms.  These algorithms are documented in
+ * the associated methods.
+ * @author robin
+ *
+ */
 public class AIKernel {
 
+	/**
+	 * Interface for objects which wish to modify the decision reached by an iteration
+	 * of an AI algorithm.  Modifications include but are not limited to adjusting the
+	 * score attached to a decision based on other factors, such as the recent frequency
+	 * of shapes.
+	 * @author robin
+	 *
+	 */
 	public static interface DecisionModifier {
+		/**
+		 * Modify the planned decision.
+		 * @param context The context in which the decision was made
+		 * @param decision The decision that was made.
+		 */
 		public void modifyPlannedDecision(Context context, Decision decision);
 	}
 	
+	/**
+	 * A decision context.  Contains the original {@link Field}, a copy
+	 * of the field with impossible areas marked, and some book-keeping info.
+	 * There is one {@link Context} at each node in the decision tree.
+	 * @author robin
+	 *
+	 */
 	public static class Context {
+		/**
+		 * The decision modifier in use for this context.
+		 */
 		public DecisionModifier decisionModifier;
+		/**
+		 * The original {@link Field} based on which a decision is to be made
+		 */
 		public Field original;
+		/**
+		 * The original {@link Field} (see {@link #original}) but painted impossible.
+		 * (see {@link Fitness#paintImpossibles(Field)})
+		 */
 		public Field paintedImpossible;
+		/**
+		 * The remaining decision depth at this context in the decision tree.
+		 */
 		public int remainingDepth;
+		/**
+		 * The {@link ShapeType} to omit from the decision.
+		 */
 		public ShapeType omit;
 		
+		/**
+		 * Create a new {@link Context}.
+		 * @param decisionModifier
+		 * @param original
+		 * @param remainingDepth
+		 */
 		public Context(DecisionModifier decisionModifier, Field original, int remainingDepth) {
 			this.decisionModifier = decisionModifier;
 			this.original = original.copy();
@@ -23,6 +71,12 @@ public class AIKernel {
 			this.remainingDepth = remainingDepth;
 		}
 		
+		/**
+		 * Construct a {@link Context} that is a copy of this one, but for use at one level
+		 * deeper in the decision tree.
+		 * @param deeperOriginal
+		 * @return
+		 */
 		public Context deeper(Field deeperOriginal) {
 			return new Context(decisionModifier, deeperOriginal, remainingDepth - 1);
 		}
@@ -33,12 +87,37 @@ public class AIKernel {
 		}
 	}
 	
+	/**
+	 * {@link Context} for a decision-tree whose list of shapes is already decided.
+	 * A {@link QueueContext} is used instead for determining the optimal shape placements
+	 * that a user will make.
+	 * @author robin
+	 *
+	 */
 	public static class QueueContext extends Context {
+		/**
+		 * The queue of known upcoming shapes
+		 */
 		public ShapeType[] queue;
+		/**
+		 * The decided-on context, one level deeper
+		 */
 		public QueueContext deeper;
+		/**
+		 * The parent of this context
+		 */
 		public QueueContext shallower;
+		/**
+		 * The current shape type in the shape queue
+		 */
 		public ShapeType type;
 		
+		/**
+		 * Create a {@link QueueContext} for determining the optimal placement of shapes
+		 * (from a player's perspective) for the argument {@link Field} and {@link ShapeType} array.
+		 * @param original
+		 * @param queue
+		 */
 		public QueueContext(Field original, ShapeType[] queue) {
 			super(null, original, queue.length);
 			this.queue = queue;
@@ -57,19 +136,44 @@ public class AIKernel {
 			return deeper;
 		}
 		
+		/**
+		 * Returns the "root" parent {@link QueueContext}.
+		 * @return
+		 */
 		public QueueContext shallowest() {
 			return shallower == null ? this : shallower.shallowest();
 		}
 		
+		/**
+		 * Returns the "decided" context, the deepest of the children.
+		 * @return
+		 */
 		public QueueContext deepest() {
 			return deeper == null ? this : deeper.deepest();
 		}
 	}
 	
+	/**
+	 * A decision that can be made by the {@link AIKernel}.
+	 * @author robin
+	 *
+	 */
 	public static class Decision {
+		/**
+		 * The score of this decision
+		 */
 		public double score;
+		/**
+		 * The shape that was decided on
+		 */
 		public ShapeType type;
+		/**
+		 * The field that was decided on
+		 */
 		public Field field;
+		/**
+		 * One level deeper in the final decision path
+		 */
 		public Decision deeper;
 		
 		public Decision() {}
@@ -89,6 +193,10 @@ public class AIKernel {
 			this.score = score;
 			this.field = field;
 		}
+		/**
+		 * Copy this {@link Decision}
+		 * @return
+		 */
 		public Decision copy() {
 			Decision c = new Decision(type, score, field);
 			c.deeper = deeper;
@@ -111,6 +219,10 @@ public class AIKernel {
 			sb.append("]");
 			return sb.toString();
 		}
+		/**
+		 * Generate a string of shapes that represent the decision path
+		 * @return
+		 */
 		public String taunt() {
 			if(deeper == this)
 				return String.valueOf(type);
@@ -118,6 +230,10 @@ public class AIKernel {
 				return type + deeper.taunt();
 			return String.valueOf(type);
 		}
+		/**
+		 * Return the deepest decision in the decision path
+		 * @return
+		 */
 		public Decision deepest() {
 			return (deeper == null || deeper == this) ? this : deeper.deepest();
 		}
@@ -132,6 +248,11 @@ public class AIKernel {
 	
 	private AIKernel() {}
 	
+	/**
+	 * Determine the best way for a player to play a particular queue of shapes.
+	 * @param context
+	 * @return
+	 */
 	public Decision bestFor(QueueContext context) {
 		Decision best = new Decision(context.type, context.original);
 		if(context.remainingDepth == 0) {
@@ -168,6 +289,12 @@ public class AIKernel {
 		return best.copy();
 	}
 	
+	/**
+	 * Determine the best way for a player to play a single shape.
+	 * @param context
+	 * @param type
+	 * @return
+	 */
 	public Decision bestFor(Context context, ShapeType type) {
 		Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
 		
@@ -202,6 +329,11 @@ public class AIKernel {
 		return best;
 	}
 	
+	/**
+	 * Determine the shape that would be best for the player
+	 * @param context
+	 * @return
+	 */
 	public Decision bestFor(Context context) {
 		Decision best = new Decision(null, Double.POSITIVE_INFINITY, context.original.copy());
 		double originalScore = Fitness.scoreWithPaint(best.field);
@@ -225,6 +357,12 @@ public class AIKernel {
 		return best;
 	}
 	
+	/**
+	 * Determine the shape that would be best for the player
+	 * @param context
+	 * @param defaultDecision
+	 * @return
+	 */
 	public Decision planBest(Context context, Decision defaultDecision) {
 		if(context.remainingDepth < 0)
 			return defaultDecision;
@@ -232,6 +370,11 @@ public class AIKernel {
 		return bestFor(context);
 	}
 	
+	/**
+	 * Determine the shape that would be worst for the player
+	 * @param context
+	 * @return
+	 */
 	public Decision worstFor(Context context) {
 		Decision worst = new Decision(null, Double.NEGATIVE_INFINITY, context.original.copy());
 		
@@ -252,6 +395,12 @@ public class AIKernel {
 		return worst;
 	}
 	
+	/**
+	 * Determine the shape that would be worst for the player
+	 * @param context
+	 * @param defaultDecision
+	 * @return
+	 */
 	public Decision planWorst(Context context, Decision defaultDecision) {
 		if(context.remainingDepth < 0)
 			return defaultDecision;
