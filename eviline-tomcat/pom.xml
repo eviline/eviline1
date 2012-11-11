@@ -53,6 +53,7 @@
 					<outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 	<dependencies>
