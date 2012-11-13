@@ -40,10 +40,15 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		Shape shape = decision.type.starter();
 //		taunt = score.taunt;
 		recent.add(shape.type());
+		history.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+//		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		if(history.size() > config.distribution() * typeCounts.length) {
+			ShapeType hdrop = history.remove(0);
+			typeCounts[hdrop.ordinal()]--;
+		}
 		return shape;
 	}
 	
