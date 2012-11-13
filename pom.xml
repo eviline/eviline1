@@ -85,6 +85,13 @@
 							<goal>sign</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>install</id>
+						<phase>install</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
 				</executions>
 				<configuration>
 					<keystore>../keystore</keystore>
