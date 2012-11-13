@@ -38,11 +38,16 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		taunt = decision.taunt();
 		if(taunt.length() > 0)
 			taunt = taunt.substring(0, 1);
-		recent.add(shape.type());
+		recent.add(decision.type);
+		history.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+//		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		if(history.size() > config.distribution() * typeCounts.length) {
+			ShapeType hdrop = history.remove(0);
+			typeCounts[hdrop.ordinal()]--;
+		}
 		return shape;
 	}
 

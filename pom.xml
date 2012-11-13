@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eviline</groupId>
 	<artifactId>eviline-pom</artifactId>
-	<version>1.0.11</version>
+	<version>1.0.12-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -26,9 +26,10 @@
 	</licenses>
 
 	<modules>
-		<module>eviline</module>
-		<module>eviline-tomcat</module>
 		<module>eviline-core</module>
+		<module>eviline</module>
+		<module>eviline-nullpo</module>
+		<module>eviline-tomcat</module>
 	</modules>
 
 	<build>
@@ -84,6 +85,13 @@
 							<goal>sign</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>install</id>
+						<phase>install</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
 				</executions>
 				<configuration>
 					<keystore>../keystore</keystore>
@@ -128,17 +136,22 @@
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline</artifactId>
-				<version>1.0.11</version>
+				<version>1.0.12-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-core</artifactId>
-				<version>1.0.11</version>
+				<version>1.0.12-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eviline</groupId>
+				<artifactId>eviline-nullpo</artifactId>
+				<version>1.0.12-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-tomcat</artifactId>
-				<version>1.0.11</version>
+				<version>1.0.12-SNAPSHOT</version>
 				<type>war</type>
 			</dependency>
 		</dependencies>

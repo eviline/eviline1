@@ -85,6 +85,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
 	protected int[] typeCounts = new int[ShapeType.values().length];
+	protected List<ShapeType> history = new ArrayList<ShapeType>();
 	protected int distAdjustment = 0;
 	
 	protected Random random = new Random();
@@ -113,10 +114,15 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		Shape shape = decision.type.starter();
 //		taunt = score.taunt;
 		recent.add(decision.type);
+		history.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[decision.type.ordinal()]++;
-		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+//		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		if(history.size() > config.distribution() * typeCounts.length) {
+			ShapeType hdrop = history.remove(0);
+			typeCounts[hdrop.ordinal()]--;
+		}
 		return shape;
 	}
 	
