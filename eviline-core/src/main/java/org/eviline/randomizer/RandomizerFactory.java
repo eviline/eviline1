@@ -2,7 +2,6 @@ package org.eviline.randomizer;
 
 import org.eviline.ExtendedPropertySource;
 import org.eviline.PropertySource;
-import org.eviline.runner.MainApplet;
 
 public class RandomizerFactory {
 	public static final String CLASS = "class";

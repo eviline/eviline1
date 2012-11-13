@@ -1,4 +1,5 @@
 keystore_password
 bin
 target
+keystore.properties
 
