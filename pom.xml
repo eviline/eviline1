@@ -86,8 +86,8 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>install</id>
-						<phase>install</phase>
+						<id>verify</id>
+						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
 						</goals>
