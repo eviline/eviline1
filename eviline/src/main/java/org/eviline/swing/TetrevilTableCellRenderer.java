@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -16,6 +17,7 @@ import org.eviline.Block;
 import org.eviline.BlockMetadata;
 import org.eviline.Field;
 import org.eviline.ShapeType;
+import org.eviline.ShapeTypeIcon;
 
 /**
  * Cell renderer for a {@link TetrevilTable}
@@ -84,7 +86,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 					String shape = taunt.substring(row, row+1);
 					ShapeType type = ShapeType.valueOf(shape);
 					c.setText(null);
-					c.setIcon(type.icon());
+					Icon icon = ShapeTypeIcon.forType(type).icon();
+					c.setIcon(icon);
 //				} else
 //					c.setText("?");
 			}
