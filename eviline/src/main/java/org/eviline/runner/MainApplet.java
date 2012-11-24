@@ -319,6 +319,7 @@ public class MainApplet extends JApplet implements PropertySource {
 					field.addTetrevilListener(soundListener);
 				else
 					field.removeTetrevilListener(soundListener);
+				setParameter("sounds", "" + soundEnabled);
 			}
 		});
 		sound.setBackground(Color.WHITE);
@@ -333,6 +334,7 @@ public class MainApplet extends JApplet implements PropertySource {
 				} else {
 					field.removeTetrevilListener(musicListener);
 				}
+				setParameter("music", "" + musicEnabled);
 			}
 		});
 		music.setBackground(Color.WHITE);
