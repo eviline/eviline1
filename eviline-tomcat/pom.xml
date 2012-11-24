@@ -21,7 +21,7 @@
 	<build>
 		<directory>target</directory>
 		<outputDirectory>target/classes</outputDirectory>
-		<finalName>${artifactId}</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
