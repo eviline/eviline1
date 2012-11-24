@@ -166,8 +166,11 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		if(typeDecision.score == Double.POSITIVE_INFINITY || typeDecision.score == Double.NEGATIVE_INFINITY)
 			return;
 		typeDecision.score *= 1 + rfactor() - 2 * rfactor() * random.nextDouble();
-		if(fair())
-			typeDecision.score *= (distribution() + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		if(fair()) {
+			double overuse = typeCounts[typeDecision.type.ordinal()] / (double) distribution() - 1;
+			overuse /= 3;
+			typeDecision.score -= Math.abs(typeDecision.score) * overuse;
+		}
 		if(typeDecision.type == ShapeType.O) {
 			typeDecision.score -= 0.2 * Math.abs(typeDecision.score);
 		}

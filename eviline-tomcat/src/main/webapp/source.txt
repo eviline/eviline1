@@ -1,7 +1,6 @@
 The EVILINE source code is released under a BSD-style license.  You can check it out using git.
 
 EVILINE maven: git://git.eviline.org/eviline-pom.git
-EVILINE nullpo mod: git://git.eviline.org/eviline_nullpo.git
 
 Copyright (c) 2012, Robin Kirkman
 All rights reserved.
