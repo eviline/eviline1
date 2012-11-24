@@ -37,7 +37,6 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<excludes>
-					<exclude>rebel.xml</exclude>
 					<exclude>.gitignore</exclude>
 				</excludes>
 			</resource>
@@ -47,7 +46,6 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 				<excludes>
-					<exclude>rebel.xml</exclude>
 					<exclude>.gitignore</exclude>
 				</excludes>
 			</testResource>
