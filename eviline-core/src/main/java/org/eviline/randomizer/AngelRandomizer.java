@@ -119,6 +119,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		typeDecision.score *= 1 + rfactor() - 2 * rfactor() * random.nextDouble();
 		if(fair()) {
 			double overuse = typeCounts[typeDecision.type.ordinal()] / (double) distribution() - 1;
+			overuse /= 3;
 			typeDecision.score += Math.abs(typeDecision.score) * overuse;
 		}
 		if(typeDecision.type == ShapeType.O) {
