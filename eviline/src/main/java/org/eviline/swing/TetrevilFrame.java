@@ -127,7 +127,7 @@ public class TetrevilFrame extends JFrame {
 		kl = tc.getTetrevilKeyListener();
 		setKeysFromParams();
 		tkp = new TetrevilKeyPanel(kl);
-		dp = new DifficultyPanel(field, new BasicPropertySource(parameters));
+		dp = new DifficultyPanel(field, new BasicPropertySource(parameters), true);
 		center.setBackground(Color.WHITE);
 		center.setOpaque(true);
 		

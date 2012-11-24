@@ -69,7 +69,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 	protected JCheckBox music = new JCheckBox("Music");
 	protected JCheckBox sounds = new JCheckBox("Sounds");
 
-	public DifficultyPanel(Field f, PropertySource props) {
+	public DifficultyPanel(Field f, PropertySource props, boolean soundControls) {
 		super(new GridBagLayout());
 		this.field = f;
 		this.props = props;
@@ -200,7 +200,9 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		
 		details.add(new JLabel("")); details.add(concurrent);
 		details.add(new JLabel("Next Pieces:")); details.add(nextSize);
-		details.add(music); details.add(sounds);
+		if(soundControls) {
+			details.add(music); details.add(sounds);
+		}
 		
 		
 		c.gridy++; c.weighty = 1; add(details, c);

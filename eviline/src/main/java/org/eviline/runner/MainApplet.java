@@ -268,7 +268,7 @@ public class MainApplet extends JApplet implements PropertySource {
 	}
 	
 	protected JPanel createDifficultyPanel() {
-		final DifficultyPanel ret = new DifficultyPanel(field, this);
+		final DifficultyPanel ret = new DifficultyPanel(field, this, false);
 
 		ret.addActionListener(new ActionListener() {
 			@Override
