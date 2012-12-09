@@ -23,13 +23,16 @@ public class Fitness {
 		int[] stackHeight = new int[Field.WIDTH];
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			double holes = 0;
+			int overhangs = 0;
 			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
 				int h = Field.HEIGHT + Field.BUFFER - y;
 				Block b = f[y][x];
 				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
-				if(b != null && b != Block.X && b != Block.G)
+				if(b != null && b != Block.X && b != Block.G) {
 					score += 25 + 2 * h;
+					score += 10 * overhangs;
+				}
 				else if(b == Block.X) {
 					score += 25 * (holes + 1);
 					holes++;
@@ -37,8 +40,10 @@ public class Fitness {
 				else if(b == Block.G) {
 					score += 15 * (holes + 1);
 					holes += 0.5;
+					overhangs++;
 				}
 				else if(b == null) {
+					overhangs++;
 //					score += 15 * (holes + 1);
 //					holes += 0.5;
 //					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)
