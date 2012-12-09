@@ -4,11 +4,64 @@ import java.util.Arrays;
 
 public class PlayerAction {
 	public static enum Type {
-		ROTATE_LEFT,
-		ROTATE_RIGHT,
+		DOWN_ONE,
 		SHIFT_LEFT,
 		SHIFT_RIGHT,
-		DOWN_ONE
+		ROTATE_LEFT,
+		ROTATE_RIGHT,
+		;
+		
+		public String toString() {
+			switch(this) {
+			case DOWN_ONE: return "D";
+			case ROTATE_LEFT: return "RL";
+			case ROTATE_RIGHT: return "RR";
+			case SHIFT_LEFT: return "SL";
+			case SHIFT_RIGHT: return "SR";
+			}
+			return null;
+		}
+	}
+	
+	public static class Node {
+		private Shape shape;
+		private int x;
+		private int y;
+		
+		public Node(Shape shape, int x, int y) {
+			this.shape = shape;
+			this.x = x;
+			this.y = y;
+		}
+		
+		@Override
+		public int hashCode() {
+			return (1 + shape.ordinal()) * x * y;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if(obj == null)
+				return false;
+			if(obj == this)
+				return true;
+			if(!(obj instanceof Node))
+				return false;
+			Node n = (Node) obj;
+			return shape == n.shape && x == n.x && y == n.y;
+		}
+
+		public Shape getShape() {
+			return shape;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
+		}
 	}
 	
 	private Field startField;
@@ -21,7 +74,14 @@ public class PlayerAction {
 	private int endX;
 	private int endY;
 	
+	private Node startNode;
+	private Node endNode;
+	
 	private boolean possible;
+	
+	public PlayerAction(Field field, Type type) {
+		this(field, type, false);
+	}
 	
 	public PlayerAction(Field field, Type type, boolean reverse) {
 		if(field.getShape() == null)
@@ -32,6 +92,8 @@ public class PlayerAction {
 			computeReverse(field, type);
 		
 		possible = !(startShape == endShape && startX == endX && startY == endY);
+		startNode = new Node(startShape, startX, startY);
+		endNode = new Node(endShape, endX, endY);
 	}
 	
 	@Override
@@ -148,5 +210,18 @@ public class PlayerAction {
 
 	public boolean isPossible() {
 		return possible;
+	}
+	
+	@Override
+	public String toString() {
+		return type.toString();
+	}
+
+	public Node getStartNode() {
+		return startNode;
+	}
+
+	public Node getEndNode() {
+		return endNode;
 	}
 }

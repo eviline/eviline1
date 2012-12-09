@@ -382,7 +382,9 @@ public class Field implements Serializable {
 		Shape rotated = shape.rotateRight();
 		int[][] table = KickTable.forShape(shape.type(), rotated.direction(), shape.direction()).table();
 		
-		for(int[] kick : table) {
+//		for(int[] kick : table) {
+		for(int i = table.length - 1; i >= 0; i--) {
+			int[] kick = table[i];
 			int x = shapeX - kick[0];
 			int y = shapeY - kick[1];
 			if(!rotated.intersects(field, x, y)) {
@@ -433,7 +435,9 @@ public class Field implements Serializable {
 		Shape rotated = shape.rotateLeft();
 		int[][] table = KickTable.forShape(shape.type(), rotated.direction(), shape.direction()).table();
 		
-		for(int[] kick : table) {
+//		for(int[] kick : table) {
+		for(int i = table.length - 1; i >= 0; i--) {
+			int[] kick = table[i];
 			int x = shapeX - kick[0];
 			int y = shapeY - kick[1];
 			if(!rotated.intersects(field, x, y)) {
