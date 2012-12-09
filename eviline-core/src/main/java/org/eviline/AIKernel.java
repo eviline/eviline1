@@ -1,6 +1,9 @@
 package org.eviline;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Class which holds the AI algorithms.  These algorithms are documented in
@@ -247,6 +250,37 @@ public class AIKernel {
 	}
 	
 	private AIKernel() {}
+	
+	public List<PlayerAction> pathFrom(Field field, Shape destShape, int destX, int destY) {
+		if(field.shape.type() != destShape.type())
+			throw new IllegalArgumentException("Cannot compute path from different shape types");
+		return pathFrom(new HashSet<PlayerAction>(), field.copy(), destShape, destX, destY);
+	}
+	
+	private List<PlayerAction> pathFrom(Set<PlayerAction> visited, Field field, Shape destShape, int destX, int destY) {
+		Field destField = field.copy();
+		destField.shape = destShape;
+		destField.shapeX = destX;
+		destField.shapeY = destY;
+		
+		for(PlayerAction.Type type : PlayerAction.Type.values()) {
+			PlayerAction pa = new PlayerAction(destField, type, true);
+			if(visited.contains(pa))
+				continue;
+			visited.add(pa);
+			if(!pa.isPossible())
+				continue;
+			List<PlayerAction> path = pathFrom(
+					visited,
+					field,
+					pa.getStartShape(),
+					pa.getStartX(),
+					pa.getStartY());
+			if(path != null)
+				return path;
+		}
+		return null;
+	}
 	
 	/**
 	 * Determine the best way for a player to play a particular queue of shapes.

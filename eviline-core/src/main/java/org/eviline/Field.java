@@ -373,6 +373,30 @@ public class Field implements Serializable {
 		}
 	}
 	
+	public void reverseRotateLeft() {
+		if(paused || shape == null)
+			return;
+//		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
+//			return;
+//		shape = shape.rotateLeft();
+		Shape rotated = shape.rotateRight();
+		int[][] table = KickTable.forShape(shape.type(), rotated.direction(), shape.direction()).table();
+		
+		for(int[] kick : table) {
+			int x = shapeX - kick[0];
+			int y = shapeY - kick[1];
+			if(!rotated.intersects(field, x, y)) {
+				shapeX = x;
+				shapeY = y;
+				shape = rotated;
+				reghost();
+				autoshift();
+				fireRotatedLeft();
+				return;
+			}
+		}
+	}
+	
 	/**
 	 * Clockwise shape rotation
 	 */
@@ -388,6 +412,30 @@ public class Field implements Serializable {
 		for(int[] kick : table) {
 			int x = shapeX + kick[0];
 			int y = shapeY + kick[1];
+			if(!rotated.intersects(field, x, y)) {
+				shapeX = x;
+				shapeY = y;
+				shape = rotated;
+				reghost();
+				autoshift();
+				fireRotatedRight();
+				return;
+			}
+		}
+	}
+	
+	public void reverseRotateRight() {
+		if(paused || shape == null)
+			return;
+//		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
+//			return;
+//		shape = shape.rotateRight();
+		Shape rotated = shape.rotateLeft();
+		int[][] table = KickTable.forShape(shape.type(), rotated.direction(), shape.direction()).table();
+		
+		for(int[] kick : table) {
+			int x = shapeX - kick[0];
+			int y = shapeY - kick[1];
 			if(!rotated.intersects(field, x, y)) {
 				shapeX = x;
 				shapeY = y;
