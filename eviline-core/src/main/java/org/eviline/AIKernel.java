@@ -402,11 +402,17 @@ public class AIKernel {
 
 		
 		Field possibility = new Field();
-		Field starter = context.original.copy();
-		starter.shape = context.type.starter();
-		starter.shapeY = context.type.starterY();
-		starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
-//		Map<Node, List<PlayerAction>> paths = allPathsFrom(starter);
+		Map<Node, List<PlayerAction>> paths;
+		if(context.shallower == null) {
+			Field starter = context.original.copy();
+			if(starter.shape == null) {
+				starter.shape = context.type.starter();
+				starter.shapeY = context.type.starterY();
+				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
+			}
+			paths = allPathsFrom(starter);
+		} else
+			paths = null;
 		for(Shape shape : context.type.orientations()) {
 			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
 				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
@@ -422,12 +428,13 @@ public class AIKernel {
 						Decision option = bestFor(context.deeper(possibility));
 						if(best.deeper == null || option.score < best.score) {
 							Node n = new Node(shape, x, y);
-//							if(!paths.containsKey(n))
-//								continue;
+							if(paths != null && !paths.containsKey(n))
+								continue;
 							best.bestShape = shape;
 							best.bestShapeX = x;
 							best.bestShapeY = y;
-//							best.bestPath = paths.get(n);
+							if(paths != null)
+								best.bestPath = paths.get(n);
 							best.deeper = option.copy();
 							best.score = option.score;
 						}
