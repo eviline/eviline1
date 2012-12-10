@@ -395,7 +395,7 @@ public class AIKernel {
 		if(context.remainingDepth == 0) {
 			double score = Fitness.score(context.paintedImpossible);
 			if(context.original.lines != context.shallowest().original.lines)
-				score -= 100 * Math.pow(context.original.lines - context.shallowest().original.lines, 1.5);
+				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 1.5);
 			best.score = score;
 			return best;
 		}
@@ -404,6 +404,7 @@ public class AIKernel {
 		Field possibility = new Field();
 		Map<Node, List<PlayerAction>> paths;
 		if(context.shallower == null) {
+			context.original.lines = 0;
 			Field starter = context.original.copy();
 			if(starter.shape == null) {
 				starter.shape = context.type.starter();
@@ -413,6 +414,14 @@ public class AIKernel {
 			paths = allPathsFrom(starter);
 		} else
 			paths = null;
+		if(context.type == ShapeType.O) { // Paint the unlikelies as impossible for O pieces
+			Fitness.paintUnlikelies(context.paintedImpossible);
+			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
+				for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++)
+					if(context.paintedImpossible.field[y][x] == Block.G)
+						context.paintedImpossible.field[y][x] = Block.X;
+			}
+		}
 		for(Shape shape : context.type.orientations()) {
 			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
 				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
@@ -474,7 +483,7 @@ public class AIKernel {
 						possibility.copyInto(paintedPossibility);
 						Fitness.paintImpossibles(paintedPossibility);
 						double score = Fitness.score(paintedPossibility);
-						score -= 100 * Math.pow(possibility.lines - context.original.lines, 1.5);
+						score -= 10000 * Math.pow(possibility.lines - context.original.lines, 1.5);
 						if(score < best.score) {
 							best.bestShape = shape;
 							best.bestShapeX = x;
@@ -520,7 +529,7 @@ public class AIKernel {
 						possibility.copyInto(paintedPossibility);
 						Fitness.paintImpossibles(paintedPossibility);
 						double score = Fitness.score(paintedPossibility);
-						score -= 100 * Math.pow(possibility.lines - context.original.lines, 1.5);
+						score -= 10000 * Math.pow(possibility.lines - context.original.lines, 1.5);
 						if(score < best.score) {
 							List<PlayerAction> pa = allPaths.get(new Node(shape, x, y));
 							if(pa == null)

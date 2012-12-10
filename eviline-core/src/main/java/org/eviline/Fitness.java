@@ -21,35 +21,52 @@ public class Fitness {
 		paintUnlikelies(f);
 		double score = 0;
 		int[] stackHeight = new int[Field.WIDTH];
+		int maxHeight = 0;
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			double holes = 0;
-			int overhangs = 0;
+			double overhangs = 0;
 			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
-				int h = Field.HEIGHT + Field.BUFFER - y;
+				int h = Field.HEIGHT + Field.BUFFER - y + 1;
+				double ph = Math.pow(1.2, h);
+				double mph = (h + 4) * ph;
 				Block b = f[y][x];
 				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
 				if(b != null && b != Block.X && b != Block.G) {
-					score += 25 + 2 * h;
-					score += 35 * overhangs;
+					score += 100 + Math.pow(h, h);
+					score += 50 * mph * Math.pow(holes, 3);
+					score += 30 * mph * overhangs * Math.pow(2.5, overhangs);
+					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && overhangs >= 2) {
+						overhangs /= 2;
+					}
+					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && holes >= 0.2) {
+						holes -= 0.2;
+					}
 				}
 				else if(b == Block.X) {
-					score += 25 * (holes + 1);
 					holes++;
+					score += 50 * mph * Math.pow(holes, 3);
 				}
 				else if(b == Block.G) {
-					score += 15 * (holes + 1);
-					holes += 0.5;
 					overhangs++;
+					if(f[y][x-1] == Block.G)
+						overhangs += 0.5;
+					if(f[y][x+1] == Block.G)
+						overhangs += 0.5;
+					score += 30 * mph * overhangs * Math.pow(2.5, overhangs);
 				}
 				else if(b == null) {
 					overhangs++;
+					if(f[y+1][x] == Block.G) {
+						score += 30 * mph * overhangs * Math.pow(2.5, overhangs);
+					}
 //					score += 15 * (holes + 1);
 //					holes += 0.5;
 //					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)
 //						score += h;
 				}
 			}
+			maxHeight = Math.max(maxHeight, stackHeight[x - Field.BUFFER]);
 //			int w = x - Field.BUFFER;
 //			if(w > 0 && stackHeight[w] == stackHeight[w-1])
 //				score -= stackHeight[w];
@@ -62,7 +79,6 @@ public class Fitness {
 //		
 //		score += sr * 10;
 		
-		score -= field.getLines() * 250;
 		unpaintUnlikelies(field);
 		return score;
 	}
