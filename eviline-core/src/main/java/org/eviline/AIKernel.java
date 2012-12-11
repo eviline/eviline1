@@ -280,88 +280,89 @@ public class AIKernel {
 		shortestPaths.put(start, new ArrayList<PlayerAction>());
 		ArrayDeque<Node> pending = new ArrayDeque<Node>();
 		pending.add(start);
-		Node n = start;
-		for(int i = 0; i < 5; i++) {
-			field.shapeX = n.getX();
-			PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
-			if(!pa.isPossible())
-				break;
-			List<PlayerAction> nl = shortestPaths.get(n);
-			nl = new ArrayList<PlayerAction>(nl);
-			nl.add(pa);
-			shortestPaths.put(n = pa.getEndNode(), nl);
-			pending.add(pa.getEndNode());
-		}
-		n = start;
-		for(int i = 0; i < 5; i++) {
-			field.shapeX = n.getX();
-			PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
-			if(!pa.isPossible())
-				break;
-			List<PlayerAction> nl = shortestPaths.get(n);
-			nl = new ArrayList<PlayerAction>(nl);
-			nl.add(pa);
-			shortestPaths.put(n = pa.getEndNode(), nl);
-			pending.add(pa.getEndNode());
-		}
+//		Node n = start;
+//		for(int i = 0; i < 5; i++) {
+//			field.shapeX = n.getX();
+//			PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
+//			if(!pa.isPossible())
+//				break;
+//			List<PlayerAction> nl = shortestPaths.get(n);
+//			nl = new ArrayList<PlayerAction>(nl);
+//			nl.add(pa);
+//			shortestPaths.put(n = pa.getEndNode(), nl);
+//			pending.add(pa.getEndNode());
+//		}
+//		n = start;
+//		for(int i = 0; i < 5; i++) {
+//			field.shapeX = n.getX();
+//			PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
+//			if(!pa.isPossible())
+//				break;
+//			List<PlayerAction> nl = shortestPaths.get(n);
+//			nl = new ArrayList<PlayerAction>(nl);
+//			nl.add(pa);
+//			shortestPaths.put(n = pa.getEndNode(), nl);
+//			pending.add(pa.getEndNode());
+//		}
+//		
+//		ArrayDeque<Node> toprow = new ArrayDeque<PlayerAction.Node>();
+//		toprow.addAll(pending);
+//		while(toprow.size() > 0) {
+//			n = toprow.pollFirst();
+//			List<PlayerAction> nl = shortestPaths.get(n);
+//			field.shape = n.getShape();
+//			field.shapeX = n.getX();
+//			field.shapeY = n.getY();
+//			for(Type t : new Type[] {Type.ROTATE_LEFT, Type.ROTATE_RIGHT}) {
+//				PlayerAction pa = new PlayerAction(field, t);
+//				if(!pa.isPossible())
+//					continue;
+//				Node dest = pa.getEndNode();
+//				List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl);
+//				destPath.add(pa);
+//				if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
+//					shortestPaths.put(dest, destPath);
+//					pending.offerLast(dest);
+//				}
+//			}
+//		}
+//
+//		toprow.addAll(pending);
+//		while(toprow.size() > 0) {
+//			List<PlayerAction> nl = shortestPaths.get(n);
+//			n = toprow.pollFirst();
+//			field.shape = n.getShape();
+//			field.shapeX = n.getX();
+//			field.shapeY = n.getY();
+//			Type t = Type.ROTATE_LEFT;
+//			PlayerAction pa = new PlayerAction(field, t);
+//			if(!pa.isPossible())
+//				continue;
+//			n = pa.getEndNode();
+//			List<PlayerAction> nl2 = shortestPaths.get(n);
+//			if(nl2 == null) {
+//				nl2 = new ArrayList<PlayerAction>(nl);
+//				nl2.add(pa);
+//				shortestPaths.put(n, nl2);
+//			}
+//			field.shape = n.getShape();
+//			field.shapeX = n.getX();
+//			field.shapeY = n.getY();
+//			t = Type.ROTATE_LEFT;
+//			pa = new PlayerAction(field, t);
+//			if(!pa.isPossible())
+//				continue;
+//			
+//			Node dest = pa.getEndNode();
+//			List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl2);
+//			destPath.add(pa);
+//			if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
+//				shortestPaths.put(dest, destPath);
+//				pending.offerLast(dest);
+//			}
+//		}
 		
-		ArrayDeque<Node> toprow = new ArrayDeque<PlayerAction.Node>();
-		toprow.addAll(pending);
-		while(toprow.size() > 0) {
-			n = toprow.pollFirst();
-			List<PlayerAction> nl = shortestPaths.get(n);
-			field.shape = n.getShape();
-			field.shapeX = n.getX();
-			field.shapeY = n.getY();
-			for(Type t : new Type[] {Type.ROTATE_LEFT, Type.ROTATE_RIGHT}) {
-				PlayerAction pa = new PlayerAction(field, t);
-				if(!pa.isPossible())
-					continue;
-				Node dest = pa.getEndNode();
-				List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl);
-				destPath.add(pa);
-				if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
-					shortestPaths.put(dest, destPath);
-					pending.offerLast(dest);
-				}
-			}
-		}
-
-		toprow.addAll(pending);
-		while(toprow.size() > 0) {
-			List<PlayerAction> nl = shortestPaths.get(n);
-			n = toprow.pollFirst();
-			field.shape = n.getShape();
-			field.shapeX = n.getX();
-			field.shapeY = n.getY();
-			Type t = Type.ROTATE_LEFT;
-			PlayerAction pa = new PlayerAction(field, t);
-			if(!pa.isPossible())
-				continue;
-			n = pa.getEndNode();
-			List<PlayerAction> nl2 = shortestPaths.get(n);
-			if(nl2 == null) {
-				nl2 = new ArrayList<PlayerAction>(nl);
-				nl2.add(pa);
-				shortestPaths.put(n, nl2);
-			}
-			field.shape = n.getShape();
-			field.shapeX = n.getX();
-			field.shapeY = n.getY();
-			t = Type.ROTATE_LEFT;
-			pa = new PlayerAction(field, t);
-			if(!pa.isPossible())
-				continue;
-			
-			Node dest = pa.getEndNode();
-			List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl2);
-			destPath.add(pa);
-			if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
-				shortestPaths.put(dest, destPath);
-				pending.offerLast(dest);
-			}
-		}
-		
+		Node n;
 		while(pending.size() > 0) {
 			n = pending.pollFirst();
 			List<PlayerAction> nl = shortestPaths.get(n);
