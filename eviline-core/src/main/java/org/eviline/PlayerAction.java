@@ -9,6 +9,7 @@ public class PlayerAction {
 		SHIFT_RIGHT,
 		ROTATE_LEFT,
 		ROTATE_RIGHT,
+		HOLD,
 		;
 		
 		public String toString() {

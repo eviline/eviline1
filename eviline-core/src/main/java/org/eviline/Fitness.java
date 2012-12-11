@@ -68,13 +68,15 @@ public class Fitness {
 //			if(w > 0 && stackHeight[w] == stackHeight[w-1])
 //				score -= stackHeight[w];
 		}
-//		// Add in surface smoothness weight
-//		int sr = Math.max(stackHeight[1] - stackHeight[0], 0);
-//		for(int i = 1; i < stackHeight.length - 2; i++)
-//			sr += Math.abs(stackHeight[i] - stackHeight[i+1]);
+		
+		// Add in surface smoothness weight
+		int sr = 0;
+//		sr += Math.max(stackHeight[1] - stackHeight[0], 0);
+		for(int i = 1; i < stackHeight.length - 3; i++)
+			sr += Math.abs(stackHeight[i] - stackHeight[i+1]);
 //		sr += Math.max(stackHeight[stackHeight.length - 2] - stackHeight[stackHeight.length - 1], 0);
-//		
-//		score += sr * 10;
+		
+		score += sr * 10;
 		
 		unpaintUnlikelies(field);
 		return score;
