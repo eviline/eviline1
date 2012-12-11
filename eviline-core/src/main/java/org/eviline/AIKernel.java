@@ -78,7 +78,7 @@ public class AIKernel {
 			this.decisionModifier = decisionModifier;
 			this.original = original.copy();
 			this.paintedImpossible = original.copy();
-			Fitness.paintImpossibles(paintedImpossible);
+			Fitness.getInstance().paintImpossibles(paintedImpossible);
 			this.remainingDepth = remainingDepth;
 		}
 		
@@ -143,7 +143,7 @@ public class AIKernel {
 		public QueueContext deeper(Field deeperOriginal) {
 			deeper.original = deeperOriginal.copy();
 			deeper.paintedImpossible = deeper.original.copy();
-			Fitness.paintImpossibles(deeper.paintedImpossible);
+			Fitness.getInstance().paintImpossibles(deeper.paintedImpossible);
 			return deeper;
 		}
 		
@@ -394,7 +394,7 @@ public class AIKernel {
 	public Decision bestFor(QueueContext context) {
 		Decision best = new Decision(context.type, context.original);
 		if(context.remainingDepth == 0) {
-			double score = Fitness.score(context.paintedImpossible);
+			double score = Fitness.getInstance().score(context.paintedImpossible);
 			if(context.original.lines != context.shallowest().original.lines)
 				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 2.5);
 			best.score = score;
@@ -416,7 +416,7 @@ public class AIKernel {
 		} else
 			paths = null;
 		if(context.type == ShapeType.O) { // Paint the unlikelies as impossible for O pieces
-			Fitness.paintUnlikelies(context.paintedImpossible);
+			Fitness.getInstance().paintUnlikelies(context.paintedImpossible);
 			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
 				for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++)
 					if(context.paintedImpossible.field[y][x] == Block.G)
@@ -482,8 +482,8 @@ public class AIKernel {
 						possibility.shapeY = y;
 						possibility.clockTick();
 						possibility.copyInto(paintedPossibility);
-						Fitness.paintImpossibles(paintedPossibility);
-						double score = Fitness.score(paintedPossibility);
+						Fitness.getInstance().paintImpossibles(paintedPossibility);
+						double score = Fitness.getInstance().score(paintedPossibility);
 						score -= 10000 * Math.pow(possibility.lines - context.original.lines, 1.5);
 						if(score < best.score) {
 							best.bestShape = shape;
@@ -528,8 +528,8 @@ public class AIKernel {
 						possibility.copyInto(pretick);
 						possibility.clockTick();
 						possibility.copyInto(paintedPossibility);
-						Fitness.paintImpossibles(paintedPossibility);
-						double score = Fitness.score(paintedPossibility);
+						Fitness.getInstance().paintImpossibles(paintedPossibility);
+						double score = Fitness.getInstance().score(paintedPossibility);
 						score -= 10000 * Math.pow(possibility.lines - context.original.lines, 1.5);
 						if(score < best.score) {
 							List<PlayerAction> pa = allPaths.get(new Node(shape, x, y));
@@ -557,7 +557,7 @@ public class AIKernel {
 	 */
 	public Decision bestFor(Context context) {
 		Decision best = new Decision(null, Double.POSITIVE_INFINITY, context.original.copy());
-		double originalScore = Fitness.scoreWithPaint(best.field);
+		double originalScore = Fitness.getInstance().scoreWithPaint(best.field);
 		
 		for(ShapeType type : ShapeType.values()) {
 			if(type == context.omit)

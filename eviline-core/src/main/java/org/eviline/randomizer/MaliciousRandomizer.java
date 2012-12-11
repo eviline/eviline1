@@ -156,7 +156,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
-		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
+		defaultDecision.score = Fitness.getInstance().scoreWithPaint(defaultDecision.field);
 		Decision decision = AIKernel.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;

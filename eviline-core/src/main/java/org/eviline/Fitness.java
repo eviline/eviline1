@@ -2,7 +2,17 @@ package org.eviline;
 
 public class Fitness {
 	
-	public static double scoreWithPaint(Field field) {
+	private static Fitness instance;
+	
+	public static Fitness getInstance() {
+		if(instance == null)
+			instance = new Fitness();
+		return instance;
+	}
+	
+	protected Fitness() {}
+	
+	public double scoreWithPaint(Field field) {
 		paintImpossibles(field);
 		double ret = score(field);
 		unpaintImpossibles(field);
@@ -14,7 +24,7 @@ public class Fitness {
 	 * @param field
 	 * @return
 	 */
-	public static double score(Field field) {
+	public double score(Field field) {
 		if(field.isGameOver())
 			return Double.POSITIVE_INFINITY;
 		Block[][] f = field.getField();
@@ -82,11 +92,11 @@ public class Fitness {
 		return score;
 	}
 
-	public static void paintImpossibles(Field field) {
+	public void paintImpossibles(Field field) {
 		paintImpossibles(field.getField());
 	}
 	
-	public static void paintImpossibles(Block[][] f) {
+	public void paintImpossibles(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 				if(f[y][x] == null)
@@ -103,11 +113,11 @@ public class Fitness {
 		}
 	}
 
-	public static void paintUnlikelies(Field field) {
+	public void paintUnlikelies(Field field) {
 		paintUnlikelies(field.getField());
 	}
 	
-	public static void paintUnlikelies(Block[][] f) {
+	public void paintUnlikelies(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 				if(f[y][x] == null && f[y][x-1] != null && f[y][x+1] != null)
@@ -140,7 +150,7 @@ public class Fitness {
 		}
 	}
 	
-	public static void unpaintUnlikelies(Field field) {
+	public void unpaintUnlikelies(Field field) {
 		Block[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -150,7 +160,7 @@ public class Fitness {
 		}
 	}
 	
-	public static void unpaintImpossibles(Field field) {
+	public void unpaintImpossibles(Field field) {
 		Block[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {

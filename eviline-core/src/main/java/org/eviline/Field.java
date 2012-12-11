@@ -837,7 +837,7 @@ public class Field implements Serializable {
 			}
 			sb.append("\n");
 		}
-		sb.append("Score " + Fitness.score(this));
+		sb.append("Score " + Fitness.getInstance().score(this));
 		return sb.toString();
 	}
 }
