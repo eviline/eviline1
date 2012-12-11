@@ -33,33 +33,30 @@ public class Fitness {
 				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
 				if(b != null && b != Block.X && b != Block.G) {
-					score += 100 + Math.pow(h, h);
-					score += 50 * mph * Math.pow(holes, 3);
-					score += 30 * mph * overhangs * Math.pow(2.5, overhangs);
-					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && overhangs >= 2) {
-						overhangs /= 2;
-					}
-					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && holes >= 0.2) {
-						holes -= 0.2;
+					score += 15 + 5 * h * h;
+					score += 10 * holes * h;
+					score += 8 * overhangs * h;
+//					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && overhangs >= 0.3) {
+//						overhangs -= 0.3;
+//					}
+					overhangs = 0;
+					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && holes >= 0.3) {
+						holes -= 0.3;
 					}
 				}
 				else if(b == Block.X) {
 					holes++;
-					score += 50 * mph * Math.pow(holes, 3);
+					score += 150;
 				}
 				else if(b == Block.G) {
 					overhangs++;
-					if(f[y][x-1] == Block.G)
-						overhangs += 0.5;
-					if(f[y][x+1] == Block.G)
-						overhangs += 0.5;
-					score += 30 * mph * overhangs * Math.pow(2.5, overhangs);
+					score += 150;
 				}
 				else if(b == null) {
 					overhangs++;
-					if(f[y+1][x] == Block.G) {
-						score += 30 * mph * overhangs * Math.pow(2.5, overhangs);
-					}
+//					if(f[y+1][x] == Block.G) {
+//						score += 125 * overhangs;
+//					}
 //					score += 15 * (holes + 1);
 //					holes += 0.5;
 //					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)

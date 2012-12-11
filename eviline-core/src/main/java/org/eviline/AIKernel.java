@@ -395,7 +395,7 @@ public class AIKernel {
 		if(context.remainingDepth == 0) {
 			double score = Fitness.score(context.paintedImpossible);
 			if(context.original.lines != context.shallowest().original.lines)
-				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 1.5);
+				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 2.5);
 			best.score = score;
 			return best;
 		}
@@ -427,7 +427,7 @@ public class AIKernel {
 				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
 				for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
 					boolean groundedAbove = grounded;
-					grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
+					grounded = shape.intersects(paths == null ? context.paintedImpossible.field : context.original.field, x, y+1);
 					if(!groundedAbove && grounded) {
 						context.original.copyInto(possibility);
 						possibility.shape = shape;
