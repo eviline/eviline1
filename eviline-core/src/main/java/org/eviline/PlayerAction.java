@@ -10,6 +10,7 @@ public class PlayerAction {
 		ROTATE_LEFT,
 		ROTATE_RIGHT,
 		HOLD,
+		HARD_DROP,
 		;
 		
 		public String toString() {
@@ -21,6 +22,19 @@ public class PlayerAction {
 			case SHIFT_RIGHT: return "SR";
 			}
 			return null;
+		}
+		
+		
+		public static Type[] shiftFirstValues() {
+			return new Type[] {
+					ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, DOWN_ONE
+			};
+		}
+
+		public static Type[] dropFirstValues() {
+			return new Type[] {
+					DOWN_ONE, SHIFT_LEFT, SHIFT_RIGHT, ROTATE_LEFT, ROTATE_RIGHT
+			};
 		}
 	}
 	

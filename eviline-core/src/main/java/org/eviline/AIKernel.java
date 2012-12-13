@@ -269,7 +269,9 @@ public class AIKernel {
 		return instance;
 	}
 	
-	private AIKernel() {}
+	public AIKernel() {}
+	
+	private boolean highGravity = false;
 
 	public Map<Node, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<Node, List<PlayerAction>> shortestPaths = new HashMap<Node, List<PlayerAction>>();
@@ -280,31 +282,31 @@ public class AIKernel {
 		shortestPaths.put(start, new ArrayList<PlayerAction>());
 		ArrayDeque<Node> pending = new ArrayDeque<Node>();
 		pending.add(start);
-//		Node n = start;
-//		for(int i = 0; i < 5; i++) {
-//			field.shapeX = n.getX();
-//			PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
-//			if(!pa.isPossible())
-//				break;
-//			List<PlayerAction> nl = shortestPaths.get(n);
-//			nl = new ArrayList<PlayerAction>(nl);
-//			nl.add(pa);
-//			shortestPaths.put(n = pa.getEndNode(), nl);
-//			pending.add(pa.getEndNode());
-//		}
-//		n = start;
-//		for(int i = 0; i < 5; i++) {
-//			field.shapeX = n.getX();
-//			PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
-//			if(!pa.isPossible())
-//				break;
-//			List<PlayerAction> nl = shortestPaths.get(n);
-//			nl = new ArrayList<PlayerAction>(nl);
-//			nl.add(pa);
-//			shortestPaths.put(n = pa.getEndNode(), nl);
-//			pending.add(pa.getEndNode());
-//		}
-//		
+		Node n = start;
+		for(int i = 0; i < 5; i++) {
+			field.shapeX = n.getX();
+			PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
+			if(!pa.isPossible())
+				break;
+			List<PlayerAction> nl = shortestPaths.get(n);
+			nl = new ArrayList<PlayerAction>(nl);
+			nl.add(pa);
+			shortestPaths.put(n = pa.getEndNode(), nl);
+			pending.add(pa.getEndNode());
+		}
+		n = start;
+		for(int i = 0; i < 5; i++) {
+			field.shapeX = n.getX();
+			PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
+			if(!pa.isPossible())
+				break;
+			List<PlayerAction> nl = shortestPaths.get(n);
+			nl = new ArrayList<PlayerAction>(nl);
+			nl.add(pa);
+			shortestPaths.put(n = pa.getEndNode(), nl);
+			pending.add(pa.getEndNode());
+		}
+		
 //		ArrayDeque<Node> toprow = new ArrayDeque<PlayerAction.Node>();
 //		toprow.addAll(pending);
 //		while(toprow.size() > 0) {
@@ -362,21 +364,28 @@ public class AIKernel {
 //			}
 //		}
 		
-		Node n;
+//		Node n;
 		while(pending.size() > 0) {
 			n = pending.pollFirst();
 			List<PlayerAction> nl = shortestPaths.get(n);
 			field.shape = n.getShape();
 			field.shapeX = n.getX();
 			field.shapeY = n.getY();
-			for(Type t : Type.values()) {
+			Type[] values;
+			if(n.getY() == start.getY() && !highGravity)
+				values = Type.shiftFirstValues();
+			else
+				values = Type.dropFirstValues();
+			for(Type t : values) {
 				PlayerAction pa = new PlayerAction(field, t);
 				if(!pa.isPossible())
+					continue;
+				if(highGravity && !field.shape.intersects(field.field, field.shapeX, field.shapeY + 1) && t != Type.DOWN_ONE)
 					continue;
 				Node dest = pa.getEndNode();
 				List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl);
 				destPath.add(pa);
-				if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
+				if(!shortestPaths.containsKey(dest) /* || destPath.size() < shortestPaths.get(dest).size() */ ) {
 					shortestPaths.put(dest, destPath);
 					pending.offerLast(dest);
 				}
@@ -395,8 +404,8 @@ public class AIKernel {
 		Decision best = new Decision(context.type, context.original);
 		if(context.remainingDepth == 0) {
 			double score = Fitness.getInstance().score(context.paintedImpossible);
-			if(context.original.lines != context.shallowest().original.lines)
-				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 2.5);
+//			if(context.original.lines != context.shallowest().original.lines)
+//				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 2.5);
 			best.score = score;
 			return best;
 		}
@@ -435,6 +444,9 @@ public class AIKernel {
 						possibility.shapeX = x;
 						possibility.shapeY = y;
 						possibility.clockTick();
+						possibility.shape = shape;
+						possibility.shapeX = x;
+						possibility.shapeY = y;
 						Decision option = bestFor(context.deeper(possibility));
 						if(best.deeper == null || option.score < best.score) {
 							Node n = new Node(shape, x, y);
@@ -477,10 +489,14 @@ public class AIKernel {
 					grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
 					if(!groundedAbove && grounded) {
 						context.original.copyInto(possibility);
+						possibility.lines = 0;
 						possibility.shape = shape;
 						possibility.shapeX = x;
 						possibility.shapeY = y;
 						possibility.clockTick();
+						possibility.shape = shape;
+						possibility.shapeX = x;
+						possibility.shapeY = y;
 						possibility.copyInto(paintedPossibility);
 						Fitness.getInstance().paintImpossibles(paintedPossibility);
 						double score = Fitness.getInstance().score(paintedPossibility);
@@ -522,11 +538,15 @@ public class AIKernel {
 					grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
 					if(!groundedAbove && grounded) {
 						context.original.copyInto(possibility);
+						possibility.lines = 0;
 						possibility.shape = shape;
 						possibility.shapeX = x;
 						possibility.shapeY = y;
 						possibility.copyInto(pretick);
 						possibility.clockTick();
+						possibility.shape = shape;
+						possibility.shapeX = x;
+						possibility.shapeY = y;
 						possibility.copyInto(paintedPossibility);
 						Fitness.getInstance().paintImpossibles(paintedPossibility);
 						double score = Fitness.getInstance().score(paintedPossibility);
@@ -628,5 +648,13 @@ public class AIKernel {
 		
 		Decision worst = worstFor(context);
 		return worst;
+	}
+
+	public boolean isHighGravity() {
+		return highGravity;
+	}
+
+	public void setHighGravity(boolean highGravity) {
+		this.highGravity = highGravity;
 	}
 }

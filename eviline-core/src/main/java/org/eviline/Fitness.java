@@ -10,6 +10,10 @@ public class Fitness {
 		return instance;
 	}
 	
+	public static void setInstance(Fitness instance) {
+		Fitness.instance = instance;
+	}
+	
 	protected Fitness() {}
 	
 	public double scoreWithPaint(Field field) {
@@ -35,6 +39,7 @@ public class Fitness {
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			double holes = 0;
 			double overhangs = 0;
+			int columnTransitions = -1;
 			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
 				int h = Field.HEIGHT + Field.BUFFER - y + 1;
 				double ph = Math.pow(1.2, h);
@@ -53,6 +58,11 @@ public class Fitness {
 					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && holes >= 0.3) {
 						holes -= 0.3;
 					}
+					
+					if(f[y+1][x] == null || f[y+1][x] == Block.X || f[y+1][x] == Block.G)
+						columnTransitions++;
+					if(f[y-1][x] == null || f[y-1][x] == Block.X || f[y-1][x] == Block.G)
+						columnTransitions++;
 				}
 				else if(b == Block.X) {
 					holes++;
@@ -64,9 +74,9 @@ public class Fitness {
 				}
 				else if(b == null) {
 					overhangs++;
-//					if(f[y+1][x] == Block.G) {
-//						score += 125 * overhangs;
-//					}
+					if(f[y+1][x] == Block.G) {
+						score += 6 * overhangs * h;
+					}
 //					score += 15 * (holes + 1);
 //					holes += 0.5;
 //					if(f[y][x-1] != null && f[y][x+1] != null && f[y+1][x] == null)
@@ -74,6 +84,7 @@ public class Fitness {
 				}
 			}
 			maxHeight = Math.max(maxHeight, stackHeight[x - Field.BUFFER]);
+			score += columnTransitions * 65;
 //			int w = x - Field.BUFFER;
 //			if(w > 0 && stackHeight[w] == stackHeight[w-1])
 //				score -= stackHeight[w];
