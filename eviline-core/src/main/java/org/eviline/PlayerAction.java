@@ -30,6 +30,12 @@ public class PlayerAction {
 					ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, DOWN_ONE
 			};
 		}
+		
+		public static Type[] rotateOnlyValues() {
+			return new Type[] {
+					ROTATE_LEFT, ROTATE_RIGHT
+			};
+		}
 
 		public static Type[] dropFirstValues() {
 			return new Type[] {
