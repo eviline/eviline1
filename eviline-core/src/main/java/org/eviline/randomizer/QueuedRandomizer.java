@@ -153,7 +153,7 @@ public class QueuedRandomizer implements Randomizer {
 	}
 	
 	private static Field bestDrop(Field field, ShapeType type) {
-		Context context = new Context(null, field, 1);
+		Context context = AIKernel.getInstance().new Context(null, field, 1);
 		Decision decision = AIKernel.getInstance().bestFor(context, type);
 		return decision.field;
 	}
@@ -163,7 +163,7 @@ public class QueuedRandomizer implements Randomizer {
 //			field = bestDrop(field, type);
 //		return field;
 		ShapeType[] sq = queue.toArray(new ShapeType[queue.size()]);
-		QueueContext context = new QueueContext(field, sq);
+		QueueContext context = AIKernel.getInstance().new QueueContext(field, sq);
 		Decision best = AIKernel.getInstance().bestFor(context);
 		return best.deepest().field;
 	}

@@ -72,7 +72,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				ThreadedMaliciousRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth());
+		final Context context = AIKernel.getInstance().new Context(decisionModifier, field, depth());
 		
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
 		for(final ShapeType type : ShapeType.values()) {

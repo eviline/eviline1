@@ -89,7 +89,7 @@ public class ConcurrentRandomizer implements Randomizer, Serializable {
 	
 	private static Field bestDrop(Field field, ShapeType type) {
 		
-		Context context = new Context(null, field, 1);
+		Context context = AIKernel.getInstance().new Context(null, field, 1);
 		Decision decision = AIKernel.getInstance().bestFor(context, type);
 		return decision.field;
 	}

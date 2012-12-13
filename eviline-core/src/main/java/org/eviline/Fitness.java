@@ -2,19 +2,19 @@ package org.eviline;
 
 public class Fitness {
 	
-	private static Fitness instance;
+	private static Fitness defaultInstance;
 	
-	public static Fitness getInstance() {
-		if(instance == null)
-			instance = new Fitness();
-		return instance;
+	public static Fitness getDefaultInstance() {
+		if(defaultInstance == null)
+			defaultInstance = new Fitness();
+		return defaultInstance;
 	}
 	
-	public static void setInstance(Fitness instance) {
-		Fitness.instance = instance;
+	public static void setDefaultInstance(Fitness instance) {
+		Fitness.defaultInstance = instance;
 	}
 	
-	protected Fitness() {}
+	public Fitness() {}
 	
 	public double scoreWithPaint(Field field) {
 		paintImpossibles(field);

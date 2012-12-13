@@ -93,7 +93,7 @@ public class TestableField extends PropertiedField {
 		ShapeType[] ret = new ShapeType[chars.length];
 		for(int i = 0; i < chars.length; i++)
 			ret[i] = ShapeType.valueOf("" + chars[i]);
-		return new QueueContext(this, ret);
+		return AIKernel.getInstance().new QueueContext(this, ret);
 	}
 	
 	public AIKernel getAi() {

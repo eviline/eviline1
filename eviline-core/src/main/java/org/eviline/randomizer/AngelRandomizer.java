@@ -68,7 +68,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				AngelRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth());
+		final Context context = AIKernel.getInstance().new Context(decisionModifier, field, depth());
 		context.omit = omit;
 
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();

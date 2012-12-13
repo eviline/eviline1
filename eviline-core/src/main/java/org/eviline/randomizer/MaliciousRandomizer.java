@@ -152,11 +152,11 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				permuteDecision(decision);
 			}
 		};
-		Context context = new Context(decisionModifier, field, this.depth() - depth);
+		Context context = AIKernel.getInstance().new Context(decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
-		defaultDecision.score = Fitness.getInstance().scoreWithPaint(defaultDecision.field);
+		defaultDecision.score = AIKernel.getInstance().getFitness().scoreWithPaint(defaultDecision.field);
 		Decision decision = AIKernel.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;
