@@ -78,8 +78,8 @@ public class TNRandomizer extends Randomizer {
 		field.update();
 		Field f;
 		f = field.copyInto(new Field());
-		Fitness.paintImpossibles(f);
-		double base = Fitness.score(f);
+		Fitness.getDefaultInstance().paintImpossibles(f);
+		double base = Fitness.getDefaultInstance().score(f);
 
 		f = field.copyInto(new Field());
 		f.setShape(TNPiece.fromNullpo(engine.nowPieceObject));
@@ -87,8 +87,8 @@ public class TNRandomizer extends Randomizer {
 		f.setShapeY(engine.nowPieceBottomY + Field.BUFFER);
 		if(f.getShape() != null)
 			f.clockTick();
-		Fitness.paintImpossibles(f);
-		double withMove = Fitness.score(f);
+		Fitness.getDefaultInstance().paintImpossibles(f);
+		double withMove = Fitness.getDefaultInstance().score(f);
 		
 		return new double[] {base, withMove - base};
 //		return 0;
