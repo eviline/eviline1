@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.eviline.PlayerAction.Node;
 import org.eviline.PlayerAction.Type;
@@ -141,9 +144,11 @@ public class AIKernel {
 		
 		@Override
 		public QueueContext deeper(Field deeperOriginal) {
+			QueueContext deeper = new QueueContext(deeperOriginal.copy(), Arrays.copyOfRange(queue, 1, queue.length));
 			deeper.original = deeperOriginal.copy();
 			deeper.paintedImpossible = deeper.original.copy();
 			fitness.paintImpossibles(deeper.paintedImpossible);
+			deeper.shallower = this;
 			return deeper;
 		}
 		
@@ -274,6 +279,7 @@ public class AIKernel {
 	private boolean highGravity = false;
 	private boolean hardDropOnly = false;
 	private Fitness fitness = Fitness.getDefaultInstance();
+	private ExecutorService pool = Executors.newFixedThreadPool(4);
 
 	public Map<Node, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<Node, List<PlayerAction>> shortestPaths = new HashMap<Node, List<PlayerAction>>();
@@ -468,8 +474,8 @@ public class AIKernel {
 	 * @param context
 	 * @return
 	 */
-	public Decision bestFor(QueueContext context) {
-		Decision best = new Decision(context.type, context.original);
+	public Decision bestFor(final QueueContext context) {
+		final Decision best = new Decision(context.type, context.original);
 		if(context.remainingDepth == 0) {
 			double score = fitness.score(context.paintedImpossible);
 //			if(context.original.lines != context.shallowest().original.lines)
@@ -479,8 +485,7 @@ public class AIKernel {
 		}
 
 		
-		Field possibility = new Field();
-		Map<Node, List<PlayerAction>> paths;
+		final Map<Node, List<PlayerAction>> paths;
 		if(context.shallower == null) {
 			context.original.lines = 0;
 			Field starter = context.original.copy();
@@ -489,7 +494,7 @@ public class AIKernel {
 				starter.shapeY = context.type.starterY();
 				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
 			}
-			paths = allPathsFrom(starter);
+			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
 			paths = null;
 		if(context.type == ShapeType.O) { // Paint the unlikelies as impossible for O pieces
@@ -500,36 +505,59 @@ public class AIKernel {
 						context.paintedImpossible.field[y][x] = Block.X;
 			}
 		}
-		for(Shape shape : context.type.orientations()) {
-			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
-				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
-				for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
-					boolean groundedAbove = grounded;
-					grounded = shape.intersects(paths == null ? context.paintedImpossible.field : context.original.field, x, y+1);
-					if(!groundedAbove && grounded) {
-						context.original.copyInto(possibility);
-						possibility.shape = shape;
-						possibility.shapeX = x;
-						possibility.shapeY = y;
-						possibility.clockTick();
-						possibility.shape = shape;
-						possibility.shapeX = x;
-						possibility.shapeY = y;
-						Decision option = bestFor(context.deeper(possibility));
-						if(best.deeper == null || option.score < best.score) {
-							Node n = new Node(shape, x, y);
-							if(paths != null && !paths.containsKey(n))
-								continue;
-							best.bestShape = shape;
-							best.bestShapeX = x;
-							best.bestShapeY = y;
-							if(paths != null)
-								best.bestPath = paths.get(n);
-							best.deeper = option.copy();
-							best.score = option.score;
+		List<Future<?>> futures = new ArrayList<Future<?>>();
+		for(final Shape shape : context.type.orientations()) {
+			for(int ix = Field.BUFFER - 2; ix < Field.WIDTH + Field.BUFFER + 2; ix++) {
+				final int x = ix;
+				Runnable task = new Runnable() {
+					@Override
+					public void run() {
+						Field possibility = new Field();
+						boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
+						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
+							boolean groundedAbove = grounded;
+							grounded = shape.intersects(paths == null ? context.paintedImpossible.field : context.original.field, x, y+1);
+							if(!groundedAbove && grounded) {
+								context.original.copyInto(possibility);
+								possibility.shape = shape;
+								possibility.shapeX = x;
+								possibility.shapeY = y;
+								possibility.clockTick();
+								possibility.shape = shape;
+								possibility.shapeX = x;
+								possibility.shapeY = y;
+								QueueContext deeper = context.deeper(possibility);
+								Decision option = bestFor(deeper);
+								synchronized(best) {
+									if(best.deeper == null || option.score < best.score) {
+										context.deeper = deeper;
+										Node n = new Node(shape, x, y);
+										if(paths != null && !paths.containsKey(n))
+											continue;
+										best.bestShape = shape;
+										best.bestShapeX = x;
+										best.bestShapeY = y;
+										if(paths != null)
+											best.bestPath = paths.get(n);
+										best.deeper = option.copy();
+										best.score = option.score;
+									}
+								}
+							}
 						}
 					}
-				}
+				};
+				if(context.shallower != null)
+					task.run();
+				else
+					futures.add(pool.submit(task));
+			}
+		}
+		
+		for(Future<?> f : futures) {
+			try {
+				f.get();
+			} catch(Exception ex) {
 			}
 		}
 		
