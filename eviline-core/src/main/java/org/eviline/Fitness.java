@@ -40,7 +40,7 @@ public class Fitness {
 			double holes = 0;
 			double overhangs = 0;
 			int columnTransitions = -1;
-			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= Field.BUFFER; y--) {
+			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= 1; y--) {
 				int h = Field.HEIGHT + Field.BUFFER - y + 1;
 				double ph = Math.pow(1.2, h);
 				double mph = (h + 4) * ph;
@@ -48,7 +48,7 @@ public class Fitness {
 				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
 				if(b != null && b != Block.X && b != Block.G) {
-					score += 15 + 5 * h * h;
+					score += 15 + 5 * h * h * h;
 					score += 10 * holes * h;
 					score += 8 * overhangs * h;
 //					if(f[y+1][x] != null && f[y+1][x] != Block.X && f[y+1][x] != Block.G && overhangs >= 0.3) {
@@ -132,10 +132,17 @@ public class Fitness {
 	
 	public void paintUnlikelies(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
+			boolean painted = false;
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if(f[y][x] == null && f[y][x-1] != null && f[y][x+1] != null)
+				if(f[y][x] == null && f[y][x-1] != null && f[y][x+1] != null) {
 					f[y][x] = Block.G;
+					painted = true;
+				}
+				if(f[y-1][x] == Block.G)
+					painted = true;
 			}
+			if(!painted)
+				continue;
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 				if(f[y][x] != null)
 					continue;
