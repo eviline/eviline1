@@ -430,18 +430,22 @@ public class AIKernel {
 		}
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for(final Shape shape : context.type.orientations()) {
-			for(int ix = Field.BUFFER - 2; ix < Field.WIDTH + Field.BUFFER + 2; ix++) {
-				final int x = ix;
-				Runnable task = new Runnable() {
-					@Override
-					public void run() {
+			Runnable task = new Runnable() {
+				@Override
+				public void run() {
+					for(int ix = Field.BUFFER - 2; ix < Field.WIDTH + Field.BUFFER + 2; ix++) {
+						final int x = ix;
 						Field possibility = new Field();
 						boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
 						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
 							boolean groundedAbove = grounded;
 							grounded = shape.intersects(paths == null ? context.paintedImpossible.field : context.original.field, x, y+1);
+							Node n = new Node(shape, x, y);
+							if(paths != null && !paths.containsKey(n))
+								continue;
 							if(!groundedAbove && grounded) {
 								context.original.copyInto(possibility);
+								possibility.lines = 0;
 								possibility.shape = shape;
 								possibility.shapeX = x;
 								possibility.shapeY = y;
@@ -454,9 +458,6 @@ public class AIKernel {
 								synchronized(best) {
 									if(best.deeper == null || option.score < best.score) {
 										context.deeper = deeper;
-										Node n = new Node(shape, x, y);
-										if(paths != null && !paths.containsKey(n))
-											continue;
 										best.bestShape = shape;
 										best.bestShapeX = x;
 										best.bestShapeY = y;
@@ -469,18 +470,19 @@ public class AIKernel {
 							}
 						}
 					}
-				};
-				if(context.shallower != null)
-					task.run();
-				else
-					futures.add(pool.submit(task));
-			}
+				}
+			};
+			if(context.shallower != null)
+				task.run();
+			else
+				futures.add(pool.submit(task));
 		}
 		
 		for(Future<?> f : futures) {
 			try {
 				f.get();
 			} catch(Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 		
@@ -552,7 +554,6 @@ public class AIKernel {
 				public void run() {
 					Field possibility = new Field();
 					Field paintedPossibility = new Field();
-					Field pretick = new Field();
 					for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
 						boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
 						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
@@ -564,7 +565,6 @@ public class AIKernel {
 								possibility.shape = shape;
 								possibility.shapeX = x;
 								possibility.shapeY = y;
-								possibility.copyInto(pretick);
 								possibility.clockTick();
 								possibility.shape = shape;
 								possibility.shapeX = x;
