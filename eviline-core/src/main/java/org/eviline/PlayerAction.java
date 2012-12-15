@@ -11,6 +11,8 @@ public class PlayerAction {
 		ROTATE_RIGHT,
 		HOLD,
 		HARD_DROP,
+		DAS_LEFT,
+		DAS_RIGHT,
 		;
 		
 		public String toString() {
@@ -27,7 +29,7 @@ public class PlayerAction {
 		
 		public static Type[] shiftFirstValues() {
 			return new Type[] {
-					ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, DOWN_ONE
+					ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ DOWN_ONE
 			};
 		}
 		
@@ -39,7 +41,7 @@ public class PlayerAction {
 
 		public static Type[] dropFirstValues() {
 			return new Type[] {
-					DOWN_ONE, SHIFT_LEFT, SHIFT_RIGHT, ROTATE_LEFT, ROTATE_RIGHT
+					DOWN_ONE, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ ROTATE_LEFT, ROTATE_RIGHT
 			};
 		}
 	}
@@ -160,6 +162,14 @@ public class PlayerAction {
 		case SHIFT_RIGHT:
 			endField.shiftRight();
 			break;
+		case DAS_LEFT:
+			for(int i = 0; i < 10; i++)
+				endField.shiftLeft();
+			break;
+		case DAS_RIGHT:
+			for(int i = 0; i < 10; i++)
+				endField.shiftRight();
+			break;
 		}
 		
 		endShape = endField.shape;
@@ -193,6 +203,14 @@ public class PlayerAction {
 			break;
 		case SHIFT_RIGHT:
 			startField.shiftLeft();
+			break;
+		case DAS_LEFT:
+			for(int i = 0; i < 10; i++)
+				endField.shiftRight();
+			break;
+		case DAS_RIGHT:
+			for(int i = 0; i < 10; i++)
+				endField.shiftLeft();
 			break;
 		}
 		

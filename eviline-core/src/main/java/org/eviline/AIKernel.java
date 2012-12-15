@@ -289,43 +289,50 @@ public class AIKernel {
 		Node start = new Node(field.shape, field.shapeX, field.shapeY);
 		ArrayDeque<Node> pending = new ArrayDeque<Node>();
 		shortestPaths.put(start, new ArrayList<PlayerAction>());
-		for(int r = 0; r < 4; r++) {
-			pending.add(start);
-			Node n = start;
-			for(int i = 0; i < 7; i++) {
-				field.shapeX = n.getX();
-				PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
-				if(!pa.isPossible())
-					break;
-				List<PlayerAction> nl = shortestPaths.get(n);
-				nl = new ArrayList<PlayerAction>(nl);
-				nl.add(pa);
-				shortestPaths.put(n = pa.getEndNode(), nl);
-				pending.add(pa.getEndNode());
+		
+//		Node dasLeft = new PlayerAction(field, Type.DAS_LEFT).getEndNode();
+//		Node dasRight = new PlayerAction(field, Type.DAS_RIGHT).getEndNode();
+//		
+//		shortestPaths.put(dasLeft, Arrays.asList(new PlayerAction(field, Type.DAS_LEFT)));
+//		shortestPaths.put(dasRight, Arrays.asList(new PlayerAction(field, Type.DAS_RIGHT)));
+		
+			for(int r = 0; r < 4; r++) {
+				pending.add(start);
+				Node n = start;
+				for(int i = 0; i < 7; i++) {
+					field.shapeX = n.getX();
+					PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
+					if(!pa.isPossible())
+						break;
+					List<PlayerAction> nl = shortestPaths.get(n);
+					nl = new ArrayList<PlayerAction>(nl);
+					nl.add(pa);
+					shortestPaths.put(n = pa.getEndNode(), nl);
+					pending.add(pa.getEndNode());
+				}
+				n = start;
+				for(int i = 0; i < 7; i++) {
+					field.shapeX = n.getX();
+					PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
+					if(!pa.isPossible())
+						break;
+					List<PlayerAction> nl = shortestPaths.get(n);
+					nl = new ArrayList<PlayerAction>(nl);
+					nl.add(pa);
+					shortestPaths.put(n = pa.getEndNode(), nl);
+					pending.add(pa.getEndNode());
+				}
+				field.shapeX = start.getX();
+				field.shapeY = start.getY();
+				PlayerAction pa = new PlayerAction(field, Type.ROTATE_LEFT);
+				field.shape = pa.getEndShape();
+				start = pa.getEndNode();
+				if(r < 3) {
+					List<PlayerAction> nl = new ArrayList<PlayerAction>(shortestPaths.get(pa.getStartNode()));
+					nl.add(pa);
+					shortestPaths.put(pa.getEndNode(), nl);
+				}
 			}
-			n = start;
-			for(int i = 0; i < 7; i++) {
-				field.shapeX = n.getX();
-				PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
-				if(!pa.isPossible())
-					break;
-				List<PlayerAction> nl = shortestPaths.get(n);
-				nl = new ArrayList<PlayerAction>(nl);
-				nl.add(pa);
-				shortestPaths.put(n = pa.getEndNode(), nl);
-				pending.add(pa.getEndNode());
-			}
-			field.shapeX = start.getX();
-			field.shapeY = start.getY();
-			PlayerAction pa = new PlayerAction(field, Type.ROTATE_LEFT);
-			field.shape = pa.getEndShape();
-			start = pa.getEndNode();
-			if(r < 3) {
-				List<PlayerAction> nl = new ArrayList<PlayerAction>(shortestPaths.get(pa.getStartNode()));
-				nl.add(pa);
-				shortestPaths.put(pa.getEndNode(), nl);
-			}
-		}
 		
 //		{
 //			field.shapeX = origStart.getX();
