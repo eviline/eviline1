@@ -1,6 +1,10 @@
 package org.eviline;
 
+import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class PlayerAction {
 	public static enum Type {
@@ -84,6 +88,53 @@ public class PlayerAction {
 
 		public int getY() {
 			return y;
+		}
+	}
+	
+	public static class NodeMap<V> extends AbstractMap<Node, V> {
+		private static int W = Field.WIDTH + Field.BUFFER * 2;
+		private static int H = Field.HEIGHT + Field.BUFFER * 2;
+		
+		private Map.Entry<Node, V>[][][] entries = new Map.Entry[Shape.values().length][H][W];
+		
+		@Override
+		public Set<Map.Entry<Node, V>> entrySet() {
+			Set<Map.Entry<Node, V>> es = new HashSet<Map.Entry<Node,V>>();
+			for(Map.Entry<Node, V>[][] ea : entries) {
+				for(Map.Entry<Node, V>[] eaa : ea) {
+					for(Map.Entry<Node, V> e : eaa) {
+						if(e != null)
+							es.add(e);
+					}
+				}
+			}
+			return es;
+		}
+		
+		@Override
+		public V get(Object key) {
+			Node k = (Node) key;
+			Map.Entry<Node, V> e = entries[k.shape.ordinal()][k.y][k.x];
+			return e == null ? null : e.getValue();
+		}
+		
+		public V put(Node key, V value) {
+			V old = get(key);
+			entries[key.shape.ordinal()][key.y][key.x] = new AbstractMap.SimpleEntry(key, value);
+			return old;
+		}
+		
+		@Override
+		public V remove(Object key) {
+			Node k = (Node) key;
+			V ret = get(key);
+			entries[k.shape.ordinal()][k.y][k.x] = null;	
+			return ret;
+		}
+		
+		@Override
+		public boolean containsKey(Object key) {
+			return get(key) != null;
 		}
 	}
 	

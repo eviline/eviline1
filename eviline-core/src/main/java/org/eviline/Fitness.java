@@ -84,7 +84,7 @@ public class Fitness {
 				}
 			}
 			maxHeight = Math.max(maxHeight, stackHeight[x - Field.BUFFER]);
-			score += columnTransitions * 65;
+			score += Math.pow(columnTransitions+1, 1.1) * 65;
 //			int w = x - Field.BUFFER;
 //			if(w > 0 && stackHeight[w] == stackHeight[w-1])
 //				score -= stackHeight[w];
@@ -98,6 +98,8 @@ public class Fitness {
 //		sr += Math.max(stackHeight[stackHeight.length - 2] - stackHeight[stackHeight.length - 1], 0);
 		
 		score += sr * 10;
+		
+		score -= Math.pow(maxHeight, field.lines);
 		
 		unpaintUnlikelies(field);
 		return score;

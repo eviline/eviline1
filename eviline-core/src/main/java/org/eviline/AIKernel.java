@@ -282,7 +282,7 @@ public class AIKernel {
 	private ExecutorService pool = Executors.newFixedThreadPool(4);
 
 	public Map<Node, List<PlayerAction>> allPathsFrom(Field field) {
-		Map<Node, List<PlayerAction>> shortestPaths = new HashMap<Node, List<PlayerAction>>();
+		Map<Node, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
 		
 		field = field.copy();
 		
@@ -297,9 +297,11 @@ public class AIKernel {
 //		shortestPaths.put(dasRight, Arrays.asList(new PlayerAction(field, Type.DAS_RIGHT)));
 		
 			for(int r = 0; r < 4; r++) {
+				if(!shortestPaths.containsKey(start))
+					continue;
 				pending.add(start);
 				Node n = start;
-				for(int i = 0; i < 7; i++) {
+				for(int i = 0; i < 10; i++) {
 					field.shapeX = n.getX();
 					PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
 					if(!pa.isPossible())
@@ -311,7 +313,7 @@ public class AIKernel {
 					pending.add(pa.getEndNode());
 				}
 				n = start;
-				for(int i = 0; i < 7; i++) {
+				for(int i = 0; i < 10; i++) {
 					field.shapeX = n.getX();
 					PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
 					if(!pa.isPossible())
@@ -330,106 +332,18 @@ public class AIKernel {
 				if(r < 3) {
 					List<PlayerAction> nl = new ArrayList<PlayerAction>(shortestPaths.get(pa.getStartNode()));
 					nl.add(pa);
-					shortestPaths.put(pa.getEndNode(), nl);
+					if(nl.size() == 3) {
+						field.shape = field.shape.rotateLeft();
+						PlayerAction rpa = new PlayerAction(field, Type.ROTATE_RIGHT);
+						field.shape = pa.getEndShape();
+						nl.clear();
+						nl.add(rpa);
+					}
+					if(pa.isPossible())
+						shortestPaths.put(pa.getEndNode(), nl);
 				}
 			}
 		
-//		{
-//			field.shapeX = origStart.getX();
-//			field.shapeY = origStart.getY();
-//			field.shape = origStart.getShape();
-//			PlayerAction pa = new PlayerAction(field, Type.ROTATE_RIGHT);
-//			start = pa.getEndNode();
-//			List<PlayerAction> nl = new ArrayList<PlayerAction>();
-//			nl.add(pa);
-//			shortestPaths.put(start, nl);
-//			pending.add(start);
-//			Node n = start;
-//			for(int i = 0; i < 7; i++) {
-//				field.shapeX = n.getX();
-//				pa = new PlayerAction(field, Type.SHIFT_LEFT);
-//				if(!pa.isPossible())
-//					break;
-//				nl = shortestPaths.get(n);
-//				nl = new ArrayList<PlayerAction>(nl);
-//				nl.add(pa);
-//				shortestPaths.put(n = pa.getEndNode(), nl);
-//				pending.add(pa.getEndNode());
-//			}
-//			n = start;
-//			for(int i = 0; i < 7; i++) {
-//				field.shapeX = n.getX();
-//				pa = new PlayerAction(field, Type.SHIFT_RIGHT);
-//				if(!pa.isPossible())
-//					break;
-//				nl = shortestPaths.get(n);
-//				nl = new ArrayList<PlayerAction>(nl);
-//				nl.add(pa);
-//				shortestPaths.put(n = pa.getEndNode(), nl);
-//				pending.add(pa.getEndNode());
-//			}
-//			field.shapeX = origStart.getX();
-//			field.shapeY = origStart.getY();
-//			field.shape = origStart.getShape();
-//			start = origStart;
-//		}
-		
-//		ArrayDeque<Node> toprow = new ArrayDeque<PlayerAction.Node>();
-//		toprow.addAll(pending);
-//		while(toprow.size() > 0) {
-//			n = toprow.pollFirst();
-//			List<PlayerAction> nl = shortestPaths.get(n);
-//			field.shape = n.getShape();
-//			field.shapeX = n.getX();
-//			field.shapeY = n.getY();
-//			for(Type t : new Type[] {Type.ROTATE_LEFT, Type.ROTATE_RIGHT}) {
-//				PlayerAction pa = new PlayerAction(field, t);
-//				if(!pa.isPossible())
-//					continue;
-//				Node dest = pa.getEndNode();
-//				List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl);
-//				destPath.add(pa);
-//				if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
-//					shortestPaths.put(dest, destPath);
-//					pending.offerLast(dest);
-//				}
-//			}
-//		}
-//
-//		toprow.addAll(pending);
-//		while(toprow.size() > 0) {
-//			List<PlayerAction> nl = shortestPaths.get(n);
-//			n = toprow.pollFirst();
-//			field.shape = n.getShape();
-//			field.shapeX = n.getX();
-//			field.shapeY = n.getY();
-//			Type t = Type.ROTATE_LEFT;
-//			PlayerAction pa = new PlayerAction(field, t);
-//			if(!pa.isPossible())
-//				continue;
-//			n = pa.getEndNode();
-//			List<PlayerAction> nl2 = shortestPaths.get(n);
-//			if(nl2 == null) {
-//				nl2 = new ArrayList<PlayerAction>(nl);
-//				nl2.add(pa);
-//				shortestPaths.put(n, nl2);
-//			}
-//			field.shape = n.getShape();
-//			field.shapeX = n.getX();
-//			field.shapeY = n.getY();
-//			t = Type.ROTATE_LEFT;
-//			pa = new PlayerAction(field, t);
-//			if(!pa.isPossible())
-//				continue;
-//			
-//			Node dest = pa.getEndNode();
-//			List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl2);
-//			destPath.add(pa);
-//			if(!shortestPaths.containsKey(dest) || destPath.size() < shortestPaths.get(dest).size()) {
-//				shortestPaths.put(dest, destPath);
-//				pending.offerLast(dest);
-//			}
-//		}
 		
 		int minY = Integer.MAX_VALUE;
 		for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -445,15 +359,15 @@ public class AIKernel {
 		while(pending.size() > 0) {
 			n = pending.pollFirst();
 			List<PlayerAction> nl = shortestPaths.get(n);
-			field.shape = n.getShape();
-			field.shapeX = n.getX();
-			field.shapeY = n.getY();
 			Type[] values;
 			if(!highGravity && field.shapeY < 0) {
 				values = Type.shiftFirstValues();
 			} else
 				values = Type.dropFirstValues();
 			for(Type t : values) {
+				field.shape = n.getShape();
+				field.shapeX = n.getX();
+				field.shapeY = n.getY();
 				PlayerAction pa = new PlayerAction(field, t);
 				if(!pa.isPossible()) {
 					continue;
@@ -499,7 +413,9 @@ public class AIKernel {
 			if(starter.shape == null) {
 				starter.shape = context.type.starter();
 				starter.shapeY = context.type.starterY();
-				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
+//				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
+//				starter.shapeX = (Field.WIDTH + Field.BUFFER * 2 - starter.shape.width()) / 2;
+				starter.shapeY = context.type.starterX();
 			}
 			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
@@ -620,53 +536,69 @@ public class AIKernel {
 	}
 	
 	public Decision bestFor(Field inPlayField) {
-		Context context = new Context(null, inPlayField, 0);
+		final Context context = new Context(null, inPlayField, 0);
 		ShapeType type = inPlayField.shape.type();
 		
-		Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
+		final Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
 		
 		Field starter = inPlayField;
-		Field possibility = new Field();
-		Field paintedPossibility = new Field();
-		Field pretick = new Field();
 		
 //		Set<PlayerAction> visitedActions = new HashSet<PlayerAction>();
-		Map<Node, List<PlayerAction>> allPaths = allPathsFrom(inPlayField);
-		for(Shape shape : type.orientations()) {
-			
-			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
-				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
-				for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
-					boolean groundedAbove = grounded;
-					grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
-					if(!groundedAbove && grounded) {
-						context.original.copyInto(possibility);
-						possibility.lines = 0;
-						possibility.shape = shape;
-						possibility.shapeX = x;
-						possibility.shapeY = y;
-						possibility.copyInto(pretick);
-						possibility.clockTick();
-						possibility.shape = shape;
-						possibility.shapeX = x;
-						possibility.shapeY = y;
-						possibility.copyInto(paintedPossibility);
-						fitness.paintImpossibles(paintedPossibility);
-						double score = fitness.score(paintedPossibility);
-						score -= 10000 * Math.pow(possibility.lines, 1.5);
-						if(score < best.score) {
-							List<PlayerAction> pa = allPaths.get(new Node(shape, x, y));
-							if(pa == null)
-								continue;
-							best.bestPath = pa;
-							best.bestShape = shape;
-							best.bestShapeX = x;
-							best.bestShapeY = y;
-							best.score = score;
-							possibility.copyInto(best.field);
+		final Map<Node, List<PlayerAction>> allPaths = Collections.synchronizedMap(allPathsFrom(inPlayField));
+		List<Future<?>> futures = new ArrayList<Future<?>>();
+		for(final Shape shape : type.orientations()) {
+			Runnable task = new Runnable() {
+				@Override
+				public void run() {
+					Field possibility = new Field();
+					Field paintedPossibility = new Field();
+					Field pretick = new Field();
+					for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
+						boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
+						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
+							boolean groundedAbove = grounded;
+							grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
+							if(!groundedAbove && grounded) {
+								context.original.copyInto(possibility);
+								possibility.lines = 0;
+								possibility.shape = shape;
+								possibility.shapeX = x;
+								possibility.shapeY = y;
+								possibility.copyInto(pretick);
+								possibility.clockTick();
+								possibility.shape = shape;
+								possibility.shapeX = x;
+								possibility.shapeY = y;
+								possibility.copyInto(paintedPossibility);
+								fitness.paintImpossibles(paintedPossibility);
+								double score = fitness.score(paintedPossibility);
+								score -= 10000 * Math.pow(possibility.lines, 1.5);
+								synchronized(best) {
+									if(score < best.score) {
+										List<PlayerAction> pa = allPaths.get(new Node(shape, x, y));
+										if(pa == null)
+											continue;
+										best.bestPath = pa;
+										best.bestShape = shape;
+										best.bestShapeX = x;
+										best.bestShapeY = y;
+										best.score = score;
+										possibility.copyInto(best.field);
+									}
+								}
+							}
 						}
 					}
 				}
+			};
+			futures.add(pool.submit(task));
+		}
+		
+		for(Future<?> f : futures) {
+			try {
+				f.get();
+			} catch(Exception ex) {
+				throw new RuntimeException(ex);
 			}
 		}
 		

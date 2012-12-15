@@ -70,13 +70,13 @@ public enum ShapeType {
 	 */
 	public int starterY() {
 		switch(this) {
-		case O: return 1;
-		case S: return 1;
-		case Z: return 1;
-		case I: return 1;
-		case T: return 1;
-		case J: return 1;
-		case L: return 1;
+		case O: return Field.BUFFER - 2;
+		case S: return Field.BUFFER - 2;
+		case Z: return Field.BUFFER - 2;
+		case I: return Field.BUFFER - 2;
+		case T: return Field.BUFFER - 2;
+		case J: return Field.BUFFER - 2;
+		case L: return Field.BUFFER - 2;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
@@ -87,13 +87,13 @@ public enum ShapeType {
 	 */
 	public int starterX() {
 		switch(this) {
-		case O: return 1;
-		case S: return 0;
-		case Z: return 0;
-		case I: return 0;
-		case T: return 0;
-		case J: return 0;
-		case L: return 0;
+		case O: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case S: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case Z: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case I: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case T: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case J: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case L: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
