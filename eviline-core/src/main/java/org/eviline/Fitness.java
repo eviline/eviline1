@@ -79,7 +79,7 @@ public class Fitness {
 					columnTransitions++;
 				
 				if(b != null && b != Block.X && b != Block.G) {
-					score += 15 + Math.pow(1 + h / params[Weights.BLOCK_HEIGHT], h);
+					score += 15 + Math.pow(h, 1 / (2.6 - h / 10.));
 				}
 				else if(b == Block.X) {
 					impossibles++;
@@ -98,7 +98,7 @@ public class Fitness {
 			}
 		}
 		
-		score += Math.pow(columnTransitions + rowTransitions, params[Weights.TRANSITION_EXP]) * (10 + maxHeight);
+		score += Math.pow(columnTransitions + rowTransitions, params[Weights.TRANSITION_EXP]) * (5 + maxHeight);
 		score += Math.pow(params[Weights.IMPOSSIBLE_POWER], impossibles) * (10 + maxHeight);
 		score += Math.pow(params[Weights.UNLIKELY_POWER], unlikelies) * (10 + maxHeight);
 		
@@ -110,6 +110,8 @@ public class Fitness {
 		
 		// Weigh the lines cleared heavily
 		score -= Math.pow(field.lines * params[Weights.CLEARED_LINES], maxHeight);
+		
+//		score += Math.pow(maxHeight, 1/(2.6-maxHeight/10.));
 		
 		unpaintUnlikelies(field);
 		return score;
