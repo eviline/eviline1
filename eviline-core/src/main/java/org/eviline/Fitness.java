@@ -16,6 +16,28 @@ public class Fitness {
 	
 	public Fitness() {}
 	
+	public static interface Weights {
+		public static final int BLOCK_HEIGHT = 0;
+		public static final int TRANSITION_EXP = 1;
+		public static final int IMPOSSIBLE_POWER = 2;
+		public static final int UNLIKELY_POWER = 3;
+		public static final int SMOOTHNESS_MULT = 4;
+		public static final int CLEARED_LINES = 5;
+	}
+	
+	private double[] params = new double[] {
+			20.,
+			3,
+			2,
+			1.75,
+			10,
+			1
+	};
+	
+	public double[] getParams() {
+		return params;
+	}
+	
 	public double scoreWithPaint(Field field) {
 		paintImpossibles(field);
 		double ret = score(field);
@@ -57,7 +79,7 @@ public class Fitness {
 					columnTransitions++;
 				
 				if(b != null && b != Block.X && b != Block.G) {
-					score += 15 + Math.pow(1 + h / 20., h);
+					score += 15 + Math.pow(1 + h / params[Weights.BLOCK_HEIGHT], h);
 				}
 				else if(b == Block.X) {
 					impossibles++;
@@ -76,18 +98,18 @@ public class Fitness {
 			}
 		}
 		
-		score += Math.pow(columnTransitions + rowTransitions, 3) * (10 + maxHeight);
-		score += Math.pow(2, impossibles) * (10 + maxHeight);
-		score += Math.pow(1.75, unlikelies) * (10 + maxHeight);
+		score += Math.pow(columnTransitions + rowTransitions, params[Weights.TRANSITION_EXP]) * (10 + maxHeight);
+		score += Math.pow(params[Weights.IMPOSSIBLE_POWER], impossibles) * (10 + maxHeight);
+		score += Math.pow(params[Weights.UNLIKELY_POWER], unlikelies) * (10 + maxHeight);
 		
 		// Add in surface smoothness weight
 		int sr = 0;
 		for(int i = 0; i < stackHeight.length - 2; i++)
 			sr += Math.pow(1 + Math.abs(stackHeight[i] - stackHeight[i+1]), 2) - 1;
-		score += sr * 10 * maxHeight;
+		score += sr * params[Weights.SMOOTHNESS_MULT] * maxHeight;
 		
 		// Weigh the lines cleared heavily
-		score -= Math.pow(field.lines, maxHeight);
+		score -= Math.pow(field.lines * params[Weights.CLEARED_LINES], maxHeight);
 		
 		unpaintUnlikelies(field);
 		return score;
