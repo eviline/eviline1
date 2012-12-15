@@ -445,7 +445,6 @@ public class AIKernel {
 								continue;
 							if(!groundedAbove && grounded) {
 								context.original.copyInto(possibility);
-								possibility.lines = 0;
 								possibility.shape = shape;
 								possibility.shapeX = x;
 								possibility.shapeY = y;
