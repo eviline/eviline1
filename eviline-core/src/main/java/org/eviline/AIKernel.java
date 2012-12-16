@@ -497,6 +497,24 @@ public class AIKernel {
 			}
 		}
 		
+		if(context.shallower == null) {
+			Decision d = best.deeper;
+			Field df = best.field.copy();
+			while(d != null) {
+				if(d.type == null)
+					break;
+				df.shape = d.type.starter();
+				df.shapeX = d.type.starterX();
+				df.shapeY = d.type.starterY();
+				Map<Node, List<PlayerAction>> pla = allPathsFrom(df);
+				d.bestPath = pla.get(new Node(d.bestShape, d.bestShapeX, d.bestShapeY));
+				df = d.field.copy();
+				if(d == d.deeper)
+					break;
+				d = d.deeper;
+			}
+		}
+		
 		return best.copy();
 	}
 	
