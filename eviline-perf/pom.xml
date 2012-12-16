@@ -21,4 +21,16 @@
 		<version>1.0.14-SNAPSHOT</version>
 	</parent>
 	<artifactId>eviline-perf</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.googlecode.lanterna</groupId>
+			<artifactId>lanterna</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eviline</groupId>
+			<artifactId>eviline-core</artifactId>
+			<version>1.0.14-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>
