@@ -64,9 +64,13 @@ public class TestableField extends PropertiedField {
 		
 		v = body();
 		
+		Object postContext = v;
+		
 		if((c = get("postcondition")) != null)
-			if((v = postcondition(v)) == null || Boolean.FALSE.equals(v))
+			if((v = postcondition(v)) == null || Boolean.FALSE.equals(v)) {
+				System.out.println("For context object, " + postContext + ", assertion failed!");
 				Assert.fail("Failed postcondition:" + c);
+			}
 	}
 	
 	public Object precondition() {

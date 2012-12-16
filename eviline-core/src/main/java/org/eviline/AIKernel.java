@@ -145,9 +145,9 @@ public class AIKernel {
 		@Override
 		public QueueContext deeper(Field deeperOriginal) {
 			QueueContext deeper = new QueueContext(deeperOriginal.copy(), Arrays.copyOfRange(queue, 1, queue.length));
-			deeper.original = deeperOriginal.copy();
-			deeper.paintedImpossible = deeper.original.copy();
-			fitness.paintImpossibles(deeper.paintedImpossible);
+//			deeper.original = deeperOriginal.copy();
+//			deeper.paintedImpossible = deeper.original.copy();
+//			fitness.paintImpossibles(deeper.paintedImpossible);
 			deeper.shallower = this;
 			return deeper;
 		}
@@ -198,7 +198,7 @@ public class AIKernel {
 		/**
 		 * One level deeper in the final decision path
 		 */
-		public Decision deeper;
+		public volatile Decision deeper;
 		
 		public Decision() {}
 		public Decision(ShapeType type) {
@@ -223,7 +223,12 @@ public class AIKernel {
 		 */
 		public Decision copy() {
 			Decision c = new Decision(type, score, field);
-			c.deeper = deeper;
+			if(deeper == null)
+				c.deeper = null;
+			else if(deeper != this)
+				c.deeper = deeper.copy();
+			else
+				c.deeper = c;
 			c.bestPath = bestPath;
 			c.bestShape = bestShape;
 			c.bestShapeX = bestShapeX;
@@ -415,7 +420,7 @@ public class AIKernel {
 				starter.shapeY = context.type.starterY();
 //				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
 //				starter.shapeX = (Field.WIDTH + Field.BUFFER * 2 - starter.shape.width()) / 2;
-				starter.shapeY = context.type.starterX();
+				starter.shapeX = context.type.starterX();
 			}
 			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
@@ -462,8 +467,9 @@ public class AIKernel {
 										best.bestShapeY = y;
 										if(paths != null)
 											best.bestPath = paths.get(n);
-										best.deeper = option.copy();
+										best.deeper = option;
 										best.score = option.score;
+										best.field = possibility.copy();
 									}
 								}
 							}
