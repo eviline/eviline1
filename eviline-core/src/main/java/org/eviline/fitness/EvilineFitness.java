@@ -1,20 +1,12 @@
-package org.eviline;
+package org.eviline.fitness;
 
-public class Fitness {
+import org.eviline.Block;
+import org.eviline.Field;
+
+public class EvilineFitness extends Fitness {
 	
-	private static Fitness defaultInstance;
 	
-	public static Fitness getDefaultInstance() {
-		if(defaultInstance == null)
-			defaultInstance = new Fitness();
-		return defaultInstance;
-	}
-	
-	public static void setDefaultInstance(Fitness instance) {
-		Fitness.defaultInstance = instance;
-	}
-	
-	public Fitness() {}
+	public EvilineFitness() {}
 	
 	public static interface Weights {
 		public static final int BLOCK_HEIGHT = 0;
@@ -34,10 +26,17 @@ public class Fitness {
 			1
 	};
 	
+	@Override
 	public double[] getParams() {
 		return params;
 	}
 	
+	@Override
+	protected double normalize(double score) {
+		return score;
+	}
+	
+	@Override
 	public double scoreWithPaint(Field field) {
 		paintImpossibles(field);
 		double ret = score(field);
@@ -54,6 +53,7 @@ public class Fitness {
 	 * @param field
 	 * @return
 	 */
+	@Override
 	public double score(Field field) {
 		if(field.isGameOver())
 			return Double.POSITIVE_INFINITY;
@@ -109,7 +109,7 @@ public class Fitness {
 		score += sr * params[Weights.SMOOTHNESS_MULT] * maxHeight;
 		
 		// Weigh the lines cleared heavily
-		score -= Math.pow(field.lines * params[Weights.CLEARED_LINES], maxHeight);
+		score -= Math.pow(field.getLines() * params[Weights.CLEARED_LINES], maxHeight);
 		
 //		score += Math.pow(maxHeight, 1/(2.6-maxHeight/10.));
 		
@@ -117,10 +117,12 @@ public class Fitness {
 		return score;
 	}
 
+	@Override
 	public void paintImpossibles(Field field) {
 		paintImpossibles(field.getField());
 	}
 	
+	@Override
 	public void paintImpossibles(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -138,10 +140,12 @@ public class Fitness {
 		}
 	}
 
+	@Override
 	public void paintUnlikelies(Field field) {
 		paintUnlikelies(field.getField());
 	}
 	
+	@Override
 	public void paintUnlikelies(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -176,6 +180,7 @@ public class Fitness {
 		}
 	}
 	
+	@Override
 	public void unpaintUnlikelies(Field field) {
 		Block[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
@@ -186,6 +191,7 @@ public class Fitness {
 		}
 	}
 	
+	@Override
 	public void unpaintImpossibles(Field field) {
 		Block[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.eviline.event.EventDispatcher;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
+import org.eviline.fitness.Fitness;
 import org.eviline.randomizer.Randomizer;
 
 /**

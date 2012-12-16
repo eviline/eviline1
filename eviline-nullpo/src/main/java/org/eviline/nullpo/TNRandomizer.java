@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eviline.Field;
-import org.eviline.Fitness;
 import org.eviline.Shape;
+import org.eviline.fitness.Fitness;
 
 import mu.nu.nullpo.game.component.Block;
 import mu.nu.nullpo.game.component.Piece;

@@ -8,13 +8,14 @@ import java.util.Random;
 import org.eviline.AIKernel;
 import org.eviline.ExtendedPropertySource;
 import org.eviline.Field;
-import org.eviline.Fitness;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.AIKernel.Context;
 import org.eviline.AIKernel.Decision;
 import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.fitness.Fitness;
+
 import static org.eviline.randomizer.RandomizerFactory.*;
 
 /**

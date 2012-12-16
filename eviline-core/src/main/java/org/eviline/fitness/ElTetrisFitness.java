@@ -1,4 +1,7 @@
-package org.eviline;
+package org.eviline.fitness;
+
+import org.eviline.Block;
+import org.eviline.Field;
 
 public class ElTetrisFitness extends Fitness {
 	
@@ -11,6 +14,11 @@ public class ElTetrisFitness extends Fitness {
 	
 
 	@Override
+	protected double normalize(double score) {
+		return score * 100;
+	}
+	
+	@Override
 	public double scoreWithPaint(Field field) {
 		return super.scoreWithPaint(field);
 	}
@@ -18,9 +26,7 @@ public class ElTetrisFitness extends Fitness {
 	@Override
 	public double score(Field field) {
 		field = field.copy();
-		super.unpaintImpossibles(field);
-		super.unpaintUnlikelies(field);
-		Block[][] f = field.field;
+		Block[][] f = field.getField();
 		
 		int landingHeight;
 		int rowsEliminated;
@@ -30,10 +36,10 @@ public class ElTetrisFitness extends Fitness {
 		int wellSums;
 		
 		// Approximate landing height
-		landingHeight = Field.BUFFER + Field.HEIGHT - field.shapeY;
+		landingHeight = Field.BUFFER + Field.HEIGHT - field.getShapeY();
 		
 		// Approximate rows eliminated
-		rowsEliminated = field.lines;
+		rowsEliminated = field.getLines();
 		
 		// row transitions
 		rowTransitions = 0;

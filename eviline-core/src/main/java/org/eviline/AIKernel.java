@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 
 import org.eviline.PlayerAction.Node;
 import org.eviline.PlayerAction.Type;
+import org.eviline.fitness.Fitness;
 
 /**
  * Class which holds the AI algorithms.  These algorithms are documented in
@@ -195,6 +196,8 @@ public class AIKernel {
 		public int bestShapeX;
 		
 		public int bestShapeY;
+		
+		public double worstScore = Double.NEGATIVE_INFINITY;
 		/**
 		 * One level deeper in the final decision path
 		 */
@@ -233,6 +236,7 @@ public class AIKernel {
 			c.bestShape = bestShape;
 			c.bestShapeX = bestShapeX;
 			c.bestShapeY = bestShapeY;
+			c.worstScore = worstScore;
 			return c;
 		}
 		@Override
@@ -471,6 +475,8 @@ public class AIKernel {
 										best.score = option.score;
 										best.field = possibility.copy();
 									}
+									if(best.worstScore < option.score)
+										best.worstScore = option.score;
 								}
 							}
 						}
@@ -590,6 +596,8 @@ public class AIKernel {
 										best.score = score;
 										possibility.copyInto(best.field);
 									}
+									if(best.worstScore < score)
+										best.worstScore = score;
 								}
 							}
 						}
