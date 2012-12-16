@@ -413,7 +413,8 @@ public class AIKernel {
 			best.score = score;
 			return best;
 		}
-
+		
+		best.score = Double.POSITIVE_INFINITY;
 		
 		final Map<Node, List<PlayerAction>> paths;
 		if(context.shallower == null) {
@@ -461,10 +462,11 @@ public class AIKernel {
 								possibility.shape = shape;
 								possibility.shapeX = x;
 								possibility.shapeY = y;
+								double base = fitness.scoreWithPaint(possibility);
 								QueueContext deeper = context.deeper(possibility);
 								Decision option = bestFor(deeper);
 								synchronized(best) {
-									if(best.deeper == null || option.score < best.score) {
+									if(best.deeper == null || option.score + base < best.score) {
 										context.deeper = deeper;
 										best.bestShape = shape;
 										best.bestShapeX = x;
@@ -472,7 +474,7 @@ public class AIKernel {
 										if(paths != null)
 											best.bestPath = paths.get(n);
 										best.deeper = option;
-										best.score = option.score;
+										best.score = option.score + base;
 										best.field = possibility.copy();
 									}
 									if(best.worstScore < option.score)

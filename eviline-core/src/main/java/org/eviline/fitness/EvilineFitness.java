@@ -18,12 +18,12 @@ public class EvilineFitness extends Fitness {
 	}
 	
 	private double[] params = new double[] {
-			1.25,
-			3.25,
-			2,
-			1.75,
-			10,
-			1
+			1.4, // block height
+			3.25, // row/col trans
+			2, // impossibles
+			1.75, // unlikelies
+			50, // smoothness
+			1 // line clears
 	};
 	
 	@Override
