@@ -18,8 +18,8 @@ public class EvilineFitness extends Fitness {
 	}
 	
 	private double[] params = new double[] {
-			20.,
-			3,
+			1.25,
+			3.25,
 			2,
 			1.75,
 			10,
@@ -79,7 +79,7 @@ public class EvilineFitness extends Fitness {
 					columnTransitions++;
 				
 				if(b != null && b != Block.X && b != Block.G) {
-					score += 15 + Math.pow(h, 1 / (2.6 - h / 10.));
+					score += 15 + Math.pow(h * params[Weights.BLOCK_HEIGHT], 1 / (2.6 - h / 10.));
 				}
 				else if(b == Block.X) {
 					impossibles++;
@@ -104,7 +104,7 @@ public class EvilineFitness extends Fitness {
 		
 		// Add in surface smoothness weight
 		int sr = 0;
-		for(int i = 0; i < stackHeight.length - 2; i++)
+		for(int i = 1; i < stackHeight.length - 2; i++)
 			sr += Math.pow(1 + Math.abs(stackHeight[i] - stackHeight[i+1]), 2) - 1;
 		score += sr * params[Weights.SMOOTHNESS_MULT] * maxHeight;
 		
