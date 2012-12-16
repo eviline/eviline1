@@ -30,6 +30,7 @@
 		<module>eviline</module>
 		<module>eviline-nullpo</module>
 		<module>eviline-tomcat</module>
+		<module>eviline-perf</module>
 	</modules>
 
 	<build>
