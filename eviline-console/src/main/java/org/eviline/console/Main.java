@@ -13,6 +13,9 @@ import org.eviline.console.gui.FieldComponent;
 import org.eviline.console.gui.FieldStatisticsPanel;
 import org.eviline.randomizer.Bag7Randomizer;
 import org.eviline.randomizer.QueuedRandomizer;
+import org.eviline.randomizer.Randomizer;
+import org.eviline.randomizer.RandomizerFactory;
+import org.eviline.randomizer.RandomizerPresets;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.gui.Action;
@@ -33,8 +36,10 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Randomizer r = new RandomizerFactory().newRandomizer(RandomizerPresets.AGGRESSIVE);
+		
 		final Field field = new Field();
-		field.setProvider(new QueuedRandomizer(new Bag7Randomizer(), 1, true) );
+		field.setProvider(new QueuedRandomizer(r, 1, true) );
 		Player player = new DefaultPlayer(field, new AIKernel());
 		final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
 		
