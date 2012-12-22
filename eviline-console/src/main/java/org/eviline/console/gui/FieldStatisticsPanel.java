@@ -15,14 +15,14 @@ public class FieldStatisticsPanel extends Panel {
 	private Field field;
 	
 	private Panel next = new Panel(Orientation.VERTICAL);
-	private Label current = new Label();
 	private Label lines = new Label();
 	
 	public FieldStatisticsPanel(Field field) {
 		super(Orientation.VERTICAL);
 		this.field = field;
 		setLayoutManager(new BorderLayout());
-		next.setLayoutManager(new VerticalLayout());
+		next.addComponent(new Label("Next:"));
+		next.addComponent(new NextShapeComponent(field));
 		addComponent(next, BorderLayout.TOP);
 		Panel p = new Panel(Orientation.VERTICAL);
 		p.addComponent(new Label("Lines:"));
@@ -33,23 +33,7 @@ public class FieldStatisticsPanel extends Panel {
 	}
 	
 	@Override
-	protected TerminalSize calculatePreferredSize() {
-		next.removeAllComponents();
-		next.addComponent(current);
-		for(ShapeType t : field.getProvider().getNext()) {
-			next.addComponent(new Label(t.toString()));
-		}
-		return super.calculatePreferredSize();
-	}
-	
-	@Override
 	public void repaint(TextGraphics graphics) {
-		current.setText(field.getShape() == null ? "" : field.getShape().type().toString());
-		next.removeAllComponents();
-		next.addComponent(current);
-		for(ShapeType t : field.getProvider().getNext()) {
-			next.addComponent(new Label(t.toString()));
-		}
 		lines.setText("" + field.getLines());
 		super.repaint(graphics);
 	}
