@@ -40,4 +40,22 @@
 		<relativePath>..</relativePath>
 		<version>1.0.14-SNAPSHOT</version>
 	</parent>
+	
+	<profiles>
+		<profile>
+			<id>main</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<configuration>
+							<mainClass>org.eviline.console.Main</mainClass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

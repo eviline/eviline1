@@ -1,5 +1,7 @@
 package org.eviline.console;
 
+import java.util.concurrent.Semaphore;
+
 import org.eviline.Field;
 import org.eviline.ai.AIKernel;
 import org.eviline.ai.DefaultPlayer;
@@ -9,6 +11,7 @@ import org.eviline.console.gui.FieldComponent;
 import org.eviline.randomizer.Bag7Randomizer;
 
 import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.Border;
 import com.googlecode.lanterna.gui.GUIScreen;
 import com.googlecode.lanterna.gui.Window;
@@ -40,11 +43,26 @@ public class Main {
 		Runnable ticker = new Runnable() {
 			@Override
 			public void run() {
+				final Semaphore sync = new Semaphore(0);
 				while(!field.isGameOver()) {
 					synchronized(field) {
 						harness.tick();
 					}
-					gui.invalidate();
+					if(field.getShape() == null) {
+						gui.runInEventThread(new Action() {
+							@Override
+							public void doAction() {
+								gui.invalidate();
+								gui.runInEventThread(new Action() {
+									@Override
+									public void doAction() {
+										sync.release();
+									}
+								});
+							}
+						});
+						sync.acquireUninterruptibly();
+					}
 				}
 				gui.getScreen().stopScreen();
 			}
