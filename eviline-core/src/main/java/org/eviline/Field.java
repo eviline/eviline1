@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.eviline.event.EventDispatcher;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
+import org.eviline.fitness.Fitness;
 import org.eviline.randomizer.Randomizer;
 
 /**
@@ -188,7 +189,9 @@ public class Field implements Serializable {
 				return;
 			shape = shape.type().starter();
 			shapeY = shape.type().starterY();
-			shapeX = WIDTH / 2 + Field.BUFFER - 2 + shape.type().starterX();
+//			shapeX = WIDTH / 2 + Field.BUFFER - 2 + shape.type().starterX();
+//			shapeX = (WIDTH + 2 * BUFFER - shape.width()) / 2;
+			shapeX = shape.type().starterX();
 			if(!shape.intersects(field, shapeX, shapeY+1)) // Move the shape down one row if possible
 				shapeY++;
 			reghost();
@@ -373,6 +376,30 @@ public class Field implements Serializable {
 		}
 	}
 	
+	public void reverseRotateLeft() {
+		if(paused || shape == null)
+			return;
+		Shape rotated = shape.rotateRight();
+		int[][] table = KickTable.forShape(shape.type(), rotated.direction(), shape.direction()).table();
+		
+		int kickI = -1;
+		for(int i = table.length - 1; i >= 0; i--) {
+			int[] kick = table[i];
+			int x = shapeX - kick[0];
+			int y = shapeY - kick[1];
+			if(!rotated.intersects(field, x, y)) {
+				kickI = i;
+			}
+		}
+		if(kickI == -1)
+			return;
+		shapeX -= table[kickI][0];
+		shapeY -= table[kickI][1];
+		shape = rotated;
+		reghost();
+		autoshift();
+	}
+	
 	/**
 	 * Clockwise shape rotation
 	 */
@@ -398,6 +425,30 @@ public class Field implements Serializable {
 				return;
 			}
 		}
+	}
+	
+	public void reverseRotateRight() {
+		if(paused || shape == null)
+			return;
+		Shape rotated = shape.rotateLeft();
+		int[][] table = KickTable.forShape(shape.type(), rotated.direction(), shape.direction()).table();
+		
+		int kickI = -1;
+		for(int i = table.length - 1; i >= 0; i--) {
+			int[] kick = table[i];
+			int x = shapeX - kick[0];
+			int y = shapeY - kick[1];
+			if(!rotated.intersects(field, x, y)) {
+				kickI = i;
+			}
+		}
+		if(kickI == -1)
+			return;
+		shapeX -= table[kickI][0];
+		shapeY -= table[kickI][1];
+		shape = rotated;
+		reghost();
+		autoshift();
 	}
 	
 	public void garbage(int lines) {
@@ -785,7 +836,7 @@ public class Field implements Serializable {
 			}
 			sb.append("\n");
 		}
-		sb.append("Score " + Fitness.score(this));
+		sb.append("Score " + Fitness.getDefaultInstance().score(this));
 		return sb.toString();
 	}
 }

@@ -8,14 +8,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
 
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
@@ -40,10 +40,15 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 		Shape shape = decision.type.starter();
 //		taunt = score.taunt;
 		recent.add(shape.type());
+		history.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+//		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		if(history.size() > config.distribution() * typeCounts.length) {
+			ShapeType hdrop = history.remove(0);
+			typeCounts[hdrop.ordinal()]--;
+		}
 		return shape;
 	}
 	
@@ -67,7 +72,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				ThreadedMaliciousRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth());
+		final Context context = AIKernel.getInstance().new Context(decisionModifier, field, depth());
 		
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
 		for(final ShapeType type : ShapeType.values()) {

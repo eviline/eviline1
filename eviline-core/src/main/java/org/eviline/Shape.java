@@ -129,25 +129,38 @@ public enum Shape {
 	
 	private int[] bx = new int[4];
 	private int[] by = new int[4];
+	private int width;
+	private int height;
 	
 	private Shape(Block[][] shape) {
 		this.shape = shape;
 		int b = 0;
+		int xmin = 4, xmax = -1, ymin = 4, ymax = -1;
 		for(int y = 0; y < shape.length; y++) {
 			for(int x = 0; x < shape[y].length; x++) {
 				if(shape[y][x] != null) {
 					bx[b] = x;
 					by[b] = y;
 					b++;
+					xmin = Math.min(xmin, x);
+					xmax = Math.max(xmax, x);
+					ymin = Math.min(ymin, y);
+					ymax = Math.max(ymax, y);
 				}
 			}
 		}
 		type = ShapeType.valueOf(name().substring(0, 1));
+		width = xmax - xmin + 1;
+		height = ymax - ymin + 1;
 	}
 	
 	public Block[][] shape() {
 		return shape;
 	}
+	
+	public int width() { return width; }
+	
+	public int height() { return height; }
 	
 	public ShapeType type() {
 		return type;
@@ -239,10 +252,26 @@ public enum Shape {
 		int y3 = y + by[3];
 		if((y0 | y1 | y2 | y3) < 0)
 			return true;
-		Block b0 = field[y0][x + bx[0]];
-		Block b1 = field[y1][x + bx[1]];
-		Block b2 = field[y2][x + bx[2]];
-		Block b3 = field[y3][x + bx[3]];
+		
+		int x0 = x + bx[0];
+		int x1 = x + bx[1];
+		int x2 = x + bx[2];
+		int x3 = x + bx[3];
+		
+		if(x0 < Field.BUFFER || x1 < Field.BUFFER || x2 < Field.BUFFER || x3 < Field.BUFFER)
+			return true;
+		if(
+				x0 >= Field.BUFFER + Field.WIDTH
+				|| x1 >= Field.BUFFER + Field.WIDTH
+				|| x2 >= Field.BUFFER + Field.WIDTH
+				|| x3 >= Field.BUFFER + Field.WIDTH)
+			return true;
+		
+		
+		Block b0 = field[y0][x0];
+		Block b1 = field[y1][x1];
+		Block b2 = field[y2][x2];
+		Block b3 = field[y3][x3];
 		if(b0 == null && b1 == null && b2 == null && b3 == null)
 			return false;
 		if((b0 == null || b0 == Block.G) && (b1 == null || b1 == Block.G) && (b2 == null || b2 == Block.G) && (b3 == null || b3 == Block.G))

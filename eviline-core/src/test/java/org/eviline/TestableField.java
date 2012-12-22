@@ -1,6 +1,7 @@
 package org.eviline;
 
-import org.eviline.AIKernel.QueueContext;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.QueueContext;
 import org.jruby.Ruby;
 import org.jruby.embed.ScriptingContainer;
 import org.jruby.javasupport.JavaUtil;
@@ -64,9 +65,13 @@ public class TestableField extends PropertiedField {
 		
 		v = body();
 		
+		Object postContext = v;
+		
 		if((c = get("postcondition")) != null)
-			if((v = postcondition(v)) == null || Boolean.FALSE.equals(v))
+			if((v = postcondition(v)) == null || Boolean.FALSE.equals(v)) {
+				System.out.println("For context object, " + postContext + ", assertion failed!");
 				Assert.fail("Failed postcondition:" + c);
+			}
 	}
 	
 	public Object precondition() {
@@ -93,7 +98,7 @@ public class TestableField extends PropertiedField {
 		ShapeType[] ret = new ShapeType[chars.length];
 		for(int i = 0; i < chars.length; i++)
 			ret[i] = ShapeType.valueOf("" + chars[i]);
-		return new QueueContext(this, ret);
+		return AIKernel.getInstance().new QueueContext(this, ret);
 	}
 	
 	public AIKernel getAi() {

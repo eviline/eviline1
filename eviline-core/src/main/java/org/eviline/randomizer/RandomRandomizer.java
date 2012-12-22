@@ -11,7 +11,7 @@ import org.eviline.Shape;
  * @author robin
  *
  */
-public class RandomRandomizer implements Randomizer, Serializable {
+public class RandomRandomizer extends AbstractRandomizer implements Randomizer, Serializable {
 
 	protected PropertySource config;
 	

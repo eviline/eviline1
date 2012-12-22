@@ -6,14 +6,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
 
 public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 	private static final long serialVersionUID = 0;
@@ -38,11 +38,16 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		taunt = decision.taunt();
 		if(taunt.length() > 0)
 			taunt = taunt.substring(0, 1);
-		recent.add(shape.type());
+		recent.add(decision.type);
+		history.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[shape.type().ordinal()]++;
-		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+//		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		if(history.size() > config.distribution() * typeCounts.length) {
+			ShapeType hdrop = history.remove(0);
+			typeCounts[hdrop.ordinal()]--;
+		}
 		return shape;
 	}
 
@@ -63,7 +68,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				AngelRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth());
+		final Context context = AIKernel.getInstance().new Context(decisionModifier, field, depth());
 		context.omit = omit;
 
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
@@ -112,8 +117,11 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 		if(typeDecision.score == Double.POSITIVE_INFINITY)
 			return;
 		typeDecision.score *= 1 + rfactor() - 2 * rfactor() * random.nextDouble();
-		if(fair())
-			typeDecision.score *= (distribution() + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		if(fair()) {
+			double overuse = typeCounts[typeDecision.type.ordinal()] / (double) distribution() - 1;
+			overuse /= 3;
+			typeDecision.score += Math.abs(typeDecision.score) * overuse;
+		}
 		if(typeDecision.type == ShapeType.O) {
 			typeDecision.score += 0.2 * Math.abs(typeDecision.score);
 		}

@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.eviline.AIKernel;
 import org.eviline.ExtendedPropertySource;
 import org.eviline.Field;
-import org.eviline.Fitness;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
+import org.eviline.fitness.Fitness;
+
 import static org.eviline.randomizer.RandomizerFactory.*;
 
 /**
@@ -85,6 +86,7 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	
 	protected List<ShapeType> recent = new ArrayList<ShapeType>();
 	protected int[] typeCounts = new int[ShapeType.values().length];
+	protected List<ShapeType> history = new ArrayList<ShapeType>();
 	protected int distAdjustment = 0;
 	
 	protected Random random = new Random();
@@ -113,16 +115,42 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		Shape shape = decision.type.starter();
 //		taunt = score.taunt;
 		recent.add(decision.type);
+		history.add(decision.type);
 		while(recent.size() > HISTORY_SIZE)
 			recent.remove(0);
 		typeCounts[decision.type.ordinal()]++;
-		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+//		typeCounts[(int)(typeCounts.length * random.nextDouble())]--;
+		if(history.size() > config.distribution() * typeCounts.length) {
+			ShapeType hdrop = history.remove(0);
+			typeCounts[hdrop.ordinal()]--;
+		}
 		return shape;
 	}
 	
 	@Override
 	public String getTaunt() {
 		return taunt;
+	}
+	
+	@Override
+	public List<ShapeType> getNext() {
+		String taunt = getTaunt();
+		if(taunt == null || taunt.length() < 2)
+			return new ArrayList<ShapeType>();
+		List<ShapeType> ret = new ArrayList<ShapeType>();
+		for(int i = 1; i < taunt.length(); i++) {
+			char c = taunt.charAt(i);
+			switch(c) {
+			case 'O': ret.add(ShapeType.O); break;
+			case 'T': ret.add(ShapeType.T); break;
+			case 'J': ret.add(ShapeType.J); break;
+			case 'L': ret.add(ShapeType.L); break;
+			case 'S': ret.add(ShapeType.S); break;
+			case 'Z': ret.add(ShapeType.Z); break;
+			case 'I': ret.add(ShapeType.I); break;
+			}
+		}
+		return ret;
 	}
 	
 	protected Decision decide(Field field, String taunt, int depth) {
@@ -146,11 +174,11 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				permuteDecision(decision);
 			}
 		};
-		Context context = new Context(decisionModifier, field, this.depth() - depth);
+		Context context = AIKernel.getInstance().new Context(decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
-		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
+		defaultDecision.score = AIKernel.getInstance().getFitness().scoreWithPaint(defaultDecision.field);
 		Decision decision = AIKernel.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;
@@ -160,8 +188,11 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		if(typeDecision.score == Double.POSITIVE_INFINITY || typeDecision.score == Double.NEGATIVE_INFINITY)
 			return;
 		typeDecision.score *= 1 + rfactor() - 2 * rfactor() * random.nextDouble();
-		if(fair())
-			typeDecision.score *= (distribution() + distAdjustment) / (double) typeCounts[typeDecision.type.ordinal()];
+		if(fair()) {
+			double overuse = typeCounts[typeDecision.type.ordinal()] / (double) distribution() - 1;
+			overuse /= 3;
+			typeDecision.score -= Math.abs(typeDecision.score) * overuse;
+		}
 		if(typeDecision.type == ShapeType.O) {
 			typeDecision.score -= 0.2 * Math.abs(typeDecision.score);
 		}

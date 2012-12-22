@@ -268,7 +268,7 @@ public class MainApplet extends JApplet implements PropertySource {
 	}
 	
 	protected JPanel createDifficultyPanel() {
-		final DifficultyPanel ret = new DifficultyPanel(field, this);
+		final DifficultyPanel ret = new DifficultyPanel(field, this, false);
 
 		ret.addActionListener(new ActionListener() {
 			@Override
@@ -319,6 +319,7 @@ public class MainApplet extends JApplet implements PropertySource {
 					field.addTetrevilListener(soundListener);
 				else
 					field.removeTetrevilListener(soundListener);
+				setParameter("sounds", "" + soundEnabled);
 			}
 		});
 		sound.setBackground(Color.WHITE);
@@ -333,6 +334,7 @@ public class MainApplet extends JApplet implements PropertySource {
 				} else {
 					field.removeTetrevilListener(musicListener);
 				}
+				setParameter("music", "" + musicEnabled);
 			}
 		});
 		music.setBackground(Color.WHITE);

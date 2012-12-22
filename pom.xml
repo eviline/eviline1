@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eviline</groupId>
 	<artifactId>eviline-pom</artifactId>
-	<version>1.0.12-SNAPSHOT</version>
+	<version>1.0.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -26,13 +26,33 @@
 	</licenses>
 
 	<modules>
+		<module>eviline-core</module>
 		<module>eviline</module>
+		<module>eviline-nullpo</module>
 		<module>eviline-tomcat</module>
 		<module>eviline-console</module>
-		<module>eviline-core</module>
+		<module>eviline-perf</module>
 	</modules>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>.gitignore</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<excludes>
+					<exclude>.gitignore</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+	
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -85,6 +105,13 @@
 							<goal>sign</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>verify</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
 				</executions>
 				<configuration>
 					<keystore>../keystore</keystore>
@@ -129,17 +156,22 @@
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline</artifactId>
-				<version>1.0.12-SNAPSHOT</version>
+				<version>1.0.14-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-core</artifactId>
-				<version>1.0.12-SNAPSHOT</version>
+				<version>1.0.14-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eviline</groupId>
+				<artifactId>eviline-nullpo</artifactId>
+				<version>1.0.14-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-tomcat</artifactId>
-				<version>1.0.12-SNAPSHOT</version>
+				<version>1.0.14-SNAPSHOT</version>
 				<type>war</type>
 			</dependency>
 		</dependencies>
