@@ -9,6 +9,7 @@ import org.eviline.ai.Player;
 import org.eviline.ai.PlayerFieldHarness;
 import org.eviline.console.gui.FieldComponent;
 import org.eviline.randomizer.Bag7Randomizer;
+import org.eviline.randomizer.QueuedRandomizer;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.gui.Action;
@@ -28,13 +29,13 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		final Field field = new Field();
-		field.setProvider(new Bag7Randomizer());
+		field.setProvider(new QueuedRandomizer(new Bag7Randomizer(), 0, true) );
 		Player player = new DefaultPlayer(field, new AIKernel());
 		final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		gui.getScreen().startScreen();
-		Window w = new Window("EVILINE");
+		final Window w = new Window("EVILINE");
 		Panel p = new Panel(new Border.Invisible(), Orientation.HORISONTAL);
 		p.setLayoutManager(new BorderLayout());
 		p.addComponent(new FieldComponent(field), BorderLayout.LEFT);
@@ -64,7 +65,9 @@ public class Main {
 						sync.acquireUninterruptibly();
 					}
 				}
+				w.close();
 				gui.getScreen().stopScreen();
+				
 			}
 		};
 		
