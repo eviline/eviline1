@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.eviline.AIKernel;
 import org.eviline.ExtendedPropertySource;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
 import org.eviline.fitness.Fitness;
 
 import static org.eviline.randomizer.RandomizerFactory.*;

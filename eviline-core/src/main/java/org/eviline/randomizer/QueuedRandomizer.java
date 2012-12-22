@@ -10,14 +10,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.SynchronousQueue;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.QueueContext;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.QueueContext;
 
 public class QueuedRandomizer implements Randomizer {
 	protected Randomizer provider;

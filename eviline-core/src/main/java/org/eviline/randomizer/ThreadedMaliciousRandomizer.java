@@ -8,14 +8,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
 
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();

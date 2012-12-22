@@ -1,4 +1,4 @@
-package org.eviline;
+package org.eviline.ai;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -13,7 +13,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.eviline.Block;
+import org.eviline.Field;
+import org.eviline.PlayerAction;
+import org.eviline.Shape;
+import org.eviline.ShapeType;
 import org.eviline.PlayerAction.Node;
+import org.eviline.PlayerAction.NodeMap;
 import org.eviline.PlayerAction.Type;
 import org.eviline.fitness.Fitness;
 

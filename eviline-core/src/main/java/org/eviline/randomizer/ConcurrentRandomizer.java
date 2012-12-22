@@ -6,13 +6,13 @@ import java.util.concurrent.Exchanger;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
 
 /**
  * {@link Randomizer} which runs concurrently with game play.  This {@link Randomizer} doesn't
