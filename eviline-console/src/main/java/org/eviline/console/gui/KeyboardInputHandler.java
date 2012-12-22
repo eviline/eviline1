@@ -7,6 +7,9 @@ import org.eviline.Field;
 import org.eviline.ShapeDirection;
 
 import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui.dialog.DialogButtons;
+import com.googlecode.lanterna.gui.dialog.DialogResult;
+import com.googlecode.lanterna.gui.dialog.MessageBox;
 import com.googlecode.lanterna.gui.listener.WindowAdapter;
 import com.googlecode.lanterna.input.InputProvider;
 import com.googlecode.lanterna.input.Key;
@@ -47,6 +50,16 @@ public class KeyboardInputHandler extends WindowAdapter {
 			rotateLeft();
 		else if(key.getCharacter() == 'x')
 			rotateRight();
+		else if(key.getKind() == Kind.Escape)
+			promptExit(window);
+	}
+	
+	protected void promptExit(Window window) {
+		field.setPaused(true);
+		DialogResult r = MessageBox.showMessageBox(window.getOwner(), "Really Quit?", "Really quit EVILINE?", DialogButtons.YES_NO);
+		if(r == DialogResult.YES)
+			System.exit(0);
+		field.setPaused(false);
 	}
 	
 	protected void shiftDown() {
