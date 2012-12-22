@@ -496,6 +496,10 @@ public class Field implements Serializable {
 		return field[y][x];
 	}
 	
+	public Block getFieldBlock(int x, int y) {
+		return getBlock(x + Field.BUFFER, y + Field.BUFFER);
+	}
+	
 	public BlockMetadata getMetadata(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
 			Block[][] s = shape.shape();
