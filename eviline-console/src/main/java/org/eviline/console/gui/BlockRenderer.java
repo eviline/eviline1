@@ -52,8 +52,9 @@ public class BlockRenderer {
 		switch(b) {
 		case G: return '#';
 		case O: case OA: return '\u2593';
+		case S: case SA: return '\u2591';
 		}
-		return '\u2591';
+		return '\u2592';
 	}
 	
 	public void render(Block b, TextGraphics g, int x, int y) {

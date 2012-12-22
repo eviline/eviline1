@@ -46,6 +46,7 @@ public class Main {
 					}
 					gui.invalidate();
 				}
+				gui.getScreen().stopScreen();
 			}
 		};
 		
