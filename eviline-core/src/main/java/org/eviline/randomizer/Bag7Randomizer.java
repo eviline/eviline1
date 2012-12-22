@@ -11,7 +11,7 @@ import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 
-public class Bag7Randomizer implements Randomizer {
+public class Bag7Randomizer extends AbstractRandomizer implements Randomizer {
 
 	protected PropertySource config = new BasicPropertySource();
 	

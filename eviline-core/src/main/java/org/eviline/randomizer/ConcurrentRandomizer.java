@@ -22,7 +22,7 @@ import org.eviline.ai.AIKernel.Decision;
  * @author robin
  *
  */
-public class ConcurrentRandomizer implements Randomizer, Serializable {
+public class ConcurrentRandomizer extends AbstractRandomizer implements Randomizer, Serializable {
 
 	protected Randomizer provider;
 

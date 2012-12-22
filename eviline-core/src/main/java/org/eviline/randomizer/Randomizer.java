@@ -1,8 +1,11 @@
 package org.eviline.randomizer;
 
+import java.util.List;
+
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
+import org.eviline.ShapeType;
 
 /**
  * Interface for objects which can provide {@link Shape}s to a {@link Field}.
@@ -18,6 +21,8 @@ public interface Randomizer {
 	public Shape provideShape(Field field);
 	
 	public String getTaunt();
+	
+	public List<ShapeType> getNext();
 	
 	public PropertySource config();
 	

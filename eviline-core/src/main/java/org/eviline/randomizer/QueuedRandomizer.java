@@ -19,7 +19,7 @@ import org.eviline.ai.AIKernel.Context;
 import org.eviline.ai.AIKernel.Decision;
 import org.eviline.ai.AIKernel.QueueContext;
 
-public class QueuedRandomizer implements Randomizer {
+public class QueuedRandomizer extends AbstractRandomizer implements Randomizer {
 	protected Randomizer provider;
 
 	protected boolean concurrent;

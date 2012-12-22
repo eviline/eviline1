@@ -301,7 +301,7 @@ public class AIKernel {
 		
 		field = field.copy();
 		
-		Node start = new Node(field.shape, field.shapeX, field.shapeY);
+		Node start = new Node(field.getShape(), field.getShapeX(), field.getShapeY());
 		ArrayDeque<Node> pending = new ArrayDeque<Node>();
 		shortestPaths.put(start, new ArrayList<PlayerAction>());
 		
@@ -317,7 +317,7 @@ public class AIKernel {
 				pending.add(start);
 				Node n = start;
 				for(int i = 0; i < 10; i++) {
-					field.shapeX = n.getX();
+					field.setShapeX(n.getX());
 					PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
 					if(!pa.isPossible())
 						break;
@@ -329,7 +329,7 @@ public class AIKernel {
 				}
 				n = start;
 				for(int i = 0; i < 10; i++) {
-					field.shapeX = n.getX();
+					field.setShapeX(n.getX());
 					PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
 					if(!pa.isPossible())
 						break;
@@ -339,18 +339,18 @@ public class AIKernel {
 					shortestPaths.put(n = pa.getEndNode(), nl);
 					pending.add(pa.getEndNode());
 				}
-				field.shapeX = start.getX();
-				field.shapeY = start.getY();
+				field.setShapeX(start.getX());
+				field.setShapeY(start.getY());
 				PlayerAction pa = new PlayerAction(field, Type.ROTATE_LEFT);
-				field.shape = pa.getEndShape();
+				field.setShape(pa.getEndShape());
 				start = pa.getEndNode();
 				if(r < 3) {
 					List<PlayerAction> nl = new ArrayList<PlayerAction>(shortestPaths.get(pa.getStartNode()));
 					nl.add(pa);
 					if(nl.size() == 3) {
-						field.shape = field.shape.rotateLeft();
+						field.setShape(field.getShape().rotateLeft());
 						PlayerAction rpa = new PlayerAction(field, Type.ROTATE_RIGHT);
-						field.shape = pa.getEndShape();
+						field.setShape(pa.getEndShape());
 						nl.clear();
 						nl.add(rpa);
 					}
@@ -363,7 +363,7 @@ public class AIKernel {
 		int minY = Integer.MAX_VALUE;
 		for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
-				if(field.field[y][x] != null) {
+				if(field.getField()[y][x] != null) {
 					minY = Math.min(minY, y);
 					break;
 				}
@@ -375,20 +375,20 @@ public class AIKernel {
 			n = pending.pollFirst();
 			List<PlayerAction> nl = shortestPaths.get(n);
 			Type[] values;
-			if(!highGravity && field.shapeY < 0) {
+			if(!highGravity && field.getShapeY() < 0) {
 				values = Type.shiftFirstValues();
 			} else
 				values = Type.dropFirstValues();
 			for(Type t : values) {
-				field.shape = n.getShape();
-				field.shapeX = n.getX();
-				field.shapeY = n.getY();
+				field.setShape(n.getShape());
+				field.setShapeX(n.getX());
+				field.setShapeY(n.getY());
 				PlayerAction pa = new PlayerAction(field, t);
 				if(!pa.isPossible()) {
 					continue;
 				}
-				if((highGravity && !field.shape.intersects(field.field, field.shapeX, field.shapeY + 1)
-						|| field.shapeY < minY - 4
+				if((highGravity && !field.getShape().intersects(field.getField(), field.getShapeX(), field.getShapeY() + 1)
+						|| field.getShapeY() < minY - 4
 						|| hardDropOnly) 
 						&& t != Type.DOWN_ONE)
 					continue;
@@ -424,14 +424,14 @@ public class AIKernel {
 		
 		final Map<Node, List<PlayerAction>> paths;
 		if(context.shallower == null) {
-			context.original.lines = 0;
+			context.original.setLines(0);
 			Field starter = context.original.copy();
-			if(starter.shape == null) {
-				starter.shape = context.type.starter();
-				starter.shapeY = context.type.starterY();
+			if(starter.getShape() == null) {
+				starter.setShape(context.type.starter());
+				starter.setShapeY(context.type.starterY());
 //				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
 //				starter.shapeX = (Field.WIDTH + Field.BUFFER * 2 - starter.shape.width()) / 2;
-				starter.shapeX = context.type.starterX();
+				starter.setShapeX(context.type.starterX());
 			}
 			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
@@ -440,8 +440,8 @@ public class AIKernel {
 			fitness.paintUnlikelies(context.paintedImpossible);
 			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
 				for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++)
-					if(context.paintedImpossible.field[y][x] == Block.G)
-						context.paintedImpossible.field[y][x] = Block.X;
+					if(context.paintedImpossible.getField()[y][x] == Block.G)
+						context.paintedImpossible.getField()[y][x] = Block.X;
 			}
 		}
 		List<Future<?>> futures = new ArrayList<Future<?>>();
@@ -452,22 +452,22 @@ public class AIKernel {
 					for(int ix = Field.BUFFER - 2; ix < Field.WIDTH + Field.BUFFER + 2; ix++) {
 						final int x = ix;
 						Field possibility = new Field();
-						boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
+						boolean grounded = shape.intersects(context.paintedImpossible.getField(), x, 0);
 						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
 							boolean groundedAbove = grounded;
-							grounded = shape.intersects(paths == null ? context.paintedImpossible.field : context.original.field, x, y+1);
+							grounded = shape.intersects(paths == null ? context.paintedImpossible.getField() : context.original.getField(), x, y+1);
 							Node n = new Node(shape, x, y);
 							if(paths != null && !paths.containsKey(n))
 								continue;
 							if(!groundedAbove && grounded) {
 								context.original.copyInto(possibility);
-								possibility.shape = shape;
-								possibility.shapeX = x;
-								possibility.shapeY = y;
+								possibility.setShape(shape);
+								possibility.setShapeX(x);
+								possibility.setShapeY(y);
 								possibility.clockTick();
-								possibility.shape = shape;
-								possibility.shapeX = x;
-								possibility.shapeY = y;
+								possibility.setShape(shape);
+								possibility.setShapeX(x);
+								possibility.setShapeY(y);
 								double base = fitness.scoreWithPaint(possibility);
 								QueueContext deeper = context.deeper(possibility);
 								Decision option = bestFor(deeper);
@@ -511,9 +511,9 @@ public class AIKernel {
 			while(d != null) {
 				if(d.type == null)
 					break;
-				df.shape = d.type.starter();
-				df.shapeX = d.type.starterX();
-				df.shapeY = d.type.starterY();
+				df.setShape(d.type.starter());
+				df.setShapeX(d.type.starterX());
+				df.setShapeY(d.type.starterY());
 				Map<Node, List<PlayerAction>> pla = allPathsFrom(df);
 				d.bestPath = pla.get(new Node(d.bestShape, d.bestShapeX, d.bestShapeY));
 				df = d.field.copy();
@@ -541,24 +541,24 @@ public class AIKernel {
 		for(Shape shape : type.orientations()) {
 			
 			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
-				boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
+				boolean grounded = shape.intersects(context.paintedImpossible.getField(), x, 0);
 				for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
 					boolean groundedAbove = grounded;
-					grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
+					grounded = shape.intersects(context.paintedImpossible.getField(), x, y+1);
 					if(!groundedAbove && grounded) {
 						context.original.copyInto(possibility);
-						possibility.lines = 0;
-						possibility.shape = shape;
-						possibility.shapeX = x;
-						possibility.shapeY = y;
+						possibility.setLines(0);
+						possibility.setShape(shape);
+						possibility.setShapeX(x);
+						possibility.setShapeY(y);
 						possibility.clockTick();
-						possibility.shape = shape;
-						possibility.shapeX = x;
-						possibility.shapeY = y;
+						possibility.setShape(shape);
+						possibility.setShapeX(x);
+						possibility.setShapeY(y);
 						possibility.copyInto(paintedPossibility);
 						fitness.paintImpossibles(paintedPossibility);
 						double score = fitness.score(paintedPossibility);
-						score -= 10000 * Math.pow(possibility.lines, 1.5);
+						score -= 10000 * Math.pow(possibility.getLines(), 1.5);
 						if(score < best.score) {
 							best.bestShape = shape;
 							best.bestShapeX = x;
@@ -576,7 +576,7 @@ public class AIKernel {
 	
 	public Decision bestFor(Field inPlayField) {
 		final Context context = new Context(null, inPlayField, 0);
-		ShapeType type = inPlayField.shape.type();
+		ShapeType type = inPlayField.getShape().type();
 		
 		final Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
 		
@@ -592,24 +592,24 @@ public class AIKernel {
 					Field possibility = new Field();
 					Field paintedPossibility = new Field();
 					for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
-						boolean grounded = shape.intersects(context.paintedImpossible.field, x, 0);
+						boolean grounded = shape.intersects(context.paintedImpossible.getField(), x, 0);
 						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
 							boolean groundedAbove = grounded;
-							grounded = shape.intersects(context.paintedImpossible.field, x, y+1);
+							grounded = shape.intersects(context.paintedImpossible.getField(), x, y+1);
 							if(!groundedAbove && grounded) {
 								context.original.copyInto(possibility);
-								possibility.lines = 0;
-								possibility.shape = shape;
-								possibility.shapeX = x;
-								possibility.shapeY = y;
+								possibility.setLines(0);
+								possibility.setShape(shape);
+								possibility.setShapeX(x);
+								possibility.setShapeY(y);
 								possibility.clockTick();
-								possibility.shape = shape;
-								possibility.shapeX = x;
-								possibility.shapeY = y;
+								possibility.setShape(shape);
+								possibility.setShapeX(x);
+								possibility.setShapeY(y);
 								possibility.copyInto(paintedPossibility);
 								fitness.paintImpossibles(paintedPossibility);
 								double score = fitness.score(paintedPossibility);
-								score -= 10000 * Math.pow(possibility.lines, 1.5);
+								score -= 10000 * Math.pow(possibility.getLines(), 1.5);
 								synchronized(best) {
 									if(score < best.score) {
 										List<PlayerAction> pa = allPaths.get(new Node(shape, x, y));

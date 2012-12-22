@@ -6,7 +6,7 @@ import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 
-public class BipolarRandomizer implements Randomizer {
+public class BipolarRandomizer extends AbstractRandomizer implements Randomizer {
 	protected AngelRandomizer angelic;
 	protected ThreadedMaliciousRandomizer evil;
 	
