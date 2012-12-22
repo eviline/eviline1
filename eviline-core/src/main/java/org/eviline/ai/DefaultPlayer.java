@@ -24,12 +24,15 @@ public class DefaultPlayer extends AbstractPlayer {
 	public DefaultPlayer(Field field, AIKernel ai) {
 		super(field);
 		this.ai = ai;
+		setBlocking(true);
 	}
 	
 	protected Callable<Queue<PlayerAction>> newComputeTask(final Field field) {
 		return new Callable<Queue<PlayerAction>>() {
 			@Override
 			public Queue<PlayerAction> call() throws Exception {
+				if(field.getShape() == null)
+					return new ArrayDeque<PlayerAction>();
 				return new ArrayDeque<PlayerAction>(ai.bestFor(field).bestPath);
 			}
 		};
