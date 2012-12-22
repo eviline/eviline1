@@ -57,8 +57,11 @@ public class KeyboardInputHandler extends WindowAdapter {
 	protected void promptExit(Window window) {
 		field.setPaused(true);
 		DialogResult r = MessageBox.showMessageBox(window.getOwner(), "Really Quit?", "Really quit EVILINE?", DialogButtons.YES_NO);
-		if(r == DialogResult.YES)
+		if(r == DialogResult.YES) {
+			window.getOwner().getScreen().stopScreen();
+			window.getOwner().getScreen().clear();
 			System.exit(0);
+		}
 		field.setPaused(false);
 	}
 	
