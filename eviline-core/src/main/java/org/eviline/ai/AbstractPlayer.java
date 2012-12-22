@@ -20,8 +20,11 @@ public abstract class AbstractPlayer implements Player {
 		@Override
 		public PlayerAction next() {
 			if(moves.size() == 0) {
-				for(PlayerAction a : compute(field)) {
-					moves.offerLast(a);
+				Queue<PlayerAction> pm = compute(field);
+				if(pm != null) {
+					for(PlayerAction a : pm) {
+						moves.offerLast(a);
+					}
 				}
 			}
 			return moves.pollFirst();
@@ -34,8 +37,8 @@ public abstract class AbstractPlayer implements Player {
 		
 	}
 
-	private Field field;
-	private Deque<PlayerAction> moves = new ArrayDeque<PlayerAction>();
+	protected Field field;
+	protected Deque<PlayerAction> moves = new ArrayDeque<PlayerAction>();
 	
 	public AbstractPlayer(Field field) {
 		this.field = field;
