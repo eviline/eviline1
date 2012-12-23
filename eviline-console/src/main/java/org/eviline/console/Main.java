@@ -26,6 +26,7 @@ import com.googlecode.lanterna.gui.component.Label;
 import com.googlecode.lanterna.gui.component.Panel;
 import com.googlecode.lanterna.gui.component.Panel.Orientation;
 import com.googlecode.lanterna.gui.component.Separator;
+import com.googlecode.lanterna.gui.dialog.MessageBox;
 import com.googlecode.lanterna.gui.layout.BorderLayout;
 import com.googlecode.lanterna.gui.layout.LayoutParameter;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
@@ -48,6 +49,22 @@ public class Main {
 		new ConsoleEngine(field, gui).startEngine();
 		
 		gui.getScreen().startScreen();
+		
+		MessageBox.showMessageBox(
+				gui, 
+				"Controls", 
+				"EVILINE Controls:\n\n" +
+				"LEFT:           shift left one\n" +
+				"DOUBLE-LEFT:    autoshift left\n" +
+				"RIGHT:          shift right one\n" +
+				"DOUBLE-RIGHT:   autoshift right\n" +
+				"DOWN:           shift down one\n" +
+				"DOUBLE-DOWN:    soft drop\n" +
+				"UP:             hard drop\n" +
+				"Z:              rotate left\n" +
+				"X:              rotate right\n" +
+				"ESC:            pause/exit");
+		
 		gui.showWindow(w);
 	}
 
