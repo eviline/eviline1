@@ -1,5 +1,6 @@
 package org.eviline.console;
 
+import java.awt.TrayIcon.MessageType;
 import java.util.Properties;
 import java.util.concurrent.Semaphore;
 
@@ -14,6 +15,8 @@ import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.console.gui.EvilineWindow;
 import org.eviline.console.gui.FieldComponent;
 import org.eviline.console.gui.FieldStatisticsPanel;
+import org.eviline.event.TetrevilAdapter;
+import org.eviline.event.TetrevilEvent;
 import org.eviline.randomizer.Bag7Randomizer;
 import org.eviline.randomizer.QueuedRandomizer;
 import org.eviline.randomizer.Randomizer;
@@ -30,6 +33,8 @@ import com.googlecode.lanterna.gui.component.Label;
 import com.googlecode.lanterna.gui.component.Panel;
 import com.googlecode.lanterna.gui.component.Panel.Orientation;
 import com.googlecode.lanterna.gui.component.Separator;
+import com.googlecode.lanterna.gui.dialog.DialogButtons;
+import com.googlecode.lanterna.gui.dialog.DialogResult;
 import com.googlecode.lanterna.gui.dialog.MessageBox;
 import com.googlecode.lanterna.gui.layout.BorderLayout;
 import com.googlecode.lanterna.gui.layout.LayoutParameter;
@@ -52,6 +57,25 @@ public class Main {
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		Window w = new EvilineWindow(field);
 		
+		field.addTetrevilListener(new TetrevilAdapter() {
+			@Override
+			public void gameOver(TetrevilEvent e) {
+				gui.runInEventThread(new Action() {
+					@Override
+					public void doAction() {
+						DialogResult r = MessageBox.showMessageBox(gui, "Game Over", "Game Over!  Reset?", DialogButtons.YES_NO);
+						if(r == DialogResult.YES) {
+							field.reset();
+							return;
+						}
+						gui.getScreen().stopScreen();
+						gui.getScreen().clear();
+						gui.getScreen().getTerminal().setCursorVisible(true);
+						System.exit(0);
+					}
+				});
+			}
+		});
 		
 		gui.getScreen().startScreen();
 		
