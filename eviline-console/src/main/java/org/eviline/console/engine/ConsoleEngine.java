@@ -39,7 +39,7 @@ public class ConsoleEngine implements TetrevilListener {
 	protected long calculateDelay() {
 		if(field.isGrounded())
 			return 1000;
-		int level = field.getLines() / 10;
+		int level = Math.max(field.getLines() / 10, 0);
 		double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
 		return (long)(1000 * fss);
 	}
