@@ -1,8 +1,11 @@
 package org.eviline.console;
 
+import java.util.Properties;
 import java.util.concurrent.Semaphore;
 
+import org.eviline.BasicPropertySource;
 import org.eviline.Field;
+import org.eviline.PropertySource;
 import org.eviline.ai.AIKernel;
 import org.eviline.ai.DefaultPlayer;
 import org.eviline.ai.Player;
@@ -38,7 +41,9 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Randomizer r = new RandomizerFactory().newRandomizer(RandomizerPresets.AGGRESSIVE);
+		PropertySource mode = new BasicPropertySource(new Properties(RandomizerPresets.EVIL.getProperties()));
+		mode.put(RandomizerFactory.NEXT, "1");
+		Randomizer r = new RandomizerFactory().newRandomizer(mode);
 		
 		final Field field = new Field();
 		field.setProvider(new QueuedRandomizer(r, 1, true) );
