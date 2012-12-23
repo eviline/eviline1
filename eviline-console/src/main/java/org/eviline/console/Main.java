@@ -47,7 +47,6 @@ public class Main {
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		Window w = new EvilineWindow(field);
 		
-		new ConsoleEngine(field, gui).startEngine();
 		
 		gui.getScreen().startScreen();
 		
@@ -66,6 +65,7 @@ public class Main {
 				"X:              rotate right\n" +
 				"ESC:            pause/exit");
 		
+		new ConsoleEngine(field, gui).startEngine();
 		gui.showWindow(w, Position.CENTER);
 	}
 
