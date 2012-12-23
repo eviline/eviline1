@@ -68,6 +68,7 @@ public class Main {
 				"UP:             hard drop\n" +
 				"Z:              rotate left\n" +
 				"X:              rotate right\n" +
+				"A:              toggle AI\n" +
 				"ESC:            pause/exit");
 		
 		new ConsoleEngine(field, gui).startEngine();
