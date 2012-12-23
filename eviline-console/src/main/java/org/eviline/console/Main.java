@@ -21,6 +21,7 @@ import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.Border;
 import com.googlecode.lanterna.gui.GUIScreen;
+import com.googlecode.lanterna.gui.GUIScreen.Position;
 import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.component.Label;
 import com.googlecode.lanterna.gui.component.Panel;
@@ -65,7 +66,7 @@ public class Main {
 				"X:              rotate right\n" +
 				"ESC:            pause/exit");
 		
-		gui.showWindow(w);
+		gui.showWindow(w, Position.CENTER);
 	}
 
 }
