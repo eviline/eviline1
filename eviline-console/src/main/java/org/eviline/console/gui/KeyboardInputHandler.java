@@ -15,6 +15,7 @@ import org.eviline.event.TetrevilAdapter;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
 import org.eviline.randomizer.Bag7Randomizer;
+import org.eviline.randomizer.QueuedRandomizer;
 import org.eviline.randomizer.Randomizer;
 import org.eviline.randomizer.RandomizerFactory;
 import org.eviline.randomizer.RandomizerPresets;
@@ -52,7 +53,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 //		mode.put(RandomizerFactory.NEXT, "0");
 //		aiProvider = new RandomizerFactory().newRandomizer(mode);
 		
-		aiProvider = new Bag7Randomizer();
+		aiProvider = new QueuedRandomizer(new Bag7Randomizer(), 1, true);
 	}
 	
 	@Override
