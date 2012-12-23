@@ -40,8 +40,7 @@ public class Main {
 		
 		final Field field = new Field();
 		field.setProvider(new QueuedRandomizer(r, 1, true) );
-		Player player = new DefaultPlayer(field, new AIKernel());
-		final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
+		field.setGhosting(true);
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		Window w = new EvilineWindow(field);
