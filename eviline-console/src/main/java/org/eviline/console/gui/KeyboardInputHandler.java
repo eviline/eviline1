@@ -60,6 +60,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 		if(r == DialogResult.YES) {
 			window.getOwner().getScreen().stopScreen();
 			window.getOwner().getScreen().clear();
+			window.getOwner().getScreen().getTerminal().setCursorVisible(true);
 			System.exit(0);
 		}
 		field.setPaused(false);
