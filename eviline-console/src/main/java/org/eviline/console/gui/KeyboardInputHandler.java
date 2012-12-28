@@ -81,7 +81,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 			rotateLeft();
 		else if(key.getCharacter() == 'x')
 			rotateRight();
-		else if(key.getCharacter() == 'q')
+		else if(key.getKind() == Kind.Escape)
 			promptExit(window);
 		else if(key.getCharacter() == 'a') {
 			if(playerProvider == null) {
