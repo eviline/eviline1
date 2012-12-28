@@ -93,7 +93,7 @@ public class Main {
 				"Z:              rotate left\n" +
 				"X:              rotate right\n" +
 				"A:              toggle AI\n" +
-				"ESC:            pause/exit");
+				"Q:              pause/exit");
 		
 		new ConsoleEngine(field, gui).startEngine();
 		gui.showWindow(w, Position.CENTER);
