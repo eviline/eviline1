@@ -60,26 +60,6 @@ public class Main {
 
 		Window w = new EvilineWindow(engine);
 		
-		field.addTetrevilListener(new TetrevilAdapter() {
-			@Override
-			public void gameOver(TetrevilEvent e) {
-				gui.runInEventThread(new Action() {
-					@Override
-					public void doAction() {
-						DialogResult r = MessageBox.showMessageBox(gui, "Game Over", "Game Over!  Reset?", DialogButtons.YES_NO);
-						if(r == DialogResult.YES) {
-							field.reset();
-							return;
-						}
-						gui.getScreen().stopScreen();
-						gui.getScreen().clear();
-						gui.getScreen().getTerminal().setCursorVisible(true);
-						System.exit(0);
-					}
-				});
-			}
-		});
-		
 		gui.getScreen().startScreen();
 		
 		MessageBox.showMessageBox(

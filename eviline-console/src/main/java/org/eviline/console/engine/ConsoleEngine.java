@@ -12,6 +12,7 @@ import org.eviline.console.gui.RerenderTetrevilListener;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
 
+import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.GUIScreen;
 import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.dialog.DialogButtons;
@@ -68,14 +69,18 @@ public class ConsoleEngine implements TetrevilListener {
 		tickerFuture = null;
 	}
 	
+	public void systemExit() {
+		gui.getScreen().stopScreen();
+		gui.getScreen().clear();
+		gui.getScreen().getTerminal().setCursorVisible(true);
+		System.exit(0);
+	}
+	
 	public void promptExit() {
 		field.setPaused(true);
 		DialogResult r = MessageBox.showMessageBox(gui, "Really Quit?", "Really quit EVILINE?", DialogButtons.YES_NO);
 		if(r == DialogResult.YES) {
-			gui.getScreen().stopScreen();
-			gui.getScreen().clear();
-			gui.getScreen().getTerminal().setCursorVisible(true);
-			System.exit(0);
+			systemExit();
 		}
 		field.setPaused(false);
 	}
@@ -151,8 +156,17 @@ public class ConsoleEngine implements TetrevilListener {
 
 	@Override
 	public void gameOver(TetrevilEvent e) {
-		// TODO Auto-generated method stub
-		
+		gui.runInEventThread(new Action() {
+			@Override
+			public void doAction() {
+				DialogResult r = MessageBox.showMessageBox(gui, "Game Over", "Game Over!  Reset?", DialogButtons.YES_NO);
+				if(r == DialogResult.YES) {
+					field.reset();
+					return;
+				}
+				systemExit();
+			}
+		});
 	}
 
 	@Override
