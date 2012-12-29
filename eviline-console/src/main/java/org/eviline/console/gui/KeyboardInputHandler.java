@@ -11,6 +11,7 @@ import org.eviline.ShapeDirection;
 import org.eviline.ai.AIKernel;
 import org.eviline.ai.DefaultPlayer;
 import org.eviline.ai.PlayerFieldHarness;
+import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.event.TetrevilAdapter;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
@@ -32,7 +33,7 @@ import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.input.Key.Kind;
 
 public class KeyboardInputHandler extends WindowAdapter {
-	protected Field field;
+	protected ConsoleEngine engine;
 	
 	protected Map<Key, Long> lastInputTimes = new HashMap<Key, Long>();
 	protected long doubleTapTime = 200;
@@ -46,8 +47,8 @@ public class KeyboardInputHandler extends WindowAdapter {
 		}
 	};
 	
-	public KeyboardInputHandler(Field field) {
-		this.field = field;
+	public KeyboardInputHandler(ConsoleEngine engine) {
+		this.engine = engine;
 		
 //		PropertySource mode = new BasicPropertySource(new Properties(RandomizerPresets.ANGELIC.getProperties()));
 //		mode.put(RandomizerFactory.NEXT, "0");
@@ -64,26 +65,27 @@ public class KeyboardInputHandler extends WindowAdapter {
 		lastInputTimes.put(key, now);
 		
 		if(key.getKind() == Kind.ArrowDown && !doubleTab)
-			shiftDown();
+			engine.shiftDown();
 		else if(key.getKind() == Kind.ArrowDown && doubleTab)
-			softDrop();
+			engine.softDrop();
 		else if(key.getKind() == Kind.ArrowUp)
-			hardDrop();
+			engine.hardDrop();
 		else if(key.getKind() == Kind.ArrowLeft && !doubleTab)
-			shiftLeft();
+			engine.shiftLeft();
 		else if(key.getKind() == Kind.ArrowLeft && doubleTab)
-			dasLeft();
+			engine.dasLeft();
 		else if(key.getKind() == Kind.ArrowRight && !doubleTab)
-			shiftRight();
+			engine.shiftRight();
 		else if(key.getKind() == Kind.ArrowRight && doubleTab)
-			dasRight();
+			engine.dasRight();
 		else if(key.getCharacter() == 'z')
-			rotateLeft();
+			engine.rotateLeft();
 		else if(key.getCharacter() == 'x')
-			rotateRight();
+			engine.rotateRight();
 		else if(key.getKind() == Kind.Escape)
-			promptExit(window);
+			engine.promptExit();
 		else if(key.getCharacter() == 'a') {
+			Field field = engine.getField();
 			if(playerProvider == null) {
 				playerProvider = field.getProvider();
 				field.setProvider(aiProvider);
@@ -107,59 +109,5 @@ public class KeyboardInputHandler extends WindowAdapter {
 				playerProvider = null;
 			}
 		}
-	}
-	
-	protected void promptExit(Window window) {
-		field.setPaused(true);
-		DialogResult r = MessageBox.showMessageBox(window.getOwner(), "Really Quit?", "Really quit EVILINE?", DialogButtons.YES_NO);
-		if(r == DialogResult.YES) {
-			window.getOwner().getScreen().stopScreen();
-			window.getOwner().getScreen().clear();
-			window.getOwner().getScreen().getTerminal().setCursorVisible(true);
-			System.exit(0);
-		}
-		field.setPaused(false);
-	}
-	
-	protected void shiftDown() {
-		field.clockTick();
-	}
-	
-	protected void softDrop() {
-		while(!field.isGrounded())
-			field.clockTick();
-	}
-	
-	protected void hardDrop() {
-		softDrop();
-		field.clockTick();
-	}
-	
-	protected void shiftLeft() {
-		field.shiftLeft();
-	}
-	
-	protected void shiftRight() {
-		field.shiftRight();
-	}
-	
-	protected void dasLeft() {
-		field.setAutoShift(ShapeDirection.LEFT);
-		field.autoshift();
-		field.setAutoShift(null);
-	}
-	
-	protected void dasRight() {
-		field.setAutoShift(ShapeDirection.RIGHT);
-		field.autoshift();
-		field.setAutoShift(null);
-	}
-	
-	protected void rotateLeft() {
-		field.rotateLeft();
-	}
-	
-	protected void rotateRight() {
-		field.rotateRight();
 	}
 }

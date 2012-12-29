@@ -6,12 +6,17 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eviline.Field;
+import org.eviline.ShapeDirection;
 import org.eviline.console.gui.KeyboardInputHandler;
 import org.eviline.console.gui.RerenderTetrevilListener;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
 
 import com.googlecode.lanterna.gui.GUIScreen;
+import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui.dialog.DialogButtons;
+import com.googlecode.lanterna.gui.dialog.DialogResult;
+import com.googlecode.lanterna.gui.dialog.MessageBox;
 
 public class ConsoleEngine implements TetrevilListener {
 	protected Field field;
@@ -63,7 +68,62 @@ public class ConsoleEngine implements TetrevilListener {
 		tickerFuture = null;
 	}
 	
-	protected void restartTicker() {
+	public void promptExit() {
+		field.setPaused(true);
+		DialogResult r = MessageBox.showMessageBox(gui, "Really Quit?", "Really quit EVILINE?", DialogButtons.YES_NO);
+		if(r == DialogResult.YES) {
+			gui.getScreen().stopScreen();
+			gui.getScreen().clear();
+			gui.getScreen().getTerminal().setCursorVisible(true);
+			System.exit(0);
+		}
+		field.setPaused(false);
+	}
+	
+	public void shiftDown() {
+		field.clockTick();
+	}
+	
+	public void softDrop() {
+		while(!field.isGrounded())
+			field.clockTick();
+	}
+	
+	public void hardDrop() {
+		softDrop();
+		field.clockTick();
+	}
+	
+	public void shiftLeft() {
+		field.shiftLeft();
+	}
+	
+	public void shiftRight() {
+		field.shiftRight();
+	}
+	
+	public void dasLeft() {
+		field.setAutoShift(ShapeDirection.LEFT);
+		field.autoshift();
+		field.setAutoShift(null);
+	}
+	
+	public void dasRight() {
+		field.setAutoShift(ShapeDirection.RIGHT);
+		field.autoshift();
+		field.setAutoShift(null);
+	}
+	
+	public void rotateLeft() {
+		field.rotateLeft();
+	}
+	
+	public void rotateRight() {
+		field.rotateRight();
+	}
+
+	
+	public void restartTicker() {
 		if(!isRunning())
 			return;
 		tickerFuture.cancel(false);
@@ -137,5 +197,9 @@ public class ConsoleEngine implements TetrevilListener {
 	public void garbageReceived(TetrevilEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Field getField() {
+		return field;
 	}
 }

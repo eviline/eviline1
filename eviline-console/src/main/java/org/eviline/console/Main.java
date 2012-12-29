@@ -54,8 +54,11 @@ public class Main {
 		field.setProvider(new QueuedRandomizer(r, 1, true) );
 		field.setGhosting(true);
 		
+		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
-		Window w = new EvilineWindow(field);
+		ConsoleEngine engine = new ConsoleEngine(field, gui);
+
+		Window w = new EvilineWindow(engine);
 		
 		field.addTetrevilListener(new TetrevilAdapter() {
 			@Override
@@ -95,7 +98,7 @@ public class Main {
 				"A:              toggle AI\n" +
 				"ESC:            pause/exit");
 		
-		new ConsoleEngine(field, gui).startEngine();
+		engine.startEngine();
 		gui.showWindow(w, Position.CENTER);
 	}
 
