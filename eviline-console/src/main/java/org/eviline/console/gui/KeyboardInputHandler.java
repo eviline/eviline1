@@ -33,7 +33,51 @@ import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.input.Key.Kind;
 
 public class KeyboardInputHandler extends WindowAdapter {
+	public static class Controls {
+		public static final int PAUSE_EXIT = 0;
+		public static final int SHIFT_DOWN = 1;
+		public static final int SHIFT_LEFT = 2;
+		public static final int SHIFT_RIGHT = 3;
+		public static final int HARD_DROP = 4;
+		public static final int ROTATE_LEFT = 5;
+		public static final int ROTATE_RIGHT = 6;
+		public static final int TOGGLE_AI = 7;
+		public static final int TOGGLE_CONTROLS = 8;
+		
+		public static final Controls DEFAULT_CONTROLS = new Controls(
+				PAUSE_EXIT, Key.Kind.Escape.getRepresentationKey(),
+				SHIFT_DOWN, Key.Kind.ArrowDown.getRepresentationKey(),
+				SHIFT_LEFT, Key.Kind.ArrowLeft.getRepresentationKey(),
+				SHIFT_RIGHT, Key.Kind.ArrowRight.getRepresentationKey(),
+				HARD_DROP, Key.Kind.ArrowUp.getRepresentationKey(),
+				ROTATE_LEFT, 'z',
+				ROTATE_RIGHT, 'x',
+				TOGGLE_AI, 'a',
+				TOGGLE_CONTROLS, 'm');
+		
+		public static final Controls MOBILE_CONTROLS = new Controls(
+				PAUSE_EXIT, 'q',
+				SHIFT_DOWN, 's',
+				SHIFT_LEFT, 'a',
+				SHIFT_RIGHT, 'd',
+				HARD_DROP, 'w',
+				ROTATE_LEFT, 'z',
+				ROTATE_RIGHT, 'x',
+				TOGGLE_AI, 't',
+				TOGGLE_CONTROLS, 'm');
+		
+		protected char[] chars = new char[9];
+		
+		public Controls(int... ctrls) {
+			for(int i = 0; i < ctrls.length - 1; i += 2) {
+				chars[ctrls[i]] = (char) ctrls[i+1];
+			}
+		}
+	}
+	
 	protected ConsoleEngine engine;
+	
+	protected Controls controls = Controls.DEFAULT_CONTROLS;
 	
 	protected Map<Key, Long> lastInputTimes = new HashMap<Key, Long>();
 	protected long doubleTapTime = 200;
@@ -64,27 +108,27 @@ public class KeyboardInputHandler extends WindowAdapter {
 		boolean doubleTab = now - lastInputTime < doubleTapTime;
 		lastInputTimes.put(key, now);
 		
-		if(key.getKind() == Kind.ArrowDown && !doubleTab)
+		if(key.getCharacter() == controls.chars[Controls.SHIFT_DOWN] && !doubleTab)
 			engine.shiftDown();
-		else if(key.getKind() == Kind.ArrowDown && doubleTab)
+		else if(key.getCharacter() == controls.chars[Controls.SHIFT_DOWN] && doubleTab)
 			engine.softDrop();
-		else if(key.getKind() == Kind.ArrowUp)
+		else if(key.getCharacter() == controls.chars[Controls.HARD_DROP])
 			engine.hardDrop();
-		else if(key.getKind() == Kind.ArrowLeft && !doubleTab)
+		else if(key.getCharacter() == controls.chars[Controls.SHIFT_LEFT] && !doubleTab)
 			engine.shiftLeft();
-		else if(key.getKind() == Kind.ArrowLeft && doubleTab)
+		else if(key.getCharacter() == controls.chars[Controls.SHIFT_LEFT] && doubleTab)
 			engine.dasLeft();
-		else if(key.getKind() == Kind.ArrowRight && !doubleTab)
+		else if(key.getCharacter() == controls.chars[Controls.SHIFT_RIGHT] && !doubleTab)
 			engine.shiftRight();
-		else if(key.getKind() == Kind.ArrowRight && doubleTab)
+		else if(key.getCharacter() == controls.chars[Controls.SHIFT_RIGHT] && doubleTab)
 			engine.dasRight();
-		else if(key.getCharacter() == 'z')
+		else if(key.getCharacter() == controls.chars[Controls.ROTATE_LEFT])
 			engine.rotateLeft();
-		else if(key.getCharacter() == 'x')
+		else if(key.getCharacter() == controls.chars[Controls.ROTATE_RIGHT])
 			engine.rotateRight();
-		else if(key.getKind() == Kind.Escape)
+		else if(key.getCharacter() == controls.chars[Controls.PAUSE_EXIT])
 			engine.promptExit();
-		else if(key.getCharacter() == 'a') {
+		else if(key.getCharacter() == controls.chars[Controls.TOGGLE_AI]) {
 			Field field = engine.getField();
 			if(playerProvider == null) {
 				playerProvider = field.getProvider();
@@ -108,6 +152,11 @@ public class KeyboardInputHandler extends WindowAdapter {
 				field.removeTetrevilListener(aiScoreAdjuster);
 				playerProvider = null;
 			}
+		} else if(key.getCharacter() == controls.chars[Controls.TOGGLE_CONTROLS]) {
+			if(controls == Controls.DEFAULT_CONTROLS)
+				controls = Controls.MOBILE_CONTROLS;
+			else
+				controls = Controls.DEFAULT_CONTROLS;
 		}
 	}
 }
