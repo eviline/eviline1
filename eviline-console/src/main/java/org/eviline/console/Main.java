@@ -65,18 +65,20 @@ public class Main {
 		MessageBox.showMessageBox(
 				gui, 
 				"Controls", 
-				"EVILINE Controls:\n\n" +
-				"LEFT:           shift left one\n" +
-				"DOUBLE-LEFT:    autoshift left\n" +
-				"RIGHT:          shift right one\n" +
-				"DOUBLE-RIGHT:   autoshift right\n" +
-				"DOWN:           shift down one\n" +
-				"DOUBLE-DOWN:    soft drop\n" +
-				"UP:             hard drop\n" +
-				"Z:              rotate left\n" +
-				"X:              rotate right\n" +
-				"A:              toggle AI\n" +
-				"ESC:            pause/exit");
+				"             EVILINE Controls:\n\n" +
+				"Default Key         Action         Mobile Key\n" + 
+				"LEFT:           shift left one             :A\n" +
+				"DOUBLE-LEFT:    autoshift left      :DOUBLE-A\n" +
+				"RIGHT:          shift right one            :D\n" +
+				"DOUBLE-RIGHT:   autoshift right     :DOUBLE-D\n" +
+				"DOWN:           shift down one             :S\n" +
+				"DOUBLE-DOWN:    soft drop           :DOUBLE-S\n" +
+				"UP:             hard drop                  :W\n" +
+				"Z:              rotate left                :Z\n" +
+				"X:              rotate right               :X\n" +
+				"A:              toggle AI                  :T\n" +
+				"ESC:            pause/exit                 :Q\n" +
+				"M:              toggle mobile controls     :M");
 		
 		engine.startEngine();
 		gui.showWindow(w, Position.CENTER);
