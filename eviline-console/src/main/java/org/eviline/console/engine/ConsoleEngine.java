@@ -150,8 +150,10 @@ public class ConsoleEngine implements TetrevilListener {
 
 	@Override
 	public void shapeLocked(TetrevilEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(!isRunning())
+			return;
+		tickerFuture.cancel(false);
+		field.clockTick();
 	}
 
 	@Override
