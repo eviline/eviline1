@@ -138,8 +138,7 @@ public class ConsoleEngine implements TetrevilListener {
 
 	@Override
 	public void shapeSpawned(TetrevilEvent e) {
-		// TODO Auto-generated method stub
-		
+		restartTicker();
 	}
 
 	@Override
