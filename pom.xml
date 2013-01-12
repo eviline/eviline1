@@ -28,7 +28,7 @@
 	<modules>
 		<module>eviline-core</module>
 		<module>eviline</module>
-		<module>eviline-nullpo</module>
+		
 		<module>eviline-tomcat</module>
 		<module>eviline-console</module>
 		<module>eviline-perf</module>
