@@ -2,12 +2,7 @@ package org.eviline.console.gui;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
-import org.eviline.BasicPropertySource;
 import org.eviline.Field;
-import org.eviline.PropertySource;
-import org.eviline.ShapeDirection;
 import org.eviline.ai.AIKernel;
 import org.eviline.ai.DefaultPlayer;
 import org.eviline.ai.PlayerFieldHarness;
@@ -18,19 +13,11 @@ import org.eviline.event.TetrevilListener;
 import org.eviline.randomizer.Bag7Randomizer;
 import org.eviline.randomizer.QueuedRandomizer;
 import org.eviline.randomizer.Randomizer;
-import org.eviline.randomizer.RandomizerFactory;
-import org.eviline.randomizer.RandomizerPresets;
-
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.GUIScreen;
 import com.googlecode.lanterna.gui.Window;
-import com.googlecode.lanterna.gui.dialog.DialogButtons;
-import com.googlecode.lanterna.gui.dialog.DialogResult;
-import com.googlecode.lanterna.gui.dialog.MessageBox;
 import com.googlecode.lanterna.gui.listener.WindowAdapter;
-import com.googlecode.lanterna.input.InputProvider;
 import com.googlecode.lanterna.input.Key;
-import com.googlecode.lanterna.input.Key.Kind;
 
 public class KeyboardInputHandler extends WindowAdapter {
 	public static class Controls {

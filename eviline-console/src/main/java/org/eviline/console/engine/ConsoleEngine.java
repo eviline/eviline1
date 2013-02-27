@@ -7,14 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.eviline.Field;
 import org.eviline.ShapeDirection;
-import org.eviline.console.gui.KeyboardInputHandler;
 import org.eviline.console.gui.RerenderTetrevilListener;
 import org.eviline.event.TetrevilEvent;
 import org.eviline.event.TetrevilListener;
 
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.GUIScreen;
-import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.dialog.DialogButtons;
 import com.googlecode.lanterna.gui.dialog.DialogResult;
 import com.googlecode.lanterna.gui.dialog.MessageBox;

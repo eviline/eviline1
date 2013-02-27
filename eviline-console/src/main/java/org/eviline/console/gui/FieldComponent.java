@@ -5,8 +5,6 @@ import org.eviline.Field;
 
 import com.googlecode.lanterna.gui.TextGraphics;
 import com.googlecode.lanterna.gui.component.AbstractComponent;
-import com.googlecode.lanterna.terminal.Terminal.Color;
-import com.googlecode.lanterna.terminal.TerminalPosition;
 import com.googlecode.lanterna.terminal.TerminalSize;
 
 public class FieldComponent extends AbstractComponent {

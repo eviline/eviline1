@@ -1,44 +1,21 @@
 package org.eviline.console;
 
-import java.awt.TrayIcon.MessageType;
 import java.util.Properties;
-import java.util.concurrent.Semaphore;
-
 import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.PropertySource;
-import org.eviline.ai.AIKernel;
-import org.eviline.ai.DefaultPlayer;
-import org.eviline.ai.Player;
-import org.eviline.ai.PlayerFieldHarness;
 import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.console.gui.EvilineWindow;
-import org.eviline.console.gui.FieldComponent;
-import org.eviline.console.gui.FieldStatisticsPanel;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
-import org.eviline.randomizer.Bag7Randomizer;
 import org.eviline.randomizer.QueuedRandomizer;
 import org.eviline.randomizer.Randomizer;
 import org.eviline.randomizer.RandomizerFactory;
 import org.eviline.randomizer.RandomizerPresets;
 
 import com.googlecode.lanterna.TerminalFacade;
-import com.googlecode.lanterna.gui.Action;
-import com.googlecode.lanterna.gui.Border;
 import com.googlecode.lanterna.gui.GUIScreen;
 import com.googlecode.lanterna.gui.GUIScreen.Position;
 import com.googlecode.lanterna.gui.Window;
-import com.googlecode.lanterna.gui.component.Label;
-import com.googlecode.lanterna.gui.component.Panel;
-import com.googlecode.lanterna.gui.component.Panel.Orientation;
-import com.googlecode.lanterna.gui.component.Separator;
-import com.googlecode.lanterna.gui.dialog.DialogButtons;
-import com.googlecode.lanterna.gui.dialog.DialogResult;
 import com.googlecode.lanterna.gui.dialog.MessageBox;
-import com.googlecode.lanterna.gui.layout.BorderLayout;
-import com.googlecode.lanterna.gui.layout.LayoutParameter;
-import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 
 public class Main {
 
