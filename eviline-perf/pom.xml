@@ -30,7 +30,6 @@
 		<dependency>
 			<groupId>org.eviline</groupId>
 			<artifactId>eviline-core</artifactId>
-			<version>1.0.14-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
