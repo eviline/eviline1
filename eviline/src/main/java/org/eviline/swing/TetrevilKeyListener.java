@@ -93,7 +93,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 	public void updateTimers() {
 		dasTimer.setInitialDelay(DAS_TIME);
 		dasTimer.setDelay(DAS_TIME);
-		downTimer.setInitialDelay(0);
+		downTimer.setInitialDelay(DOWN_TIME);
 		downTimer.setDelay(DOWN_TIME);
 	}
 
