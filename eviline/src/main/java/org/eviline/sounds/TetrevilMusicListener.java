@@ -3,10 +3,10 @@ package org.eviline.sounds;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 
-public class TetrevilMusicListener extends TetrevilAdapter {
+public class TetrevilMusicListener extends EvilineAdapter {
 	private ExecutorService executor = Executors.newCachedThreadPool();
 	
 	public TetrevilMusicListener() {
@@ -19,7 +19,7 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 	protected boolean ingame = false;
 	
 	@Override
-	public void clockTicked(TetrevilEvent e) {
+	public void clockTicked(EvilineEvent e) {
 		if(!ingame) {
 			ingame = true;
 			TetrevilSounds.setMusicPaused(false);
@@ -28,19 +28,19 @@ public class TetrevilMusicListener extends TetrevilAdapter {
 	}
 	
 	@Override
-	public void gameReset(TetrevilEvent e) {
+	public void gameReset(EvilineEvent e) {
 		ingame = false;
 		TetrevilSounds.setMusicPaused(true);
 	}
 	
 	@Override
-	public void gameOver(TetrevilEvent e) {
+	public void gameOver(EvilineEvent e) {
 		ingame = false;
 		TetrevilSounds.setMusicPaused(true);
 	}
 	
 	@Override
-	public void gamePaused(TetrevilEvent e) {
+	public void gamePaused(EvilineEvent e) {
 		if(e.getField().isPaused()) {
 			ingame = false;
 			TetrevilSounds.setMusicPaused(true);

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import org.eviline.event.EventDispatcher;
-import org.eviline.event.TetrevilEvent;
-import org.eviline.event.TetrevilListener;
+import org.eviline.event.EvilineEvent;
+import org.eviline.event.EvilineListener;
 import org.eviline.fitness.Fitness;
 import org.eviline.randomizer.Randomizer;
 
@@ -96,7 +96,7 @@ public class Field implements Serializable {
 	/**
 	 * Event listeners
 	 */
-	protected transient TetrevilListener[] listeners = new TetrevilListener[0];
+	protected transient EvilineListener[] listeners = new EvilineListener[0];
 	
 	protected transient EventDispatcher dispatcher = null;
 	
@@ -522,10 +522,10 @@ public class Field implements Serializable {
 	 * Add a tetrevil listener to this field
 	 * @param l
 	 */
-	public void addTetrevilListener(TetrevilListener l) {
+	public void addEvilineListener(EvilineListener l) {
 		if(listeners == null)
-			listeners = new TetrevilListener[0];
-		TetrevilListener[] ll = Arrays.copyOf(listeners, listeners.length + 1);
+			listeners = new EvilineListener[0];
+		EvilineListener[] ll = Arrays.copyOf(listeners, listeners.length + 1);
 		ll[ll.length - 1] = l;
 		listeners = ll;
 	}
@@ -534,13 +534,13 @@ public class Field implements Serializable {
 	 * Remove a tetrevil listener from this field
 	 * @param l
 	 */
-	public void removeTetrevilListener(TetrevilListener l) {
+	public void removeEvilineListener(EvilineListener l) {
 		if(listeners == null)
-			listeners = new TetrevilListener[0];
-		TetrevilListener[] listeners = this.listeners;
+			listeners = new EvilineListener[0];
+		EvilineListener[] listeners = this.listeners;
 		for(int i = listeners.length - 1; i >= 0; i--) {
 			if(l == listeners[i]) {
-				TetrevilListener[] ll = Arrays.copyOf(listeners, listeners.length - 1);
+				EvilineListener[] ll = Arrays.copyOf(listeners, listeners.length - 1);
 				System.arraycopy(listeners, i+1, ll, i, listeners.length - i - 1);
 				this.listeners = ll;
 				break;
@@ -551,13 +551,13 @@ public class Field implements Serializable {
 	protected void fireClockTicked() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.CLOCK_TICKED, this);
+				e = new EvilineEvent(this, EvilineEvent.CLOCK_TICKED, this);
 			dispatcher.clockTicked(ll[i], e);
 		}
 	}
@@ -565,13 +565,13 @@ public class Field implements Serializable {
 	protected void fireGameOver() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.GAME_OVER, this);
+				e = new EvilineEvent(this, EvilineEvent.GAME_OVER, this);
 			dispatcher.gameOver(ll[i], e);
 		}
 	}
@@ -579,13 +579,13 @@ public class Field implements Serializable {
 	protected void fireGamePaused() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.GAME_PAUSED, this);
+				e = new EvilineEvent(this, EvilineEvent.GAME_PAUSED, this);
 			dispatcher.gamePaused(ll[i], e);
 		}
 	}
@@ -593,13 +593,13 @@ public class Field implements Serializable {
 	protected void fireGameReset() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.GAME_RESET, this);
+				e = new EvilineEvent(this, EvilineEvent.GAME_RESET, this);
 			dispatcher.gameReset(ll[i], e);
 		}
 	}
@@ -607,13 +607,13 @@ public class Field implements Serializable {
 	protected void fireShiftedLeft() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.SHIFTED_LEFT, this);
+				e = new EvilineEvent(this, EvilineEvent.SHIFTED_LEFT, this);
 			dispatcher.shiftedLeft(ll[i], e);
 		}
 	}
@@ -621,13 +621,13 @@ public class Field implements Serializable {
 	protected void fireShiftedRight() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.SHIFTED_RIGHT, this);
+				e = new EvilineEvent(this, EvilineEvent.SHIFTED_RIGHT, this);
 			dispatcher.shiftedRight(ll[i], e);
 		}
 	}
@@ -635,13 +635,13 @@ public class Field implements Serializable {
 	protected void fireRotatedLeft() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.ROTATED_LEFT, this);
+				e = new EvilineEvent(this, EvilineEvent.ROTATED_LEFT, this);
 			dispatcher.rotatedLeft(ll[i], e);
 		}
 	}
@@ -649,13 +649,13 @@ public class Field implements Serializable {
 	protected void fireRotatedRight() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.ROTATED_RIGHT, this);
+				e = new EvilineEvent(this, EvilineEvent.ROTATED_RIGHT, this);
 			dispatcher.rotatedRight(ll[i], e);
 		}
 	}
@@ -663,13 +663,13 @@ public class Field implements Serializable {
 	protected void fireLinesCleared(int lines) {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.LINES_CLEARED, this, lines);
+				e = new EvilineEvent(this, EvilineEvent.LINES_CLEARED, this, lines);
 			dispatcher.linesCleared(ll[i], e);
 		}
 	}
@@ -677,13 +677,13 @@ public class Field implements Serializable {
 	protected void fireGarbageReceived(int lines) {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.GARBAGE_RECEIVED, this, lines);
+				e = new EvilineEvent(this, EvilineEvent.GARBAGE_RECEIVED, this, lines);
 			dispatcher.garbageReceived(ll[i], e);
 		}
 	}
@@ -691,13 +691,13 @@ public class Field implements Serializable {
 	protected void fireShapeSpawned() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.SHAPE_SPAWNED, this, lines);
+				e = new EvilineEvent(this, EvilineEvent.SHAPE_SPAWNED, this, lines);
 			dispatcher.shapeSpawned(ll[i], e);
 		}
 	}
@@ -705,13 +705,13 @@ public class Field implements Serializable {
 	protected void fireShapeLocked() {
 		if(listeners == null)
 			return;
-		TetrevilEvent e = null;
-		TetrevilListener[] ll = listeners;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
 		for(int i = ll.length - 1; i >= 0; i--) {
 			if(dispatcher == null)
 				dispatcher = new EventDispatcher();
 			if(e == null)
-				e = new TetrevilEvent(this, TetrevilEvent.SHAPE_LOCKED, this, lines);
+				e = new EvilineEvent(this, EvilineEvent.SHAPE_LOCKED, this, lines);
 			dispatcher.shapeLocked(ll[i], e);
 		}
 	}

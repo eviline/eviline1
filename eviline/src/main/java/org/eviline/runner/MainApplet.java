@@ -39,8 +39,8 @@ import javax.swing.UIManager;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Version;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 import org.eviline.sounds.TetrevilMusicListener;
 import org.eviline.sounds.TetrevilSoundListener;
 import org.eviline.sounds.TetrevilSounds;
@@ -63,15 +63,15 @@ public class MainApplet extends JApplet implements PropertySource {
 	
 	protected Field field = new Field();
 	{{
-		field.addTetrevilListener(new TetrevilAdapter() {
+		field.addEvilineListener(new EvilineAdapter() {
 			@Override
-			public void gameReset(TetrevilEvent e) {
+			public void gameReset(EvilineEvent e) {
 				if(!field.isGameOver())
 					submitScore("Reset");
 				setProvider();
 			}
 			@Override
-			public void gameOver(TetrevilEvent e) {
+			public void gameOver(EvilineEvent e) {
 				try {
 					submitScore("Game Over");
 					
@@ -86,7 +86,7 @@ public class MainApplet extends JApplet implements PropertySource {
 					toggleSettings();
 			}
 			@Override
-			public void shapeLocked(TetrevilEvent e) {
+			public void shapeLocked(EvilineEvent e) {
 //				SwingUtilities.invokeLater(new Runnable() {
 //				@Override
 //				public void run() {
@@ -316,9 +316,9 @@ public class MainApplet extends JApplet implements PropertySource {
 			public void actionPerformed(ActionEvent l) {
 				JCheckBox sound = (JCheckBox) l.getSource();
 				if(soundEnabled = sound.isSelected())
-					field.addTetrevilListener(soundListener);
+					field.addEvilineListener(soundListener);
 				else
-					field.removeTetrevilListener(soundListener);
+					field.removeEvilineListener(soundListener);
 				setParameter("sounds", "" + soundEnabled);
 			}
 		});
@@ -330,9 +330,9 @@ public class MainApplet extends JApplet implements PropertySource {
 			public void actionPerformed(ActionEvent l) {
 				JCheckBox sound = (JCheckBox) l.getSource();
 				if(musicEnabled = sound.isSelected()) {
-					field.addTetrevilListener(musicListener);
+					field.addEvilineListener(musicListener);
 				} else {
-					field.removeTetrevilListener(musicListener);
+					field.removeEvilineListener(musicListener);
 				}
 				setParameter("music", "" + musicEnabled);
 			}

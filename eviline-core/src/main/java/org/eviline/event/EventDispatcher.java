@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 public class EventDispatcher {
 	protected Executor dispatchThread = Executors.newSingleThreadExecutor();
 
-	public void shapeSpawned(final TetrevilListener l, final TetrevilEvent e) {
+	public void shapeSpawned(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -15,7 +15,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void clockTicked(final TetrevilListener l, final TetrevilEvent e) {
+	public void clockTicked(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -24,7 +24,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void shapeLocked(final TetrevilListener l, final TetrevilEvent e) {
+	public void shapeLocked(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -33,7 +33,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void gameOver(final TetrevilListener l, final TetrevilEvent e) {
+	public void gameOver(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -42,7 +42,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void shiftedLeft(final TetrevilListener l, final TetrevilEvent e) {
+	public void shiftedLeft(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -51,7 +51,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void shiftedRight(final TetrevilListener l, final TetrevilEvent e) {
+	public void shiftedRight(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -60,7 +60,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void rotatedLeft(final TetrevilListener l, final TetrevilEvent e) {
+	public void rotatedLeft(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -69,7 +69,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void rotatedRight(final TetrevilListener l, final TetrevilEvent e) {
+	public void rotatedRight(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -78,7 +78,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void gameReset(final TetrevilListener l, final TetrevilEvent e) {
+	public void gameReset(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -87,7 +87,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void gamePaused(final TetrevilListener l, final TetrevilEvent e) {
+	public void gamePaused(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -96,7 +96,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void linesCleared(final TetrevilListener l, final TetrevilEvent e) {
+	public void linesCleared(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -105,7 +105,7 @@ public class EventDispatcher {
 		});
 	}
 
-	public void garbageReceived(final TetrevilListener l, final TetrevilEvent e) {
+	public void garbageReceived(final EvilineListener l, final EvilineEvent e) {
 		dispatchThread.execute(new Runnable() {
 			@Override
 			public void run() {

@@ -13,8 +13,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import org.eviline.Field;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 
 /**
  * A {@link JScrollPane} that holds, and will resize if necessary, a {@link TetrevilTable}
@@ -70,11 +70,11 @@ public class TetrevilComponent extends JPanel {
 		scroll.addKeyListener(tetrevilKeyListener);
 		addKeyListener(tetrevilKeyListener);
 		
-		field.addTetrevilListener(new TetrevilAdapter() {
+		field.addEvilineListener(new EvilineAdapter() {
 			private boolean lockDelaying = false;
 			
 			@Override
-			public void clockTicked(TetrevilEvent e) {
+			public void clockTicked(EvilineEvent e) {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
@@ -85,7 +85,7 @@ public class TetrevilComponent extends JPanel {
 			}
 
 			@Override
-			public void shiftedLeft(TetrevilEvent e) {
+			public void shiftedLeft(EvilineEvent e) {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
@@ -98,7 +98,7 @@ public class TetrevilComponent extends JPanel {
 			}
 
 			@Override
-			public void shiftedRight(TetrevilEvent e) {
+			public void shiftedRight(EvilineEvent e) {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
@@ -111,7 +111,7 @@ public class TetrevilComponent extends JPanel {
 			}
 
 			@Override
-			public void rotatedLeft(TetrevilEvent e) {
+			public void rotatedLeft(EvilineEvent e) {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
@@ -124,7 +124,7 @@ public class TetrevilComponent extends JPanel {
 			}
 
 			@Override
-			public void rotatedRight(TetrevilEvent e) {
+			public void rotatedRight(EvilineEvent e) {
 				if(field.isGrounded()) {
 					ticker.setInitialDelay(LOCK_DELAY);
 					ticker.restart();
@@ -136,14 +136,14 @@ public class TetrevilComponent extends JPanel {
 				}
 			}
 			@Override
-			public void linesCleared(TetrevilEvent e) {
+			public void linesCleared(EvilineEvent e) {
 				int level = field.getLines() / 10;
 				double fss = Math.pow(0.8 - (level - 1) * 0.007, level - 1);
 				ticker.setDelay((int)(1000 * fss));
 //				ticker.setInitialDelay(ticker.getDelay());
 			}
 			@Override
-			public void gameReset(TetrevilEvent e) {
+			public void gameReset(EvilineEvent e) {
 				ticker.setDelay(1000);
 				lockDelaying = false;
 			}

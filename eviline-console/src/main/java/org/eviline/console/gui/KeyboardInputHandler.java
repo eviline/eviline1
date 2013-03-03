@@ -7,9 +7,9 @@ import org.eviline.ai.AIKernel;
 import org.eviline.ai.DefaultPlayer;
 import org.eviline.ai.PlayerFieldHarness;
 import org.eviline.console.engine.ConsoleEngine;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
-import org.eviline.event.TetrevilListener;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
+import org.eviline.event.EvilineListener;
 import org.eviline.randomizer.Bag7Randomizer;
 import org.eviline.randomizer.QueuedRandomizer;
 import org.eviline.randomizer.Randomizer;
@@ -71,9 +71,9 @@ public class KeyboardInputHandler extends WindowAdapter {
 	
 	protected Randomizer aiProvider;
 	protected Randomizer playerProvider;
-	protected TetrevilListener aiScoreAdjuster = new TetrevilAdapter() {
+	protected EvilineListener aiScoreAdjuster = new EvilineAdapter() {
 		@Override
-		public void linesCleared(TetrevilEvent e) {
+		public void linesCleared(EvilineEvent e) {
 			e.getField().setLines(e.getField().getLines() - 2 * e.getLines());
 		}
 	};
@@ -120,7 +120,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 			if(playerProvider == null) {
 				playerProvider = field.getProvider();
 				field.setProvider(aiProvider);
-				field.addTetrevilListener(aiScoreAdjuster);
+				field.addEvilineListener(aiScoreAdjuster);
 				DefaultPlayer player = new DefaultPlayer(field, new AIKernel());
 				player.setBlocking(true);
 				final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
@@ -136,7 +136,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 				});
 			} else {
 				field.setProvider(playerProvider);
-				field.removeTetrevilListener(aiScoreAdjuster);
+				field.removeEvilineListener(aiScoreAdjuster);
 				playerProvider = null;
 			}
 		} else if(key.getCharacter() == controls.chars[Controls.TOGGLE_CONTROLS]) {

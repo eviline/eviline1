@@ -13,8 +13,8 @@ import javax.swing.Timer;
 
 import org.eviline.Field;
 import org.eviline.ShapeDirection;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 
 /**
  * {@link KeyListener} that implements the controls for tetrevil
@@ -81,9 +81,9 @@ public class TetrevilKeyListener extends KeyAdapter {
 	
 	public TetrevilKeyListener(Field field) {
 		this.field = field;
-		field.addTetrevilListener(new TetrevilAdapter() {
+		field.addEvilineListener(new EvilineAdapter() {
 			@Override
-			public void shapeLocked(TetrevilEvent e) {
+			public void shapeLocked(EvilineEvent e) {
 				downTimer.stop();
 			}
 		});

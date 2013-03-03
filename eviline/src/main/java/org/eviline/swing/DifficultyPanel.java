@@ -25,8 +25,8 @@ import javax.swing.SwingConstants;
 
 import org.eviline.Field;
 import org.eviline.PropertySource;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 import org.eviline.randomizer.AngelRandomizer;
 import org.eviline.randomizer.BipolarRandomizer;
 import org.eviline.randomizer.RandomizerFactory;
@@ -148,9 +148,9 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 				TetrevilSounds.setMusicPaused(true);
 				if(music.isSelected()) {
 					tml = new TetrevilMusicListener();
-					field.addTetrevilListener(tml);
+					field.addEvilineListener(tml);
 				} else {
-					field.removeTetrevilListener(tml);
+					field.removeEvilineListener(tml);
 				}
 				setParameter("music", "" + music.isSelected());
 			}
@@ -161,9 +161,9 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(sounds.isSelected()) {
-					field.addTetrevilListener(tsl);
+					field.addEvilineListener(tsl);
 				} else {
-					field.removeTetrevilListener(tsl);
+					field.removeEvilineListener(tsl);
 				}
 				setParameter("sounds", "" + sounds.isSelected());
 			}
@@ -219,9 +219,9 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		if("true".equals(getParameter("sounds")))
 			sounds.doClick();
 		
-		field.addTetrevilListener(new TetrevilAdapter() {
+		field.addEvilineListener(new EvilineAdapter() {
 			@Override
-			public void gameReset(TetrevilEvent e) {
+			public void gameReset(EvilineEvent e) {
 				setProvider();
 			}
 		});

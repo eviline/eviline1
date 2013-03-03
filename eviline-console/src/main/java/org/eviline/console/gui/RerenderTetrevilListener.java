@@ -2,13 +2,13 @@ package org.eviline.console.gui;
 
 import java.util.concurrent.Semaphore;
 
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.GUIScreen;
 
-public class RerenderTetrevilListener extends TetrevilAdapter {
+public class RerenderTetrevilListener extends EvilineAdapter {
 	protected GUIScreen gui;
 	protected Semaphore sync = new Semaphore(0);
 	
@@ -42,37 +42,37 @@ public class RerenderTetrevilListener extends TetrevilAdapter {
 	}
 
 	@Override
-	public void shapeSpawned(TetrevilEvent e) {
+	public void shapeSpawned(EvilineEvent e) {
 		rerenderNow();
 	}
 
 	@Override
-	public void clockTicked(TetrevilEvent e) {
+	public void clockTicked(EvilineEvent e) {
 		rerenderNow();
 	}
 
 	@Override
-	public void shapeLocked(TetrevilEvent e) {
+	public void shapeLocked(EvilineEvent e) {
 		rerenderLater();
 	}
 
 	@Override
-	public void shiftedLeft(TetrevilEvent e) {
+	public void shiftedLeft(EvilineEvent e) {
 		rerenderLater();
 	}
 
 	@Override
-	public void shiftedRight(TetrevilEvent e) {
+	public void shiftedRight(EvilineEvent e) {
 		rerenderLater();
 	}
 
 	@Override
-	public void rotatedLeft(TetrevilEvent e) {
+	public void rotatedLeft(EvilineEvent e) {
 		rerenderNow();
 	}
 
 	@Override
-	public void rotatedRight(TetrevilEvent e) {
+	public void rotatedRight(EvilineEvent e) {
 		rerenderNow();
 	}
 }
