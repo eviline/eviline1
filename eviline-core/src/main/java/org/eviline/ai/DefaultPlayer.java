@@ -2,6 +2,7 @@ package org.eviline.ai;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Callable;
@@ -94,6 +95,10 @@ public class DefaultPlayer extends AbstractPlayer {
 					return t;
 				}
 			});
+	}
+
+	public Deque<PlayerAction> getMoves() {
+		return moves;
 	}
 
 }

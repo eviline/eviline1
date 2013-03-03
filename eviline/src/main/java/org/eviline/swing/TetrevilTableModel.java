@@ -217,4 +217,8 @@ public class TetrevilTableModel extends AbstractTableModel implements EvilineLis
 	public void shapeLocked(EvilineEvent e) {
 		changed(e);
 	}
+
+	public Field getLast() {
+		return last;
+	}
 }

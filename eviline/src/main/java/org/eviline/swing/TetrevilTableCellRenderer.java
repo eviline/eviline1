@@ -131,7 +131,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		border.set(colors, column + Field.BUFFER - 1, row + Field.BUFFER);
 		c.setBorder(border);
 		//		}
-		if(b != null && !b.isActive()) {
+		if(b != null && !b.isActive() && c != null) {
 			c.setBackground(c.getBackground().darker().darker());
 		}
 		return c;
