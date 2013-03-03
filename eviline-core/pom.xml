@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
-		<version>1.0.16-SNAPSHOT</version>
+		<version>1.0.16</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>eviline-core</artifactId>
