@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eviline</groupId>
 	<artifactId>eviline-pom</artifactId>
-	<version>1.0.13</version>
+	<version>1.0.14-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -28,8 +28,10 @@
 	<modules>
 		<module>eviline-core</module>
 		<module>eviline</module>
-		<module>eviline-nullpo</module>
+		
 		<module>eviline-tomcat</module>
+		<module>eviline-console</module>
+		<module>eviline-perf</module>
 	</modules>
 
 	<build>
@@ -154,22 +156,22 @@
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline</artifactId>
-				<version>1.0.13</version>
+				<version>1.0.14-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-core</artifactId>
-				<version>1.0.13</version>
+				<version>1.0.14-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-nullpo</artifactId>
-				<version>1.0.13</version>
+				<version>1.0.14-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-tomcat</artifactId>
-				<version>1.0.13</version>
+				<version>1.0.14-SNAPSHOT</version>
 				<type>war</type>
 			</dependency>
 		</dependencies>

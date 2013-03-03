@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.eviline.AIKernel;
 import org.eviline.ExtendedPropertySource;
 import org.eviline.Field;
-import org.eviline.Fitness;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
+import org.eviline.fitness.Fitness;
+
 import static org.eviline.randomizer.RandomizerFactory.*;
 
 /**
@@ -131,6 +132,27 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		return taunt;
 	}
 	
+	@Override
+	public List<ShapeType> getNext() {
+		String taunt = getTaunt();
+		if(taunt == null || taunt.length() < 2)
+			return new ArrayList<ShapeType>();
+		List<ShapeType> ret = new ArrayList<ShapeType>();
+		for(int i = 1; i < taunt.length(); i++) {
+			char c = taunt.charAt(i);
+			switch(c) {
+			case 'O': ret.add(ShapeType.O); break;
+			case 'T': ret.add(ShapeType.T); break;
+			case 'J': ret.add(ShapeType.J); break;
+			case 'L': ret.add(ShapeType.L); break;
+			case 'S': ret.add(ShapeType.S); break;
+			case 'Z': ret.add(ShapeType.Z); break;
+			case 'I': ret.add(ShapeType.I); break;
+			}
+		}
+		return ret;
+	}
+	
 	protected Decision decide(Field field, String taunt, int depth) {
 		return worstFor(field, taunt, depth);
 	}
@@ -152,11 +174,11 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				permuteDecision(decision);
 			}
 		};
-		Context context = new Context(decisionModifier, field, this.depth() - depth);
+		Context context = AIKernel.getInstance().new Context(decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
-		defaultDecision.score = Fitness.scoreWithPaint(defaultDecision.field);
+		defaultDecision.score = AIKernel.getInstance().getFitness().scoreWithPaint(defaultDecision.field);
 		Decision decision = AIKernel.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;

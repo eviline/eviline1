@@ -10,16 +10,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.SynchronousQueue;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.QueueContext;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.QueueContext;
 
-public class QueuedRandomizer implements Randomizer {
+public class QueuedRandomizer extends AbstractRandomizer implements Randomizer {
 	protected Randomizer provider;
 
 	protected boolean concurrent;
@@ -153,7 +153,7 @@ public class QueuedRandomizer implements Randomizer {
 	}
 	
 	private static Field bestDrop(Field field, ShapeType type) {
-		Context context = new Context(null, field, 1);
+		Context context = AIKernel.getInstance().new Context(null, field, 1);
 		Decision decision = AIKernel.getInstance().bestFor(context, type);
 		return decision.field;
 	}
@@ -163,7 +163,7 @@ public class QueuedRandomizer implements Randomizer {
 //			field = bestDrop(field, type);
 //		return field;
 		ShapeType[] sq = queue.toArray(new ShapeType[queue.size()]);
-		QueueContext context = new QueueContext(field, sq);
+		QueueContext context = AIKernel.getInstance().new QueueContext(field, sq);
 		Decision best = AIKernel.getInstance().bestFor(context);
 		return best.deepest().field;
 	}

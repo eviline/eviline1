@@ -6,14 +6,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.eviline.AIKernel;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.AIKernel.Context;
-import org.eviline.AIKernel.Decision;
-import org.eviline.AIKernel.DecisionModifier;
+import org.eviline.ai.AIKernel;
+import org.eviline.ai.AIKernel.Context;
+import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.AIKernel.DecisionModifier;
 
 public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 	private static final long serialVersionUID = 0;
@@ -68,7 +68,7 @@ public class AngelRandomizer extends ThreadedMaliciousRandomizer {
 				AngelRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(decisionModifier, field, depth());
+		final Context context = AIKernel.getInstance().new Context(decisionModifier, field, depth());
 		context.omit = omit;
 
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();

@@ -8,7 +8,7 @@
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
 		<relativePath>..</relativePath>
-		<version>1.0.13</version>
+		<version>1.0.14-SNAPSHOT</version>
 	</parent>
 	<name>eviline</name>
 	<url>http://www.eviline.org/</url>
@@ -153,8 +153,7 @@
 			<groupId>sun.plugin</groupId>
 			<artifactId>plugin</artifactId>
 			<version>1.6</version>
-			<scope>system</scope>
-			<systemPath>${java.home}/lib/plugin.jar</systemPath>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

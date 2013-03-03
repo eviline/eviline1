@@ -1,27 +1,6 @@
 package org.eviline;
 
-import static org.eviline.Shape.I_DOWN;
-import static org.eviline.Shape.I_LEFT;
-import static org.eviline.Shape.I_UP;
-import static org.eviline.Shape.J_DOWN;
-import static org.eviline.Shape.J_LEFT;
-import static org.eviline.Shape.J_RIGHT;
-import static org.eviline.Shape.J_UP;
-import static org.eviline.Shape.L_DOWN;
-import static org.eviline.Shape.L_LEFT;
-import static org.eviline.Shape.L_RIGHT;
-import static org.eviline.Shape.L_UP;
-import static org.eviline.Shape.O_UP;
-import static org.eviline.Shape.S_DOWN;
-import static org.eviline.Shape.S_LEFT;
-import static org.eviline.Shape.S_UP;
-import static org.eviline.Shape.T_DOWN;
-import static org.eviline.Shape.T_LEFT;
-import static org.eviline.Shape.T_RIGHT;
-import static org.eviline.Shape.T_UP;
-import static org.eviline.Shape.Z_DOWN;
-import static org.eviline.Shape.Z_LEFT;
-import static org.eviline.Shape.Z_UP;
+import static org.eviline.Shape.*;
 
 import java.awt.image.BufferedImage;
 
@@ -58,12 +37,12 @@ public enum ShapeType {
 	public Shape[] orientations() {
 		switch(this) {
 		case O: return new Shape[] { O_UP };
-		case S: return new Shape[] { S_DOWN, S_LEFT};
-		case Z: return new Shape[] { Z_DOWN, Z_LEFT};
-		case J: return new Shape[] { J_DOWN, J_LEFT, J_RIGHT, J_UP };
-		case L: return new Shape[] { L_DOWN, L_LEFT, L_RIGHT, L_UP };
-		case I: return new Shape[] { I_DOWN, I_LEFT};
-		case T: return new Shape[] { T_DOWN, T_LEFT, T_RIGHT, T_UP };
+		case S: return new Shape[] { S_UP, S_RIGHT, S_LEFT, S_DOWN};
+		case Z: return new Shape[] { Z_UP, Z_RIGHT, Z_LEFT, Z_DOWN};
+		case J: return new Shape[] { J_UP, J_RIGHT, J_LEFT, J_DOWN};
+		case L: return new Shape[] { L_UP, L_RIGHT, L_LEFT, L_DOWN};
+		case I: return new Shape[] { I_UP, I_RIGHT, I_LEFT, I_DOWN};
+		case T: return new Shape[] { T_UP, T_RIGHT, T_LEFT, T_DOWN};
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
@@ -91,13 +70,13 @@ public enum ShapeType {
 	 */
 	public int starterY() {
 		switch(this) {
-		case O: return 1;
-		case S: return 1;
-		case Z: return 1;
-		case I: return 1;
-		case T: return 1;
-		case J: return 1;
-		case L: return 1;
+		case O: return Field.BUFFER - 2;
+		case S: return Field.BUFFER - 2;
+		case Z: return Field.BUFFER - 2;
+		case I: return Field.BUFFER - 2;
+		case T: return Field.BUFFER - 2;
+		case J: return Field.BUFFER - 2;
+		case L: return Field.BUFFER - 2;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
@@ -108,13 +87,13 @@ public enum ShapeType {
 	 */
 	public int starterX() {
 		switch(this) {
-		case O: return 1;
-		case S: return 0;
-		case Z: return 0;
-		case I: return 0;
-		case T: return 0;
-		case J: return 0;
-		case L: return 0;
+		case O: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case S: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case Z: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case I: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case T: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case J: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case L: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}

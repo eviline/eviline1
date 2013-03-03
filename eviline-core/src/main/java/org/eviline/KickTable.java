@@ -31,8 +31,10 @@ public enum KickTable {
 	
 	private KickTable(int[][] table) {
 		this.table = table;
-		for(int[] test : table) // Invert the Y-value because the docs count Y up rather than down
+		for(int[] test : table) {
+//			test[0] = -test[0];
 			test[1] = -test[1];
+		}
 	}
 	
 	public int[][] table() { return table; }
