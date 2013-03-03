@@ -25,8 +25,8 @@ import javax.swing.JPanel;
 import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.Version;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 import org.eviline.wobj.WebScore;
 
 public class TetrevilFrame extends JFrame {
@@ -151,9 +151,9 @@ public class TetrevilFrame extends JFrame {
 		
 		setLayout(new TFLayoutManager());
 		
-		field.addTetrevilListener(new TetrevilAdapter() {
+		field.addEvilineListener(new EvilineAdapter() {
 			@Override
-			public void gameReset(TetrevilEvent e) {
+			public void gameReset(EvilineEvent e) {
 				if(!field.isGameOver())
 					submitScore("Reset");
 				field.setPaused(true);
@@ -161,7 +161,7 @@ public class TetrevilFrame extends JFrame {
 				dp.setProvider();
 			}
 			@Override
-			public void gameOver(TetrevilEvent e) {
+			public void gameOver(EvilineEvent e) {
 				try {
 					submitScore("Game Over");
 

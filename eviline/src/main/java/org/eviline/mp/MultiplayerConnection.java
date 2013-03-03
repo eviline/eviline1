@@ -11,8 +11,8 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 import org.eviline.randomizer.ConcurrentRandomizer;
 import org.eviline.swing.TetrevilFrame;
 
@@ -39,9 +39,9 @@ public class MultiplayerConnection {
 		
 		frame.getDp().setEnabled(false);
 		
-		frame.getField().addTetrevilListener(new TetrevilAdapter() {
+		frame.getField().addEvilineListener(new EvilineAdapter() {
 			@Override
-			public void shapeLocked(final TetrevilEvent e) {
+			public void shapeLocked(final EvilineEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
@@ -60,7 +60,7 @@ public class MultiplayerConnection {
 			out.writeObject(frame.getField().getProvider());
 		
 		
-		frame.getField().addTetrevilListener(new TetrevilTableSender(out));
+		frame.getField().addEvilineListener(new TetrevilTableSender(out));
 		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 		frame.getCenter().add(new TetrevilTableReceiver(in, frame.getField()));
 		frame.getCenter().revalidate();

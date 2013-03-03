@@ -8,10 +8,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.eviline.Field;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 
-public class TetrevilTableSender extends TetrevilAdapter {
+public class TetrevilTableSender extends EvilineAdapter {
 	protected ObjectOutputStream out;
 	
 	protected ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -33,7 +33,7 @@ public class TetrevilTableSender extends TetrevilAdapter {
 		this.out = out;
 	}
 	
-	protected void writePartialField(TetrevilEvent e) {
+	protected void writePartialField(EvilineEvent e) {
 		Field f = e.getField().copyInto(new Field());
 		f.setField(null);
 		f.setProvider(null);
@@ -46,11 +46,11 @@ public class TetrevilTableSender extends TetrevilAdapter {
 			}
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
-			e.getField().removeTetrevilListener(this);
+			e.getField().removeEvilineListener(this);
 		}
 	}
 	
-	protected void writeFullField(TetrevilEvent e) {
+	protected void writeFullField(EvilineEvent e) {
 		try {
 			out.reset();
 			out.writeObject(e.getField());
@@ -60,27 +60,27 @@ public class TetrevilTableSender extends TetrevilAdapter {
 			}
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
-			e.getField().removeTetrevilListener(this);
+			e.getField().removeEvilineListener(this);
 		}
 	}
 	
 	@Override
-	public void clockTicked(TetrevilEvent e) {
+	public void clockTicked(EvilineEvent e) {
 		writePartialField(e);
 	}
 	
 	@Override
-	public void shapeSpawned(TetrevilEvent e) {
+	public void shapeSpawned(EvilineEvent e) {
 		writePartialField(e);
 	}
 	
 	@Override
-	public void shapeLocked(TetrevilEvent e) {
+	public void shapeLocked(EvilineEvent e) {
 		writeFullField(e);
 	}
 	
 	@Override
-	public void linesCleared(TetrevilEvent e) {
+	public void linesCleared(EvilineEvent e) {
 		writeFullField(e);
 		try {
 			out.reset();
@@ -88,17 +88,17 @@ public class TetrevilTableSender extends TetrevilAdapter {
 			out.flush();
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
-			e.getField().removeTetrevilListener(this);
+			e.getField().removeEvilineListener(this);
 		}
 	}
 	
 	@Override
-	public void garbageReceived(TetrevilEvent e) {
+	public void garbageReceived(EvilineEvent e) {
 		writeFullField(e);
 	}
 	
 	@Override
-	public void gameOver(TetrevilEvent e) {
+	public void gameOver(EvilineEvent e) {
 		writeFullField(e);
 	}
 }

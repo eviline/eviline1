@@ -6,10 +6,10 @@ import java.util.concurrent.Executors;
 import javax.sound.sampled.Clip;
 
 import org.eviline.ShapeType;
-import org.eviline.event.TetrevilAdapter;
-import org.eviline.event.TetrevilEvent;
+import org.eviline.event.EvilineAdapter;
+import org.eviline.event.EvilineEvent;
 
-public class TetrevilSoundListener extends TetrevilAdapter {
+public class TetrevilSoundListener extends EvilineAdapter {
 	private ExecutorService executor = Executors.newCachedThreadPool();
 	
 	public TetrevilSoundListener() {
@@ -32,39 +32,39 @@ public class TetrevilSoundListener extends TetrevilAdapter {
 	}
 	
 	@Override
-	public void shapeSpawned(TetrevilEvent e) {
+	public void shapeSpawned(EvilineEvent e) {
 		ShapeType type = e.getField().getShape().type();
 		Clip clip = TetrevilSounds.getShapeSpawn(type);
 		play(clip);
 	}
 	
 	@Override
-	public void linesCleared(TetrevilEvent e) {
+	public void linesCleared(EvilineEvent e) {
 		play(TetrevilSounds.getLinesCleared(e.getLines()));
 	}
 	
 	@Override
-	public void shiftedLeft(TetrevilEvent e) {
+	public void shiftedLeft(EvilineEvent e) {
 		play(TetrevilSounds.getShift());
 	}
 	
 	@Override
-	public void shiftedRight(TetrevilEvent e) {
+	public void shiftedRight(EvilineEvent e) {
 		play(TetrevilSounds.getShift());
 	}
 	
 	@Override
-	public void rotatedLeft(TetrevilEvent e) {
+	public void rotatedLeft(EvilineEvent e) {
 		play(TetrevilSounds.getRotate());
 	}
 	
 	@Override
-	public void rotatedRight(TetrevilEvent e) {
+	public void rotatedRight(EvilineEvent e) {
 		play(TetrevilSounds.getRotate());
 	}
 	
 	@Override
-	public void shapeLocked(TetrevilEvent e) {
+	public void shapeLocked(EvilineEvent e) {
 		play(TetrevilSounds.getLock());
 	}
 }

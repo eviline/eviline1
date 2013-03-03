@@ -7,15 +7,15 @@ import javax.swing.table.AbstractTableModel;
 
 import org.eviline.Field;
 import org.eviline.Shape;
-import org.eviline.event.TetrevilEvent;
-import org.eviline.event.TetrevilListener;
+import org.eviline.event.EvilineEvent;
+import org.eviline.event.EvilineListener;
 
 /**
  * Table model for a {@link TetrevilTable}.  Mostly just a passthrough to {@link Field#getBlock(int, int)}
  * @author robin
  *
  */
-public class TetrevilTableModel extends AbstractTableModel implements TetrevilListener {
+public class TetrevilTableModel extends AbstractTableModel implements EvilineListener {
 	private static final long serialVersionUID = 1L;
 	protected Field field;
 	
@@ -24,7 +24,7 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	public TetrevilTableModel(Field field) {
 		this.field = field;
 		last.setGhosting(true);
-		field.addTetrevilListener(this);
+		field.addEvilineListener(this);
 	}
 	
 	@Override
@@ -80,7 +80,7 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 		}
 	}
 	
-	protected void changed(final TetrevilEvent e) {
+	protected void changed(final EvilineEvent e) {
 		if(!EventQueue.isDispatchThread()) {
 			EventQueue.invokeLater(new Runnable() {
 				@Override
@@ -150,32 +150,32 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	}
 	
 	@Override
-	public void clockTicked(TetrevilEvent e) {
+	public void clockTicked(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void gameOver(TetrevilEvent e) {
+	public void gameOver(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void shiftedLeft(TetrevilEvent e) {
+	public void shiftedLeft(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void shiftedRight(TetrevilEvent e) {
+	public void shiftedRight(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void rotatedLeft(TetrevilEvent e) {
+	public void rotatedLeft(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void rotatedRight(TetrevilEvent e) {
+	public void rotatedRight(EvilineEvent e) {
 		changed(e);
 	}
 
@@ -189,32 +189,36 @@ public class TetrevilTableModel extends AbstractTableModel implements TetrevilLi
 	}
 
 	@Override
-	public void gameReset(TetrevilEvent e) {
+	public void gameReset(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void gamePaused(TetrevilEvent e) {
+	public void gamePaused(EvilineEvent e) {
 		changed(e);
 	}
 
 	@Override
-	public void linesCleared(TetrevilEvent e) {
+	public void linesCleared(EvilineEvent e) {
 		changed(e);
 	}
 	
 	@Override
-	public void garbageReceived(TetrevilEvent e) {
+	public void garbageReceived(EvilineEvent e) {
 		changed(e);
 	}
 	
 	@Override
-	public void shapeSpawned(TetrevilEvent e) {
+	public void shapeSpawned(EvilineEvent e) {
 		changed(e);
 	}
 	
 	@Override
-	public void shapeLocked(TetrevilEvent e) {
+	public void shapeLocked(EvilineEvent e) {
 		changed(e);
+	}
+
+	public Field getLast() {
+		return last;
 	}
 }

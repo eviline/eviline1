@@ -6,11 +6,11 @@ import org.eviline.Field;
 import org.eviline.Shape;
 
 /**
- * Event issued by a {@link Field} to {@link TetrevilListener} objects
+ * Event issued by a {@link Field} to {@link EvilineListener} objects
  * @author robin
  *
  */
-public class TetrevilEvent extends EventObject {
+public class EvilineEvent extends EventObject {
 	private static final long serialVersionUID = 1L;
 
 	public static final int CLOCK_TICKED = 0;
@@ -34,7 +34,7 @@ public class TetrevilEvent extends EventObject {
 	protected int y;
 	protected int ghostY;
 	
-	public TetrevilEvent(Object source, int id, Field field) {
+	public EvilineEvent(Object source, int id, Field field) {
 		super(source);
 		this.id = id;
 		this.field = field;
@@ -44,7 +44,7 @@ public class TetrevilEvent extends EventObject {
 		this.ghostY = field.getGhostY();
 	}
 	
-	public TetrevilEvent(Object source, int id, Field field, int lines) {
+	public EvilineEvent(Object source, int id, Field field, int lines) {
 		this(source, id, field);
 		this.lines = lines;
 	}

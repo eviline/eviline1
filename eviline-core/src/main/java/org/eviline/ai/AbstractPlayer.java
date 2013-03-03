@@ -55,4 +55,5 @@ public abstract class AbstractPlayer implements Player {
 	public Iterator<PlayerAction> iterator() {
 		return new AbstractPlayerIterator();
 	}
+
 }

@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 import org.eviline.Field;
 import org.eviline.ShapeDirection;
 import org.eviline.console.gui.RerenderTetrevilListener;
-import org.eviline.event.TetrevilEvent;
-import org.eviline.event.TetrevilListener;
+import org.eviline.event.EvilineEvent;
+import org.eviline.event.EvilineListener;
 
 import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.GUIScreen;
@@ -17,7 +17,7 @@ import com.googlecode.lanterna.gui.dialog.DialogButtons;
 import com.googlecode.lanterna.gui.dialog.DialogResult;
 import com.googlecode.lanterna.gui.dialog.MessageBox;
 
-public class ConsoleEngine implements TetrevilListener {
+public class ConsoleEngine implements EvilineListener {
 	protected Field field;
 	protected GUIScreen gui;
 	
@@ -36,8 +36,8 @@ public class ConsoleEngine implements TetrevilListener {
 		this.field = field;
 		this.gui = gui;
 		
-		field.addTetrevilListener(new RerenderTetrevilListener(gui));
-		field.addTetrevilListener(this);
+		field.addEvilineListener(new RerenderTetrevilListener(gui));
+		field.addEvilineListener(this);
 	}
 	
 	protected long calculateDelay() {
@@ -135,18 +135,18 @@ public class ConsoleEngine implements TetrevilListener {
 	}
 
 	@Override
-	public void shapeSpawned(TetrevilEvent e) {
+	public void shapeSpawned(EvilineEvent e) {
 		restartTicker();
 	}
 
 	@Override
-	public void clockTicked(TetrevilEvent e) {
+	public void clockTicked(EvilineEvent e) {
 		if(field.isGrounded())
 			restartTicker();
 	}
 
 	@Override
-	public void shapeLocked(TetrevilEvent e) {
+	public void shapeLocked(EvilineEvent e) {
 		if(!isRunning())
 			return;
 		tickerFuture.cancel(false);
@@ -154,7 +154,7 @@ public class ConsoleEngine implements TetrevilListener {
 	}
 
 	@Override
-	public void gameOver(TetrevilEvent e) {
+	public void gameOver(EvilineEvent e) {
 		gui.runInEventThread(new Action() {
 			@Override
 			public void doAction() {
@@ -169,45 +169,45 @@ public class ConsoleEngine implements TetrevilListener {
 	}
 
 	@Override
-	public void shiftedLeft(TetrevilEvent e) {
+	public void shiftedLeft(EvilineEvent e) {
 		restartTicker();
 	}
 
 	@Override
-	public void shiftedRight(TetrevilEvent e) {
+	public void shiftedRight(EvilineEvent e) {
 		restartTicker();
 	}
 
 	@Override
-	public void rotatedLeft(TetrevilEvent e) {
+	public void rotatedLeft(EvilineEvent e) {
 		restartTicker();
 	}
 
 	@Override
-	public void rotatedRight(TetrevilEvent e) {
+	public void rotatedRight(EvilineEvent e) {
 		restartTicker();
 	}
 
 	@Override
-	public void gameReset(TetrevilEvent e) {
+	public void gameReset(EvilineEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void gamePaused(TetrevilEvent e) {
+	public void gamePaused(EvilineEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void linesCleared(TetrevilEvent e) {
+	public void linesCleared(EvilineEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void garbageReceived(TetrevilEvent e) {
+	public void garbageReceived(EvilineEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eviline.event.EvilineEvent;
+
 public class PlayerAction {
 	public static enum Type {
 		DOWN_ONE,
@@ -47,6 +49,22 @@ public class PlayerAction {
 			return new Type[] {
 					DOWN_ONE, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ ROTATE_LEFT, ROTATE_RIGHT
 			};
+		}
+		
+		public static Type fromEvent(EvilineEvent e) {
+			switch(e.getId()) {
+			case EvilineEvent.CLOCK_TICKED:
+				return DOWN_ONE;
+			case EvilineEvent.SHIFTED_LEFT:
+				return SHIFT_LEFT;
+			case EvilineEvent.SHIFTED_RIGHT:
+				return SHIFT_RIGHT;
+			case EvilineEvent.ROTATED_LEFT:
+				return ROTATE_LEFT;
+			case EvilineEvent.ROTATED_RIGHT:
+				return ROTATE_RIGHT;
+			}
+			return null;
 		}
 	}
 	
@@ -153,6 +171,8 @@ public class PlayerAction {
 	
 	private boolean possible;
 	
+	private long timestamp = System.currentTimeMillis();
+	
 	public PlayerAction(Field field, Type type) {
 		this(field, type, false);
 	}
@@ -168,6 +188,14 @@ public class PlayerAction {
 		possible = !(startShape == endShape && startX == endX && startY == endY);
 		startNode = new Node(startShape, startX, startY);
 		endNode = new Node(endShape, endX, endY);
+	}
+	
+	public PlayerAction(EvilineEvent e) {
+		this.endField = e.getField();
+		this.type = Type.fromEvent(e);
+		this.endShape = e.getShape();
+		this.endX = e.getX();
+		this.endY = e.getY();
 	}
 	
 	@Override
@@ -313,5 +341,9 @@ public class PlayerAction {
 
 	public Node getEndNode() {
 		return endNode;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
 	}
 }
