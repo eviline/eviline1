@@ -38,7 +38,7 @@
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
 		<relativePath>..</relativePath>
-		<version>1.0.14</version>
+		<version>1.0.15-SNAPSHOT</version>
 	</parent>
 	
 	<profiles>
