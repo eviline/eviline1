@@ -432,6 +432,8 @@ public class AIKernel {
 //				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
 //				starter.shapeX = (Field.WIDTH + Field.BUFFER * 2 - starter.shape.width()) / 2;
 				starter.setShapeX(context.type.starterX());
+				if(!starter.getShape().intersects(starter.getField(), starter.getShapeX(), starter.getShapeY() + 1))
+					starter.setShapeY(starter.getShapeY() + 1);
 			}
 			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
