@@ -26,9 +26,11 @@ public class ConsoleEngine implements EvilineListener {
 	protected Runnable ticker = new Runnable() {
 		@Override
 		public void run() {
-			field.clockTick();
+			if(!antigravity)
+				field.clockTick();
 		}
 	};
+	protected boolean antigravity = false;
 	
 	protected boolean lockDelaying;
 	
@@ -214,5 +216,17 @@ public class ConsoleEngine implements EvilineListener {
 
 	public Field getField() {
 		return field;
+	}
+
+	public ScheduledFuture<?> getTickerFuture() {
+		return tickerFuture;
+	}
+
+	public boolean isAntigravity() {
+		return antigravity;
+	}
+
+	public void setAntigravity(boolean antigravity) {
+		this.antigravity = antigravity;
 	}
 }

@@ -125,6 +125,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 				player.setBlocking(true);
 				final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
 				final GUIScreen gui = window.getOwner();
+				engine.setAntigravity(true);
 				gui.runInEventThread(new Action() {
 					@Override
 					public void doAction() {
@@ -135,6 +136,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 					}
 				});
 			} else {
+				engine.setAntigravity(false);
 				field.setProvider(playerProvider);
 				field.removeEvilineListener(aiScoreAdjuster);
 				playerProvider = null;
