@@ -2,9 +2,9 @@ package org.eviline;
 
 public class PlayerActionNode {
 	private int[] xform;
-	Shape shape;
-	int x;
-	int y;
+	public Shape shape;
+	public int x;
+	public int y;
 	
 	public PlayerActionNode(Shape shape, int x, int y) {
 		xform = shape.symmetryTranslation(shape.rotateLeft().rotateLeft());

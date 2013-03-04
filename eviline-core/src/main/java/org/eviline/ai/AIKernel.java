@@ -324,7 +324,8 @@ public class AIKernel {
 					List<PlayerAction> nl = shortestPaths.get(n);
 					nl = new ArrayList<PlayerAction>(nl);
 					nl.add(pa);
-					shortestPaths.put(n = pa.getEndNode(), nl);
+					if(shortestPaths.get(pa.getEndNode()) == null || shortestPaths.get(pa.getEndNode()).size() > nl.size())
+						shortestPaths.put(n = pa.getEndNode(), nl);
 					pending.add(pa.getEndNode());
 				}
 				n = start;
@@ -336,7 +337,8 @@ public class AIKernel {
 					List<PlayerAction> nl = shortestPaths.get(n);
 					nl = new ArrayList<PlayerAction>(nl);
 					nl.add(pa);
-					shortestPaths.put(n = pa.getEndNode(), nl);
+					if(shortestPaths.get(pa.getEndNode()) == null || shortestPaths.get(pa.getEndNode()).size() > nl.size())
+						shortestPaths.put(n = pa.getEndNode(), nl);
 					pending.add(pa.getEndNode());
 				}
 				field.setShapeX(start.getX());
@@ -344,6 +346,8 @@ public class AIKernel {
 				PlayerAction pa = new PlayerAction(field, Type.ROTATE_LEFT);
 				field.setShape(pa.getEndShape());
 				start = pa.getEndNode();
+				field.setShapeX(start.getX());
+				field.setShapeY(start.getY());
 				if(r < 3) {
 					List<PlayerAction> nl = new ArrayList<PlayerAction>(shortestPaths.get(pa.getStartNode()));
 					nl.add(pa);
@@ -614,7 +618,8 @@ public class AIKernel {
 								score -= 10000 * Math.pow(possibility.getLines(), 1.5);
 								synchronized(best) {
 									if(score < best.score) {
-										List<PlayerAction> pa = allPaths.get(new PlayerActionNode(shape, x, y));
+										PlayerActionNode node = new PlayerActionNode(shape, x, y);
+										List<PlayerAction> pa = allPaths.get(node);
 										if(pa == null)
 											continue;
 										best.bestPath = pa;
