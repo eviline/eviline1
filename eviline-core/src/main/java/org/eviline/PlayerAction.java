@@ -91,13 +91,13 @@ public class PlayerAction {
 		@Override
 		public V get(Object key) {
 			PlayerActionNode k = (PlayerActionNode) key;
-			Map.Entry<PlayerActionNode, V> e = entries[k.getShape().ordinal()][k.getY()][k.getX()];
+			Map.Entry<PlayerActionNode, V> e = entries[k.shape.ordinal()][k.y][k.x];
 			return e == null ? null : e.getValue();
 		}
 		
 		public V put(PlayerActionNode key, V value) {
 			V old = get(key);
-			entries[key.getShape().ordinal()][key.getY()][key.getX()] = new AbstractMap.SimpleEntry(key, value);
+			entries[key.shape.ordinal()][key.y][key.x] = new AbstractMap.SimpleEntry(key, value);
 			return old;
 		}
 		
@@ -105,7 +105,7 @@ public class PlayerAction {
 		public V remove(Object key) {
 			PlayerActionNode k = (PlayerActionNode) key;
 			V ret = get(key);
-			entries[k.getShape().ordinal()][k.getY()][k.getX()] = null;	
+			entries[k.shape.ordinal()][k.y][k.x] = null;	
 			return ret;
 		}
 		
