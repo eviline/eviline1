@@ -6,6 +6,7 @@ import java.util.Queue;
 
 import org.eviline.Field;
 import org.eviline.PlayerAction;
+import org.eviline.PlayerActionNode;
 import org.eviline.ShapeDirection;
 
 public class PlayerFieldHarness {
@@ -20,11 +21,11 @@ public class PlayerFieldHarness {
 		moves = player.iterator();
 	}
 	
-	public void tick() {
+	public boolean tick() {
 		PlayerAction move = moves.next();
 		if(move == null) {
 			field.clockTick();
-			return;
+			return false;
 		}
 		switch(move.getType()) {
 		case DAS_LEFT:
@@ -59,5 +60,17 @@ public class PlayerFieldHarness {
 			//FIXME: Support hold
 			throw new UnsupportedOperationException("Eviline doesn't currently support hold");
 		}
+		boolean mismove = false;
+		if(move.getEndShape() == null ? field.getShape() != null : field.getShape() == null)
+			mismove = true;
+		else {
+			PlayerActionNode mpan = new PlayerActionNode(move.getEndShape(), move.getEndX(), move.getEndY());
+			PlayerActionNode apan = new PlayerActionNode(field.getShape(), field.getShapeX(), field.getShapeY());
+			if(!mpan.equals(apan))
+				mismove = true;
+		}
+		if(mismove)
+			player.reset();
+		return mismove;
 	}
 }
