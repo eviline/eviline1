@@ -16,9 +16,9 @@ import java.util.concurrent.Future;
 import org.eviline.Block;
 import org.eviline.Field;
 import org.eviline.PlayerAction;
+import org.eviline.PlayerActionNode;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.PlayerAction.Node;
 import org.eviline.PlayerAction.NodeMap;
 import org.eviline.PlayerAction.Type;
 import org.eviline.fitness.Fitness;
@@ -296,13 +296,13 @@ public class AIKernel {
 	private Fitness fitness = Fitness.getDefaultInstance();
 	private ExecutorService pool = Executors.newFixedThreadPool(4);
 
-	public Map<Node, List<PlayerAction>> allPathsFrom(Field field) {
-		Map<Node, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
+	public Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
+		Map<PlayerActionNode, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
 		
 		field = field.copy();
 		
-		Node start = new Node(field.getShape(), field.getShapeX(), field.getShapeY());
-		ArrayDeque<Node> pending = new ArrayDeque<Node>();
+		PlayerActionNode start = new PlayerActionNode(field.getShape(), field.getShapeX(), field.getShapeY());
+		ArrayDeque<PlayerActionNode> pending = new ArrayDeque<PlayerActionNode>();
 		shortestPaths.put(start, new ArrayList<PlayerAction>());
 		
 //		Node dasLeft = new PlayerAction(field, Type.DAS_LEFT).getEndNode();
@@ -315,7 +315,7 @@ public class AIKernel {
 				if(!shortestPaths.containsKey(start))
 					continue;
 				pending.add(start);
-				Node n = start;
+				PlayerActionNode n = start;
 				for(int i = 0; i < 10; i++) {
 					field.setShapeX(n.getX());
 					PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
@@ -370,7 +370,7 @@ public class AIKernel {
 			}
 		}
 		
-		Node n;
+		PlayerActionNode n;
 		while(pending.size() > 0) {
 			n = pending.pollFirst();
 			List<PlayerAction> nl = shortestPaths.get(n);
@@ -392,7 +392,7 @@ public class AIKernel {
 						|| hardDropOnly) 
 						&& t != Type.DOWN_ONE)
 					continue;
-				Node dest = pa.getEndNode();
+				PlayerActionNode dest = pa.getEndNode();
 				List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl);
 				destPath.add(pa);
 				if(!shortestPaths.containsKey(dest) /* || destPath.size() < shortestPaths.get(dest).size() */ ) {
@@ -422,7 +422,7 @@ public class AIKernel {
 		
 		best.score = Double.POSITIVE_INFINITY;
 		
-		final Map<Node, List<PlayerAction>> paths;
+		final Map<PlayerActionNode, List<PlayerAction>> paths;
 		if(context.shallower == null) {
 			context.original.setLines(0);
 			Field starter = context.original.copy();
@@ -458,7 +458,7 @@ public class AIKernel {
 						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
 							boolean groundedAbove = grounded;
 							grounded = shape.intersects(paths == null ? context.paintedImpossible.getField() : context.original.getField(), x, y+1);
-							Node n = new Node(shape, x, y);
+							PlayerActionNode n = new PlayerActionNode(shape, x, y);
 							if(paths != null && !paths.containsKey(n))
 								continue;
 							if(!groundedAbove && grounded) {
@@ -516,8 +516,8 @@ public class AIKernel {
 				df.setShape(d.type.starter());
 				df.setShapeX(d.type.starterX());
 				df.setShapeY(d.type.starterY());
-				Map<Node, List<PlayerAction>> pla = allPathsFrom(df);
-				d.bestPath = pla.get(new Node(d.bestShape, d.bestShapeX, d.bestShapeY));
+				Map<PlayerActionNode, List<PlayerAction>> pla = allPathsFrom(df);
+				d.bestPath = pla.get(new PlayerActionNode(d.bestShape, d.bestShapeX, d.bestShapeY));
 				df = d.field.copy();
 				if(d == d.deeper)
 					break;
@@ -585,7 +585,7 @@ public class AIKernel {
 		Field starter = inPlayField;
 		
 //		Set<PlayerAction> visitedActions = new HashSet<PlayerAction>();
-		final Map<Node, List<PlayerAction>> allPaths = Collections.synchronizedMap(allPathsFrom(inPlayField));
+		final Map<PlayerActionNode, List<PlayerAction>> allPaths = Collections.synchronizedMap(allPathsFrom(inPlayField));
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for(final Shape shape : type.orientations()) {
 			Runnable task = new Runnable() {
@@ -614,7 +614,7 @@ public class AIKernel {
 								score -= 10000 * Math.pow(possibility.getLines(), 1.5);
 								synchronized(best) {
 									if(score < best.score) {
-										List<PlayerAction> pa = allPaths.get(new Node(shape, x, y));
+										List<PlayerAction> pa = allPaths.get(new PlayerActionNode(shape, x, y));
 										if(pa == null)
 											continue;
 										best.bestPath = pa;

@@ -300,4 +300,28 @@ public enum Shape {
 			return ShapeDirection.DOWN;
 		throw new InternalError("Somehow enum doesn't end in direction specifier:" + this);
 	}
+	
+	public int[] symmetryTranslation(Shape s) {
+		if(type() != s.type())
+			return null;
+		if(type() == ShapeType.O)
+			return new int[] {0, 0};
+		if(direction() == ShapeDirection.UP && s.direction() != ShapeDirection.DOWN)
+			return null;
+		if(direction() == ShapeDirection.DOWN && s.direction() != ShapeDirection.UP)
+			return null;
+		if(direction() == ShapeDirection.LEFT && s.direction() != ShapeDirection.RIGHT)
+			return null;
+		if(direction() == ShapeDirection.RIGHT && s.direction() != ShapeDirection.LEFT)
+			return null;
+		if(type() != ShapeType.I && type() != ShapeType.S && type != ShapeType.Z)
+			return null;
+		switch(direction()) {
+		case DOWN: return new int[] {0, 1};
+		case LEFT: return new int[] {-1, 0};
+		case RIGHT: return new int[] {1, 0};
+		case UP: return new int[] {0, -1};
+		}
+		return null;
+	}
 }

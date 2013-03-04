@@ -68,59 +68,18 @@ public class PlayerAction {
 		}
 	}
 	
-	public static class Node {
-		private Shape shape;
-		private int x;
-		private int y;
-		
-		public Node(Shape shape, int x, int y) {
-			this.shape = shape;
-			this.x = x;
-			this.y = y;
-		}
-		
-		@Override
-		public int hashCode() {
-			return (1 + shape.ordinal()) * x * y;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(obj == null)
-				return false;
-			if(obj == this)
-				return true;
-			if(!(obj instanceof Node))
-				return false;
-			Node n = (Node) obj;
-			return shape == n.shape && x == n.x && y == n.y;
-		}
-
-		public Shape getShape() {
-			return shape;
-		}
-
-		public int getX() {
-			return x;
-		}
-
-		public int getY() {
-			return y;
-		}
-	}
-	
-	public static class NodeMap<V> extends AbstractMap<Node, V> {
+	public static class NodeMap<V> extends AbstractMap<PlayerActionNode, V> {
 		private static int W = Field.WIDTH + Field.BUFFER * 2;
 		private static int H = Field.HEIGHT + Field.BUFFER * 2;
 		
-		private Map.Entry<Node, V>[][][] entries = new Map.Entry[Shape.values().length][H][W];
+		private Map.Entry<PlayerActionNode, V>[][][] entries = new Map.Entry[Shape.values().length][H][W];
 		
 		@Override
-		public Set<Map.Entry<Node, V>> entrySet() {
-			Set<Map.Entry<Node, V>> es = new HashSet<Map.Entry<Node,V>>();
-			for(Map.Entry<Node, V>[][] ea : entries) {
-				for(Map.Entry<Node, V>[] eaa : ea) {
-					for(Map.Entry<Node, V> e : eaa) {
+		public Set<Map.Entry<PlayerActionNode, V>> entrySet() {
+			Set<Map.Entry<PlayerActionNode, V>> es = new HashSet<Map.Entry<PlayerActionNode,V>>();
+			for(Map.Entry<PlayerActionNode, V>[][] ea : entries) {
+				for(Map.Entry<PlayerActionNode, V>[] eaa : ea) {
+					for(Map.Entry<PlayerActionNode, V> e : eaa) {
 						if(e != null)
 							es.add(e);
 					}
@@ -131,22 +90,22 @@ public class PlayerAction {
 		
 		@Override
 		public V get(Object key) {
-			Node k = (Node) key;
-			Map.Entry<Node, V> e = entries[k.shape.ordinal()][k.y][k.x];
+			PlayerActionNode k = (PlayerActionNode) key;
+			Map.Entry<PlayerActionNode, V> e = entries[k.getShape().ordinal()][k.getY()][k.getX()];
 			return e == null ? null : e.getValue();
 		}
 		
-		public V put(Node key, V value) {
+		public V put(PlayerActionNode key, V value) {
 			V old = get(key);
-			entries[key.shape.ordinal()][key.y][key.x] = new AbstractMap.SimpleEntry(key, value);
+			entries[key.getShape().ordinal()][key.getY()][key.getX()] = new AbstractMap.SimpleEntry(key, value);
 			return old;
 		}
 		
 		@Override
 		public V remove(Object key) {
-			Node k = (Node) key;
+			PlayerActionNode k = (PlayerActionNode) key;
 			V ret = get(key);
-			entries[k.shape.ordinal()][k.y][k.x] = null;	
+			entries[k.getShape().ordinal()][k.getY()][k.getX()] = null;	
 			return ret;
 		}
 		
@@ -166,8 +125,8 @@ public class PlayerAction {
 	private int endX;
 	private int endY;
 	
-	private Node startNode;
-	private Node endNode;
+	private PlayerActionNode startNode;
+	private PlayerActionNode endNode;
 	
 	private boolean possible;
 	
@@ -186,8 +145,8 @@ public class PlayerAction {
 			computeReverse(field, type);
 		
 		possible = !(startShape == endShape && startX == endX && startY == endY);
-		startNode = new Node(startShape, startX, startY);
-		endNode = new Node(endShape, endX, endY);
+		startNode = new PlayerActionNode(startShape, startX, startY);
+		endNode = new PlayerActionNode(endShape, endX, endY);
 	}
 	
 	public PlayerAction(EvilineEvent e) {
@@ -335,11 +294,11 @@ public class PlayerAction {
 		return type.toString();
 	}
 
-	public Node getStartNode() {
+	public PlayerActionNode getStartNode() {
 		return startNode;
 	}
 
-	public Node getEndNode() {
+	public PlayerActionNode getEndNode() {
 		return endNode;
 	}
 
