@@ -39,8 +39,11 @@ import javax.swing.UIManager;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Version;
+import org.eviline.clj.ClojureFitness;
 import org.eviline.event.EvilineAdapter;
 import org.eviline.event.EvilineEvent;
+import org.eviline.fitness.AbstractFitness;
+import org.eviline.fitness.WrapperFitness;
 import org.eviline.sounds.TetrevilMusicListener;
 import org.eviline.sounds.TetrevilSoundListener;
 import org.eviline.sounds.TetrevilSounds;
@@ -426,6 +429,9 @@ public class MainApplet extends JApplet implements PropertySource {
 			return;
 		}
 //		field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
+		
+		// FIXME: Shouldn't normally be using ClojureFitness
+		AbstractFitness.setDefaultInstance(new WrapperFitness(ClojureFitness.newFitness()));
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
