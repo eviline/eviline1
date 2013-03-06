@@ -770,123 +770,123 @@ public class Field implements Serializable {
 		}
 	}
 
-	public synchronized Randomizer getProvider() {
+	public Randomizer getProvider() {
 		return provider;
 	}
 
-	public synchronized void setProvider(Randomizer provider) {
+	public void setProvider(Randomizer provider) {
 		this.provider = provider;
 	}
 
-	public synchronized Shape getShape() {
+	public Shape getShape() {
 		return shape;
 	}
 
-	public synchronized int getShapeX() {
+	public int getShapeX() {
 		return shapeX;
 	}
 
-	public synchronized int getShapeY() {
+	public int getShapeY() {
 		return shapeY;
 	}
 
-	public synchronized int getGhostY() {
+	public int getGhostY() {
 		return ghostY;
 	}
 	
-	public synchronized boolean isGameOver() {
+	public boolean isGameOver() {
 		return gameOver;
 	}
 
-	public synchronized void setShape(Shape shape) {
+	public void setShape(Shape shape) {
 		this.shape = shape;
 	}
 
-	public synchronized void setShapeX(int shapeX) {
+	public void setShapeX(int shapeX) {
 		this.shapeX = shapeX;
 	}
 
-	public synchronized void setShapeY(int shapeY) {
+	public void setShapeY(int shapeY) {
 		this.shapeY = shapeY;
 	}
 
-	public synchronized void setGameOver(boolean gameOver) {
+	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
 
-	public synchronized int getLines() {
+	public int getLines() {
 		return lines;
 	}
 
-	public synchronized void setLines(int lines) {
+	public void setLines(int lines) {
 		this.lines = lines;
 	}
 
-	public synchronized boolean isPaused() {
+	public boolean isPaused() {
 		return paused;
 	}
 
-	public synchronized void setPaused(boolean paused) {
+	public void setPaused(boolean paused) {
 		if(unpausable)
 			return;
 		this.paused = paused;
 		fireGamePaused();
 	}
 
-	public synchronized ShapeDirection getAutoShift() {
+	public ShapeDirection getAutoShift() {
 		return autoShift;
 	}
 
-	public synchronized void setAutoShift(ShapeDirection autoShift) {
+	public void setAutoShift(ShapeDirection autoShift) {
 		this.autoShift = autoShift;
 	}
 
-	public synchronized Block[][] getField() {
+	public Block[][] getField() {
 		return field;
 	}
 
-	public synchronized void setField(Block[][] field) {
+	public void setField(Block[][] field) {
 		this.field = field;
 	}
 	
-	public synchronized boolean isGhosting() {
+	public boolean isGhosting() {
 		return ghosting;
 	}
 
-	public synchronized void setGhosting(boolean ghosting) {
+	public void setGhosting(boolean ghosting) {
 		this.ghosting = ghosting;
 	}
 	
-	public synchronized boolean isUnpausable() {
+	public boolean isUnpausable() {
 		return unpausable;
 	}
 	
-	public synchronized void setUnpausable(boolean unpausable) {
+	public void setUnpausable(boolean unpausable) {
 		this.unpausable = unpausable;
 	}
 
-	public synchronized boolean isPlaying() {
+	public boolean isPlaying() {
 		return playing;
 	}
 
-	public synchronized boolean isWinner() {
+	public boolean isWinner() {
 		return winner;
 	}
 
-	public synchronized void setWinner(boolean winner) {
+	public void setWinner(boolean winner) {
 		this.winner = winner;
 	}
 
-	public synchronized boolean isMultiplayer() {
+	public boolean isMultiplayer() {
 		return multiplayer;
 	}
 	
-	public synchronized void setMultiplayer(boolean multiplayer) {
+	public void setMultiplayer(boolean multiplayer) {
 		this.multiplayer = multiplayer;
 	}
 	
 	@Override
-	public synchronized String toString() {
+	public String toString() {
 		StringBuilder sb = new StringBuilder(220);
 		for(int y = 0; y < field.length - BUFFER + 1; y++) {
 			for(int x = BUFFER - 1; x < field[y].length - BUFFER + 1; x++) {
@@ -898,19 +898,19 @@ public class Field implements Serializable {
 		return sb.toString();
 	}
 
-	public synchronized double getScore() {
+	public double getScore() {
 		return score;
 	}
 
-	public synchronized void setScore(double score) {
+	public void setScore(double score) {
 		this.score = score;
 	}
 
-	public synchronized double getScoreFactor() {
+	public double getScoreFactor() {
 		return scoreFactor;
 	}
 
-	public synchronized void setScoreFactor(double scoreFactor) {
+	public void setScoreFactor(double scoreFactor) {
 		this.scoreFactor = scoreFactor;
 	}
 }
