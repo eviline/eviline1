@@ -265,9 +265,6 @@ public interface AIKernel {
 		}
 	}
 	
-	public Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(
-			Field field);
-
 	/**
 	 * Determine the best way for a player to play a particular queue of shapes.
 	 * @param context
