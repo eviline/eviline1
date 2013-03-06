@@ -10,7 +10,21 @@
   (run-tests 'org.eviline.clj.clojurefitnesstest))
 
 (deftest scoring 
-  (is (= (.score (ClojureFitness/newFitness) (new Field)) 0.0))
+  (is (let [fitness (new ClojureFitness)]
+        (= 0.0 (.score fitness (.prepareField fitness (new Field))))
+        ))
   )
 
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
+(time (.prepareField (new ClojureFitness) (new Field)))
 
