@@ -9,6 +9,7 @@
     :exposes-methods {setFitness superSetFitness}
     ))
 (clojure.core/use 'clojure.core)
+(import '(org.eviline ShapeType))
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 
 (defn -init [fitness] [[]])
@@ -16,3 +17,6 @@
 (defn -post-init [this fitness] (.superSetFitness this fitness))
 
 (defn -setFitness [this fitness] (throw (UnsupportedOperationException.)))
+
+(defn ^Decision -bestFor [^Context context ^ShapeType type]
+  )

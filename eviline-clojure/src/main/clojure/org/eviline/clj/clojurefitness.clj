@@ -42,13 +42,16 @@
   (rest (reverse (reduce paint-impossibles-row-reducer empty-row-list field-array)))
   )
 
+(defn to-field-array [field-array]
+  (into-array (map (fn [row] (into-array Block row)) field-array))
+  )
 
 (defn count-impossibles-row [row]
   (* 200 (count (filter #(= M %) row)))
   )
 
 (defn count-impossibles [field] 
-  (reduce + (map count-impossibles-row (paint-impossibles field)))
+  (reduce + (map count-impossibles-row field))
   )
 
 (defn score-block-array [field-array]
@@ -60,5 +63,7 @@
 (defn -score [this field] 
   (score-block-array (.getField field)))
 
-(defn -prepareField [this field] field)
+(defn -prepareField [this field] 
+  (.setField field (to-field-array (paint-impossibles (.getField field))))
+  field)
 
