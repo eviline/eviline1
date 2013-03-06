@@ -66,5 +66,9 @@
 			<artifactId>clojure</artifactId>
 			<version>1.5.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eviline</groupId>
+			<artifactId>eviline-core</artifactId>
+		</dependency>
 	</dependencies>
 </project>
