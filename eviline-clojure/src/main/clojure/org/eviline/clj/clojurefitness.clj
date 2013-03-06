@@ -2,9 +2,8 @@
   (:gen-class
     :name org.eviline.clj.ClojureFitness
     :implements [org.eviline.fitness.Fitness]
-    :methods [
-              ;#^{:static true} [ newFitness [] org.eviline.fitness.Fitness]
-              ]))
+    :main false
+    ))
 (clojure.core/use 'clojure.core)
 (import '(org.eviline.fitness Fitness))
 (import '(org.eviline Field Block))
@@ -58,8 +57,8 @@
     (count-impossibles field-array)
     )))
 
-(defn -score [self field] 
+(defn -score [this field] 
   (score-block-array (.getField field)))
 
-(defn -prepareField [self field] field)
+(defn -prepareField [this field] field)
 
