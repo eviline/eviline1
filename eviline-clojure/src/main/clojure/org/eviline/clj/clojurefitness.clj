@@ -11,13 +11,14 @@
 
 (def M Block/M)
 (def X Block/X)
+(def expected-X-count (* (+ Field/HEIGHT Field/BUFFER Field/WIDTH Field/BUFFER Field/HEIGHT) Field/BUFFER))
 
-(defn count-row [rev-index row]
-  (* rev-index (count (filter #(and (not (nil? %)) (not (= X %))) row)))
+(defn count-row [row]
+  (count (filter #(not (nil? %)) row))
   )
 
 (defn count-field [field]
-  (reduce + (map-indexed count-row (reverse (.getField field))))
+  (- (reduce + (map count-row (.getField field))) expected-X-count)
   )
 
 (defn unpaint-row-reversing [row]
