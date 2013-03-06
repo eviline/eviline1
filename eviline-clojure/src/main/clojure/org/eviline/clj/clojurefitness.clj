@@ -23,19 +23,21 @@
 
 
 (defn paint-impossibles-rows-inplace [field]
-  (let [painted (reduce (fn [prev-rows row-array]
-	  (let [
-         ; The row above us
-         prev-row (last prev-rows)
-	       above (if (nil? prev-row) (repeat (alength row-array) nil) prev-row)
-         ; current row with all nills set to M unless nill above
-         max-painted (map-indexed (fn [index b] (if (nil? b) (if (nil? (nth above index)) nil M) b)) row-array)
-         right-painted (reduce (fn [lhs b] (conj lhs (if (and (= M b) (nil? (peek lhs))) nil b))) '() max-painted)
-         left-painted (reduce (fn [lhs b] (conj lhs (if (and (= M b) (nil? (peek lhs))) nil b))) '() right-painted)
-	       ]
-       (conj prev-rows left-painted))) nil (.getField field))]
+  (let [rev-painted (reduce (fn [prev-rows row-array]
+                          (let [
+                                ; The row above us
+                                prev-row (last prev-rows)
+                                above (if (nil? prev-row) (repeat (alength row-array) nil) prev-row)
+                                ; current row with all nills set to M unless nill above
+                                max-painted (map-indexed (fn [index b] (if (nil? b) (if (nil? (nth above index)) nil M) b)) row-array)
+                                right-painted (reduce (fn [lhs b] (conj lhs (if (and (= M b) (nil? (peek lhs))) nil b))) '() max-painted)
+                                left-painted (reduce (fn [lhs b] (conj lhs (if (and (= M b) (nil? (peek lhs))) nil b))) '() right-painted)
+                                ]
+                            (conj prev-rows left-painted))) '() (.getField field))
+        painted (reverse rev-painted)
+        ]
     (areduce (.getField field) i m nil (aset (.getField field) i (into-array Block (nth painted i))))))
-    
+
 
 (defn count-impossibles-row [rev-index row]
   (* 200 (count (filter #(= M %) row)))

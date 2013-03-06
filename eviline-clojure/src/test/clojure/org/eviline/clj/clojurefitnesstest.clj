@@ -28,3 +28,4 @@
 (time (.prepareField (new ClojureFitness) (new Field)))
 (time (.prepareField (new ClojureFitness) (new Field)))
 
+(println (.prepareField (new ClojureFitness) (new Field)))
