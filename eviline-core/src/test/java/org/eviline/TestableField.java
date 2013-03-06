@@ -2,6 +2,7 @@ package org.eviline;
 
 import org.eviline.ai.AIKernel;
 import org.eviline.ai.AIKernel.QueueContext;
+import org.eviline.ai.DefaultAIKernel;
 import org.jruby.Ruby;
 import org.jruby.embed.ScriptingContainer;
 import org.jruby.javasupport.JavaUtil;
@@ -98,10 +99,10 @@ public class TestableField extends PropertiedField {
 		ShapeType[] ret = new ShapeType[chars.length];
 		for(int i = 0; i < chars.length; i++)
 			ret[i] = ShapeType.valueOf("" + chars[i]);
-		return AIKernel.getInstance().new QueueContext(this, ret);
+		return new QueueContext(DefaultAIKernel.getInstance(), this, ret);
 	}
 	
 	public AIKernel getAi() {
-		return AIKernel.getInstance();
+		return DefaultAIKernel.getInstance();
 	}
 }

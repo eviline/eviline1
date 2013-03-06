@@ -10,9 +10,9 @@ import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.ai.AIKernel;
 import org.eviline.ai.AIKernel.Context;
 import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.DefaultAIKernel;
 
 /**
  * {@link Randomizer} which runs concurrently with game play.  This {@link Randomizer} doesn't
@@ -89,8 +89,8 @@ public class ConcurrentRandomizer extends AbstractRandomizer implements Randomiz
 	
 	private static Field bestDrop(Field field, ShapeType type) {
 		
-		Context context = AIKernel.getInstance().new Context(null, field, 1);
-		Decision decision = AIKernel.getInstance().bestFor(context, type);
+		Context context = new Context(DefaultAIKernel.getInstance(), null, field, 1);
+		Decision decision = DefaultAIKernel.getInstance().bestFor(context, type);
 		return decision.field;
 	}
 }

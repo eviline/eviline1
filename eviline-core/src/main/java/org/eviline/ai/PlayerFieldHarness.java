@@ -1,8 +1,6 @@
 package org.eviline.ai;
 
-import java.util.ArrayDeque;
 import java.util.Iterator;
-import java.util.Queue;
 
 import org.eviline.Field;
 import org.eviline.PlayerAction;

@@ -2,17 +2,6 @@ package org.eviline;
 
 import java.util.Set;
 
-import org.jruby.Ruby;
-import org.jruby.RubyObject;
-import org.jruby.embed.ScriptingContainer;
-import org.jruby.javasupport.JavaObject;
-import org.jruby.javasupport.JavaUtil;
-import org.jruby.parser.EvalStaticScope;
-import org.jruby.runtime.DynamicScope;
-import org.jruby.runtime.ThreadContext;
-import org.jruby.runtime.builtin.IRubyObject;
-import org.jruby.runtime.scope.ManyVarsDynamicScope;
-
 public class PropertiedField extends Field implements PropertySource {
 	private static final long serialVersionUID = 0;
 	

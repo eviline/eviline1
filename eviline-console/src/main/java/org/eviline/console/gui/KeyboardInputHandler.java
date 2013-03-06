@@ -3,7 +3,7 @@ package org.eviline.console.gui;
 import java.util.HashMap;
 import java.util.Map;
 import org.eviline.Field;
-import org.eviline.ai.AIKernel;
+import org.eviline.ai.DefaultAIKernel;
 import org.eviline.ai.DefaultPlayer;
 import org.eviline.ai.PlayerFieldHarness;
 import org.eviline.console.engine.ConsoleEngine;
@@ -121,7 +121,7 @@ public class KeyboardInputHandler extends WindowAdapter {
 				playerProvider = field.getProvider();
 				field.setProvider(aiProvider);
 				field.addEvilineListener(aiScoreAdjuster);
-				DefaultPlayer player = new DefaultPlayer(field, new AIKernel());
+				DefaultPlayer player = new DefaultPlayer(field, new DefaultAIKernel());
 				player.setBlocking(true);
 				final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
 				final GUIScreen gui = window.getOwner();

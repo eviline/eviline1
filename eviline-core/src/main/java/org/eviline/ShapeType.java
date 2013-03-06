@@ -1,11 +1,30 @@
 package org.eviline;
 
-import static org.eviline.Shape.*;
-
-import java.awt.image.BufferedImage;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import static org.eviline.Shape.I_DOWN;
+import static org.eviline.Shape.I_LEFT;
+import static org.eviline.Shape.I_RIGHT;
+import static org.eviline.Shape.I_UP;
+import static org.eviline.Shape.J_DOWN;
+import static org.eviline.Shape.J_LEFT;
+import static org.eviline.Shape.J_RIGHT;
+import static org.eviline.Shape.J_UP;
+import static org.eviline.Shape.L_DOWN;
+import static org.eviline.Shape.L_LEFT;
+import static org.eviline.Shape.L_RIGHT;
+import static org.eviline.Shape.L_UP;
+import static org.eviline.Shape.O_UP;
+import static org.eviline.Shape.S_DOWN;
+import static org.eviline.Shape.S_LEFT;
+import static org.eviline.Shape.S_RIGHT;
+import static org.eviline.Shape.S_UP;
+import static org.eviline.Shape.T_DOWN;
+import static org.eviline.Shape.T_LEFT;
+import static org.eviline.Shape.T_RIGHT;
+import static org.eviline.Shape.T_UP;
+import static org.eviline.Shape.Z_DOWN;
+import static org.eviline.Shape.Z_LEFT;
+import static org.eviline.Shape.Z_RIGHT;
+import static org.eviline.Shape.Z_UP;
 
 /**
  * Possible types of {@link Shape}s.

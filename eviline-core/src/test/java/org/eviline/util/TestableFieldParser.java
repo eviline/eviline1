@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 import org.eviline.BasicPropertySource;
 import org.eviline.Field;
-import org.eviline.PropertiedField;
 import org.eviline.PropertySource;
 import org.eviline.TestableField;
 import org.eviline.util.FieldParser.FieldFactory;

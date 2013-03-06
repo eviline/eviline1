@@ -1,7 +1,5 @@
 package org.eviline.util;
 
-import java.util.NoSuchElementException;
-
 import org.junit.Test;
 
 public class FieldParserTest extends AbstractUtilTest {

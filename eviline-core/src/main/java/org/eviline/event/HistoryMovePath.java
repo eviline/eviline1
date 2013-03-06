@@ -2,11 +2,9 @@ package org.eviline.event;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import org.eviline.PlayerAction;
-import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.ai.PlayerMovePath;
 

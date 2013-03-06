@@ -1,12 +1,18 @@
 package org.eviline.randomizer;
 
+import static org.eviline.randomizer.RandomizerFactory.CLASS;
+import static org.eviline.randomizer.RandomizerFactory.CONCURRENT;
+import static org.eviline.randomizer.RandomizerFactory.DEPTH;
+import static org.eviline.randomizer.RandomizerFactory.DISTRIBUTION;
+import static org.eviline.randomizer.RandomizerFactory.FAIR;
+import static org.eviline.randomizer.RandomizerFactory.NEXT;
+import static org.eviline.randomizer.RandomizerFactory.RFACTOR;
+
 import java.util.Properties;
 import java.util.Set;
 
 import org.eviline.Field;
 import org.eviline.PropertySource;
-
-import static org.eviline.randomizer.RandomizerFactory.*;
 
 public enum RandomizerPresets implements PropertySource {
 	SADISTIC("Sadistic", ThreadedMaliciousRandomizer.class, DEPTH+"=5", RFACTOR+"=0", FAIR+"=false", DISTRIBUTION+"=0", CONCURRENT+"=false", NEXT+"=0"),
