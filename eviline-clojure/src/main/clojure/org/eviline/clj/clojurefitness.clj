@@ -1,7 +1,7 @@
 (ns org.eviline.clj.clojurefitness
   (:gen-class
     :name org.eviline.clj.ClojureFitness
-    :implements [org.eviline.fitness.Fitness]
+    :extends org.eviline.fitness.DefaultFitness
     :main false
     ))
 (clojure.core/use 'clojure.core)
@@ -63,7 +63,7 @@
 (defn -score [this field] 
   (score-block-array (.getField field)))
 
-(defn -prepareField [this field] 
+(defn -paintImpossibles [this field] 
   (.setField field (to-field-array (paint-impossibles (.getField field))))
   field)
 
