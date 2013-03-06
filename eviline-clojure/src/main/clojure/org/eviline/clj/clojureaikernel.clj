@@ -37,7 +37,7 @@
   )
 (defn grounded-locations 
   ([^Field field ^ShapeType type] 
-    (mapcat (fn [shape] (y-grounded field shape)) (.orientations type))
+    (mapcat (fn [shape] (y-grounded field shape)) (.searchOrientations type))
     )
   )
 

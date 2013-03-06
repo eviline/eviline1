@@ -15,4 +15,7 @@
   (is (ClojureAIKernel. (ClojureFitness.)))
   )
 
-(println (grounded-locations (Field.) ShapeType/O))
+(deftest grounded-locations-test
+  (is (= 9 (count (grounded-locations (Field.) ShapeType/O))))
+  (is (= 17 (count (grounded-locations (Field.) ShapeType/S))))
+  )
