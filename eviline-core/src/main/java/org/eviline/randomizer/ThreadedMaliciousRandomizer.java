@@ -12,10 +12,10 @@ import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
+import org.eviline.ai.AI;
 import org.eviline.ai.AIKernel.Context;
 import org.eviline.ai.AIKernel.Decision;
 import org.eviline.ai.AIKernel.DecisionModifier;
-import org.eviline.ai.DefaultAIKernel;
 
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
@@ -72,7 +72,7 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				ThreadedMaliciousRandomizer.this.permuteDecision(decision);
 			}
 		};
-		final Context context = new Context(DefaultAIKernel.getInstance(), decisionModifier, field, depth());
+		final Context context = new Context(AI.getInstance(), decisionModifier, field, depth());
 		
 		Collection<Future<Decision>> futures = new ArrayList<Future<Decision>>();
 		for(final ShapeType type : ShapeType.values()) {
@@ -82,8 +82,8 @@ public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
 				@Override
 				public Decision call() throws Exception {
 					
-					Decision best = DefaultAIKernel.getInstance().bestFor(context, type);
-					Decision worstPlannable = DefaultAIKernel.getInstance().planWorst(context.deeper(best.field), best);
+					Decision best = AI.getInstance().bestFor(context, type);
+					Decision worstPlannable = AI.getInstance().planWorst(context.deeper(best.field), best);
 					best.deeper = worstPlannable;
 					best.score = worstPlannable.score;
 					context.decisionModifier.modifyPlannedDecision(context, best);

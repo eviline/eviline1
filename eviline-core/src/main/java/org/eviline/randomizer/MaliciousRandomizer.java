@@ -15,10 +15,10 @@ import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
+import org.eviline.ai.AI;
 import org.eviline.ai.AIKernel.Context;
 import org.eviline.ai.AIKernel.Decision;
 import org.eviline.ai.AIKernel.DecisionModifier;
-import org.eviline.ai.DefaultAIKernel;
 
 /**
  * {@link Randomizer} that looks a few moves ahead in the future to come up with the worst
@@ -176,12 +176,12 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				permuteDecision(decision);
 			}
 		};
-		Context context = new Context(DefaultAIKernel.getInstance(), decisionModifier, field, this.depth() - depth);
+		Context context = new Context(AI.getInstance(), decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
-		defaultDecision.score = DefaultAIKernel.getInstance().getFitness().scoreWithPaint(defaultDecision.field);
-		Decision decision = DefaultAIKernel.getInstance().planWorst(context, defaultDecision);
+		defaultDecision.score = AI.getInstance().getFitness().scoreWithPaint(defaultDecision.field);
+		Decision decision = AI.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;
 	}

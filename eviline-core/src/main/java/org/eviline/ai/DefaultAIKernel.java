@@ -28,13 +28,6 @@ import org.eviline.fitness.Fitness;
 public class DefaultAIKernel implements AIKernel {
 
 	
-	private static AIKernel instance;
-	public static AIKernel getInstance() {
-		if(instance == null)
-			instance = new DefaultAIKernel();
-		return instance;
-	}
-	
 	public DefaultAIKernel() {}
 	
 	private boolean highGravity = false;

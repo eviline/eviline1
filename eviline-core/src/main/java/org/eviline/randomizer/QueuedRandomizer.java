@@ -14,10 +14,10 @@ import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
+import org.eviline.ai.AI;
 import org.eviline.ai.AIKernel.Context;
 import org.eviline.ai.AIKernel.Decision;
 import org.eviline.ai.AIKernel.QueueContext;
-import org.eviline.ai.DefaultAIKernel;
 
 public class QueuedRandomizer extends AbstractRandomizer implements Randomizer {
 	protected Randomizer provider;
@@ -153,8 +153,8 @@ public class QueuedRandomizer extends AbstractRandomizer implements Randomizer {
 	}
 	
 	private static Field bestDrop(Field field, ShapeType type) {
-		Context context = new Context(DefaultAIKernel.getInstance(), null, field, 1);
-		Decision decision = DefaultAIKernel.getInstance().bestFor(context, type);
+		Context context = new Context(AI.getInstance(), null, field, 1);
+		Decision decision = AI.getInstance().bestFor(context, type);
 		return decision.field;
 	}
 	
@@ -163,8 +163,8 @@ public class QueuedRandomizer extends AbstractRandomizer implements Randomizer {
 //			field = bestDrop(field, type);
 //		return field;
 		ShapeType[] sq = queue.toArray(new ShapeType[queue.size()]);
-		QueueContext context = new QueueContext(DefaultAIKernel.getInstance(), field, sq);
-		Decision best = DefaultAIKernel.getInstance().bestFor(context);
+		QueueContext context = new QueueContext(AI.getInstance(), field, sq);
+		Decision best = AI.getInstance().bestFor(context);
 		return best.deepest().field;
 	}
 
