@@ -1,6 +1,6 @@
-(ns org.eviline.fitness.clojurefitness
+(ns org.eviline.clj.clojurefitness
   (:gen-class
-    :name org.eviline.fitness.ClojureFitness
+    :name org.eviline.clj.ClojureFitness
     :methods [#^{:static true} [ newFitness [] org.eviline.fitness.Fitness]]))
 (clojure.core/use 'clojure.core)
 (import '(org.eviline.fitness Fitness))
