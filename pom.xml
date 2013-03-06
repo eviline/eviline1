@@ -89,7 +89,16 @@
 				<version>2.5</version>
 			</plugin>
 
-			<plugin>
+			
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>jarsigner</id>
+			<build>
+				<plugins>
+				<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jarsigner-plugin</artifactId>
 				<version>1.2</version>
@@ -120,10 +129,10 @@
 					<storepass>${keystore.password}</storepass>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
-
-	<profiles>
+				</plugins>
+			</build>
+		</profile>
+	
 		<profile>
 			<id>sign-artifacts</id>
 			<activation>
