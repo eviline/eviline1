@@ -45,8 +45,7 @@ public class Context {
 		this.ai = ai;
 		this.decisionModifier = decisionModifier;
 		this.original = original.copy();
-		this.paintedImpossible = original.copy();
-		ai.getFitness().prepareField(paintedImpossible);
+		this.paintedImpossible = ai.getFitness().prepareField(original);
 		this.remainingDepth = remainingDepth;
 	}
 	

@@ -32,8 +32,10 @@ public abstract class AbstractFitness implements Fitness {
 	}
 
 	@Override
-	public void prepareField(Field field) {
+	public Field prepareField(Field field) {
+		field = field.copy();
 		paintImpossibles(field);
+		return field;
 	}
 	
 	/**

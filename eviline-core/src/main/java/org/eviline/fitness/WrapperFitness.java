@@ -25,6 +25,11 @@ public class WrapperFitness extends AbstractFitness {
 	public void paintImpossibles(Field field) {
 		delegate.prepareField(field);
 	}
+	
+	@Override
+	public Field prepareField(Field field) {
+		return delegate.prepareField(field);
+	}
 
 	@Override
 	public void paintUnlikelies(Field field) {

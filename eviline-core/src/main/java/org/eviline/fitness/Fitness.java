@@ -11,6 +11,6 @@ public interface Fitness {
 	 */
 	public double score(Field field);
 	
-	public void prepareField(Field field);
+	public Field prepareField(Field field);
 
 }
