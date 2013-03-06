@@ -6,14 +6,32 @@
 (import '(org.eviline.fitness Fitness))
 (import '(org.eviline Field Block))
 
-(defn score-row [index row]
-  (* index (count (filter #(and (not (nil? %)) (not (= Block/X %))) row)))
+(defn count-row [rev-index row]
+  (* rev-index (count (filter #(and (not (nil? %)) (not (= Block/X %))) row)))
   )
 
-(defn score [field]
-  (reduce + (map-indexed score-row (reverse (.getField field))))
+(defn count-field [field]
+  (reduce + (map-indexed count-row (reverse (.getField field))))
   )
 
+(defn paint-impossibles [field]
+  field
+  )
+
+(defn count-impossibles-row [rev-index row]
+  
+  )
+
+(defn count-impossibles [field] 
+  (let (painted (paint-impossibles (.getField field)))
+    (reduce + (map-indexed count-impossibles-row (reverse painted)))
+    )
+  )
+
+(defn score [field] 
+  (+
+    (count-field field)
+    ))
 
 (defn -newFitness []
   (proxy [Fitness] []
