@@ -32,7 +32,7 @@
                                 ; The row above us
                                 above (first prev-rows)
                                 ; current row with all nills set to M unless nill above
-                                max-painted (map-indexed (fn [index b] (if (nil? b) (if (nil? (nth above index)) nil M) b)) row-array)
+                                max-painted (map (fn [b ba] (if (nil? b) (if (nil? ba) nil M) b)) row-array above)
                                 min-painted (unpaint-row-reversing (unpaint-row-reversing max-painted))
                                 ]
                             (cons min-painted prev-rows))) (list empty-row) (.getField field))
