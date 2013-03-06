@@ -39,6 +39,9 @@ import javax.swing.UIManager;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Version;
+import org.eviline.ai.AI;
+import org.eviline.ai.DefaultAIKernel;
+import org.eviline.clj.ClojureAIKernel;
 import org.eviline.clj.ClojureFitness;
 import org.eviline.event.EvilineAdapter;
 import org.eviline.event.EvilineEvent;
@@ -431,8 +434,10 @@ public class MainApplet extends JApplet implements PropertySource {
 //		field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
 		
 		// FIXME: Shouldn't normally be using ClojureFitness
-		if(System.getProperty("eviline.clojure") != null)
-			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
+		if(System.getProperty("eviline.clojure") != null) {
+//			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
+			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
+		}
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
