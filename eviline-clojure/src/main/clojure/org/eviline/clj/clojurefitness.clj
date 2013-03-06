@@ -28,7 +28,7 @@
     )
   )
 
-(defn paint-impossibles [field]
+(defn paint-impossible-rows [field]
   (reduce paint-impossibles-row [] (vec field))
   )
 
@@ -37,9 +37,25 @@
   )
 
 (defn count-impossibles [field] 
-  (let [painted (paint-impossibles (.getField field))]
-    (reduce + (map-indexed count-impossibles-row (reverse painted)))
+  (reduce + (map-indexed count-impossibles-row (.getField field)))
+  )
+
+(defn prepare-field-inplace [field]
+  (let [
+        field-array (.getField field)
+        painted-impossible (paint-impossibles-row field-array)
+        
+        ]
+    (map-indexed 
+      (fn [row-index row] 
+        (let [painted-row (nth painted-impossible row-index)
+              ]
+          (map-indexed (fn [col-index b] (aset row col-index b)))
+          )
+        )
+      field-array)
     )
+  field
   )
 
 (defn score [field] 
@@ -51,7 +67,7 @@
 (defn -newFitness []
   (proxy [Fitness] []
     (score [field] (score field))
-    (prepareField [field])
+    (prepareField [field] (prepare-field-inplace (.copy field)))
     )
   )
 
