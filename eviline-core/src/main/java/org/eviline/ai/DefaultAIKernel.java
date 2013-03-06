@@ -486,22 +486,18 @@ public class DefaultAIKernel implements AIKernel {
 		return worst;
 	}
 
-	@Override
 	public boolean isHighGravity() {
 		return highGravity;
 	}
 
-	@Override
 	public void setHighGravity(boolean highGravity) {
 		this.highGravity = highGravity;
 	}
 
-	@Override
 	public boolean isHardDropOnly() {
 		return hardDropOnly;
 	}
 
-	@Override
 	public void setHardDropOnly(boolean hardDropOnly) {
 		this.hardDropOnly = hardDropOnly;
 	}

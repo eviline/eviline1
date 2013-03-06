@@ -55,14 +55,6 @@ public interface AIKernel {
 	 */
 	public Decision planWorst(Context context, Decision defaultDecision);
 
-	public boolean isHighGravity();
-
-	public void setHighGravity(boolean highGravity);
-
-	public boolean isHardDropOnly();
-
-	public void setHardDropOnly(boolean hardDropOnly);
-
 	public Fitness getFitness();
 
 	public void setFitness(Fitness fitness);
