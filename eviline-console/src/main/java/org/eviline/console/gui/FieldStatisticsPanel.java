@@ -11,6 +11,7 @@ public class FieldStatisticsPanel extends Panel {
 	
 	private Panel next = new Panel(Orientation.VERTICAL);
 	private Label lines = new Label();
+	private Label score = new Label();
 	
 	public FieldStatisticsPanel(Field field) {
 		super(Orientation.VERTICAL);
@@ -22,6 +23,8 @@ public class FieldStatisticsPanel extends Panel {
 		Panel p = new Panel(Orientation.VERTICAL);
 		p.addComponent(new Label("Lines:"));
 		p.addComponent(lines);
+		p.addComponent(new Label("Score:"));
+		p.addComponent(score);
 		addComponent(p, BorderLayout.BOTTOM);
 		addComponent(new Label(" "), BorderLayout.CENTER);
 		
@@ -30,6 +33,7 @@ public class FieldStatisticsPanel extends Panel {
 	@Override
 	public void repaint(TextGraphics graphics) {
 		lines.setText("" + field.getLines());
+		score.setText("" + (int) field.getScore());
 		super.repaint(graphics);
 	}
 }

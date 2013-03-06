@@ -221,4 +221,10 @@ public class TetrevilTableModel extends AbstractTableModel implements EvilineLis
 	public Field getLast() {
 		return last;
 	}
+
+	@Override
+	public void hardDropped(EvilineEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

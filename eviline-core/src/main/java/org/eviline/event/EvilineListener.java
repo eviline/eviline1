@@ -61,4 +61,6 @@ public interface EvilineListener extends EventListener {
 	public void linesCleared(EvilineEvent e);
 	
 	public void garbageReceived(EvilineEvent e);
+	
+	public void hardDropped(EvilineEvent e);
 }

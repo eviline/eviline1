@@ -80,6 +80,10 @@ public class Field implements Serializable {
 	 */
 	protected int lines;
 	
+	protected double score;
+	
+	protected double scoreFactor = 1;
+	
 	/**
 	 * The direction of the currently active DAS
 	 */
@@ -136,6 +140,8 @@ public class Field implements Serializable {
 		target.shapeY = shapeY;
 		target.gameOver = gameOver;
 		target.lines = lines;
+		target.score = score;
+		target.scoreFactor = scoreFactor;
 		return target;
 	}
 	
@@ -146,7 +152,7 @@ public class Field implements Serializable {
 	/**
 	 * Reset the field
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		if(unpausable)
 			return;
 		fireGameReset();
@@ -168,6 +174,8 @@ public class Field implements Serializable {
 		shape = null;
 		gameOver = false;
 		lines = 0;
+		score = 0;
+		scoreFactor = 1;
 		autoShift = null;
 		playing = false;
 	}
@@ -176,7 +184,7 @@ public class Field implements Serializable {
 	 * Cause one clock tick.  One clock tick means one movement of gravity downwards.
 	 * Tetrevil does not keep a separate 60Hz clock, or some other such independent clock.
 	 */
-	public void clockTick() {
+	public synchronized void clockTick() {
 		if(paused)
 			return;
 		if(gameOver)
@@ -254,6 +262,7 @@ public class Field implements Serializable {
 			}
 			
 			if(multilines > 0) {
+				score += scoreFactor * 1000 * multilines * multilines;
 				fireLinesCleared(multilines);
 			}
 		}
@@ -263,7 +272,7 @@ public class Field implements Serializable {
 	 * Returns whether the current shape is "grounded", e.g. can be locked but isn't
 	 * @return
 	 */
-	public boolean isGrounded() {
+	public synchronized boolean isGrounded() {
 		if(shape == null)
 			return false;
 		return shape.intersects(field, shapeX, shapeY+1);
@@ -272,7 +281,7 @@ public class Field implements Serializable {
 	/**
 	 * Shift the current shape one to the left
 	 */
-	public void shiftLeft() {
+	public synchronized void shiftLeft() {
 		if(paused)
 			return;
 		if(shape == null || shape.intersects(field, shapeX-1, shapeY))
@@ -285,7 +294,7 @@ public class Field implements Serializable {
 	/**
 	 * Shift the current shape one to the right
 	 */
-	public void shiftRight() {
+	public synchronized void shiftRight() {
 		if(paused)
 			return;
 		if(shape == null || shape.intersects(field, shapeX+1, shapeY))
@@ -295,10 +304,41 @@ public class Field implements Serializable {
 		fireShiftedRight();
 	}
 	
+	public synchronized void shiftDown() {
+		if(paused)
+			return;
+		score += scoreFactor;
+		clockTick();
+	}
+	
+	public synchronized void softDrop() {
+		if(paused)
+			return;
+		if(shape == null)
+			return;
+		while(!shape.intersects(field, shapeX, shapeY + 1)) {
+			score += 2 * scoreFactor;
+			clockTick();
+		}
+	}
+	
+	public synchronized void hardDrop() {
+		if(paused)
+			return;
+		if(shape == null)
+			return;
+		while(!shape.intersects(field, shapeX, shapeY + 1)) {
+			score += 3 * scoreFactor;
+			clockTick();
+		}
+		clockTick();
+		fireHardDropped();
+	}
+	
 	/**
 	 * Auto-shift the current shape all the way to the left or right.
 	 */
-	public void autoshift() {
+	public synchronized void autoshift() {
 		if(paused || autoShift == null)
 			return;
 		switch(autoShift) {
@@ -318,7 +358,7 @@ public class Field implements Serializable {
 	/**
 	 * Recalculate the ghost location
 	 */
-	public void reghost() {
+	public synchronized void reghost() {
 		if(!ghosting)
 			return;
 		for(int y = 0; y < HEIGHT + 2 * BUFFER; y++) {
@@ -352,7 +392,7 @@ public class Field implements Serializable {
 	/**
 	 * Counter-clockwise shape rotation
 	 */
-	public void rotateLeft() {
+	public synchronized void rotateLeft() {
 		if(paused || shape == null)
 			return;
 //		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
@@ -376,7 +416,7 @@ public class Field implements Serializable {
 		}
 	}
 	
-	public void reverseRotateLeft() {
+	public synchronized void reverseRotateLeft() {
 		if(paused || shape == null)
 			return;
 		Shape rotated = shape.rotateRight();
@@ -403,7 +443,7 @@ public class Field implements Serializable {
 	/**
 	 * Clockwise shape rotation
 	 */
-	public void rotateRight() {
+	public synchronized void rotateRight() {
 		if(paused || shape == null)
 			return;
 //		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
@@ -427,7 +467,7 @@ public class Field implements Serializable {
 		}
 	}
 	
-	public void reverseRotateRight() {
+	public synchronized void reverseRotateRight() {
 		if(paused || shape == null)
 			return;
 		Shape rotated = shape.rotateLeft();
@@ -451,7 +491,7 @@ public class Field implements Serializable {
 		autoshift();
 	}
 	
-	public void garbage(int lines) {
+	public synchronized void garbage(int lines) {
 		this.garbage += lines;
 	}
 	
@@ -478,7 +518,7 @@ public class Field implements Serializable {
 	 * @param y
 	 * @return
 	 */
-	public Block getBlock(int x, int y) {
+	public synchronized Block getBlock(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
 			Block[][] s = shape.shape();
 			if(x - shapeX < s[0].length && y - shapeY < s.length) {
@@ -496,11 +536,11 @@ public class Field implements Serializable {
 		return field[y][x];
 	}
 	
-	public Block getFieldBlock(int x, int y) {
+	public synchronized Block getFieldBlock(int x, int y) {
 		return getBlock(x + Field.BUFFER, y + Field.BUFFER);
 	}
 	
-	public BlockMetadata getMetadata(int x, int y) {
+	public synchronized BlockMetadata getMetadata(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
 			Block[][] s = shape.shape();
 			if(x - shapeX < s[0].length && y - shapeY < s.length) {
@@ -522,7 +562,7 @@ public class Field implements Serializable {
 	 * Add a tetrevil listener to this field
 	 * @param l
 	 */
-	public void addEvilineListener(EvilineListener l) {
+	public synchronized void addEvilineListener(EvilineListener l) {
 		if(listeners == null)
 			listeners = new EvilineListener[0];
 		EvilineListener[] ll = Arrays.copyOf(listeners, listeners.length + 1);
@@ -534,7 +574,7 @@ public class Field implements Serializable {
 	 * Remove a tetrevil listener from this field
 	 * @param l
 	 */
-	public void removeEvilineListener(EvilineListener l) {
+	public synchronized void removeEvilineListener(EvilineListener l) {
 		if(listeners == null)
 			listeners = new EvilineListener[0];
 		EvilineListener[] listeners = this.listeners;
@@ -716,123 +756,137 @@ public class Field implements Serializable {
 		}
 	}
 
-	public Randomizer getProvider() {
+	protected void fireHardDropped() {
+		if(listeners == null)
+			return;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(dispatcher == null)
+				dispatcher = new EventDispatcher();
+			if(e == null)
+				e = new EvilineEvent(this, EvilineEvent.HARD_DROP, this);
+			dispatcher.hardDropped(ll[i], e);
+		}
+	}
+
+	public synchronized Randomizer getProvider() {
 		return provider;
 	}
 
-	public void setProvider(Randomizer provider) {
+	public synchronized void setProvider(Randomizer provider) {
 		this.provider = provider;
 	}
 
-	public Shape getShape() {
+	public synchronized Shape getShape() {
 		return shape;
 	}
 
-	public int getShapeX() {
+	public synchronized int getShapeX() {
 		return shapeX;
 	}
 
-	public int getShapeY() {
+	public synchronized int getShapeY() {
 		return shapeY;
 	}
 
-	public int getGhostY() {
+	public synchronized int getGhostY() {
 		return ghostY;
 	}
 	
-	public boolean isGameOver() {
+	public synchronized boolean isGameOver() {
 		return gameOver;
 	}
 
-	public void setShape(Shape shape) {
+	public synchronized void setShape(Shape shape) {
 		this.shape = shape;
 	}
 
-	public void setShapeX(int shapeX) {
+	public synchronized void setShapeX(int shapeX) {
 		this.shapeX = shapeX;
 	}
 
-	public void setShapeY(int shapeY) {
+	public synchronized void setShapeY(int shapeY) {
 		this.shapeY = shapeY;
 	}
 
-	public void setGameOver(boolean gameOver) {
+	public synchronized void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
 
-	public int getLines() {
+	public synchronized int getLines() {
 		return lines;
 	}
 
-	public void setLines(int lines) {
+	public synchronized void setLines(int lines) {
 		this.lines = lines;
 	}
 
-	public boolean isPaused() {
+	public synchronized boolean isPaused() {
 		return paused;
 	}
 
-	public void setPaused(boolean paused) {
+	public synchronized void setPaused(boolean paused) {
 		if(unpausable)
 			return;
 		this.paused = paused;
 		fireGamePaused();
 	}
 
-	public ShapeDirection getAutoShift() {
+	public synchronized ShapeDirection getAutoShift() {
 		return autoShift;
 	}
 
-	public void setAutoShift(ShapeDirection autoShift) {
+	public synchronized void setAutoShift(ShapeDirection autoShift) {
 		this.autoShift = autoShift;
 	}
 
-	public Block[][] getField() {
+	public synchronized Block[][] getField() {
 		return field;
 	}
 
-	public void setField(Block[][] field) {
+	public synchronized void setField(Block[][] field) {
 		this.field = field;
 	}
 	
-	public boolean isGhosting() {
+	public synchronized boolean isGhosting() {
 		return ghosting;
 	}
 
-	public void setGhosting(boolean ghosting) {
+	public synchronized void setGhosting(boolean ghosting) {
 		this.ghosting = ghosting;
 	}
 	
-	public boolean isUnpausable() {
+	public synchronized boolean isUnpausable() {
 		return unpausable;
 	}
 	
-	public void setUnpausable(boolean unpausable) {
+	public synchronized void setUnpausable(boolean unpausable) {
 		this.unpausable = unpausable;
 	}
 
-	public boolean isPlaying() {
+	public synchronized boolean isPlaying() {
 		return playing;
 	}
 
-	public boolean isWinner() {
+	public synchronized boolean isWinner() {
 		return winner;
 	}
 
-	public void setWinner(boolean winner) {
+	public synchronized void setWinner(boolean winner) {
 		this.winner = winner;
 	}
 
-	public boolean isMultiplayer() {
+	public synchronized boolean isMultiplayer() {
 		return multiplayer;
 	}
 	
-	public void setMultiplayer(boolean multiplayer) {
+	public synchronized void setMultiplayer(boolean multiplayer) {
 		this.multiplayer = multiplayer;
 	}
 	
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		StringBuilder sb = new StringBuilder(220);
 		for(int y = 0; y < field.length - BUFFER + 1; y++) {
 			for(int x = BUFFER - 1; x < field[y].length - BUFFER + 1; x++) {
@@ -842,5 +896,21 @@ public class Field implements Serializable {
 		}
 		sb.append("Score " + Fitness.getDefaultInstance().score(this));
 		return sb.toString();
+	}
+
+	public synchronized double getScore() {
+		return score;
+	}
+
+	public synchronized void setScore(double score) {
+		this.score = score;
+	}
+
+	public synchronized double getScoreFactor() {
+		return scoreFactor;
+	}
+
+	public synchronized void setScoreFactor(double scoreFactor) {
+		this.scoreFactor = scoreFactor;
 	}
 }

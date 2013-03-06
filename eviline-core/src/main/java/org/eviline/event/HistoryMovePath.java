@@ -101,6 +101,12 @@ public class HistoryMovePath extends PlayerMovePath implements EvilineListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void hardDropped(EvilineEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public List<long[]>[] getLastPaths() {
 		return lastPaths;

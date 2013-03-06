@@ -56,4 +56,8 @@ public abstract class EvilineAdapter implements EvilineListener, Serializable {
 	@Override
 	public void garbageReceived(EvilineEvent e) {
 	}
+	
+	@Override
+	public void hardDropped(EvilineEvent e) {
+	}
 }

@@ -90,13 +90,11 @@ public class ConsoleEngine implements EvilineListener {
 	}
 	
 	public void softDrop() {
-		while(!field.isGrounded())
-			field.clockTick();
+		field.softDrop();
 	}
 	
 	public void hardDrop() {
-		softDrop();
-		field.clockTick();
+		field.hardDrop();
 	}
 	
 	public void shiftLeft() {
@@ -214,6 +212,12 @@ public class ConsoleEngine implements EvilineListener {
 		
 	}
 
+	@Override
+	public void hardDropped(EvilineEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public Field getField() {
 		return field;
 	}

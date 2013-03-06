@@ -427,6 +427,7 @@ public class AIKernel {
 		best.score = Double.POSITIVE_INFINITY;
 		
 		final Map<PlayerActionNode, List<PlayerAction>> paths;
+		List<Shape> orientations = new ArrayList<Shape>(Arrays.asList(context.type.orientations()));
 		if(context.shallower == null) {
 			context.original.setLines(0);
 			Field starter = context.original.copy();
@@ -438,6 +439,9 @@ public class AIKernel {
 				starter.setShapeX(context.type.starterX());
 				if(!starter.getShape().intersects(starter.getField(), starter.getShapeX(), starter.getShapeY() + 1))
 					starter.setShapeY(starter.getShapeY() + 1);
+			} else {
+				orientations.remove(starter.getShape());
+				orientations.add(0, starter.getShape());
 			}
 			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
@@ -451,7 +455,7 @@ public class AIKernel {
 			}
 		}
 		List<Future<?>> futures = new ArrayList<Future<?>>();
-		for(final Shape shape : context.type.orientations()) {
+		for(final Shape shape : orientations) {
 			Runnable task = new Runnable() {
 				@Override
 				public void run() {
@@ -591,7 +595,12 @@ public class AIKernel {
 //		Set<PlayerAction> visitedActions = new HashSet<PlayerAction>();
 		final Map<PlayerActionNode, List<PlayerAction>> allPaths = Collections.synchronizedMap(allPathsFrom(inPlayField));
 		List<Future<?>> futures = new ArrayList<Future<?>>();
-		for(final Shape shape : type.orientations()) {
+		List<Shape> orientations = new ArrayList<Shape>(Arrays.asList(type.orientations()));
+		if(inPlayField.getShape() != null) {
+			orientations.remove(inPlayField.getShape());
+			orientations.add(0, inPlayField.getShape());
+		}
+		for(final Shape shape : orientations) {
 			Runnable task = new Runnable() {
 				@Override
 				public void run() {
