@@ -15,9 +15,9 @@ import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.ai.AI;
-import org.eviline.ai.AIKernel.Context;
-import org.eviline.ai.AIKernel.Decision;
-import org.eviline.ai.AIKernel.QueueContext;
+import org.eviline.ai.Context;
+import org.eviline.ai.Decision;
+import org.eviline.ai.QueueContext;
 
 public class QueuedRandomizer extends AbstractRandomizer implements Randomizer {
 	protected Randomizer provider;

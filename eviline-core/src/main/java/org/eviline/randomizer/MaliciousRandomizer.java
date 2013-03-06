@@ -16,9 +16,9 @@ import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.ai.AI;
-import org.eviline.ai.AIKernel.Context;
-import org.eviline.ai.AIKernel.Decision;
-import org.eviline.ai.AIKernel.DecisionModifier;
+import org.eviline.ai.Context;
+import org.eviline.ai.Decision;
+import org.eviline.ai.DecisionModifier;
 
 /**
  * {@link Randomizer} that looks a few moves ahead in the future to come up with the worst
