@@ -13,7 +13,6 @@ import java.util.concurrent.ThreadFactory;
 import org.eviline.Field;
 import org.eviline.PlayerAction;
 import org.eviline.ShapeType;
-import org.eviline.ai.AIKernel.QueueContext;
 
 public class DefaultPlayer extends AbstractPlayer {
 

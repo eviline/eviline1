@@ -2,7 +2,7 @@ package org.eviline;
 
 import org.eviline.ai.AI;
 import org.eviline.ai.AIKernel;
-import org.eviline.ai.AIKernel.QueueContext;
+import org.eviline.ai.QueueContext;
 import org.jruby.Ruby;
 import org.jruby.embed.ScriptingContainer;
 import org.jruby.javasupport.JavaUtil;

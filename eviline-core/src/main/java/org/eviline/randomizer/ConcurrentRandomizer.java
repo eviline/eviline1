@@ -11,8 +11,8 @@ import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.ai.AI;
-import org.eviline.ai.AIKernel.Context;
-import org.eviline.ai.AIKernel.Decision;
+import org.eviline.ai.Context;
+import org.eviline.ai.Decision;
 
 /**
  * {@link Randomizer} which runs concurrently with game play.  This {@link Randomizer} doesn't
