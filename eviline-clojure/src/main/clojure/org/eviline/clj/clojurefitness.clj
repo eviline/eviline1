@@ -13,33 +13,35 @@
 (def X Block/X)
 (def expected-X-count (* Field/WIDTH Field/BUFFER))
 (def empty-row (repeat (+ Field/WIDTH Field/BUFFER Field/BUFFER) nil))
+(def empty-row-list (list empty-row))
 
 (defn count-row [row]
   (- Field/WIDTH (count (filter nil? row)))
   )
 
-(defn count-field [field]
-  (- (reduce + (map count-row (.getField field))) expected-X-count)
+(defn count-field [field-array]
+  (- (reduce + (map count-row field-array)) expected-X-count)
   )
 
+(defn unpainting-reversing-reducer [lhs b] 
+  (cons (if (and (= M b) (nil? (first lhs))) nil b) lhs))
+
 (defn unpaint-row-reversing [row]
-  (reduce (fn [lhs b] (cons (if (and (= M b) (nil? (first lhs))) nil b) lhs)) '() row)
+  (reduce unpainting-reversing-reducer '() row)
   )
+
+(defn block-max-painter [b ba] (if (nil? b) (if (nil? ba) nil M) b))
 
 (defn paint-impossibles-row-reducer [prev-rows row-array]
   (let [
-        max-painted (map (fn [b ba] (if (nil? b) (if (nil? ba) nil M) b)) row-array (first prev-rows))
+        max-painted (map block-max-painter row-array (first prev-rows))
         min-painted (unpaint-row-reversing (unpaint-row-reversing max-painted))
         ]
     (cons min-painted prev-rows)))
 
-(defn paint-impossibles [field]
-  (let [
-        rev-painted (reduce paint-impossibles-row-reducer (list empty-row) (.getField field))
-        painted (reverse rev-painted)
-        ]
-    (rest painted)
-    ))
+(defn paint-impossibles [field-array]
+  (rest (reverse (reduce paint-impossibles-row-reducer empty-row-list field-array)))
+  )
 
 
 (defn count-impossibles-row [row]
@@ -50,15 +52,14 @@
   (reduce + (map count-impossibles-row (paint-impossibles field)))
   )
 
-(defn prepare-field-inplace [field]
-  field
-  )
+(defn score-block-array [field-array]
+  (double (+
+    (count-field field-array)
+    (count-impossibles field-array)
+    )))
 
 (defn -score [self field] 
-  (double (+
-    (count-field field)
-    (count-impossibles field)
-    )))
+  (score-block-array (.getField field)))
 
 (defn -prepareField [self field] field)
 
