@@ -20,32 +20,34 @@
   (reduce + (map-indexed count-row (reverse (.getField field))))
   )
 
-
+(defn unpaint-row-reversing [row]
+  (reduce (fn [lhs b] (cons (if (and (= M b) (nil? (first lhs))) nil b) lhs)) '() row)
+  )
 
 (defn paint-impossibles [field]
-  (let [rev-painted (reduce (fn [prev-rows row-array]
+  (let [
+        empty-row (repeat (+ Field/WIDTH Field/BUFFER Field/BUFFER) nil)
+        rev-painted (reduce (fn [prev-rows row-array]
                           (let [
                                 ; The row above us
-                                prev-row (last prev-rows)
-                                above (if (nil? prev-row) (repeat (alength row-array) nil) prev-row)
+                                above (first prev-rows)
                                 ; current row with all nills set to M unless nill above
                                 max-painted (map-indexed (fn [index b] (if (nil? b) (if (nil? (nth above index)) nil M) b)) row-array)
-                                right-painted (reduce (fn [lhs b] (conj lhs (if (and (= M b) (nil? (peek lhs))) nil b))) '() max-painted)
-                                left-painted (reduce (fn [lhs b] (conj lhs (if (and (= M b) (nil? (peek lhs))) nil b))) '() right-painted)
+                                min-painted (unpaint-row-reversing (unpaint-row-reversing max-painted))
                                 ]
-                            (conj prev-rows left-painted))) '() (.getField field))
+                            (cons min-painted prev-rows))) (list empty-row) (.getField field))
         painted (reverse rev-painted)
         ]
-    painted
+    (rest painted)
     ))
 
 
-(defn count-impossibles-row [rev-index row]
+(defn count-impossibles-row [row]
   (* 200 (count (filter #(= M %) row)))
   )
 
 (defn count-impossibles [field] 
-  (reduce + (map-indexed count-impossibles-row (paint-impossibles field)))
+  (reduce + (map count-impossibles-row (paint-impossibles field)))
   )
 
 (defn prepare-field-inplace [field]
@@ -58,5 +60,5 @@
     (count-impossibles field)
     )))
 
-(defn -prepareField [self field] (prepare-field-inplace (.copy field)))
+(defn -prepareField [self field] field)
 
