@@ -33,7 +33,7 @@
   )
 
 (defn count-impossibles-row [rev-index row]
-  (* rev-index (count (filter #(= Block/M %) row)))
+  (* 200 (count (filter #(= Block/M %) row)))
   )
 
 (defn count-impossibles [field] 
