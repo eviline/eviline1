@@ -11,10 +11,11 @@
 
 (def M Block/M)
 (def X Block/X)
-(def expected-X-count (* (+ Field/HEIGHT Field/BUFFER Field/WIDTH Field/BUFFER Field/HEIGHT) Field/BUFFER))
+(def expected-X-count (* Field/WIDTH Field/BUFFER))
+(def empty-row (repeat (+ Field/WIDTH Field/BUFFER Field/BUFFER) nil))
 
 (defn count-row [row]
-  (count (filter #(not (nil? %)) row))
+  (- Field/WIDTH (count (filter nil? row)))
   )
 
 (defn count-field [field]
@@ -25,18 +26,16 @@
   (reduce (fn [lhs b] (cons (if (and (= M b) (nil? (first lhs))) nil b) lhs)) '() row)
   )
 
+(defn paint-impossibles-row-reducer [prev-rows row-array]
+  (let [
+        max-painted (map (fn [b ba] (if (nil? b) (if (nil? ba) nil M) b)) row-array (first prev-rows))
+        min-painted (unpaint-row-reversing (unpaint-row-reversing max-painted))
+        ]
+    (cons min-painted prev-rows)))
+
 (defn paint-impossibles [field]
   (let [
-        empty-row (repeat (+ Field/WIDTH Field/BUFFER Field/BUFFER) nil)
-        rev-painted (reduce (fn [prev-rows row-array]
-                          (let [
-                                ; The row above us
-                                above (first prev-rows)
-                                ; current row with all nills set to M unless nill above
-                                max-painted (map (fn [b ba] (if (nil? b) (if (nil? ba) nil M) b)) row-array above)
-                                min-painted (unpaint-row-reversing (unpaint-row-reversing max-painted))
-                                ]
-                            (cons min-painted prev-rows))) (list empty-row) (.getField field))
+        rev-painted (reduce paint-impossibles-row-reducer (list empty-row) (.getField field))
         painted (reverse rev-painted)
         ]
     (rest painted)
