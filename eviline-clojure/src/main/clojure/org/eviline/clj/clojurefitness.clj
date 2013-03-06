@@ -22,7 +22,7 @@
 
 
 
-(defn paint-impossibles-rows-inplace [field]
+(defn paint-impossibles [field]
   (let [rev-painted (reduce (fn [prev-rows row-array]
                           (let [
                                 ; The row above us
@@ -36,7 +36,8 @@
                             (conj prev-rows left-painted))) '() (.getField field))
         painted (reverse rev-painted)
         ]
-    (areduce (.getField field) i m nil (aset (.getField field) i (into-array Block (nth painted i))))))
+    painted
+    ))
 
 
 (defn count-impossibles-row [rev-index row]
@@ -44,11 +45,10 @@
   )
 
 (defn count-impossibles [field] 
-  (reduce + (map-indexed count-impossibles-row (.getField field)))
+  (reduce + (map-indexed count-impossibles-row (paint-impossibles field)))
   )
 
 (defn prepare-field-inplace [field]
-  (paint-impossibles-rows-inplace field)
   field
   )
 
