@@ -2,7 +2,7 @@ package org.eviline.ai;
 
 import org.eviline.Field;
 import org.eviline.ShapeType;
-import org.eviline.fitness.Fitness;
+import org.eviline.fitness.AbstractFitness;
 
 /**
  * A decision context.  Contains the original {@link Field}, a copy
@@ -23,7 +23,7 @@ public class Context {
 	public Field original;
 	/**
 	 * The original {@link Field} (see {@link #original}) but painted impossible.
-	 * (see {@link Fitness#paintImpossibles(Field)})
+	 * (see {@link AbstractFitness#paintImpossibles(Field)})
 	 */
 	public Field paintedImpossible;
 	/**
@@ -46,7 +46,7 @@ public class Context {
 		this.decisionModifier = decisionModifier;
 		this.original = original.copy();
 		this.paintedImpossible = original.copy();
-		ai.getFitness().paintImpossibles(paintedImpossible);
+		ai.getFitness().prepareField(paintedImpossible);
 		this.remainingDepth = remainingDepth;
 	}
 	

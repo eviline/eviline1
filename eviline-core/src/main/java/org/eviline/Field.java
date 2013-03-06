@@ -6,7 +6,7 @@ import java.util.Arrays;
 import org.eviline.event.EventDispatcher;
 import org.eviline.event.EvilineEvent;
 import org.eviline.event.EvilineListener;
-import org.eviline.fitness.Fitness;
+import org.eviline.fitness.AbstractFitness;
 import org.eviline.randomizer.Randomizer;
 
 /**
@@ -894,7 +894,7 @@ public class Field implements Serializable {
 			}
 			sb.append("\n");
 		}
-		sb.append("Score " + Fitness.getDefaultInstance().score(this));
+		sb.append("Score " + AbstractFitness.getDefaultInstance().score(this));
 		return sb.toString();
 	}
 

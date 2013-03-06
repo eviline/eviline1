@@ -17,7 +17,9 @@ import org.eviline.PlayerAction.Type;
 import org.eviline.PlayerActionNode;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
+import org.eviline.fitness.AbstractFitness;
 import org.eviline.fitness.Fitness;
+import org.eviline.fitness.WrapperFitness;
 
 /**
  * Class which holds the AI algorithms.  These algorithms are documented in
@@ -32,7 +34,7 @@ public class DefaultAIKernel implements AIKernel {
 	
 	private boolean highGravity = false;
 	private boolean hardDropOnly = false;
-	private Fitness fitness = Fitness.getDefaultInstance();
+	private AbstractFitness fitness = AbstractFitness.getDefaultInstance();
 	private ExecutorService pool = Executors.newFixedThreadPool(4);
 
 	private Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
@@ -486,33 +488,32 @@ public class DefaultAIKernel implements AIKernel {
 		return worst;
 	}
 
-	@Override
 	public boolean isHighGravity() {
 		return highGravity;
 	}
 
-	@Override
 	public void setHighGravity(boolean highGravity) {
 		this.highGravity = highGravity;
 	}
 
-	@Override
 	public boolean isHardDropOnly() {
 		return hardDropOnly;
 	}
 
-	@Override
 	public void setHardDropOnly(boolean hardDropOnly) {
 		this.hardDropOnly = hardDropOnly;
 	}
 
 	@Override
-	public Fitness getFitness() {
+	public AbstractFitness getFitness() {
 		return fitness;
 	}
 
 	@Override
 	public void setFitness(Fitness fitness) {
-		this.fitness = fitness;
+		if(fitness instanceof AbstractFitness)
+			this.fitness = (AbstractFitness) fitness;
+		else
+			this.fitness = new WrapperFitness(fitness);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.eviline.Field;
 import org.eviline.PlayerActionNode;
 import org.eviline.ShapeType;
+import org.eviline.fitness.AbstractFitness;
 import org.eviline.fitness.Fitness;
 
 public interface AIKernel {
@@ -54,14 +55,6 @@ public interface AIKernel {
 	 * @return
 	 */
 	public Decision planWorst(Context context, Decision defaultDecision);
-
-	public boolean isHighGravity();
-
-	public void setHighGravity(boolean highGravity);
-
-	public boolean isHardDropOnly();
-
-	public void setHardDropOnly(boolean hardDropOnly);
 
 	public Fitness getFitness();
 
