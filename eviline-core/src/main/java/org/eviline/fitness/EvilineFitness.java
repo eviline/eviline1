@@ -3,7 +3,7 @@ package org.eviline.fitness;
 import org.eviline.Block;
 import org.eviline.Field;
 
-public class EvilineFitness extends Fitness {
+public class EvilineFitness extends AbstractFitness {
 	
 	
 	public EvilineFitness() {}
@@ -122,7 +122,6 @@ public class EvilineFitness extends Fitness {
 		paintImpossibles(field.getField());
 	}
 	
-	@Override
 	public void paintImpossibles(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -145,7 +144,6 @@ public class EvilineFitness extends Fitness {
 		paintUnlikelies(field.getField());
 	}
 	
-	@Override
 	public void paintUnlikelies(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
