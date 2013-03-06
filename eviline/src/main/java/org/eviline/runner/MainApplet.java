@@ -431,7 +431,8 @@ public class MainApplet extends JApplet implements PropertySource {
 //		field.setProvider(new ConcurrentShapeProvider(field, field.getProvider()));
 		
 		// FIXME: Shouldn't normally be using ClojureFitness
-		AbstractFitness.setDefaultInstance(new WrapperFitness(ClojureFitness.newFitness()));
+		if(System.getProperty("eviline.clojure") != null)
+			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
