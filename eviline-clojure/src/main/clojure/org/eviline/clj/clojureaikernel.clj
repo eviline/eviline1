@@ -75,11 +75,12 @@
           best (apply min-key #(:score %) scored-locations)
           decision (Decision. type (:score best) (:field best) (:shape best) (:x best) (:y best))
           ]
-      decision
-      ))
+      decision))
   ([this arg]
-    (.superBestFor this arg)
-    )
+    (cond
+      (instance? Field arg) (.superBestFor this arg)
+      (instance? QueueContext arg) (.superBestFor this arg)
+      (instance? Context arg) (.superBestFor this arg)))
   )
 
 

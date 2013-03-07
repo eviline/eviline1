@@ -37,7 +37,7 @@ public class DefaultAIKernel implements AIKernel {
 	private AbstractFitness fitness = AbstractFitness.getDefaultInstance();
 	private ExecutorService pool = Executors.newFixedThreadPool(4);
 
-	private Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
+	protected Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<PlayerActionNode, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
 		
 		field = field.copy();
