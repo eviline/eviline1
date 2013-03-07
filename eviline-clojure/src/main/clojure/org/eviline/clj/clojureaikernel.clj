@@ -22,10 +22,10 @@
 
 (def x-range (range (- Field/BUFFER 2) (+ Field/BUFFER Field/WIDTH 2)))
 (def y-range (range 0 (+ Field/BUFFER Field/HEIGHT 2)))
-(defn shape-intersects? [^Field field ^Shape shape ^long x ^long y]
-  (if (.intersects shape (.getField field) x y) (->ShapeXY shape x y)))
+(defn shape-intersects-below? [^Field field ^Shape shape ^long x ^long y]
+  (if (.intersects shape (.getField field) x (inc y)) (->ShapeXY shape x y)))
 (defn y-intersections [^Field field ^Shape shape ^long x]
-  (remove nil? (map shape-intersects? (repeat field) (repeat shape) (repeat x) y-range)))
+  (remove nil? (map shape-intersects-below? (repeat field) (repeat shape) (repeat x) y-range)))
 (defn y-grounded-reducer [grounded xy]
   (cons xy (if (= (inc (:y (first grounded))) (:y xy)) (rest grounded) (cons xy (rest grounded))))
   )
@@ -68,13 +68,14 @@
 (defn ^Decision -bestFor 
   ([this ^Context context ^ShapeType type]
     (let [fitness (.getFitness this)
-          painted-field (.paintedImpossible context)
+          painted-field (.copy (.paintedImpossible context))
           locations (grounded-locations painted-field type)
           original-field (.original context)
           scored-locations (map score (repeat fitness) (repeatedly #(.copy original-field)) locations)
           best (apply min-key #(:score %) scored-locations)
+          decision (Decision. type (:score best) (:field best) (:shape best) (:x best) (:y best))
           ]
-      (Decision. type (:score best) (:field best) (:shape best) (:x best) (:y best))
+      decision
       ))
   ([this arg]
     (.superBestFor this arg)
