@@ -24,6 +24,8 @@
 (deftest bestfor-test
   (is (let [ai (ClojureAIKernel. (ClojureFitness.))
             context (Context. ai nil (Field.) 1)
+            decision (.bestFor ai context ShapeType/O)
             ]
-        (.bestFor ai context ShapeType/O)))
+        (println decision)
+        decision))
   )

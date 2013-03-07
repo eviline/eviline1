@@ -6,7 +6,7 @@
     :init init
     :constructors {[org.eviline.fitness.Fitness] []}
     :post-init post-init
-    :exposes-methods {setFitness superSetFitness}
+    :exposes-methods {setFitness superSetFitness, bestFor superBestFor}
     ))
 (clojure.core/use 'clojure.core)
 (import '(org.eviline Field Shape ShapeType))
@@ -44,32 +44,40 @@
     )
   )
 
-(defn ^ScoredShapeXY score [^AbstractFitness fitness ^Field field-copy ^ShapeXY sxy]
-  (.setLines field-copy 0)
-  (.setShape field-copy (:shape sxy))
-  (.setShapeX field-copy (:x sxy))
-  (.setShapeY field-copy (:y sxy))
-  (.clockTick field-copy)
-  (.setShape field-copy (:shape sxy))
-  (.setShapeX field-copy (:x sxy))
-  (.setShapeY field-copy (:y sxy))
-  (.paintImpossibles fitness field-copy)
-  (->ScoredShapeXY 
-    field-copy
-    (- (.score fitness field-copy) (* 10000 (Math/pow (.getLines field-copy) 1.5)))
-    (:shape sxy)
-    (:x sxy)
-    (:y sxy))
+(defn ^ScoredShapeXY score [^AbstractFitness fitness ^Field field ^ShapeXY sxy]
+  (.setLines field 0)
+  (.setShape field (:shape sxy))
+  (.setShapeX field (:x sxy))
+  (.setShapeY field (:y sxy))
+  (.clockTick field)
+  (let [field-copy (.copy field)
+        ]
+		  (.setShape field-copy (:shape sxy))
+		  (.setShapeX field-copy (:x sxy))
+		  (.setShapeY field-copy (:y sxy))
+		  (.paintImpossibles fitness field-copy)
+		  (->ScoredShapeXY 
+		    field
+		    (- (.score fitness field-copy) (* 10000 (Math/pow (.getLines field-copy) 1.5)))
+		    (:shape sxy)
+		    (:x sxy)
+		    (:y sxy))
+    )
   )
 
-(defn ^Decision -bestFor [this ^Context context ^ShapeType type]
-  (let [fitness (.getFitness this)
-        field (.paintedImpossible context)
-        locations (grounded-locations field type)
-        scored-locations (map score (repeat fitness) (repeatedly #(.copy field)) locations)
-        best (apply min-key #(:score %) scored-locations)
-        ]
-    (Decision. type (:score best) (:field best) (:shape best) (:x best) (:y best))
+(defn ^Decision -bestFor 
+  ([this ^Context context ^ShapeType type]
+    (let [fitness (.getFitness this)
+          painted-field (.paintedImpossible context)
+          locations (grounded-locations painted-field type)
+          original-field (.original context)
+          scored-locations (map score (repeat fitness) (repeatedly #(.copy original-field)) locations)
+          best (apply min-key #(:score %) scored-locations)
+          ]
+      (Decision. type (:score best) (:field best) (:shape best) (:x best) (:y best))
+      ))
+  ([this arg]
+    (.superBestFor this arg)
     )
   )
 
