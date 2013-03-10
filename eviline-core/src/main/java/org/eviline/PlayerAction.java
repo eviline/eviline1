@@ -6,65 +6,6 @@ import java.util.HashMap;
 import org.eviline.event.EvilineEvent;
 
 public class PlayerAction {
-	public static enum Type {
-		DOWN_ONE,
-		SHIFT_LEFT,
-		SHIFT_RIGHT,
-		ROTATE_LEFT,
-		ROTATE_RIGHT,
-		HOLD,
-		HARD_DROP,
-		DAS_LEFT,
-		DAS_RIGHT,
-		;
-		
-		public String toString() {
-			switch(this) {
-			case DOWN_ONE: return "D";
-			case ROTATE_LEFT: return "RL";
-			case ROTATE_RIGHT: return "RR";
-			case SHIFT_LEFT: return "SL";
-			case SHIFT_RIGHT: return "SR";
-			}
-			return null;
-		}
-		
-		
-		public static Type[] shiftFirstValues() {
-			return new Type[] {
-					ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ DOWN_ONE
-			};
-		}
-		
-		public static Type[] rotateOnlyValues() {
-			return new Type[] {
-					ROTATE_LEFT, ROTATE_RIGHT
-			};
-		}
-
-		public static Type[] dropFirstValues() {
-			return new Type[] {
-					DOWN_ONE, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ ROTATE_LEFT, ROTATE_RIGHT
-			};
-		}
-		
-		public static Type fromEvent(EvilineEvent e) {
-			switch(e.getId()) {
-			case EvilineEvent.CLOCK_TICKED:
-				return DOWN_ONE;
-			case EvilineEvent.SHIFTED_LEFT:
-				return SHIFT_LEFT;
-			case EvilineEvent.SHIFTED_RIGHT:
-				return SHIFT_RIGHT;
-			case EvilineEvent.ROTATED_LEFT:
-				return ROTATE_LEFT;
-			case EvilineEvent.ROTATED_RIGHT:
-				return ROTATE_RIGHT;
-			}
-			return null;
-		}
-	}
-	
 	public static class NodeMap<V> extends HashMap<PlayerActionNode, V> {
 //		private static int W = Field.WIDTH + Field.BUFFER * 2;
 //		private static int H = Field.HEIGHT + Field.BUFFER * 2;
@@ -114,7 +55,7 @@ public class PlayerAction {
 	
 	private Field startField;
 	private Field endField;
-	private Type type;
+	private PlayerActionType type;
 	private Shape startShape;
 	private Shape endShape;
 	private int startX;
@@ -129,11 +70,11 @@ public class PlayerAction {
 	
 	private long timestamp = System.currentTimeMillis();
 	
-	public PlayerAction(Field field, Type type) {
+	public PlayerAction(Field field, PlayerActionType type) {
 		this(field, type, false);
 	}
 	
-	public PlayerAction(Field field, Type type, boolean reverse) {
+	public PlayerAction(Field field, PlayerActionType type, boolean reverse) {
 		if(field.getShape() == null)
 			throw new IllegalArgumentException("null field shape");
 		if(!reverse)
@@ -148,7 +89,7 @@ public class PlayerAction {
 	
 	public PlayerAction(EvilineEvent e) {
 		this.endField = e.getField();
-		this.type = Type.fromEvent(e);
+		this.type = PlayerActionType.fromEvent(e);
 		this.endShape = e.getShape();
 		this.endX = e.getX();
 		this.endY = e.getY();
@@ -172,7 +113,7 @@ public class PlayerAction {
 				Arrays.<Object>asList(opa.type, opa.startShape, opa.endShape, opa.startX, opa.endX, opa.startY, opa.endY));
 	}
 	
-	private void compute(Field field, Type type) {
+	private void compute(Field field, PlayerActionType type) {
 		this.type = type;
 		startField = field.copy();
 		startX = field.shapeX;
@@ -212,7 +153,7 @@ public class PlayerAction {
 		endY = endField.shapeY;
 	}
 	
-	private void computeReverse(Field field, Type type) {
+	private void computeReverse(Field field, PlayerActionType type) {
 		this.type = type;
 		endField = field.copy();
 		endX = field.shapeX;
@@ -260,7 +201,7 @@ public class PlayerAction {
 	public Field getEndField() {
 		return endField;
 	}
-	public Type getType() {
+	public PlayerActionType getType() {
 		return type;
 	}
 	public Shape getStartShape() {
