@@ -29,3 +29,13 @@
         (println decision)
         decision))
   )
+
+(deftest pextend-path-fully-test
+  (is (let [field (Field.)
+            path (extend-path field nil Shape/O_UP 10 0)
+            all-paths (extend-path-fully field path)
+            ]
+        (println "Found " (count all-paths) " paths.")
+        all-paths)))
+  
+  

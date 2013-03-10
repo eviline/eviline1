@@ -17,13 +17,17 @@
 (defn -post-init [this fitness] (.superSetFitness this fitness))
 (defn -setFitness [this fitness] (throw (UnsupportedOperationException.)))
 
-(defrecord ShapeXY [shape x y])
+(defrecord ShapeXY [^Shape shape ^long x ^long y])
 (defrecord ScoredShapeXY [^Field field ^double score ^Shape shape ^long x ^long y])
 
 (def x-range (range (- Field/BUFFER 2) (+ Field/BUFFER Field/WIDTH 2)))
 (def y-range (range 0 (+ Field/BUFFER Field/HEIGHT 2)))
 (defn shape-intersects-below? [^Field field ^Shape shape ^long x ^long y]
   (if (.intersects shape (.getField field) x (inc y)) (->ShapeXY shape x y)))
+(defn shape-intersects-left? [^Field field ^Shape shape ^long x ^long y]
+  (if (.intersects shape (.getField field) (dec x) y) (->ShapeXY shape x y)))
+(defn shape-intersects-right? [^Field field ^Shape shape ^long x ^long y]
+  (if (.intersects shape (.getField field) (inc x) y) (->ShapeXY shape x y)))
 (defn y-intersections [^Field field ^Shape shape ^long x]
   (remove nil? (map shape-intersects-below? (repeat field) (repeat shape) (repeat x) y-range)))
 (defn y-grounded-reducer [grounded xy]
@@ -83,4 +87,113 @@
       (instance? Context arg) (.superBestFor this arg)))
   )
 
+(defrecord PathShapeXY [
+                        origin 
+                        ^Shape shape 
+                        ^long x 
+                        ^long y 
+                        ^boolean down?
+                        ^boolean lhs? 
+                        ^boolean rhs?
+                        ^ShapeXY shxy
+                        ^long length
+                        ])
+
+(defn path-extendable-down? [^Field field ^PathShapeXY path]
+  (not (shape-intersects-below? field (:shape path) (:x path) (:y path))))
+(defn path-extendable-left? [^Field field ^PathShapeXY path]
+  (not (shape-intersects-left? field (:shape path) (:x path) (:y path))))
+(defn path-extendable-right? [^Field field ^PathShapeXY path]
+  (not (shape-intersects-right? field (:shape path) (:x path) (:y path))))
+
+(defn extend-path [^Field field ^PathShapeXY origin ^Shape shape x y]
+  (->PathShapeXY 
+      origin 
+      shape 
+      x 
+      y
+      (not (shape-intersects-below? field shape x y))
+      (not (shape-intersects-left? field shape x y))
+      (not (shape-intersects-right? field shape x y))
+      (->ShapeXY shape x y)
+      (if (nil? origin) 0 (inc (:length origin)))
+      ))
+
+(defn extend-path-down [^Field field ^PathShapeXY path]
+  (if (path-extendable-down? field path)
+    (extend-path field path (:shape path) (:x path) (inc (:y path)))))
+
+(defn extend-path-left [^Field field ^PathShapeXY path]
+  (if (path-extendable-left? field path)
+    (extend-path field path (:shape path) (dec (:x path)) (:y path))))
+
+(defn extend-path-right [^Field field ^PathShapeXY path]
+  (if (path-extendable-right? field path)
+    (extend-path field path (:shape path) (inc (:x path)) (:y path))))
+
+(defn extend-path-clockwise [^Field field ^PathShapeXY path]
+  (let [field-copy (.copy field)
+        ]
+    (.setShape field-copy (:shape path))
+    (.setShapeX field-copy (:x path))
+    (.setShapeY field-copy (:y path))
+    (.rotateRight field-copy)
+    (if (not= (:shape path) (.getShape field-copy))
+      (extend-path field path (.getShape field-copy) (.getShapeX field-copy) (.getShapeY field-copy)))))
+
+(defn extend-path-counterclockwise [^Field field ^PathShapeXY path]
+  (let [field-copy (.copy field)
+        ]
+    (.setShape field-copy (:shape path))
+    (.setShapeX field-copy (:x path))
+    (.setShapeY field-copy (:y path))
+    (.rotateLeft field-copy)
+    (if (not= (:shape path) (.getShape field-copy))
+      (extend-path field path (.getShape field-copy) (.getShapeX field-copy) (.getShapeY field-copy)))))
+
+(defn path-has-origin? [^PathShapeXY path ^ShapeXY shapexy]
+  (cond 
+    (nil? path) nil
+    (= shapexy (:shxy path)) true
+    (nil? (:origin path)) nil
+    :else (path-has-origin? (:origin path) shapexy)))
+
+(defn path-is-looping? [^PathShapeXY path]
+  (path-has-origin? (:origin path) (:shxy path)))
+
+(defn extend-path-singly [^Field field ^PathShapeXY path]
+  (remove nil?  
+          (list 
+            (if (:down? path) (extend-path-down field path))
+            (if (and (:lhs? path) (or (nil? (:origin path)) (not (:lhs? (:origin path)))))
+              (extend-path-left field path))
+            (if (and (:rhs? path) (or (nil? (:origin path)) (not (:rhs? (:origin path)))))
+              (extend-path-right field path))
+            (if (not (:down? path)) (extend-path-clockwise field path))
+            (if (not (:down? path)) (extend-path-counterclockwise field path))
+            )))
+
+(defn shorter-path? [state ^PathShapeXY path]
+  (if (or (nil? (get @state (:shxy path))) (< (:length path) (:length (get @state (:shxy path)))))
+    (do
+      (swap! state into {(:shxy path) path})
+      path
+      )
+    ))
+
+(defn extend-path-fully-rec [state ^Field field ^PathShapeXY path]
+  (let [adjacent (extend-path-singly field path)
+        shorter-paths (filter (fn [p] (shorter-path? state p)) adjacent)
+        ]
+    (doall (map extend-path-fully-rec (repeat state) (repeat field) shorter-paths))
+    state
+    )
+  )
+
+(defn extend-path-fully [^Field field path]
+  (vals @(extend-path-fully-rec (atom {}) field path)))
+  
+;(defn -allPathsFrom [^Field field]
+;  
+;  )
 
