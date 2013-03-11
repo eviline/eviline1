@@ -4,18 +4,18 @@
     :extends org.eviline.ai.DefaultAIKernel
     :main false
     :init init
-    :constructors {[org.eviline.fitness.Fitness] []}
     :post-init post-init
-    :exposes-methods {setFitness superSetFitness, bestFor superBestFor}
+    :exposes-methods {bestFor superBestFor}
     ))
 (clojure.core/use 'clojure.core)
+(require 'clojure.core.reducers)
+(require 'org.eviline.clj.lazymap)
 (import '(org.eviline Field Shape ShapeType PlayerAction PlayerActionType PlayerActionNode))
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))
 
-(defn -init [fitness] [[]])
-(defn -post-init [this fitness] (.superSetFitness this fitness))
-(defn -setFitness [this fitness] (throw (UnsupportedOperationException.)))
+(defn -init [] [[]])
+(defn -post-init [this])
 
 (defrecord ShapeXY [^Shape shape ^long x ^long y])
 (defrecord ScoredShapeXY [^Field field ^double score ^Shape shape ^long x ^long y])
@@ -54,25 +54,21 @@
   (.setShapeX field (:x sxy))
   (.setShapeY field (:y sxy))
   (.clockTick field)
-  (let [field-copy (.copy field)
-        ]
-		  (.setShape field-copy (:shape sxy))
-		  (.setShapeX field-copy (:x sxy))
-		  (.setShapeY field-copy (:y sxy))
-		  (.paintImpossibles fitness field-copy)
-		  (->ScoredShapeXY 
-		    field
-		    (- (.score fitness field-copy) (* 10000 (Math/pow (.getLines field-copy) 1.5)))
-		    (:shape sxy)
-		    (:x sxy)
-		    (:y sxy))
-    )
+  (.setShape field (:shape sxy))
+  (.setShapeX field (:x sxy))
+  (.setShapeY field (:y sxy))
+  (->ScoredShapeXY 
+    field
+    (- (.scoreWithPaint fitness field) (* 10000 (Math/pow (.getLines field) 1.5)))
+    (:shape sxy)
+    (:x sxy)
+    (:y sxy))
   )
 
 (defn ^Decision -bestFor 
   ([this ^Context context ^ShapeType type]
     (let [fitness (.getFitness this)
-          painted-field (.copy (.paintedImpossible context))
+          painted-field (.paintedImpossible context)
           locations (grounded-locations painted-field type)
           original-field (.original context)
           scored-locations (map score (repeat fitness) (repeatedly #(.copy original-field)) locations)
@@ -165,6 +161,12 @@
             (extend-path-counterclockwise field path)
             )))
 
+(defn extend-path-singly-down [^Field field ^PathShapeXY path]
+  (remove nil?  
+          (list 
+            (if (:down? path) (extend-path-down field path))
+            )))
+
 (defn extend-path-singly-horiz [^Field field ^PathShapeXY path]
   (remove nil?  
           (list 
@@ -181,22 +183,31 @@
       (reset! state (assoc @state (:shxy path) path))
       )))
 
-(defn extend-path-fully-rec [state ^Field field ^PathShapeXY path]
-  (let [adjacent (extend-path-singly field path)
+(defn still-shortest? [state ^PathShapeXY path lookback]
+  (locking state
+    (cond 
+      (<= 0 lookback) true
+      (nil? (:origin path)) true
+      (= path (get @state (:shxy path))) (still-shortest? state (:origin path) (dec lookback))
+      )))
+
+(defn extend-path-fully-rec-adjacentfn [state ^Field field ^PathShapeXY path adjacentfn]
+  (let [adjacent (adjacentfn field path)
         shorter-paths (filter (fn [p] (shorter-path? state p)) adjacent)
+        still-shorter (filter #(still-shortest? state % 10) shorter-paths)
         ]
-    (doall (map extend-path-fully-rec (repeat state) (repeat field) shorter-paths))
+    (doall (map extend-path-fully-rec-adjacentfn (repeat state) (repeat field) still-shorter (repeat adjacentfn)))
     state
     )
   )
 
+
+(defn extend-path-fully-rec [state ^Field field ^PathShapeXY path]
+  (extend-path-fully-rec-adjacentfn state field path extend-path-singly)
+  )
+
 (defn extend-path-fully-horiz-rec [state ^Field field ^PathShapeXY path]
-  (let [adjacent (extend-path-singly-horiz field path)
-        shorter-paths (filter (fn [p] (shorter-path? state p)) adjacent)
-        ]
-    (doall (map extend-path-fully-horiz-rec (repeat state) (repeat field) shorter-paths))
-    state
-    )
+  (extend-path-fully-rec-adjacentfn state field path extend-path-singly-horiz)
   )
 
 
@@ -220,8 +231,27 @@
     (PlayerAction. (shapexy-to-field field (:shxy (:origin path))) (:move path) (shapexy-to-field field (:shxy path)))))
 
 
+;(defn path-to-player-action-reverse-list [^Field field ^PathShapeXY path]
+;  (map path-head-to-player-action (repeat field) (path-ancestor-list path))
+;  )
+
 (defn path-to-player-action-reverse-list [^Field field ^PathShapeXY path]
-  (map path-head-to-player-action (repeat field) (path-ancestor-list path))
+  (let [ancestors (reverse (path-ancestor-list path))
+        start (first ancestors)
+        next (second ancestors)
+        first-action (PlayerAction. (shapexy-to-field field (:shxy start)) (:move next) (shapexy-to-field field (:shxy next)))
+        ]
+    (reduce 
+      (fn [actions path-head]
+        (list* 
+          (PlayerAction. (.getEndField (first actions)) (:move path-head) (shapexy-to-field field (:shxy path-head)))
+          actions
+          )
+        )
+      (list first-action)
+      (drop 2 ancestors)
+      )
+    )
   )
 
 (defn -allPathsFrom [this ^Field field]
@@ -229,21 +259,22 @@
         ]
     (let [start-path (extend-path fc nil nil (.getShape fc) (.getShapeX fc) (.getShapeY fc))
           shxys-to-h-paths-state (extend-path-fully-horiz-rec (atom { (:shxy start-path) start-path }) fc start-path)
-          dummy (doall (pmap (fn [start] (extend-path-fully-rec shxys-to-h-paths-state fc start)) (vals @shxys-to-h-paths-state)))
-          paths-map (into {} (map (fn [keyval] {
-                                                      (shapexy-to-player-action-node fc (key keyval))
-                                                      (rest (reverse (path-to-player-action-reverse-list fc (val keyval))))
-                                                      }) @shxys-to-h-paths-state))
-;          paths-map (time (reduce (fn [m keyval] 
-;                              (assoc m 
-;                                     (shapexy-to-player-action-node fc (key keyval)) 
-;                                     (rest (reverse (path-to-player-action-reverse-list fc (val keyval))))
-;                                     ))
-;                            {} shxys-to-paths))
-
-          
+          adjacentfn (cond
+                       (.isHardDropOnly this) extend-path-singly-down
+                       :else extend-path-singly
+                       )
           ]
-      paths-map
+      (doall (pmap
+        (fn [start] (extend-path-fully-rec-adjacentfn shxys-to-h-paths-state fc start adjacentfn) start)
+        (vals @shxys-to-h-paths-state)))
+      (reduce (fn [lazymap keyval] 
+                              (.lazyPut
+                                lazymap
+                                (shapexy-to-player-action-node fc (key keyval))
+                                (delay (reverse (path-to-player-action-reverse-list fc (val keyval)))))
+                              lazymap)
+                            (new org.eviline.clj.LazyMap (new java.util.HashMap))
+                            @shxys-to-h-paths-state)
       )
     )
   )

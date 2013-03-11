@@ -13,7 +13,7 @@
   (run-tests 'org.eviline.clj.clojureaikerneltest))
 
 (deftest instantiate-test
-  (is (ClojureAIKernel. (ClojureFitness.)))
+  (is (ClojureAIKernel.))
   )
 
 (deftest grounded-locations-test
@@ -22,7 +22,7 @@
   )
 
 (deftest bestfor-test
-  (is (let [ai (ClojureAIKernel. (ClojureFitness.))
+  (is (let [ai (ClojureAIKernel.)
             context (Context. ai nil (Field.) 1)
             decision (.bestFor ai context ShapeType/O)
             ]

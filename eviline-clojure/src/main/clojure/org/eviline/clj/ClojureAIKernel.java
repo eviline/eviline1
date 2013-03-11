@@ -12,10 +12,6 @@ import org.eviline.fitness.Fitness;
 
 public class ClojureAIKernel extends DefaultAIKernel {
 
-	public ClojureAIKernel(Fitness fitness) {
-		throw new InternalError("This class should be in clojure");
-	}
-	
 	@Override
 	public Decision bestFor(QueueContext context) {
 		throw new InternalError("This class should be in clojure");

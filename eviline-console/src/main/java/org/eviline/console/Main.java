@@ -38,7 +38,7 @@ public class Main {
 		// FIXME: Shouldn't normally be using ClojureFitness
 		if(System.getProperty("eviline.clojure") != null) {
 //			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
-			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
+			AI.setInstance(new ClojureAIKernel());
 		}
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
