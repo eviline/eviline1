@@ -65,7 +65,7 @@ public class EvilineFitness extends AbstractFitness {
 		
 		int impossibles = 0;
 		int unlikelies = 0;
-		int columnTransitions = 0;
+		double columnTransitions = 0;
 		int rowTransitions = 0;
 		
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
@@ -76,7 +76,7 @@ public class EvilineFitness extends AbstractFitness {
 					stackHeight[x-Field.BUFFER] = h;
 				
 				if(isSolid(f[y][x]) ^ isSolid(f[y+1][x]))
-					columnTransitions++;
+					columnTransitions += 1 + h / (double) Field.HEIGHT;
 				
 				if(b != null && b != Block.X && b != Block.G) {
 					score += 15 + Math.pow(h * params[Weights.BLOCK_HEIGHT], 1 / (2.6 - h / 10.));
