@@ -57,6 +57,14 @@ public class Decision {
 		this.score = score;
 		this.field = field;
 	}
+	public Decision(ShapeType type, double score, Field field, Shape bestShape, int bestShapeX, int bestShapeY) {
+		this.type = type;
+		this.score = score;
+		this.field = field;
+		this.bestShape = bestShape;
+		this.bestShapeX = bestShapeX;
+		this.bestShapeY = bestShapeY;
+	}
 	/**
 	 * Copy this {@link Decision}
 	 * @return

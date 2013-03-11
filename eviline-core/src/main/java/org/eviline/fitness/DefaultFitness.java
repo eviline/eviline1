@@ -1,15 +1,8 @@
 package org.eviline.fitness;
 
-import org.eviline.Block;
 import org.eviline.Field;
 
-public class WrapperFitness extends AbstractFitness {
-	
-	protected Fitness delegate;
-	
-	public WrapperFitness(Fitness delegate) {
-		this.delegate = delegate;
-	}
+public class DefaultFitness extends AbstractFitness {
 
 	@Override
 	protected double normalize(double score) {
@@ -18,17 +11,14 @@ public class WrapperFitness extends AbstractFitness {
 
 	@Override
 	public double score(Field field) {
-		return delegate.score(field);
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	@Override
 	public void paintImpossibles(Field field) {
-		delegate.prepareField(field);
-	}
-	
-	@Override
-	public Field prepareField(Field field) {
-		return delegate.prepareField(field);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

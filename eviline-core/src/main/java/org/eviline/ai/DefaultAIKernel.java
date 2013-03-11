@@ -13,8 +13,8 @@ import java.util.concurrent.Future;
 import org.eviline.Block;
 import org.eviline.Field;
 import org.eviline.PlayerAction;
-import org.eviline.PlayerAction.Type;
 import org.eviline.PlayerActionNode;
+import org.eviline.PlayerActionType;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.fitness.AbstractFitness;
@@ -37,7 +37,7 @@ public class DefaultAIKernel implements AIKernel {
 	private AbstractFitness fitness = AbstractFitness.getDefaultInstance();
 	private ExecutorService pool = Executors.newFixedThreadPool(4);
 
-	private Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
+	protected Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<PlayerActionNode, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
 		
 		field = field.copy();
@@ -59,7 +59,7 @@ public class DefaultAIKernel implements AIKernel {
 				PlayerActionNode n = start;
 				for(int i = 0; i < 10; i++) {
 					field.setShapeX(n.getX());
-					PlayerAction pa = new PlayerAction(field, Type.SHIFT_LEFT);
+					PlayerAction pa = new PlayerAction(field, PlayerActionType.SHIFT_LEFT);
 					if(!pa.isPossible())
 						break;
 					List<PlayerAction> nl = shortestPaths.get(n);
@@ -72,7 +72,7 @@ public class DefaultAIKernel implements AIKernel {
 				n = start;
 				for(int i = 0; i < 10; i++) {
 					field.setShapeX(n.getX());
-					PlayerAction pa = new PlayerAction(field, Type.SHIFT_RIGHT);
+					PlayerAction pa = new PlayerAction(field, PlayerActionType.SHIFT_RIGHT);
 					if(!pa.isPossible())
 						break;
 					List<PlayerAction> nl = shortestPaths.get(n);
@@ -84,7 +84,7 @@ public class DefaultAIKernel implements AIKernel {
 				}
 				field.setShapeX(start.getX());
 				field.setShapeY(start.getY());
-				PlayerAction pa = new PlayerAction(field, Type.ROTATE_LEFT);
+				PlayerAction pa = new PlayerAction(field, PlayerActionType.ROTATE_LEFT);
 				field.setShape(pa.getEndShape());
 				start = pa.getEndNode();
 				field.setShapeX(start.getX());
@@ -94,7 +94,7 @@ public class DefaultAIKernel implements AIKernel {
 					nl.add(pa);
 					if(nl.size() == 3) {
 						field.setShape(field.getShape().rotateLeft());
-						PlayerAction rpa = new PlayerAction(field, Type.ROTATE_RIGHT);
+						PlayerAction rpa = new PlayerAction(field, PlayerActionType.ROTATE_RIGHT);
 						field.setShape(pa.getEndShape());
 						nl.clear();
 						nl.add(rpa);
@@ -119,12 +119,12 @@ public class DefaultAIKernel implements AIKernel {
 		while(pending.size() > 0) {
 			n = pending.pollFirst();
 			List<PlayerAction> nl = shortestPaths.get(n);
-			Type[] values;
+			PlayerActionType[] values;
 			if(!highGravity && field.getShapeY() < 0) {
-				values = Type.shiftFirstValues();
+				values = PlayerActionType.shiftFirstValues();
 			} else
-				values = Type.dropFirstValues();
-			for(Type t : values) {
+				values = PlayerActionType.dropFirstValues();
+			for(PlayerActionType t : values) {
 				field.setShape(n.getShape());
 				field.setShapeX(n.getX());
 				field.setShapeY(n.getY());
@@ -135,7 +135,7 @@ public class DefaultAIKernel implements AIKernel {
 				if((highGravity && !field.getShape().intersects(field.getField(), field.getShapeX(), field.getShapeY() + 1)
 						|| field.getShapeY() < minY - 4
 						|| hardDropOnly) 
-						&& t != Type.DOWN_ONE)
+						&& t != PlayerActionType.DOWN_ONE)
 					continue;
 				PlayerActionNode dest = pa.getEndNode();
 				List<PlayerAction> destPath = new ArrayList<PlayerAction>(nl);
@@ -148,6 +148,10 @@ public class DefaultAIKernel implements AIKernel {
 		}
 		
 		return shortestPaths;
+	}
+	
+	protected List<PlayerAction> pathsTo(Field field, PlayerActionNode dest) {
+		return allPathsFrom(field).get(dest);
 	}
 	
 	/**

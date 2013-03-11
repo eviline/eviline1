@@ -10,4 +10,8 @@ public class AI {
 		return instance;
 	}
 
+	public static void setInstance(AIKernel instance) {
+		AI.instance = instance;
+	}
+	
 }

@@ -65,7 +65,20 @@ public enum ShapeType {
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
-	
+
+	public Shape[] searchOrientations() {
+		switch(this) {
+		case O: return new Shape[] { O_UP };
+		case S: return new Shape[] { S_UP, S_RIGHT};
+		case Z: return new Shape[] { Z_UP, Z_RIGHT};
+		case J: return new Shape[] { J_UP, J_RIGHT, J_LEFT, J_DOWN};
+		case L: return new Shape[] { L_UP, L_RIGHT, L_LEFT, L_DOWN};
+		case I: return new Shape[] { I_UP, I_RIGHT};
+		case T: return new Shape[] { T_UP, T_RIGHT, T_LEFT, T_DOWN};
+		}
+		throw new InternalError("Fell through to default when all enums covered");
+	}
+
 	/**
 	 * Returns the shape used to start a new round with this shape type
 	 * @return
