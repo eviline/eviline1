@@ -7,50 +7,6 @@ import org.eviline.event.EvilineEvent;
 
 public class PlayerAction {
 	public static class NodeMap<V> extends HashMap<PlayerActionNode, V> {
-//		private static int W = Field.WIDTH + Field.BUFFER * 2;
-//		private static int H = Field.HEIGHT + Field.BUFFER * 2;
-//		
-//		private Map.Entry<PlayerActionNode, V>[][][] entries = new Map.Entry[Shape.values().length][H][W];
-//		
-//		@Override
-//		public Set<Map.Entry<PlayerActionNode, V>> entrySet() {
-//			Set<Map.Entry<PlayerActionNode, V>> es = new HashSet<Map.Entry<PlayerActionNode,V>>();
-//			for(Map.Entry<PlayerActionNode, V>[][] ea : entries) {
-//				for(Map.Entry<PlayerActionNode, V>[] eaa : ea) {
-//					for(Map.Entry<PlayerActionNode, V> e : eaa) {
-//						if(e != null)
-//							es.add(e);
-//					}
-//				}
-//			}
-//			return es;
-//		}
-//		
-//		@Override
-//		public V get(Object key) {
-//			PlayerActionNode k = (PlayerActionNode) key;
-//			Map.Entry<PlayerActionNode, V> e = entries[k.shape.ordinal()][k.y][k.x];
-//			return e == null ? null : e.getValue();
-//		}
-//		
-//		public V put(PlayerActionNode key, V value) {
-//			V old = get(key);
-//			entries[key.shape.ordinal()][key.y][key.x] = new AbstractMap.SimpleEntry(key, value);
-//			return old;
-//		}
-//		
-//		@Override
-//		public V remove(Object key) {
-//			PlayerActionNode k = (PlayerActionNode) key;
-//			V ret = get(key);
-//			entries[k.shape.ordinal()][k.y][k.x] = null;	
-//			return ret;
-//		}
-//		
-//		@Override
-//		public boolean containsKey(Object key) {
-//			return get(key) != null;
-//		}
 	}
 	
 	private Field startField;
@@ -83,6 +39,20 @@ public class PlayerAction {
 			computeReverse(field, type);
 		
 		possible = !(startShape == endShape && startX == endX && startY == endY);
+		startNode = new PlayerActionNode(startShape, startX, startY);
+		endNode = new PlayerActionNode(endShape, endX, endY);
+	}
+	
+	public PlayerAction(Field start, PlayerActionType type, Field end) {
+		this.startField = start;
+		this.endField = end;
+		this.type = type;
+		startShape = start.getShape();
+		startX = start.getShapeX();
+		startY = start.getShapeY();
+		endShape = end.getShape();
+		endX = end.getShapeX();
+		endY = end.getShapeY();
 		startNode = new PlayerActionNode(startShape, startX, startY);
 		endNode = new PlayerActionNode(endShape, endX, endY);
 	}
