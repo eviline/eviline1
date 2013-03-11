@@ -5,7 +5,7 @@ import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.ai.AI;
-import org.eviline.clj.ClojureAIKernel;
+//import org.eviline.clj.ClojureAIKernel;
 import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.console.gui.EvilineWindow;
 import org.eviline.fitness.AbstractFitness;
@@ -35,11 +35,11 @@ public class Main {
 		field.setProvider(r);
 		field.setGhosting(true);
 		
-		// FIXME: Shouldn't normally be using ClojureFitness
-		if(System.getProperty("eviline.clojure") != null) {
-//			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
-			AI.setInstance(new ClojureAIKernel());
-		}
+//		// FIXME: Shouldn't normally be using ClojureFitness
+//		if(System.getProperty("eviline.clojure") != null) {
+////			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
+//			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
+//		}
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		ConsoleEngine engine = new ConsoleEngine(field, gui);
