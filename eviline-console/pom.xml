@@ -57,5 +57,33 @@
 				</plugins>
 			</build>
 		</profile>
+        <profile>
+            <id>clj-main</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <configuration>
+                            <mainClass>org.eviline.console.Main</mainClass>
+                            <systemProperties>
+                               <systemProperty>
+                                <key>eviline.aikernel</key>
+                                <value>org.eviline.clj.ClojureAIKernel</value>
+                               </systemProperty>
+                            </systemProperties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eviline</groupId>
+                    <artifactId>eviline-clojure</artifactId>
+                    <version>1.1.0-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+        </profile>
 	</profiles>
 </project>

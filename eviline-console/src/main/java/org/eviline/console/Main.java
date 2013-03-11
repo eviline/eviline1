@@ -5,6 +5,7 @@ import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.ai.AI;
+import org.eviline.ai.AIKernel;
 //import org.eviline.clj.ClojureAIKernel;
 import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.console.gui.EvilineWindow;
@@ -40,6 +41,16 @@ public class Main {
 ////			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
 //			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
 //		}
+		
+		if(System.getProperty("eviline.aikernel") != null) {
+			String akc = System.getProperty("eviline.aikernel");
+			try {
+				AI.setInstance((AIKernel) Class.forName(akc, true, Main.class.getClassLoader()).newInstance());
+			} catch(Exception ex) {
+				throw new RuntimeException(ex);
+			}
+			System.out.println("Set AIKernel to " + AI.getInstance());
+		}
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		ConsoleEngine engine = new ConsoleEngine(field, gui);
