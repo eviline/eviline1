@@ -3,6 +3,7 @@ package org.eviline.ai;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 
 import org.eviline.Field;
@@ -25,6 +26,7 @@ public abstract class AbstractPlayer implements Player {
 					for(PlayerAction a : pm) {
 						moves.offerLast(a);
 					}
+					moves.offerLast(null);
 				}
 			}
 			return moves.pollFirst();
@@ -38,7 +40,7 @@ public abstract class AbstractPlayer implements Player {
 	}
 
 	protected Field field;
-	protected Deque<PlayerAction> moves = new ArrayDeque<PlayerAction>();
+	protected Deque<PlayerAction> moves = new LinkedList<PlayerAction>();
 	
 	public AbstractPlayer(Field field) {
 		this.field = field;

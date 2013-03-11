@@ -229,7 +229,7 @@ public class PlayerAction {
 	
 	@Override
 	public String toString() {
-		return type.toString();
+		return type.toString() + " (" + startNode + " -> " + endNode + ")";
 	}
 
 	public PlayerActionNode getStartNode() {

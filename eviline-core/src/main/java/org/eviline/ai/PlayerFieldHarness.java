@@ -58,14 +58,19 @@ public class PlayerFieldHarness {
 			//FIXME: Support hold
 			throw new UnsupportedOperationException("Eviline doesn't currently support hold");
 		}
+		
 		boolean mismove = false;
 		if(move.getEndShape() == null ? field.getShape() != null : field.getShape() == null)
 			mismove = true;
 		else {
 			PlayerActionNode mpan = new PlayerActionNode(move.getEndShape(), move.getEndX(), move.getEndY());
 			PlayerActionNode apan = new PlayerActionNode(field.getShape(), field.getShapeX(), field.getShapeY());
-			if(!mpan.equals(apan))
+			if(!mpan.equals(apan)) {
+//				System.err.println("mismove:");
+//				System.err.println("\texpected:" + mpan);
+//				System.err.println("\tresulted:" + apan);
 				mismove = true;
+			}
 		}
 		if(mismove)
 			player.reset();

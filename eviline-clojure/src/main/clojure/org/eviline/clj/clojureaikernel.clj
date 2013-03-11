@@ -9,7 +9,7 @@
     :exposes-methods {setFitness superSetFitness, bestFor superBestFor}
     ))
 (clojure.core/use 'clojure.core)
-(import '(org.eviline Field Shape ShapeType PlayerAction PlayerActionType))
+(import '(org.eviline Field Shape ShapeType PlayerAction PlayerActionType PlayerActionNode))
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))
 
@@ -99,6 +99,8 @@
                         ^ShapeXY shxy
                         ^long length
                         ])
+(defn path-ancestor-list [path]
+  (if (nil? path) '() (list* path (path-ancestor-list (:origin path)))))
 
 (defn path-extendable-down? [^Field field ^PathShapeXY path]
   (not (shape-intersects-below? field (:shape path) (:x path) (:y path))))
@@ -141,7 +143,7 @@
     (.setShapeY field-copy (:y path))
     (.rotateRight field-copy)
     (if (not= (:shape path) (.getShape field-copy))
-      (extend-path field path PlayerActionType/ROTATE_RIGHT (.getShape field-copy) (.getShapeX field-copy) (.getShapeY field-copy)))))
+      (extend-path field-copy path PlayerActionType/ROTATE_RIGHT (.getShape field-copy) (.getShapeX field-copy) (.getShapeY field-copy)))))
 
 (defn extend-path-counterclockwise [^Field field ^PathShapeXY path]
   (let [field-copy (.copy field)
@@ -151,37 +153,32 @@
     (.setShapeY field-copy (:y path))
     (.rotateLeft field-copy)
     (if (not= (:shape path) (.getShape field-copy))
-      (extend-path field path PlayerActionType/ROTATE_LEFT (.getShape field-copy) (.getShapeX field-copy) (.getShapeY field-copy)))))
-
-(defn path-has-origin? [^PathShapeXY path ^ShapeXY shapexy]
-  (cond 
-    (nil? path) nil
-    (= shapexy (:shxy path)) true
-    (nil? (:origin path)) nil
-    :else (path-has-origin? (:origin path) shapexy)))
-
-(defn path-is-looping? [^PathShapeXY path]
-  (path-has-origin? (:origin path) (:shxy path)))
+      (extend-path field-copy path PlayerActionType/ROTATE_LEFT (.getShape field-copy) (.getShapeX field-copy) (.getShapeY field-copy)))))
 
 (defn extend-path-singly [^Field field ^PathShapeXY path]
   (remove nil?  
           (list 
             (if (:down? path) (extend-path-down field path))
-            (if (and (:lhs? path) (or (nil? (:origin path)) (:lhs? (:origin path))))
-              (extend-path-left field path))
-            (if (and (:rhs? path) (or (nil? (:origin path)) (:rhs? (:origin path))))
-              (extend-path-right field path))
+            (if (:lhs? path) (extend-path-left field path))
+            (if (:rhs? path) (extend-path-right field path))
             (extend-path-clockwise field path)
             (extend-path-counterclockwise field path)
             )))
 
+(defn extend-path-singly-horiz [^Field field ^PathShapeXY path]
+  (remove nil?  
+          (list 
+            (if (:lhs? path) (extend-path-left field path))
+            (if (:rhs? path) (extend-path-right field path))
+            (extend-path-clockwise field path)
+            (extend-path-counterclockwise field path)
+            )))
+
+
 (defn shorter-path? [state ^PathShapeXY path]
   (locking state
     (if (or (nil? (get @state (:shxy path))) (< (:length path) (:length (get @state (:shxy path)))))
-      (do
-        (swap! state into {(:shxy path) path})
-        path
-        )
+      (reset! state (assoc @state (:shxy path) path))
       )))
 
 (defn extend-path-fully-rec [state ^Field field ^PathShapeXY path]
@@ -193,10 +190,61 @@
     )
   )
 
-(defn extend-path-fully [^Field field path]
+(defn extend-path-fully-horiz-rec [state ^Field field ^PathShapeXY path]
+  (let [adjacent (extend-path-singly-horiz field path)
+        shorter-paths (filter (fn [p] (shorter-path? state p)) adjacent)
+        ]
+    (doall (map extend-path-fully-horiz-rec (repeat state) (repeat field) shorter-paths))
+    state
+    )
+  )
+
+
+(defn extend-path-fully [^Field field ^PathShapeXY path]
   (vals @(extend-path-fully-rec (atom {}) field path)))
 
-;(defn -allPathsFrom [^Field field]
-;  
-;  )
+(defn shapexy-to-player-action-node [^Field field ^ShapeXY shxy]
+  (PlayerActionNode. (:shape shxy) (:x shxy) (:y shxy)))
+
+(defn shapexy-to-field [^Field field ^ShapeXY shxy]
+  (let [fc (.copy field)]
+    (.setShape fc (:shape shxy))
+    (.setShapeX fc (:x shxy))
+    (.setShapeY fc (:y shxy))
+    fc
+    )
+  )
+
+(defn path-head-to-player-action [^Field field ^PathShapeXY path]
+  (if-not (nil? (:origin path))
+    (PlayerAction. (shapexy-to-field field (:shxy (:origin path))) (:move path))))
+
+
+(defn path-to-player-action-reverse-list [^Field field ^PathShapeXY path]
+  (map path-head-to-player-action (repeat field) (path-ancestor-list path))
+  )
+
+(defn -allPathsFrom [this ^Field field]
+  (let [fc (.copy field)
+        ]
+    (let [start-path (extend-path fc nil nil (.getShape fc) (.getShapeX fc) (.getShapeY fc))
+          shxys-to-h-paths-state (extend-path-fully-horiz-rec (atom { (:shxy start-path) start-path }) fc start-path)
+          dummy (doall (pmap (fn [start] (extend-path-fully-rec shxys-to-h-paths-state fc start)) (vals @shxys-to-h-paths-state)))
+          paths-map (into {} (map (fn [keyval] {
+                                                      (shapexy-to-player-action-node fc (key keyval))
+                                                      (rest (reverse (path-to-player-action-reverse-list fc (val keyval))))
+                                                      }) @shxys-to-h-paths-state))
+;          paths-map (time (reduce (fn [m keyval] 
+;                              (assoc m 
+;                                     (shapexy-to-player-action-node fc (key keyval)) 
+;                                     (rest (reverse (path-to-player-action-reverse-list fc (val keyval))))
+;                                     ))
+;                            {} shxys-to-paths))
+
+          
+          ]
+      paths-map
+      )
+    )
+  )
 

@@ -36,6 +36,8 @@
             all-paths (extend-path-fully field path)
             ]
         (println "Found " (count all-paths) " paths.")
+        (println "sample path:" (first all-paths))
+        (println "parl:" (path-to-player-action-reverse-list field (first all-paths)))
         all-paths)))
   
   
