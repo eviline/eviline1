@@ -217,7 +217,7 @@
 
 (defn path-head-to-player-action [^Field field ^PathShapeXY path]
   (if-not (nil? (:origin path))
-    (PlayerAction. (shapexy-to-field field (:shxy (:origin path))) (:move path))))
+    (PlayerAction. (shapexy-to-field field (:shxy (:origin path))) (:move path) (shapexy-to-field field (:shxy path)))))
 
 
 (defn path-to-player-action-reverse-list [^Field field ^PathShapeXY path]
