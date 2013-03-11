@@ -5,15 +5,13 @@ import org.eviline.ShapeType;
 import org.eviline.ai.AIKernel;
 import org.eviline.ai.Context;
 import org.eviline.ai.Decision;
+import org.eviline.ai.DefaultAIKernel;
 import org.eviline.ai.QueueContext;
+import org.eviline.fitness.AbstractFitness;
 import org.eviline.fitness.Fitness;
 
-public class ClojureAIKernel implements AIKernel {
+public class ClojureAIKernel extends DefaultAIKernel {
 
-	public ClojureAIKernel(Fitness fitness) {
-		throw new InternalError("This class should be in clojure");
-	}
-	
 	@Override
 	public Decision bestFor(QueueContext context) {
 		throw new InternalError("This class should be in clojure");
@@ -50,7 +48,7 @@ public class ClojureAIKernel implements AIKernel {
 	}
 
 	@Override
-	public Fitness getFitness() {
+	public AbstractFitness getFitness() {
 		throw new InternalError("This class should be in clojure");
 	}
 
