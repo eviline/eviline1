@@ -13,6 +13,13 @@
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))
 
+(def delay-pool-executor (java.util.concurrent.Executors/newCachedThreadPool))
+
+(defn pool-force [delayed] 
+  (let [jfut (.submit delay-pool-executor #(force delayed))]
+    (delay (.get jfut))
+    ))
+
 (defn -init [] [[]])
 (defn -post-init [this])
 
@@ -265,10 +272,11 @@
                        (.isHardDropOnly this) extend-path-singly-down
                        :else extend-path-singly
                        )
+          swimming (doall (map
+                            (fn [start] (pool-force (delay (extend-path-fully-rec-adjacentfn shxys-to-h-paths-state fc start adjacentfn) start)))
+                            (vals @shxys-to-h-paths-state)))
           ]
-      (doall (pmap
-        (fn [start] (extend-path-fully-rec-adjacentfn shxys-to-h-paths-state fc start adjacentfn) start)
-        (vals @shxys-to-h-paths-state)))
+      (doall (map #(force %) swimming))
       (reduce (fn [lazymap keyval] 
                               (.lazyPut
                                 lazymap
