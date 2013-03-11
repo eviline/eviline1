@@ -48,7 +48,7 @@ public class RerenderTetrevilListener extends EvilineAdapter {
 
 	@Override
 	public void clockTicked(EvilineEvent e) {
-		rerenderNow();
+		rerenderLater();
 	}
 
 	@Override
@@ -68,11 +68,11 @@ public class RerenderTetrevilListener extends EvilineAdapter {
 
 	@Override
 	public void rotatedLeft(EvilineEvent e) {
-		rerenderNow();
+		rerenderLater();
 	}
 
 	@Override
 	public void rotatedRight(EvilineEvent e) {
-		rerenderNow();
+		rerenderLater();
 	}
 }

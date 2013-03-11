@@ -234,4 +234,8 @@ public class ConsoleEngine implements EvilineListener {
 	public void setAntigravity(boolean antigravity) {
 		this.antigravity = antigravity;
 	}
+
+	public ScheduledExecutorService getExec() {
+		return exec;
+	}
 }

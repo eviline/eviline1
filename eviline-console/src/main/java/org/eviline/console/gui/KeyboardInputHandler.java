@@ -127,19 +127,13 @@ public class KeyboardInputHandler extends WindowAdapter {
 				final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
 				final GUIScreen gui = window.getOwner();
 				engine.setAntigravity(true);
-				gui.runInEventThread(new Action() {
-					@Override
-					public void doAction() {
-						if(playerProvider == null)
-							return;
-						harness.tick();
-						gui.runInEventThread(this);
-					}
-				});
+				engine.getField().setScoreFactor(-1);
+				gui.runInEventThread(new Tick(gui, harness));
 			} else {
 				engine.setAntigravity(false);
 				field.setProvider(playerProvider);
 				field.removeEvilineListener(aiScoreAdjuster);
+				engine.getField().setScoreFactor(1);
 				playerProvider = null;
 			}
 		} else if(key.getCharacter() == controls.chars[Controls.TOGGLE_CONTROLS]) {
@@ -147,6 +141,31 @@ public class KeyboardInputHandler extends WindowAdapter {
 				controls = Controls.MOBILE_CONTROLS;
 			else
 				controls = Controls.DEFAULT_CONTROLS;
+		}
+	}
+
+	private class Tick implements Action {
+		private final GUIScreen gui;
+		private final PlayerFieldHarness harness;
+	
+		private Runnable tock = new Runnable() {
+			@Override
+			public void run() {
+				gui.runInEventThread(Tick.this);
+			}
+		};
+		
+		private Tick(GUIScreen gui, PlayerFieldHarness harness) {
+			this.gui = gui;
+			this.harness = harness;
+		}
+	
+		@Override
+		public void doAction() {
+			if(playerProvider == null)
+				return;
+			harness.tick();
+			engine.getExec().execute(tock);
 		}
 	}
 }
