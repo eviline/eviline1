@@ -150,7 +150,8 @@ public class ConsoleEngine implements EvilineListener {
 		if(!isRunning())
 			return;
 		tickerFuture.cancel(false);
-		field.clockTick();
+		if(!antigravity)
+			field.clockTick();
 	}
 
 	@Override
