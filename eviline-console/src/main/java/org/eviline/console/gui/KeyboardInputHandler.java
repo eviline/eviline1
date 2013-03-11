@@ -164,8 +164,11 @@ public class KeyboardInputHandler extends WindowAdapter {
 		public void doAction() {
 			if(playerProvider == null)
 				return;
-			harness.tick();
-			engine.getExec().execute(tock);
+			try {
+				harness.tick();
+				engine.getExec().execute(tock);
+			} catch(RuntimeException re) {
+			}
 		}
 	}
 }
