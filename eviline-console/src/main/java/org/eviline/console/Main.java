@@ -42,14 +42,13 @@ public class Main {
 //			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
 //		}
 		
-		if(System.getProperty("eviline.aikernel") != null) {
-			String akc = System.getProperty("eviline.aikernel");
+		if(System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel") != null) {
+			String akc = System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel");
 			try {
 				AI.setInstance((AIKernel) Class.forName(akc, true, Main.class.getClassLoader()).newInstance());
+				System.out.println("Set AIKernel to " + AI.getInstance());
 			} catch(Exception ex) {
-				throw new RuntimeException(ex);
 			}
-			System.out.println("Set AIKernel to " + AI.getInstance());
 		}
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
