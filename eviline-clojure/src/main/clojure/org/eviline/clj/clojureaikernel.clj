@@ -57,9 +57,10 @@
   (.setShape field (:shape sxy))
   (.setShapeX field (:x sxy))
   (.setShapeY field (:y sxy))
+  (.paintImpossibles fitness field)
   (->ScoredShapeXY 
     field
-    (- (.scoreWithPaint fitness field) (* 10000 (Math/pow (.getLines field) 1.5)))
+    (- (.score fitness field) (* 10000 (Math/pow (.getLines field) 1.5)))
     (:shape sxy)
     (:x sxy)
     (:y sxy))
@@ -126,6 +127,8 @@
 (defn extend-path-left [^Field field ^PathShapeXY path]
   (if (path-extendable-left? field path)
     (extend-path field path PlayerActionType/SHIFT_LEFT (:shape path) (dec (:x path)) (:y path))))
+
+(defn extend-path-das-left [^Field field ^PathShapeXY path])
 
 (defn extend-path-right [^Field field ^PathShapeXY path]
   (if (path-extendable-right? field path)

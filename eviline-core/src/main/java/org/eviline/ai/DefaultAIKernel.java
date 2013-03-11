@@ -173,7 +173,7 @@ public class DefaultAIKernel implements AIKernel {
 		best.score = Double.POSITIVE_INFINITY;
 		
 		final Map<PlayerActionNode, List<PlayerAction>> paths;
-		List<Shape> orientations = new ArrayList<Shape>(Arrays.asList(context.type.orientations()));
+		List<Shape> orientations = new ArrayList<Shape>(Arrays.asList(context.type.searchOrientations()));
 		if(context.shallower == null) {
 			context.original.setLines(0);
 			Field starter = context.original.copy();

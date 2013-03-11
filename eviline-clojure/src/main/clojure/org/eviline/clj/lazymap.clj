@@ -18,14 +18,15 @@
 (defn get-backing [this] (first (.state this)))
 (defn get-lazy-store [this] (second (.state this)))
 
-(defn -lazyPut [this key delayed-val]
-  (swap! (get-lazy-store this) assoc key delayed-val)
-  )
-
 (defn eager-get [this key to-eval]
-  (swap! (get-lazy-store this) dissoc key)
-  (.put (get-backing this) key (force to-eval))
-  (.get (get-backing this) key)
+  (let [evaled (force to-eval)]
+    (.put (get-backing this) key evaled)
+    evaled
+    ))
+
+(defn -lazyPut [this key delayed-val]
+  (swap! 
+    (get-lazy-store this) assoc key (delay (eager-get this key delayed-val)))
   )
 
 (defn -entrySet [this] 
@@ -35,8 +36,8 @@
   (let [to-eval (get @(get-lazy-store this) key)
         ]
     (if-not (nil? to-eval)
-      (eager-get this key to-eval))
-    (.get (get-backing this) key)
+      (force to-eval)
+      (.get (get-backing this) key))
     )
   )
 
