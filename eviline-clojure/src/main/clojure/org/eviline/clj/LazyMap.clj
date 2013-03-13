@@ -1,4 +1,4 @@
-(ns org.eviline.clj.lazymap
+(ns org.eviline.clj.LazyMap
   (:gen-class 
     :name org.eviline.clj.LazyMap
     :extends java.util.AbstractMap

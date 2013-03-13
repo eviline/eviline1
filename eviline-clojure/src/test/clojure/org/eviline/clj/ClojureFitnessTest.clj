@@ -1,4 +1,4 @@
-(ns org.eviline.clj.clojurefitnesstest)
+(ns org.eviline.clj.ClojureFitnessTest)
 (clojure.core/use 'clojure.core)
 (use 'clojure.test)
 (use 'clojure.test.junit)
@@ -7,7 +7,7 @@
 (import '(org.eviline.clj ClojureFitness))
 
 (with-junit-output
-  (run-tests 'org.eviline.clj.clojurefitnesstest))
+  (run-tests 'org.eviline.clj.ClojureFitnessTest))
 
 (deftest scoring 
   (is (let [fitness (ClojureFitness.)]

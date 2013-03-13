@@ -1,16 +1,16 @@
-(ns org.eviline.clj.clojureaikerneltest)
+(ns org.eviline.clj.ClojureAIKernelTest)
 (clojure.core/use 'clojure.core)
 (use 'clojure.test)
 (use 'clojure.test.junit)
 
-(use 'org.eviline.clj.clojureaikernel)
+(use 'org.eviline.clj.ClojureAIKernel)
 
 (import '(org.eviline Field Shape ShapeType))
 (import '(org.eviline.clj ClojureAIKernel ClojureFitness))
 (import '(org.eviline.ai Context))
 
 (with-junit-output
-  (run-tests 'org.eviline.clj.clojureaikerneltest))
+  (run-tests 'org.eviline.clj.ClojureAIKernelTest))
 
 (deftest instantiate-test
   (is (ClojureAIKernel.))

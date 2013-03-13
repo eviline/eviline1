@@ -1,4 +1,4 @@
-(ns org.eviline.clj.clojureaikernel
+(ns org.eviline.clj.ClojureAIKernel
   (:gen-class 
     :name org.eviline.clj.ClojureAIKernel
     :extends org.eviline.ai.DefaultAIKernel
@@ -8,7 +8,7 @@
     :exposes-methods {bestFor superBestFor}
     ))
 (clojure.core/use 'clojure.core)
-(require 'org.eviline.clj.lazymap)
+(require 'org.eviline.clj.LazyMap)
 (import '(org.eviline Field Shape ShapeType PlayerAction PlayerActionType PlayerActionNode))
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))

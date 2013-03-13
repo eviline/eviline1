@@ -97,6 +97,11 @@
 									<createDependencyReducedPom>false</createDependencyReducedPom>
 									<shadedArtifactAttached>false</shadedArtifactAttached>
 									<finalName>${project.artifactId}-clj-shaded</finalName>
+								    <artifactSet>
+								        <includes>
+								            <include>*</include>
+								        </includes>
+								    </artifactSet>
 									<filters>
 										<filter>
 											<artifact>*</artifact>
