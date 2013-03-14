@@ -33,8 +33,9 @@ public class NextShapeComponent extends AbstractComponent {
 			return;
 		
 		Shape next = nextList.get(0).starter();
+		double xoff = (4 - next.width()) / 2.;
 		for(int i = 0; i < 4; i++) {
-			br.render(next.type().inactive(), g, next.x(i), next.y(i));
+			br.render(next.type().inactive(), g, next.x(i) + xoff, 1 + next.y(i));
 		}
 	}
 

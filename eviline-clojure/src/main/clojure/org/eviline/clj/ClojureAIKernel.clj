@@ -1,4 +1,4 @@
-(ns org.eviline.clj.clojureaikernel
+(ns org.eviline.clj.ClojureAIKernel
   (:gen-class 
     :name org.eviline.clj.ClojureAIKernel
     :extends org.eviline.ai.DefaultAIKernel
@@ -8,11 +8,17 @@
     :exposes-methods {bestFor superBestFor}
     ))
 (clojure.core/use 'clojure.core)
-(require 'clojure.core.reducers)
-(require 'org.eviline.clj.lazymap)
+(require 'org.eviline.clj.LazyMap)
 (import '(org.eviline Field Shape ShapeType PlayerAction PlayerActionType PlayerActionNode))
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))
+
+(def delay-pool-executor (java.util.concurrent.Executors/newCachedThreadPool))
+
+(defn pool-force [delayed] 
+  (let [jfut (.submit delay-pool-executor #(force delayed))]
+    (delay (.get jfut))
+    ))
 
 (defn -init [] [[]])
 (defn -post-init [this])
@@ -266,10 +272,11 @@
                        (.isHardDropOnly this) extend-path-singly-down
                        :else extend-path-singly
                        )
+          swimming (doall (map
+                            (fn [start] (pool-force (delay (extend-path-fully-rec-adjacentfn shxys-to-h-paths-state fc start adjacentfn) start)))
+                            (vals @shxys-to-h-paths-state)))
           ]
-      (doall (pmap
-        (fn [start] (extend-path-fully-rec-adjacentfn shxys-to-h-paths-state fc start adjacentfn) start)
-        (vals @shxys-to-h-paths-state)))
+      (doall (map #(force %) swimming))
       (reduce (fn [lazymap keyval] 
                               (.lazyPut
                                 lazymap

@@ -1,4 +1,4 @@
-(ns org.eviline.clj.clojurefitness
+(ns org.eviline.clj.ClojureFitness
   (:gen-class
     :name org.eviline.clj.ClojureFitness
     :extends org.eviline.fitness.DefaultFitness

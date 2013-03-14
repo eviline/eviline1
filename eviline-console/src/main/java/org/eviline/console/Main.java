@@ -5,7 +5,8 @@ import org.eviline.BasicPropertySource;
 import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.ai.AI;
-import org.eviline.clj.ClojureAIKernel;
+import org.eviline.ai.AIKernel;
+//import org.eviline.clj.ClojureAIKernel;
 import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.console.gui.EvilineWindow;
 import org.eviline.fitness.AbstractFitness;
@@ -35,10 +36,19 @@ public class Main {
 		field.setProvider(r);
 		field.setGhosting(true);
 		
-		// FIXME: Shouldn't normally be using ClojureFitness
-		if(System.getProperty("eviline.clojure") != null) {
-//			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
-			AI.setInstance(new ClojureAIKernel());
+//		// FIXME: Shouldn't normally be using ClojureFitness
+//		if(System.getProperty("eviline.clojure") != null) {
+////			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
+//			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
+//		}
+		
+		if(System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel") != null) {
+			String akc = System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel");
+			try {
+				AI.setInstance((AIKernel) Class.forName(akc, true, Main.class.getClassLoader()).newInstance());
+				System.out.println("Set AIKernel to " + AI.getInstance());
+			} catch(Exception ex) {
+			}
 		}
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
