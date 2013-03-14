@@ -12,8 +12,10 @@
 (import '(org.eviline Field Shape ShapeType PlayerAction PlayerActionType PlayerActionNode))
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))
+(import '(java.util.concurrent Executors))
 
-(def delay-pool-executor (java.util.concurrent.Executors/newCachedThreadPool))
+
+(def delay-pool-executor (Executors/newFixedThreadPool (+ Field/WIDTH Field/WIDTH)))
 
 (defn pool-force [delayed] 
   (let [jfut (.submit delay-pool-executor #(force delayed))]

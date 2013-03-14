@@ -42,6 +42,15 @@ public class Main {
 //			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
 //		}
 		
+		if(System.getProperty("eviline.fitness", "org.eviline.fitness.EvilineFitness2") != null) {
+			String fc = System.getProperty("eviline.fitness", "org.eviline.fitness.EvilineFitness2");
+			try {
+				AbstractFitness.setDefaultInstance((AbstractFitness) Class.forName(fc, true, Main.class.getClassLoader()).newInstance());
+				System.out.println("Set fitness to " + AbstractFitness.getDefaultInstance());
+			} catch(Exception ex) {
+			}
+		}
+
 		if(System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel") != null) {
 			String akc = System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel");
 			try {
@@ -50,6 +59,7 @@ public class Main {
 			} catch(Exception ex) {
 			}
 		}
+		
 		
 		final GUIScreen gui = TerminalFacade.createGUIScreen();
 		ConsoleEngine engine = new ConsoleEngine(field, gui);
