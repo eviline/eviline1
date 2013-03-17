@@ -47,7 +47,7 @@ public class EvilineFitness2 extends DefaultFitness {
 	private static int countVerticalSurfacesRow(Block[] row) {
 		int c = 0;
 		for(int i = 1; i < row.length; i++) {
-			if(surfaceEmpty(row[i-1]) ^ surfaceEmpty(row[i]))
+			if(surfaceEmpty(row[i-1]) ^ surfaceEmpty(row[i]) && row[i-1] != Block.X && row[i] != Block.X)
 				c++;
 		}
 		return c;
@@ -80,13 +80,13 @@ public class EvilineFitness2 extends DefaultFitness {
 		return c - (Field.WIDTH + 2 * Field.BUFFER);
 	}
 	
-	private int countSurfaces(Block[][] f) {
+	private static int countSurfaces(Block[][] f) {
 		int vs = countVerticalSurfaces(f);
 		int hs = countHorizSurfaces(f);
-		return 75 * (int) Math.pow(vs + hs, 3);
+		return 100 * (int) Math.pow(vs + hs, 3);
 	}
 	
-	private int maxHeight(Block[][] f) {
+	private static int maxHeight(Block[][] f) {
 		int h = Field.HEIGHT + Field.BUFFER;
 		for(Block[] row : f) {
 			for(Block b : row) {
@@ -99,7 +99,7 @@ public class EvilineFitness2 extends DefaultFitness {
 		return 0;
 	}
 	
-	private int impossibleDepth(Block[][] f) {
+	private static int impossibleDepth(Block[][] f) {
 		int tdepth = 0;
 		for(int x = 0; x < Field.WIDTH + 2 * Field.BUFFER; x++) {
 			int cdepth = 0;
