@@ -104,15 +104,18 @@ public class TetrevilTable extends JTable {
 		gg.setColor(new Color(238, 238, 238));
 		gg.fillRect(0, 0, getWidth(), getHeight());
 		gg.setColor(Color.BLACK);
-		int scale = getHeight() / 25;
-		((Graphics2D) gg).rotate(Math.PI / 12);
-		((Graphics2D) gg).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		((Graphics2D) gg).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-		((Graphics2D) gg).scale(scale, scale);
-		BasicStroke stroke = new BasicStroke(1f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 1f, new float[]{0,(float)Math.sqrt(2)}, 0f);
-		for(int i = 0; i < (getWidth() + getHeight()) / scale; i += 2) {
-			((Graphics2D) gg).setStroke(stroke);
-			gg.drawLine(i, 0, 0, i);
+		int scale = getHeight() / 30;
+		((Graphics2D) gg).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		double cos = Math.cos(Math.PI / 12);
+		double sin = Math.sin(Math.PI / 12);
+		double sr2 = Math.sqrt(2);
+		for(int i = 0; i < (getWidth() + getHeight()); i += scale * 2) {
+			for(int j = 0; j < (getWidth() + getHeight()); j += scale * 2) {
+				Graphics2D g2 = (Graphics2D) gg.create();
+				g2.translate((int)(i * cos - j * sin), (int)(i * sin + j * cos));
+				g2.rotate(-Math.PI / 24);
+				g2.fillRect(0, 0, (int)(scale * sr2), (int)(scale * sr2));
+			}
 		}
 	}
 	
