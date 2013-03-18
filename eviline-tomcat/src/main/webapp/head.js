@@ -20,7 +20,7 @@ function customize() {
 }           
 
 function play() {
-    var attributes = { code:'org.eviline.runner.MainApplet',  width:550, height:550} ;
+    var attributes = { code:'org.eviline.runner.MainApplet',  width:'100%', height:'100%'} ;
     var parameters = {jnlp_href: 'eviline.jnlp', score_host:'www.eviline.org:8080'} ;
     
     if(document.URL.toLowerCase().indexOf("www.angeviline.org") != -1) {
