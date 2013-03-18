@@ -33,6 +33,8 @@
 		<module>eviline-console</module>
 		<module>eviline-perf</module>
 		<module>eviline-clojure</module>
+		<module>eviline-tomcat-war</module>
+		<module>eviline-jnlp</module>
 	</modules>
 
 	<build>
