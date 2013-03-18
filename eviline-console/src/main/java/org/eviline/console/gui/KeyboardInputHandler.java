@@ -3,7 +3,8 @@ package org.eviline.console.gui;
 import java.util.HashMap;
 import java.util.Map;
 import org.eviline.Field;
-import org.eviline.ai.AIKernel;
+import org.eviline.ai.AI;
+import org.eviline.ai.DefaultAIKernel;
 import org.eviline.ai.DefaultPlayer;
 import org.eviline.ai.PlayerFieldHarness;
 import org.eviline.console.engine.ConsoleEngine;
@@ -121,22 +122,18 @@ public class KeyboardInputHandler extends WindowAdapter {
 				playerProvider = field.getProvider();
 				field.setProvider(aiProvider);
 				field.addEvilineListener(aiScoreAdjuster);
-				DefaultPlayer player = new DefaultPlayer(field, new AIKernel());
+				DefaultPlayer player = new DefaultPlayer(field, AI.getInstance());
 				player.setBlocking(true);
 				final PlayerFieldHarness harness = new PlayerFieldHarness(field, player);
 				final GUIScreen gui = window.getOwner();
-				gui.runInEventThread(new Action() {
-					@Override
-					public void doAction() {
-						if(playerProvider == null)
-							return;
-						harness.tick();
-						gui.runInEventThread(this);
-					}
-				});
+				engine.setAntigravity(true);
+				engine.getField().setScoreFactor(-1);
+				gui.runInEventThread(new Tick(gui, harness));
 			} else {
+				engine.setAntigravity(false);
 				field.setProvider(playerProvider);
 				field.removeEvilineListener(aiScoreAdjuster);
+				engine.getField().setScoreFactor(1);
 				playerProvider = null;
 			}
 		} else if(key.getCharacter() == controls.chars[Controls.TOGGLE_CONTROLS]) {
@@ -144,6 +141,34 @@ public class KeyboardInputHandler extends WindowAdapter {
 				controls = Controls.MOBILE_CONTROLS;
 			else
 				controls = Controls.DEFAULT_CONTROLS;
+		}
+	}
+
+	private class Tick implements Action {
+		private final GUIScreen gui;
+		private final PlayerFieldHarness harness;
+	
+		private Runnable tock = new Runnable() {
+			@Override
+			public void run() {
+				gui.runInEventThread(Tick.this);
+			}
+		};
+		
+		private Tick(GUIScreen gui, PlayerFieldHarness harness) {
+			this.gui = gui;
+			this.harness = harness;
+		}
+	
+		@Override
+		public void doAction() {
+			if(playerProvider == null)
+				return;
+			try {
+				harness.tick();
+				engine.getExec().execute(tock);
+			} catch(RuntimeException re) {
+			}
 		}
 	}
 }

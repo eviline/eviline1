@@ -6,7 +6,7 @@ import java.util.Arrays;
 import org.eviline.event.EventDispatcher;
 import org.eviline.event.EvilineEvent;
 import org.eviline.event.EvilineListener;
-import org.eviline.fitness.Fitness;
+import org.eviline.fitness.AbstractFitness;
 import org.eviline.randomizer.Randomizer;
 
 /**
@@ -80,6 +80,10 @@ public class Field implements Serializable {
 	 */
 	protected int lines;
 	
+	protected double score;
+	
+	protected double scoreFactor = 1;
+	
 	/**
 	 * The direction of the currently active DAS
 	 */
@@ -136,6 +140,8 @@ public class Field implements Serializable {
 		target.shapeY = shapeY;
 		target.gameOver = gameOver;
 		target.lines = lines;
+		target.score = score;
+		target.scoreFactor = scoreFactor;
 		return target;
 	}
 	
@@ -146,7 +152,7 @@ public class Field implements Serializable {
 	/**
 	 * Reset the field
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		if(unpausable)
 			return;
 		fireGameReset();
@@ -168,6 +174,8 @@ public class Field implements Serializable {
 		shape = null;
 		gameOver = false;
 		lines = 0;
+		score = 0;
+		scoreFactor = 1;
 		autoShift = null;
 		playing = false;
 	}
@@ -176,7 +184,7 @@ public class Field implements Serializable {
 	 * Cause one clock tick.  One clock tick means one movement of gravity downwards.
 	 * Tetrevil does not keep a separate 60Hz clock, or some other such independent clock.
 	 */
-	public void clockTick() {
+	public synchronized void clockTick() {
 		if(paused)
 			return;
 		if(gameOver)
@@ -254,6 +262,7 @@ public class Field implements Serializable {
 			}
 			
 			if(multilines > 0) {
+				score += scoreFactor * 1000 * multilines * multilines;
 				fireLinesCleared(multilines);
 			}
 		}
@@ -263,7 +272,7 @@ public class Field implements Serializable {
 	 * Returns whether the current shape is "grounded", e.g. can be locked but isn't
 	 * @return
 	 */
-	public boolean isGrounded() {
+	public synchronized boolean isGrounded() {
 		if(shape == null)
 			return false;
 		return shape.intersects(field, shapeX, shapeY+1);
@@ -272,7 +281,7 @@ public class Field implements Serializable {
 	/**
 	 * Shift the current shape one to the left
 	 */
-	public void shiftLeft() {
+	public synchronized void shiftLeft() {
 		if(paused)
 			return;
 		if(shape == null || shape.intersects(field, shapeX-1, shapeY))
@@ -285,7 +294,7 @@ public class Field implements Serializable {
 	/**
 	 * Shift the current shape one to the right
 	 */
-	public void shiftRight() {
+	public synchronized void shiftRight() {
 		if(paused)
 			return;
 		if(shape == null || shape.intersects(field, shapeX+1, shapeY))
@@ -295,10 +304,41 @@ public class Field implements Serializable {
 		fireShiftedRight();
 	}
 	
+	public synchronized void shiftDown() {
+		if(paused)
+			return;
+		score += scoreFactor;
+		clockTick();
+	}
+	
+	public synchronized void softDrop() {
+		if(paused)
+			return;
+		if(shape == null)
+			return;
+		while(!shape.intersects(field, shapeX, shapeY + 1)) {
+			score += 2 * scoreFactor;
+			clockTick();
+		}
+	}
+	
+	public synchronized void hardDrop() {
+		if(paused)
+			return;
+		if(shape == null)
+			return;
+		while(!shape.intersects(field, shapeX, shapeY + 1)) {
+			score += 3 * scoreFactor;
+			clockTick();
+		}
+		clockTick();
+		fireHardDropped();
+	}
+	
 	/**
 	 * Auto-shift the current shape all the way to the left or right.
 	 */
-	public void autoshift() {
+	public synchronized void autoshift() {
 		if(paused || autoShift == null)
 			return;
 		switch(autoShift) {
@@ -318,7 +358,7 @@ public class Field implements Serializable {
 	/**
 	 * Recalculate the ghost location
 	 */
-	public void reghost() {
+	public synchronized void reghost() {
 		if(!ghosting)
 			return;
 		for(int y = 0; y < HEIGHT + 2 * BUFFER; y++) {
@@ -352,7 +392,7 @@ public class Field implements Serializable {
 	/**
 	 * Counter-clockwise shape rotation
 	 */
-	public void rotateLeft() {
+	public synchronized void rotateLeft() {
 		if(paused || shape == null)
 			return;
 //		if(shape == null || shape.rotateLeft().intersects(field, shapeX, shapeY))
@@ -376,7 +416,7 @@ public class Field implements Serializable {
 		}
 	}
 	
-	public void reverseRotateLeft() {
+	public synchronized void reverseRotateLeft() {
 		if(paused || shape == null)
 			return;
 		Shape rotated = shape.rotateRight();
@@ -403,7 +443,7 @@ public class Field implements Serializable {
 	/**
 	 * Clockwise shape rotation
 	 */
-	public void rotateRight() {
+	public synchronized void rotateRight() {
 		if(paused || shape == null)
 			return;
 //		if(shape == null || shape.rotateRight().intersects(field, shapeX, shapeY))
@@ -427,7 +467,7 @@ public class Field implements Serializable {
 		}
 	}
 	
-	public void reverseRotateRight() {
+	public synchronized void reverseRotateRight() {
 		if(paused || shape == null)
 			return;
 		Shape rotated = shape.rotateLeft();
@@ -451,7 +491,7 @@ public class Field implements Serializable {
 		autoshift();
 	}
 	
-	public void garbage(int lines) {
+	public synchronized void garbage(int lines) {
 		this.garbage += lines;
 	}
 	
@@ -478,7 +518,7 @@ public class Field implements Serializable {
 	 * @param y
 	 * @return
 	 */
-	public Block getBlock(int x, int y) {
+	public synchronized Block getBlock(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
 			Block[][] s = shape.shape();
 			if(x - shapeX < s[0].length && y - shapeY < s.length) {
@@ -496,11 +536,11 @@ public class Field implements Serializable {
 		return field[y][x];
 	}
 	
-	public Block getFieldBlock(int x, int y) {
+	public synchronized Block getFieldBlock(int x, int y) {
 		return getBlock(x + Field.BUFFER, y + Field.BUFFER);
 	}
 	
-	public BlockMetadata getMetadata(int x, int y) {
+	public synchronized BlockMetadata getMetadata(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
 			Block[][] s = shape.shape();
 			if(x - shapeX < s[0].length && y - shapeY < s.length) {
@@ -522,7 +562,7 @@ public class Field implements Serializable {
 	 * Add a tetrevil listener to this field
 	 * @param l
 	 */
-	public void addEvilineListener(EvilineListener l) {
+	public synchronized void addEvilineListener(EvilineListener l) {
 		if(listeners == null)
 			listeners = new EvilineListener[0];
 		EvilineListener[] ll = Arrays.copyOf(listeners, listeners.length + 1);
@@ -534,7 +574,7 @@ public class Field implements Serializable {
 	 * Remove a tetrevil listener from this field
 	 * @param l
 	 */
-	public void removeEvilineListener(EvilineListener l) {
+	public synchronized void removeEvilineListener(EvilineListener l) {
 		if(listeners == null)
 			listeners = new EvilineListener[0];
 		EvilineListener[] listeners = this.listeners;
@@ -716,6 +756,20 @@ public class Field implements Serializable {
 		}
 	}
 
+	protected void fireHardDropped() {
+		if(listeners == null)
+			return;
+		EvilineEvent e = null;
+		EvilineListener[] ll = listeners;
+		for(int i = ll.length - 1; i >= 0; i--) {
+			if(dispatcher == null)
+				dispatcher = new EventDispatcher();
+			if(e == null)
+				e = new EvilineEvent(this, EvilineEvent.HARD_DROP, this);
+			dispatcher.hardDropped(ll[i], e);
+		}
+	}
+
 	public Randomizer getProvider() {
 		return provider;
 	}
@@ -840,7 +894,23 @@ public class Field implements Serializable {
 			}
 			sb.append("\n");
 		}
-		sb.append("Score " + Fitness.getDefaultInstance().score(this));
+		sb.append("Score " + AbstractFitness.getDefaultInstance().score(this));
 		return sb.toString();
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
+	public double getScoreFactor() {
+		return scoreFactor;
+	}
+
+	public void setScoreFactor(double scoreFactor) {
+		this.scoreFactor = scoreFactor;
 	}
 }

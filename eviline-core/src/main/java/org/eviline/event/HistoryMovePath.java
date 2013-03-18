@@ -2,11 +2,9 @@ package org.eviline.event;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import org.eviline.PlayerAction;
-import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.ai.PlayerMovePath;
 
@@ -98,6 +96,12 @@ public class HistoryMovePath extends PlayerMovePath implements EvilineListener {
 
 	@Override
 	public void garbageReceived(EvilineEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void hardDropped(EvilineEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

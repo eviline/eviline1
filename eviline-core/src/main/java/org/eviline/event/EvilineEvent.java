@@ -25,6 +25,7 @@ public class EvilineEvent extends EventObject {
 	public static final int GARBAGE_RECEIVED = 9;
 	public static final int SHAPE_SPAWNED = 10;
 	public static final int SHAPE_LOCKED = 11;
+	public static final int HARD_DROP = 12;
 	
 	protected int id;
 	protected Field field;

@@ -1,11 +1,30 @@
 package org.eviline;
 
-import static org.eviline.Shape.*;
-
-import java.awt.image.BufferedImage;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import static org.eviline.Shape.I_DOWN;
+import static org.eviline.Shape.I_LEFT;
+import static org.eviline.Shape.I_RIGHT;
+import static org.eviline.Shape.I_UP;
+import static org.eviline.Shape.J_DOWN;
+import static org.eviline.Shape.J_LEFT;
+import static org.eviline.Shape.J_RIGHT;
+import static org.eviline.Shape.J_UP;
+import static org.eviline.Shape.L_DOWN;
+import static org.eviline.Shape.L_LEFT;
+import static org.eviline.Shape.L_RIGHT;
+import static org.eviline.Shape.L_UP;
+import static org.eviline.Shape.O_UP;
+import static org.eviline.Shape.S_DOWN;
+import static org.eviline.Shape.S_LEFT;
+import static org.eviline.Shape.S_RIGHT;
+import static org.eviline.Shape.S_UP;
+import static org.eviline.Shape.T_DOWN;
+import static org.eviline.Shape.T_LEFT;
+import static org.eviline.Shape.T_RIGHT;
+import static org.eviline.Shape.T_UP;
+import static org.eviline.Shape.Z_DOWN;
+import static org.eviline.Shape.Z_LEFT;
+import static org.eviline.Shape.Z_RIGHT;
+import static org.eviline.Shape.Z_UP;
 
 /**
  * Possible types of {@link Shape}s.
@@ -46,7 +65,20 @@ public enum ShapeType {
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
-	
+
+	public Shape[] searchOrientations() {
+		switch(this) {
+		case O: return new Shape[] { O_UP };
+		case S: return new Shape[] { S_UP, S_RIGHT};
+		case Z: return new Shape[] { Z_UP, Z_RIGHT};
+		case J: return new Shape[] { J_UP, J_RIGHT, J_LEFT, J_DOWN};
+		case L: return new Shape[] { L_UP, L_RIGHT, L_LEFT, L_DOWN};
+		case I: return new Shape[] { I_UP, I_RIGHT};
+		case T: return new Shape[] { T_UP, T_RIGHT, T_LEFT, T_DOWN};
+		}
+		throw new InternalError("Fell through to default when all enums covered");
+	}
+
 	/**
 	 * Returns the shape used to start a new round with this shape type
 	 * @return

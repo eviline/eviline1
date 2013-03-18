@@ -56,12 +56,12 @@ public class BlockRenderer {
 		return "\u2592\u2592";
 	}
 	
-	public void render(Block b, TextGraphics g, int x, int y) {
+	public void render(Block b, TextGraphics g, double x, double y) {
 		ScreenCharacterStyle[] s = new ScreenCharacterStyle[0];
 //		if(b == Block.O || b == Block.OA)
 //			s = new ScreenCharacterStyle[] {ScreenCharacterStyle.Bold, ScreenCharacterStyle.Reverse};
 		g.setForegroundColor(foregroundFor(b));
 		g.setBackgroundColor(backgroundFor(b));
-		g.drawString(x * 2, y, stringFor(b), s);
+		g.drawString((int) (x * 2), (int) y, stringFor(b), s);
 	}
 }

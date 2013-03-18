@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
-		<version>1.0.16</version>
+		<version>1.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<packaging>war</packaging>
@@ -16,26 +16,10 @@
 		Webapp that handles high scores and multiplayer.  Eviline is a block-stacking
 		game that uses an AI to work against you.
 	</description>
-	
-	
+
+
 	<build>
-		<directory>target</directory>
-		<outputDirectory>target/classes</outputDirectory>
 		<finalName>${project.artifactId}</finalName>
-		<testOutputDirectory>target/test-classes</testOutputDirectory>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
-		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-		</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -52,6 +36,73 @@
 				<configuration>
 					<skip>true</skip>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>unpack-non-jnlp</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eviline</groupId>
+									<artifactId>eviline-jnlp</artifactId>
+									<version>${project.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/eviline-tomcat</outputDirectory>
+							<excludes>eviline.jnlp</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-jnlp</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eviline</groupId>
+									<artifactId>eviline-jnlp</artifactId>
+									<version>${project.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/eviline-tomcat/WEB-INF/classes/org/eviline/servlet</outputDirectory>
+							<includes>eviline.jnlp</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<archiveDirectory>${project.build.directory}/eviline-tomcat</archiveDirectory>
+							<includes>
+								<include>*.jar</include>
+							</includes>
+							<keystore>../keystore</keystore>
+							<alias>signFiles</alias>
+							<storepass>${keystore.password}</storepass>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -76,6 +127,11 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
 	</dependencies>
-	
+
 </project>

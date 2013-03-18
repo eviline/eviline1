@@ -73,7 +73,7 @@ public class TetrevilKeyListener extends KeyAdapter {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(!field.isGrounded())
-				field.clockTick();
+				field.shiftDown();
 		}
 	});
 	
@@ -117,21 +117,11 @@ public class TetrevilKeyListener extends KeyAdapter {
 			f.rotateRight();
 		else if(e.getKeyCode() == DROP) {
 			if(!pressed.contains(DROP)) {
-				synchronized(field) {
-					while(f.getShape() != null && !field.isGameOver()) {
-						field.clockTick();
-					}
-					EventQueue.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							field.clockTick();
-						}
-					});
-				}
+				field.hardDrop();
 			}
 		} else if(e.getKeyCode() == DOWN) {
 			if(!pressed.contains(DOWN)) {
-				field.clockTick();
+				field.shiftDown();
 				downTimer.start();
 			}
 		} else if(e.getKeyCode() == RESET)

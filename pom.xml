@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eviline</groupId>
 	<artifactId>eviline-pom</artifactId>
-	<version>1.0.16</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -27,11 +27,11 @@
 
 	<modules>
 		<module>eviline-core</module>
+		<module>eviline-clojure</module>
 		<module>eviline</module>
-		
-		<module>eviline-tomcat</module>
 		<module>eviline-console</module>
-		<module>eviline-perf</module>
+		<module>eviline-jnlp</module>
+		<module>eviline-tomcat</module>
 	</modules>
 
 	<build>
@@ -88,37 +88,7 @@
 				<version>2.5</version>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jarsigner-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>sign</id>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>package</id>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>verify</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<keystore>../keystore</keystore>
-					<alias>signFiles</alias>
-					<storepass>${keystore.password}</storepass>
-				</configuration>
-			</plugin>
+			
 		</plugins>
 	</build>
 
@@ -156,23 +126,23 @@
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline</artifactId>
-				<version>1.0.16</version>
+				<version>1.1.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-core</artifactId>
-				<version>1.0.16</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eviline</groupId>
-				<artifactId>eviline-nullpo</artifactId>
-				<version>1.0.14-SNAPSHOT</version>
+				<version>1.1.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eviline</groupId>
 				<artifactId>eviline-tomcat</artifactId>
-				<version>1.0.16</version>
+				<version>1.1.0-SNAPSHOT</version>
 				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>org.eviline</groupId>
+				<artifactId>eviline-clojure</artifactId>
+				<version>1.1.0-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -3,7 +3,7 @@ package org.eviline.fitness;
 import org.eviline.Block;
 import org.eviline.Field;
 
-public class EvilineFitness extends Fitness {
+public class EvilineFitness extends AbstractFitness {
 	
 	
 	public EvilineFitness() {}
@@ -65,7 +65,7 @@ public class EvilineFitness extends Fitness {
 		
 		int impossibles = 0;
 		int unlikelies = 0;
-		int columnTransitions = 0;
+		double columnTransitions = 0;
 		int rowTransitions = 0;
 		
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
@@ -76,7 +76,7 @@ public class EvilineFitness extends Fitness {
 					stackHeight[x-Field.BUFFER] = h;
 				
 				if(isSolid(f[y][x]) ^ isSolid(f[y+1][x]))
-					columnTransitions++;
+					columnTransitions += 1;
 				
 				if(b != null && b != Block.X && b != Block.G) {
 					score += 15 + Math.pow(h * params[Weights.BLOCK_HEIGHT], 1 / (2.6 - h / 10.));
@@ -122,7 +122,6 @@ public class EvilineFitness extends Fitness {
 		paintImpossibles(field.getField());
 	}
 	
-	@Override
 	public void paintImpossibles(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
@@ -145,7 +144,6 @@ public class EvilineFitness extends Fitness {
 		paintUnlikelies(field.getField());
 	}
 	
-	@Override
 	public void paintUnlikelies(Block[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {

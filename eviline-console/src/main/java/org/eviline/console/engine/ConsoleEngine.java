@@ -26,9 +26,11 @@ public class ConsoleEngine implements EvilineListener {
 	protected Runnable ticker = new Runnable() {
 		@Override
 		public void run() {
-			field.clockTick();
+			if(!antigravity)
+				field.clockTick();
 		}
 	};
+	protected boolean antigravity = false;
 	
 	protected boolean lockDelaying;
 	
@@ -88,13 +90,11 @@ public class ConsoleEngine implements EvilineListener {
 	}
 	
 	public void softDrop() {
-		while(!field.isGrounded())
-			field.clockTick();
+		field.softDrop();
 	}
 	
 	public void hardDrop() {
-		softDrop();
-		field.clockTick();
+		field.hardDrop();
 	}
 	
 	public void shiftLeft() {
@@ -150,7 +150,8 @@ public class ConsoleEngine implements EvilineListener {
 		if(!isRunning())
 			return;
 		tickerFuture.cancel(false);
-		field.clockTick();
+		if(!antigravity)
+			field.clockTick();
 	}
 
 	@Override
@@ -212,7 +213,29 @@ public class ConsoleEngine implements EvilineListener {
 		
 	}
 
+	@Override
+	public void hardDropped(EvilineEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public Field getField() {
 		return field;
+	}
+
+	public ScheduledFuture<?> getTickerFuture() {
+		return tickerFuture;
+	}
+
+	public boolean isAntigravity() {
+		return antigravity;
+	}
+
+	public void setAntigravity(boolean antigravity) {
+		this.antigravity = antigravity;
+	}
+
+	public ScheduledExecutorService getExec() {
+		return exec;
 	}
 }

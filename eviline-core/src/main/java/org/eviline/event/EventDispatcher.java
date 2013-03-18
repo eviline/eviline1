@@ -114,5 +114,13 @@ public class EventDispatcher {
 		});
 	}
 	
+	public void hardDropped(final EvilineListener l, final EvilineEvent e) {
+		dispatchThread.execute(new Runnable() {
+			@Override
+			public void run() {
+				l.hardDropped(e);
+			}
+		});
+	}
 	
 }

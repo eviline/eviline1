@@ -3,7 +3,7 @@ package org.eviline.fitness;
 import org.eviline.Block;
 import org.eviline.Field;
 
-public class ElTetrisFitness extends Fitness {
+public class ElTetrisFitness extends AbstractFitness {
 	
 	private static final double LANDING_HEIGHT_WEIGHT = -4.500158825082766;
 	private static final double ROWS_ELIMINATED_WEIGHT = 3.4181268101392694;
@@ -95,15 +95,7 @@ public class ElTetrisFitness extends Fitness {
 	}
 
 	@Override
-	public void paintImpossibles(Block[][] f) {
-	}
-
-	@Override
 	public void paintUnlikelies(Field field) {
-	}
-
-	@Override
-	public void paintUnlikelies(Block[][] f) {
 	}
 
 	@Override

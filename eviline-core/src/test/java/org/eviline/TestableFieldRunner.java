@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 
 import org.eviline.util.TestableFieldParser;
 import org.junit.runner.Description;
-import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;

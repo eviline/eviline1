@@ -1,5 +1,10 @@
 package org.eviline.randomizer;
 
+import static org.eviline.randomizer.RandomizerFactory.DEPTH;
+import static org.eviline.randomizer.RandomizerFactory.DISTRIBUTION;
+import static org.eviline.randomizer.RandomizerFactory.FAIR;
+import static org.eviline.randomizer.RandomizerFactory.RFACTOR;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +15,10 @@ import org.eviline.Field;
 import org.eviline.PropertySource;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
-import org.eviline.ai.AIKernel;
-import org.eviline.ai.AIKernel.Context;
-import org.eviline.ai.AIKernel.Decision;
-import org.eviline.ai.AIKernel.DecisionModifier;
-import org.eviline.fitness.Fitness;
-
-import static org.eviline.randomizer.RandomizerFactory.*;
+import org.eviline.ai.AI;
+import org.eviline.ai.Context;
+import org.eviline.ai.Decision;
+import org.eviline.ai.DecisionModifier;
 
 /**
  * {@link Randomizer} that looks a few moves ahead in the future to come up with the worst
@@ -174,12 +176,12 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 				permuteDecision(decision);
 			}
 		};
-		Context context = AIKernel.getInstance().new Context(decisionModifier, field, this.depth() - depth);
+		Context context = new Context(AI.getInstance(), decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
 		defaultDecision.field = field.copy();
-		defaultDecision.score = AIKernel.getInstance().getFitness().scoreWithPaint(defaultDecision.field);
-		Decision decision = AIKernel.getInstance().planWorst(context, defaultDecision);
+		defaultDecision.score = AI.getInstance().getFitness().score(defaultDecision.field);
+		Decision decision = AI.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;
 	}

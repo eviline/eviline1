@@ -1,164 +1,17 @@
 package org.eviline;
 
-import java.util.AbstractMap;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.HashMap;
 
 import org.eviline.event.EvilineEvent;
 
 public class PlayerAction {
-	public static enum Type {
-		DOWN_ONE,
-		SHIFT_LEFT,
-		SHIFT_RIGHT,
-		ROTATE_LEFT,
-		ROTATE_RIGHT,
-		HOLD,
-		HARD_DROP,
-		DAS_LEFT,
-		DAS_RIGHT,
-		;
-		
-		public String toString() {
-			switch(this) {
-			case DOWN_ONE: return "D";
-			case ROTATE_LEFT: return "RL";
-			case ROTATE_RIGHT: return "RR";
-			case SHIFT_LEFT: return "SL";
-			case SHIFT_RIGHT: return "SR";
-			}
-			return null;
-		}
-		
-		
-		public static Type[] shiftFirstValues() {
-			return new Type[] {
-					ROTATE_LEFT, ROTATE_RIGHT, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ DOWN_ONE
-			};
-		}
-		
-		public static Type[] rotateOnlyValues() {
-			return new Type[] {
-					ROTATE_LEFT, ROTATE_RIGHT
-			};
-		}
-
-		public static Type[] dropFirstValues() {
-			return new Type[] {
-					DOWN_ONE, SHIFT_LEFT, SHIFT_RIGHT, /*DAS_LEFT, DAS_RIGHT,*/ ROTATE_LEFT, ROTATE_RIGHT
-			};
-		}
-		
-		public static Type fromEvent(EvilineEvent e) {
-			switch(e.getId()) {
-			case EvilineEvent.CLOCK_TICKED:
-				return DOWN_ONE;
-			case EvilineEvent.SHIFTED_LEFT:
-				return SHIFT_LEFT;
-			case EvilineEvent.SHIFTED_RIGHT:
-				return SHIFT_RIGHT;
-			case EvilineEvent.ROTATED_LEFT:
-				return ROTATE_LEFT;
-			case EvilineEvent.ROTATED_RIGHT:
-				return ROTATE_RIGHT;
-			}
-			return null;
-		}
-	}
-	
-	public static class Node {
-		private Shape shape;
-		private int x;
-		private int y;
-		
-		public Node(Shape shape, int x, int y) {
-			this.shape = shape;
-			this.x = x;
-			this.y = y;
-		}
-		
-		@Override
-		public int hashCode() {
-			return (1 + shape.ordinal()) * x * y;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if(obj == null)
-				return false;
-			if(obj == this)
-				return true;
-			if(!(obj instanceof Node))
-				return false;
-			Node n = (Node) obj;
-			return shape == n.shape && x == n.x && y == n.y;
-		}
-
-		public Shape getShape() {
-			return shape;
-		}
-
-		public int getX() {
-			return x;
-		}
-
-		public int getY() {
-			return y;
-		}
-	}
-	
-	public static class NodeMap<V> extends AbstractMap<Node, V> {
-		private static int W = Field.WIDTH + Field.BUFFER * 2;
-		private static int H = Field.HEIGHT + Field.BUFFER * 2;
-		
-		private Map.Entry<Node, V>[][][] entries = new Map.Entry[Shape.values().length][H][W];
-		
-		@Override
-		public Set<Map.Entry<Node, V>> entrySet() {
-			Set<Map.Entry<Node, V>> es = new HashSet<Map.Entry<Node,V>>();
-			for(Map.Entry<Node, V>[][] ea : entries) {
-				for(Map.Entry<Node, V>[] eaa : ea) {
-					for(Map.Entry<Node, V> e : eaa) {
-						if(e != null)
-							es.add(e);
-					}
-				}
-			}
-			return es;
-		}
-		
-		@Override
-		public V get(Object key) {
-			Node k = (Node) key;
-			Map.Entry<Node, V> e = entries[k.shape.ordinal()][k.y][k.x];
-			return e == null ? null : e.getValue();
-		}
-		
-		public V put(Node key, V value) {
-			V old = get(key);
-			entries[key.shape.ordinal()][key.y][key.x] = new AbstractMap.SimpleEntry(key, value);
-			return old;
-		}
-		
-		@Override
-		public V remove(Object key) {
-			Node k = (Node) key;
-			V ret = get(key);
-			entries[k.shape.ordinal()][k.y][k.x] = null;	
-			return ret;
-		}
-		
-		@Override
-		public boolean containsKey(Object key) {
-			return get(key) != null;
-		}
+	public static class NodeMap<V> extends HashMap<PlayerActionNode, V> {
 	}
 	
 	private Field startField;
 	private Field endField;
-	private Type type;
+	private PlayerActionType type;
 	private Shape startShape;
 	private Shape endShape;
 	private int startX;
@@ -166,18 +19,18 @@ public class PlayerAction {
 	private int endX;
 	private int endY;
 	
-	private Node startNode;
-	private Node endNode;
+	private PlayerActionNode startNode;
+	private PlayerActionNode endNode;
 	
 	private boolean possible;
 	
 	private long timestamp = System.currentTimeMillis();
 	
-	public PlayerAction(Field field, Type type) {
+	public PlayerAction(Field field, PlayerActionType type) {
 		this(field, type, false);
 	}
 	
-	public PlayerAction(Field field, Type type, boolean reverse) {
+	public PlayerAction(Field field, PlayerActionType type, boolean reverse) {
 		if(field.getShape() == null)
 			throw new IllegalArgumentException("null field shape");
 		if(!reverse)
@@ -186,13 +39,27 @@ public class PlayerAction {
 			computeReverse(field, type);
 		
 		possible = !(startShape == endShape && startX == endX && startY == endY);
-		startNode = new Node(startShape, startX, startY);
-		endNode = new Node(endShape, endX, endY);
+		startNode = new PlayerActionNode(startShape, startX, startY);
+		endNode = new PlayerActionNode(endShape, endX, endY);
+	}
+	
+	public PlayerAction(Field start, PlayerActionType type, Field end) {
+		this.startField = start;
+		this.endField = end;
+		this.type = type;
+		startShape = start.getShape();
+		startX = start.getShapeX();
+		startY = start.getShapeY();
+		endShape = end.getShape();
+		endX = end.getShapeX();
+		endY = end.getShapeY();
+		startNode = new PlayerActionNode(startShape, startX, startY);
+		endNode = new PlayerActionNode(endShape, endX, endY);
 	}
 	
 	public PlayerAction(EvilineEvent e) {
 		this.endField = e.getField();
-		this.type = Type.fromEvent(e);
+		this.type = PlayerActionType.fromEvent(e);
 		this.endShape = e.getShape();
 		this.endX = e.getX();
 		this.endY = e.getY();
@@ -216,7 +83,7 @@ public class PlayerAction {
 				Arrays.<Object>asList(opa.type, opa.startShape, opa.endShape, opa.startX, opa.endX, opa.startY, opa.endY));
 	}
 	
-	private void compute(Field field, Type type) {
+	private void compute(Field field, PlayerActionType type) {
 		this.type = type;
 		startField = field.copy();
 		startX = field.shapeX;
@@ -256,7 +123,7 @@ public class PlayerAction {
 		endY = endField.shapeY;
 	}
 	
-	private void computeReverse(Field field, Type type) {
+	private void computeReverse(Field field, PlayerActionType type) {
 		this.type = type;
 		endField = field.copy();
 		endX = field.shapeX;
@@ -304,7 +171,7 @@ public class PlayerAction {
 	public Field getEndField() {
 		return endField;
 	}
-	public Type getType() {
+	public PlayerActionType getType() {
 		return type;
 	}
 	public Shape getStartShape() {
@@ -332,14 +199,14 @@ public class PlayerAction {
 	
 	@Override
 	public String toString() {
-		return type.toString();
+		return type.toString() + " (" + startNode + " -> " + endNode + ")";
 	}
 
-	public Node getStartNode() {
+	public PlayerActionNode getStartNode() {
 		return startNode;
 	}
 
-	public Node getEndNode() {
+	public PlayerActionNode getEndNode() {
 		return endNode;
 	}
 

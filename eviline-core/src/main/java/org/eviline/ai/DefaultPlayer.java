@@ -1,7 +1,6 @@
 package org.eviline.ai;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
@@ -14,7 +13,6 @@ import java.util.concurrent.ThreadFactory;
 import org.eviline.Field;
 import org.eviline.PlayerAction;
 import org.eviline.ShapeType;
-import org.eviline.ai.AIKernel.QueueContext;
 
 public class DefaultPlayer extends AbstractPlayer {
 
@@ -41,7 +39,7 @@ public class DefaultPlayer extends AbstractPlayer {
 				if(next.size() == 0)
 					return new ArrayDeque<PlayerAction>(ai.bestFor(field).bestPath);
 				next.add(0, field.getShape().type());
-				return new ArrayDeque<PlayerAction>(ai.bestFor(ai.new QueueContext(field, next.toArray(new ShapeType[0]))).bestPath);
+				return new ArrayDeque<PlayerAction>(ai.bestFor(new QueueContext(ai, field, next.toArray(new ShapeType[0]))).bestPath);
 			}
 		};
 	}
