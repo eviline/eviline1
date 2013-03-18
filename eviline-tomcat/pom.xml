@@ -70,14 +70,36 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.zeromeaner</groupId>
-									<artifactId>zeromeaner-webstart</artifactId>
+									<groupId>org.eviline</groupId>
+									<artifactId>eviline-jnlp</artifactId>
 									<version>${project.version}</version>
 									<type>zip</type>
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.build.directory}/eviline-tomcat/WEB-INF/classes/org/eviline/servlet</outputDirectory>
 							<includes>eviline.jnlp</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<archiveDirectory>${project.build.directory}/eviline-tomcat</archiveDirectory>
+							<includes>
+								<include>*.jar</include>
+							</includes>
+							<keystore>../keystore</keystore>
+							<alias>signFiles</alias>
+							<storepass>${keystore.password}</storepass>
 						</configuration>
 					</execution>
 				</executions>
