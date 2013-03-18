@@ -26,6 +26,8 @@ import org.eviline.ShapeTypeIcon;
  */
 public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1L;
+	
+	private static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
 	protected Field field;
 
@@ -100,8 +102,15 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		c.setForeground(Color.WHITE);
 		c.setBackground(colors.provideColor(b));
 
-		if(b == null || b == Block.X)
-			c.setBackground(Color.WHITE);
+		if(b == null)
+			c.setBackground(TRANSPARENT);
+		else if(b == Block.X) {
+			Color xc = colors.provideColor(b);
+			c.setBackground(new Color(xc.getRed(), xc.getGreen(), xc.getBlue(), 128));
+		} else if(b == Block.G) {
+			Color gb = c.getBackground();
+			c.setBackground(new Color(gb.getRed(), gb.getGreen(), gb.getBlue(), 168));
+		}
 
 		if(field.isPaused() && b != null) {
 			if(!b.isActive() && b != Block.X)
@@ -110,8 +119,8 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 				c.setText("P");
 		}
 		if(b == null && field.isPaused() && !field.isGameOver()) {
-			c.setForeground(Color.BLACK);
-			c.setText(String.valueOf(field.getLines()));
+//			c.setForeground(Color.BLACK);
+//			c.setText(String.valueOf(field.getLines()));
 		} else if(b == null && field.isGameOver()) {
 			c.setForeground(Color.BLACK);
 			if(field.isMultiplayer())
@@ -212,36 +221,4 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		// TODO Auto-generated method stub
 		super.paintChildren(g);
 	}
-
-	private static final double FACTOR = 0.95;
-
-	public static Color brighter(Color c) {
-		int r = c.getRed();
-		int g = c.getGreen();
-		int b = c.getBlue();
-
-		/* From 2D group:
-		 * 1. black.brighter() should return grey
-		 * 2. applying brighter to blue will always return blue, brighter
-		 * 3. non pure color (non zero rgb) will eventually return white
-		 */
-		int i = (int)(1.0/(1.0-FACTOR));
-		if ( r == 0 && g == 0 && b == 0) {
-			return new Color(i, i, i);
-		}
-		if ( r > 0 && r < i ) r = i;
-		if ( g > 0 && g < i ) g = i;
-		if ( b > 0 && b < i ) b = i;
-
-		return new Color(Math.min((int)(r/FACTOR), 255),
-				Math.min((int)(g/FACTOR), 255),
-				Math.min((int)(b/FACTOR), 255));
-	}
-
-	public static Color darker(Color c) {
-		return new Color(Math.max((int)(c.getRed()  *FACTOR), 0), 
-				Math.max((int)(c.getGreen()*FACTOR), 0),
-				Math.max((int)(c.getBlue() *FACTOR), 0));
-	}
-
 }
