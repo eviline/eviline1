@@ -212,7 +212,7 @@ public class DifficultyPanel extends JPanel implements PropertySource {
 		
 		c.gridy++; add(provText, c);
 
-		presetButtons.get(RandomizerPresets.BIPOLAR.ordinal()).doClick();
+		presetButtons.get(RandomizerPresets.AGGRESSIVE.ordinal()).doClick();
 		
 		if("true".equals(getParameter("music")))
 			music.doClick();
