@@ -14,6 +14,8 @@
             href="http://java.sun.com/products/autodl/j2se" />
         <jar href="http://www.eviline.org/WEB-INF/lib/eviline.jar" main="true" />
         <jar href="http://www.eviline.org/WEB-INF/lib/eviline-core.jar" />
+        <jar href="http://www.eviline.org/WEB-INF/lib/eviline-clojure.jar" />
+        <jar href="http://www.eviline.org/WEB-INF/lib/clojure.jar" />
 
     </resources>
     <applet-desc 
