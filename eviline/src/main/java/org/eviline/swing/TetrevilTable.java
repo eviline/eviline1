@@ -101,7 +101,7 @@ public class TetrevilTable extends JTable {
 	}
 	
 	protected void drawBackground(Graphics gg) {
-		gg.setColor(new Color(238, 238, 238));
+		gg.setColor(Color.WHITE);
 		gg.fillRect(0, 0, getWidth(), getHeight());
 		gg.setColor(Color.BLACK);
 		int scale = getHeight() / 30;
