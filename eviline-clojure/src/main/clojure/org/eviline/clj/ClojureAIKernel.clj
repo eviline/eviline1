@@ -13,7 +13,7 @@
 (import '(org.eviline.ai DefaultAIKernel Context Decision DecisionModifier QueueContext))
 (import '(org.eviline.fitness Fitness AbstractFitness))
 
-(def delay-pool-executor (java.util.concurrent.Executors/newCachedThreadPool))
+(def delay-pool-executor (org.funcish.core.para.ParaExecutors/AVAILABLE_X2))
 
 (defn pool-force [delayed] 
   (let [jfut (.submit delay-pool-executor #(force delayed))]

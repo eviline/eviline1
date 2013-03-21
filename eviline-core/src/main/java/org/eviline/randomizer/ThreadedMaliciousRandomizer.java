@@ -16,9 +16,10 @@ import org.eviline.ai.AI;
 import org.eviline.ai.Context;
 import org.eviline.ai.Decision;
 import org.eviline.ai.DecisionModifier;
+import org.funcish.core.para.ParaExecutors;
 
 public class ThreadedMaliciousRandomizer extends MaliciousRandomizer {
-	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+	public static ExecutorService EXECUTOR = ParaExecutors.AVAILABLE_X2;
 	private static final long serialVersionUID = -2530461350140162944L;
 	
 	public ThreadedMaliciousRandomizer(PropertySource p) {

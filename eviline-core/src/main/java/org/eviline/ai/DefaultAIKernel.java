@@ -20,6 +20,7 @@ import org.eviline.ShapeType;
 import org.eviline.fitness.AbstractFitness;
 import org.eviline.fitness.Fitness;
 import org.eviline.fitness.WrapperFitness;
+import org.funcish.core.para.ParaExecutors;
 
 /**
  * Class which holds the AI algorithms.  These algorithms are documented in
@@ -35,7 +36,7 @@ public class DefaultAIKernel implements AIKernel {
 	private boolean highGravity = false;
 	private boolean hardDropOnly = false;
 	private AbstractFitness fitness = AbstractFitness.getDefaultInstance();
-	private ExecutorService pool = Executors.newFixedThreadPool(4);
+	private ExecutorService pool = ParaExecutors.AVAILABLE_X2;
 
 	protected Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<PlayerActionNode, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
