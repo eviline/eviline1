@@ -17,7 +17,8 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		int g = (c1.getGreen() + c2.getGreen()) / 2;
 		int b = (c1.getBlue() + c2.getBlue()) / 2;
 		int a = (c1.getAlpha() + c2.getAlpha()) / 2;
-		return new Color(r, g, b, a);
+//		return new Color(r, g, b, a);
+		return Color.BLACK;
 	}
 	
 	protected static Stroke normalStroke = new BasicStroke(2f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER);
