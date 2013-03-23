@@ -163,6 +163,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		g.setColor(bg);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
+		/*
 		if(b != null && b != Block.X && m != null && m.shape != null && !m.ghost && !field.isPaused()) {
 			g = (Graphics2D) gg.create();
 			switch(m.shape.direction()) {
@@ -177,6 +178,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 3 / 8, getHeight() * 3 / 8);
 			g.drawLine(getWidth() / 2, getHeight() / 4, getWidth() * 5 / 8, getHeight() * 3 / 8);
 		}
+		*/
 //		if(b != null && b != Block.X) {
 //			if(m != null) {
 //				if(m.shape != null && !m.ghost) {

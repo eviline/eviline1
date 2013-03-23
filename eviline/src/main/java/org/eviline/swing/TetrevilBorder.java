@@ -21,8 +21,8 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		return Color.BLACK;
 	}
 	
-	protected static Stroke normalStroke = new BasicStroke(2f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER);
-	protected static Stroke topStroke = new BasicStroke(10f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER);
+	protected static Stroke normalStroke = new BasicStroke(4f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	protected static Stroke topStroke = new BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	
 	public TetrevilBorder(Field field) {
 		this.field = field;
