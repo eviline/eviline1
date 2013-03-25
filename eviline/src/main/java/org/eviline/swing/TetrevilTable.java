@@ -114,7 +114,7 @@ public class TetrevilTable extends JTable {
 				Graphics2D g2 = (Graphics2D) gg.create();
 				g2.translate((int)(i * cos - j * sin), (int)(i * sin + j * cos));
 				g2.rotate(-Math.PI / 24);
-				g2.fillRect(0, 0, (int)(scale * sr2), (int)(scale * sr2));
+				g2.drawRect(0, 0, (int)(scale * sr2), (int)(scale * sr2));
 			}
 		}
 	}
@@ -123,6 +123,7 @@ public class TetrevilTable extends JTable {
 	protected void paintComponent(Graphics g) {
 		drawBackground(g.create());
 		super.paintComponent(g);
+		/*
 		g = g.create();
 		if(!(g instanceof Graphics2D))
 			return;
@@ -171,6 +172,7 @@ public class TetrevilTable extends JTable {
 				}
 			}
 		}
+		*/
 	}
 	
 }

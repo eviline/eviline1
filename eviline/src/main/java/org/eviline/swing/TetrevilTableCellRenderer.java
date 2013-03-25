@@ -141,7 +141,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		c.setBorder(border);
 		//		}
 		if(b != null && !b.isActive() && c != null) {
-			c.setBackground(c.getBackground().darker().darker());
+			c.setBackground(c.getBackground().brighter());
 		}
 		return c;
 	}
@@ -214,7 +214,6 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 
 	@Override
 	protected void paintBorder(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paintBorder(g);
 	}
 
