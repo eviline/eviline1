@@ -1,0 +1,34 @@
+Connecting to database specified by database.yml
+Started GET "/" for 98.245.11.181 at 2013-03-29 17:40:25 -0400
+Processing by HomeController#index as HTML
+  Rendered home/index.html.erb within layouts/application (10.7ms)
+Completed 500 Internal Server Error in 66ms
+
+ActionView::Template::Error (application.css isn't precompiled):
+    2: <html>
+    3: <head>
+    4:   <title>Eviline</title>
+    5:   <%= stylesheet_link_tag    "application", :media => "all" %>
+    6:   <link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+    7:   <%= javascript_include_tag "application" %>
+    8:   <%= csrf_meta_tags %>
+  app/views/layouts/application.html.erb:5:in `_app_views_layouts_application_html_erb___3249684899278743679_14311780'
+
+
+Connecting to database specified by database.yml
+Started GET "/" for 98.245.11.181 at 2013-03-29 17:42:48 -0400
+Processing by HomeController#index as HTML
+  Rendered home/index.html.erb within layouts/application (0.1ms)
+Completed 500 Internal Server Error in 2ms
+
+ActionView::Template::Error (application.css isn't precompiled):
+    2: <html>
+    3: <head>
+    4:   <title>Eviline</title>
+    5:   <%= stylesheet_link_tag    "application", :media => "all" %>
+    6:   <link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+    7:   <%= javascript_include_tag "application" %>
+    8:   <%= csrf_meta_tags %>
+  app/views/layouts/application.html.erb:5:in `_app_views_layouts_application_html_erb___3249684899278743679_14311780'
+
+

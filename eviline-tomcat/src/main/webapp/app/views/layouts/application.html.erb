@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Eviline</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="container">
+<div id="inner-container">
+	<div id="logo">
+		<ul>
+			<li><%= link_to "Play", :controller => "home", :action=>"index" %></li>
+			<li><%= link_to "About", :controller => "home", :action=>"about" %></li>
+			<li><%= link_to "License", :controller => "home", :action=>"license" %></li>
+		</ul>
+	</div>
+	<div id="content">
+		<%= yield %>
+	</div>
+</div>
+</div>
+
+</body>
+</html>

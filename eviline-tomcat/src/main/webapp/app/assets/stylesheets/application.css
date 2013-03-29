@@ -1,0 +1,94 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+
+#logo {
+	background: url('logo.png') no-repeat;
+	width: 750px;
+	height: 53px;
+}
+
+#logo > ul
+{
+	list-style: none;
+	display: block;
+	float: right;
+}
+
+#logo > ul > li
+{
+	display: inline-block;
+	margin-right: 10px;
+	font-size: x-large;
+}
+
+#logo > ul > li > a, #logo > ul > li > a:active, #logo > ul > li > a:visited
+{
+	border: 1px solid #000000;
+	background: linear-gradient(to bottom, #E4EFE5 0%, #ABC4AC 100%);
+	background: -moz-linear-gradient(top, #E4EFE5 0%, #ABC4AC 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#E4EFE5), color-stop(100%,#ABC4AC));
+	background: -webkit-linear-gradient(top, #E4EFE5 0%,#ABC4AC 100%);
+	background: -o-linear-gradient(top, #E4EFE5 0%,#ABC4AC 100%);
+	background: -ms-linear-gradient(top, #E4EFE5 0%,#ABC4AC 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E4EFE5', endColorstr='#ABC4AC',GradientType=0 );
+	padding: 2px;
+}
+
+#logo > ul > li > a:hover
+{
+	border: 1px solid #000000;
+	background: #ABC4AC;
+	padding: 2px:
+}
+
+a, a:active, a:visited, a:active
+{
+	text-decoration: none;
+	color: black;
+	border-bottom: 1px dotted #000000;
+}
+
+#container {
+	background: url('container.png') no-repeat;
+	width: 1242px;
+	min-height: 864px;
+	margin: 0 auto;
+}
+
+#inner-container
+{
+	width: 750px;
+	margin: 0 auto;
+}
+
+#content
+{
+	width: 750px;
+	padding-left: 4px;
+	padding-right: 4px;
+	margin-top: -5px;
+	max-height: 750px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: #E4EFE5;
+}
+
+body
+{
+	font-family: 'Share Tech Mono', sans-serif;
+	background: #D3E0D5;
+	margin: 0;
+	padding: 0;
+}
