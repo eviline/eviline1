@@ -24,11 +24,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -446,7 +448,9 @@ public class MainApplet extends JApplet implements PropertySource {
 			ex.printStackTrace();
 		}
 		
-		getContentPane().setBackground(Color.WHITE);
+		getContentPane().setBackground(new Color(224, 255, 224));
+		if(getContentPane() instanceof JComponent)
+			((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		right = new JPanel(new BorderLayout());
 
@@ -570,8 +574,8 @@ public class MainApplet extends JApplet implements PropertySource {
 		c.addKeyListener(k);
 		addKeyListener(k);
 		
-		setBackground(Color.WHITE);
-		right.setBackground(Color.WHITE);
+		setBackground(new Color(224,255,224));
+		right.setBackground(new Color(224,255,224));
 		right.setPreferredSize(new Dimension(260,500));
 		right.setMaximumSize(right.getPreferredSize());
 		
