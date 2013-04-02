@@ -10,6 +10,8 @@ import org.eviline.ai.AIKernel;
 import org.eviline.console.engine.ConsoleEngine;
 import org.eviline.console.gui.EvilineWindow;
 import org.eviline.fitness.AbstractFitness;
+import org.eviline.fitness.Fitness;
+import org.eviline.fitness.WrapperFitness;
 import org.eviline.randomizer.QueuedRandomizer;
 import org.eviline.randomizer.Randomizer;
 import org.eviline.randomizer.RandomizerFactory;
@@ -41,6 +43,18 @@ public class Main {
 ////			AbstractFitness.setDefaultInstance(new WrapperFitness(new ClojureFitness()));
 //			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
 //		}
+		
+		if(System.getProperty("eviline.fitness") != null) {
+			try {
+				Class<? extends Fitness> fc = Class.forName(System.getProperty("eviline.fitness")).asSubclass(Fitness.class);
+				if(AbstractFitness.class.isAssignableFrom(fc))
+					AbstractFitness.setDefaultInstance(fc.asSubclass(AbstractFitness.class).newInstance());
+				else
+					AbstractFitness.setDefaultInstance(new WrapperFitness(fc.newInstance()));
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 		
 		if(System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel") != null) {
 			String akc = System.getProperty("eviline.aikernel", "org.eviline.clj.ClojureAIKernel");
@@ -79,5 +93,4 @@ public class Main {
 		engine.startEngine();
 		gui.showWindow(w, Position.CENTER);
 	}
-
 }
