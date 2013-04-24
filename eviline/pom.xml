@@ -157,7 +157,8 @@
 			<groupId>sun.plugin</groupId>
 			<artifactId>plugin</artifactId>
 			<version>1.6</version>
-			<scope>provided</scope>
+			<scope>system</scope>
+			<systemPath>${java.home}/lib/plugin.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
