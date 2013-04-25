@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="$encoding"?>
 <jnlp
     spec="$jnlpspec"
-    codebase="$jnlpCodebase"
+    codebase="$jnlpCodebase?"
     href="$outputFile">
   <information>
     <title>EVILINE</title>
