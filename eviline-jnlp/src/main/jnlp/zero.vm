@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="$encoding"?>
 <jnlp
     spec="$jnlpspec"
-    codebase="$jnlpCodebase?"
-    href="$outputFile">
+    codebase="$jnlpCodebase"
+    href="$outputFile?">
   <information>
     <title>EVILINE</title>
     <vendor>Robin Kirkman</vendor>
