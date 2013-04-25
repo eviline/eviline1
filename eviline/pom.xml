@@ -150,10 +150,6 @@
 			<artifactId>eviline-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eviline</groupId>
-			<artifactId>eviline-clojure</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>sun.plugin</groupId>
 			<artifactId>plugin</artifactId>
 			<version>1.6</version>

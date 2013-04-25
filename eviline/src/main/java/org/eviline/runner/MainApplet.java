@@ -43,7 +43,7 @@ import org.eviline.PropertySource;
 import org.eviline.Version;
 import org.eviline.ai.AI;
 import org.eviline.ai.DefaultAIKernel;
-import org.eviline.clj.ClojureAIKernel;
+//import org.eviline.clj.ClojureAIKernel;
 import org.eviline.event.EvilineAdapter;
 import org.eviline.event.EvilineEvent;
 import org.eviline.fitness.AbstractFitness;
@@ -440,7 +440,7 @@ public class MainApplet extends JApplet implements PropertySource {
 //			AI.setInstance(new ClojureAIKernel(AbstractFitness.getDefaultInstance()));
 //		}
 		
-		AI.setInstance(new ClojureAIKernel());
+//		AI.setInstance(new ClojureAIKernel());
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
