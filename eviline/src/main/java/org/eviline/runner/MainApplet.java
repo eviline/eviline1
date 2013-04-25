@@ -504,7 +504,7 @@ public class MainApplet extends JApplet implements PropertySource {
 		setProvider();
 				
 		if(getParameter("score_host") == null)
-			setParameter("score_host", "www.tetrevil.org:8080");
+			setParameter("score_host", "www.eviline.org:8080");
 
 		
 		
