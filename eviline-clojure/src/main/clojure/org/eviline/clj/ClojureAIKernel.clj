@@ -14,7 +14,7 @@
 (import '(org.eviline.fitness Fitness AbstractFitness))
 (import '(java.util.concurrent Executors))
 
-(def delay-pool-executor (Executors/newFixedThreadPool (+ Field/WIDTH Field/WIDTH)))
+(def delay-pool-executor (org.funcish.core.para.ParaExecutors/AVAILABLE_X2))
 
 (defn pool-force [delayed] 
   (let [jfut (.submit delay-pool-executor #(force delayed))]
