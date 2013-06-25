@@ -54,6 +54,8 @@ public enum Block {
 	 */
 	U,
 	
+	GARBAGE,
+	
 	;
 	
 	/**
@@ -70,6 +72,7 @@ public enum Block {
 		case G: return true;
 		case M: return false;
 		case U: return false;
+		case GARBAGE: return false;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -91,6 +94,7 @@ public enum Block {
 		case G: return G;
 		case M: return M;
 		case U: return U;
+		case GARBAGE: return GARBAGE;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -112,6 +116,7 @@ public enum Block {
 		case G: return G;
 		case M: return M;
 		case U: return U;
+		case GARBAGE: return GARBAGE;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}
@@ -150,6 +155,7 @@ public enum Block {
 		case G: return Color.WHITE;
 		case M: return X.color();
 		case U: return X.color();
+		case GARBAGE: return Color.GRAY;
 		}
 		throw new InternalError("Impossible switch fall-through");
 	}

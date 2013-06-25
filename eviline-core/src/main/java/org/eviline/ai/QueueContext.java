@@ -71,4 +71,8 @@ import org.eviline.ShapeType;
 		public QueueContext deepest() {
 			return deeper == null ? this : deeper.deepest();
 		}
+		
+		public int depth() {
+			return shallowest().queue.length - remainingDepth;
+		}
 	}

@@ -33,10 +33,10 @@ public class DefaultAIKernel implements AIKernel {
 	
 	public DefaultAIKernel() {}
 	
-	private boolean highGravity = false;
-	private boolean hardDropOnly = false;
-	private AbstractFitness fitness = AbstractFitness.getDefaultInstance();
-	private ExecutorService pool = ParaExecutors.AVAILABLE_X2;
+	protected boolean highGravity = false;
+	protected boolean hardDropOnly = false;
+	protected AbstractFitness fitness = AbstractFitness.getDefaultInstance();
+	protected ExecutorService pool = ParaExecutors.AVAILABLE_X2;
 
 	protected Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<PlayerActionNode, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
