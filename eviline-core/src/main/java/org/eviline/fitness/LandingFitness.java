@@ -15,21 +15,19 @@ public class LandingFitness extends AbstractFitness {
 	public static final int HEIGHT_PARAM = 7;
 	public static final int ROUGHNESS_PARAM = 8;
 	public static final int HOLES_PARAM = 9;
-	public static final int WELL_PARAM = 10;
 
 	public LandingFitness() {
-		params = new double[11];
-		params[S_PARAM] = 3;
-		params[Z_PARAM] = 3;
-		params[J_PARAM] = 3;
-		params[L_PARAM] = 3;
-		params[O_PARAM] = 3;
-		params[T_PARAM] = 3;
-		params[I_PARAM] = 3;
+		params = new double[10];
+		params[S_PARAM] = 2;
+		params[Z_PARAM] = 2;
+		params[J_PARAM] = 2;
+		params[L_PARAM] = 2;
+		params[O_PARAM] = 2;
+		params[T_PARAM] = 2;
+		params[I_PARAM] = 2;
 		params[HEIGHT_PARAM] = 3;
-		params[ROUGHNESS_PARAM] = 5;
-		params[HOLES_PARAM] = 200;
-		params[WELL_PARAM] = 10;
+		params[ROUGHNESS_PARAM] = 3;
+		params[HOLES_PARAM] = 4;
 	}
 	
 	@Override
@@ -39,30 +37,36 @@ public class LandingFitness extends AbstractFitness {
 
 	@Override
 	public double score(Field field) {
-		int S, Z, J, L, O, T, I, height, roughness, holes, well;
-		S = Z = J = L = O = T = I = height = roughness = holes = well = 0;
+		int S, Z, J, L, O, T, I;
+		S = Z = J = L = O = T = I = 0;
+
+		double height, roughness, holes;
+		height = roughness = holes = 0;
 		
 		Block[][] f = field.getField();
 		
 		int[] heights = new int[Field.WIDTH];
 		for(int x = 0; x < Field.WIDTH; x++) {
+			int bx = x + Field.BUFFER;
 			int y = -1;
 			for(; y < Field.HEIGHT; y++) {
-				if(f[y + Field.BUFFER][x + Field.BUFFER] != null)
+				int by = y + Field.BUFFER;
+				if(f[by][bx] != null)
 					break;
 			}
 			heights[x] = Field.HEIGHT - y;
+			int hy = y;
+			int hc = 0;
 			for(; y < Field.HEIGHT; y++) {
-				if(f[y + Field.BUFFER][x + Field.BUFFER] == null)
-					holes++;
+				int by = y + Field.BUFFER;
+				if(f[by][bx] == null)
+					holes += Field.HEIGHT + (y - hy) - hc++;
 			}
 		}
 		
 		for(int x = 0; x < heights.length; x++) {
 			I++;
 			height += heights[x];
-			if(heights[x] > Field.HEIGHT)
-				height += 200;
 		}
 		
 		for(int x = 0; x < heights.length - 1; x++) {
@@ -85,9 +89,8 @@ public class LandingFitness extends AbstractFitness {
 			}
 			if(delta == -2)
 				J++;
+			roughness += Math.pow(Math.abs(delta), 2);
 		}
-		
-		roughness += Field.HEIGHT - heights[0];
 		
 		for(int x = 0; x < heights.length - 2; x++) {
 			int delta1 = heights[x] - heights[x+1];
@@ -99,16 +102,18 @@ public class LandingFitness extends AbstractFitness {
 				Z++;
 			if(delta1 == 0 && delta2 == -1)
 				S++;
-			if(delta1 == 0 && delta2 == 0)
+			if(delta1 == 0 && delta2 == 0) {
 				T++;
+				J++;
+				L++;
+			}
 			if(delta1 == 0 && delta2 == 1)
 				J++;
 			if(delta1 == -1 && delta2 == 0)
 				L++;
-			roughness += Math.abs(delta1);
 		}
 		
-		well += heights[heights.length - 1];
+//		well += Math.pow(heights[heights.length - 1], params[WELL_PARAM]);
 		
 		for(int x = 0; x < heights.length - 3; x++) {
 			int delta1 = heights[x] - heights[x+1];
@@ -120,17 +125,17 @@ public class LandingFitness extends AbstractFitness {
 		}
 		
 		double goodness = 
-				params[S_PARAM] * S
-				+ params[Z_PARAM] * Z
-				+ params[J_PARAM] * J
-				+ params[L_PARAM] * L
-				+ params[O_PARAM] * O
-				+ params[T_PARAM] * T
-				+ params[I_PARAM] * I
-				- params[HEIGHT_PARAM] * height
-				- params[ROUGHNESS_PARAM] * roughness
-				- params[HOLES_PARAM] * holes
-				- params[WELL_PARAM] * well;
+				Math.pow(params[S_PARAM], S)
+				+ Math.pow(params[Z_PARAM], Z)
+				+ Math.pow(params[J_PARAM], J)
+				+ Math.pow(params[L_PARAM], L)
+				+ Math.pow(params[O_PARAM], O)
+				+ Math.pow(params[T_PARAM], T)
+				+ Math.pow(params[I_PARAM], I)
+				- Math.pow(params[HEIGHT_PARAM], height)
+				- Math.pow(params[ROUGHNESS_PARAM], roughness)
+				- Math.pow(params[HOLES_PARAM], holes)
+				;
 		
 		return -goodness;
 	}
