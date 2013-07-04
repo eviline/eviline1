@@ -266,7 +266,7 @@ public class Field implements Serializable {
 			}
 			
 			if(multilines > 0) {
-				if(optimizeCombos)
+				if(optimizeCombos && multilines > 1)
 					comboMultiplier++;
 				else
 					comboMultiplier = 1;
