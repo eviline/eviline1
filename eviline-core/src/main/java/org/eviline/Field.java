@@ -922,4 +922,12 @@ public class Field implements Serializable {
 	public void setScoreFactor(double scoreFactor) {
 		this.scoreFactor = scoreFactor;
 	}
+
+	public boolean isOptimizeCombos() {
+		return optimizeCombos;
+	}
+
+	public void setOptimizeCombos(boolean optimizeCombos) {
+		this.optimizeCombos = optimizeCombos;
+	}
 }
