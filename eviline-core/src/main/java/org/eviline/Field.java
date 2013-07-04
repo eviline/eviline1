@@ -91,6 +91,10 @@ public class Field implements Serializable {
 	
 	protected boolean unpausable = false;
 	
+	protected boolean optimizeCombos;
+	
+	protected int comboMultiplier = 1;
+	
 	protected transient boolean winner;
 	
 	protected transient boolean multiplayer;
@@ -243,7 +247,7 @@ public class Field implements Serializable {
 						cleared = false;
 				}
 				if(cleared) {
-					lines++;
+					lines += comboMultiplier;
 					multilines++;
 					// Shift down the field
 					for(int z = y - 1; z >= 0; z--) {
@@ -262,9 +266,14 @@ public class Field implements Serializable {
 			}
 			
 			if(multilines > 0) {
+				if(optimizeCombos)
+					comboMultiplier++;
+				else
+					comboMultiplier = 1;
 				score += scoreFactor * 1000 * multilines * multilines;
 				fireLinesCleared(multilines);
-			}
+			} else
+				comboMultiplier = 1;
 		}
 	}
 	

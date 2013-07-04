@@ -18,18 +18,9 @@ public class LandingFitness extends AbstractFitness {
 	public static final int WELL_PARAM = 10;
 
 	public LandingFitness() {
-		params = new double[11];
-		params[S_PARAM] = 2;
-		params[Z_PARAM] = 2;
-		params[J_PARAM] = 2;
-		params[L_PARAM] = 2;
-		params[O_PARAM] = 2;
-		params[T_PARAM] = 2;
-		params[I_PARAM] = 2;
-		params[HEIGHT_PARAM] = 3;
-		params[ROUGHNESS_PARAM] = 3;
-		params[HOLES_PARAM] = 4;
-		params[WELL_PARAM] = 5;
+		params = new double[] {
+				4.824431291133419, 3.0112693692362886, 2.3773992454437645, 3.106201661793169, 3.028955174409614, 2.6520897279939777, 4.582310343633204, 2.81134890725926, 4.577867019265293, 2.8992675643038344, 5.423695464128944
+		};
 	}
 	
 	@Override
