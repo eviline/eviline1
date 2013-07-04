@@ -247,7 +247,7 @@ public class Field implements Serializable {
 						cleared = false;
 				}
 				if(cleared) {
-					lines += comboMultiplier;
+					lines++;
 					multilines++;
 					// Shift down the field
 					for(int z = y - 1; z >= 0; z--) {
@@ -270,7 +270,7 @@ public class Field implements Serializable {
 					comboMultiplier++;
 				else
 					comboMultiplier = 1;
-				score += scoreFactor * 1000 * multilines * multilines;
+				score += Math.pow(scoreFactor * 1000 * multilines * multilines, comboMultiplier);
 				fireLinesCleared(multilines);
 			} else
 				comboMultiplier = 1;
