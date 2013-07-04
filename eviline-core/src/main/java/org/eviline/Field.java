@@ -268,9 +268,7 @@ public class Field implements Serializable {
 			if(multilines > 0) {
 				if(optimizeCombos && multilines > 1)
 					comboMultiplier++;
-				else
-					comboMultiplier = 1;
-				score += Math.pow(scoreFactor * multilines * multilines, comboMultiplier);
+				score += Math.pow(scoreFactor * Math.pow(multilines, 4), comboMultiplier);
 				fireLinesCleared(multilines);
 			} else
 				comboMultiplier = 1;

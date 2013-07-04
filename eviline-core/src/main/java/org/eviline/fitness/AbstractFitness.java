@@ -21,6 +21,10 @@ public abstract class AbstractFitness implements Fitness {
 	public double[] getParams() {
 		return params;
 	}
+	
+	public void setParams(double[] params) {
+		this.params = params;
+	}
 
 	protected abstract double normalize(double score);
 
