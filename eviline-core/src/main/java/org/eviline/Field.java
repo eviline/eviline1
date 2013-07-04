@@ -270,7 +270,7 @@ public class Field implements Serializable {
 					comboMultiplier++;
 				else
 					comboMultiplier = 1;
-				score += Math.pow(scoreFactor * 1000 * multilines * multilines, comboMultiplier);
+				score += Math.pow(scoreFactor * multilines * multilines, comboMultiplier);
 				fireLinesCleared(multilines);
 			} else
 				comboMultiplier = 1;
