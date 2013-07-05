@@ -27,10 +27,10 @@ public class LandingFitness extends AbstractFitness {
 				4.1, 
 				2.9, 
 				//
-				3.13, 
-				9.90, 
-				5.79, 
-				1.42
+				1.90, 
+				6.66, 
+				8.78, 
+				3.27
 		};
 	}
 	
