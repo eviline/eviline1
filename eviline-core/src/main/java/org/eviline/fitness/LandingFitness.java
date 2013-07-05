@@ -26,10 +26,11 @@ public class LandingFitness extends AbstractFitness {
 				3.2, 
 				4.1, 
 				2.9, 
-				3.2, 
-				3.2, 
-				7, 
-				5.5
+				//
+				3.13, 
+				9.90, 
+				5.79, 
+				1.42
 		};
 	}
 	
@@ -48,6 +49,16 @@ public class LandingFitness extends AbstractFitness {
 		
 		Block[][] f = field.getField();
 		
+		int garbageY = Field.HEIGHT;
+		for(int x = 0; x < Field.WIDTH; x++) {
+			for(int y = Field.HEIGHT - 1; y >= 0; y--) {
+				if(y > garbageY)
+					continue;
+				if(field.getBlock(x+Field.BUFFER, y+Field.BUFFER) == Block.GARBAGE)
+					garbageY = y;
+			}
+		}
+		
 		int[] heights = new int[Field.WIDTH];
 		for(int x = 0; x < Field.WIDTH; x++) {
 			int bx = x + Field.BUFFER;
@@ -60,7 +71,7 @@ public class LandingFitness extends AbstractFitness {
 			heights[x] = Field.HEIGHT - y;
 			int hy = y;
 			int hc = 0;
-			for(; y < Field.HEIGHT; y++) {
+			for(; y < Field.HEIGHT && y < garbageY + 2; y++) {
 				int by = y + Field.BUFFER;
 				if(f[by][bx] == null)
 					holes += Field.HEIGHT + (y - hy) - hc++;
