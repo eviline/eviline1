@@ -19,7 +19,17 @@ public class LandingFitness extends AbstractFitness {
 
 	public LandingFitness() {
 		params = new double[] {
-				2.345489109278929, 3.316626609878343, 3.5511542859593566, 2.3916920996162894, 3.39861607585075, 3.2313854639593016, 3.8492492687557305, 3.31892302977226, 3.4850685735542686, 4.6647373655767925, 2.0015542902351156
+				2.5, 
+				2.5, 
+				4.1, 
+				4.1, 
+				3.2, 
+				4.1, 
+				2.9, 
+				3.2, 
+				3.2, 
+				7, 
+				5.5
 		};
 	}
 	
@@ -122,8 +132,8 @@ public class LandingFitness extends AbstractFitness {
 		
 		
 		
-		well += Math.pow(heights[heights.length - 2], 2);
-		well += Math.pow(heights[heights.length - 1], 2);
+		well += Math.pow(heights[heights.length - 2] + 1, 2);
+		well += Math.pow(heights[heights.length - 1] + 1, 2);
 		
 		
 		double goodness = 
