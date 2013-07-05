@@ -928,4 +928,8 @@ public class Field implements Serializable {
 	public void setOptimizeCombos(boolean optimizeCombos) {
 		this.optimizeCombos = optimizeCombos;
 	}
+
+	public int getShapeId() {
+		return shapeId;
+	}
 }
