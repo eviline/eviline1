@@ -16,6 +16,7 @@ public class LandingFitness extends AbstractFitness {
 	public static final int ROUGHNESS_PARAM = 8;
 	public static final int HOLES_PARAM = 9;
 	public static final int WELL_PARAM = 10;
+	public static final int PIT_PARAM = 11;
 
 	public LandingFitness() {
 		params = new double[] {
@@ -25,12 +26,10 @@ public class LandingFitness extends AbstractFitness {
 				4.1, 
 				3.2, 
 				4.1, 
-				2.9, 
+				2.9,
 				//
-				1.90, 
-				6.66, 
-				8.78, 
-				3.27
+				7.817908195934679, 9.42147235655372, 9.741261438133863, 1.6975817931514334,
+				5
 		};
 	}
 	
@@ -44,12 +43,14 @@ public class LandingFitness extends AbstractFitness {
 		int S, Z, J, L, O, T, I;
 		S = Z = J = L = O = T = I = 0;
 
-		double height, roughness, holes, well;
-		height = roughness = holes = well = 0;
+		double height, roughness, holes, well, pit;
+		height = roughness = holes = well = pit = 0;
 		
 		Block[][] f = field.getField();
 		
 		int garbageY = Field.HEIGHT;
+		int garbageHeight;
+
 		for(int x = 0; x < Field.WIDTH; x++) {
 			for(int y = Field.HEIGHT - 1; y >= 0; y--) {
 				if(y > garbageY)
@@ -59,6 +60,8 @@ public class LandingFitness extends AbstractFitness {
 			}
 		}
 		
+		garbageHeight = Field.HEIGHT - garbageY;
+
 		int[] heights = new int[Field.WIDTH];
 		for(int x = 0; x < Field.WIDTH; x++) {
 			int bx = x + Field.BUFFER;
@@ -71,16 +74,16 @@ public class LandingFitness extends AbstractFitness {
 			heights[x] = Field.HEIGHT - y;
 			int hy = y;
 			int hc = 0;
-			for(; y < Field.HEIGHT && y < garbageY + 2; y++) {
+			for(; y < Field.HEIGHT; y++) {
 				int by = y + Field.BUFFER;
 				if(f[by][bx] == null)
-					holes += Field.HEIGHT + (y - hy) - hc++;
+					holes += Field.HEIGHT + (heights[x] - garbageHeight) - hc++;
 			}
 		}
 		
 		for(int x = 0; x < heights.length; x++) {
 			I++;
-			height += heights[x];
+			height += heights[x] - (Field.HEIGHT - garbageY);
 		}
 		
 		for(int x = 0; x < heights.length - 1; x++) {
@@ -129,6 +132,10 @@ public class LandingFitness extends AbstractFitness {
 				J++;
 			if(delta1 == -1 && delta2 == 0)
 				L++;
+			if(delta1 > 0 && delta2 < 0)
+				pit += Math.pow(Math.min(delta1, -delta2), 2);
+			if(delta1 < 0 && delta2 > 0)
+				pit += Math.pow(Math.min(-delta1, delta2), 2);
 		}
 		
 		for(int x = 0; x < heights.length - 3; x++) {
@@ -143,8 +150,8 @@ public class LandingFitness extends AbstractFitness {
 		
 		
 		
-		well += Math.pow(heights[heights.length - 2] + 1, 2);
-		well += Math.pow(heights[heights.length - 1] + 1, 2);
+		well += Math.pow(heights[heights.length - 2] + 1 - (Field.HEIGHT - garbageY), 2);
+		well += Math.pow(heights[heights.length - 1] + 1 - (Field.HEIGHT - garbageY), 2);
 		
 		
 		double goodness = 
@@ -159,6 +166,7 @@ public class LandingFitness extends AbstractFitness {
 				- Math.pow(params[ROUGHNESS_PARAM], roughness)
 				- Math.pow(params[HOLES_PARAM], holes)
 				- Math.pow(params[WELL_PARAM], well)
+				- Math.pow(params[PIT_PARAM], pit)
 				;
 		
 		return -goodness;
