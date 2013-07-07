@@ -502,17 +502,16 @@ public class Field implements Serializable {
 		this.garbage += lines;
 	}
 	
-	protected void applyGarbage() {
+	public void applyGarbage() {
 		int lines = this.garbage;
 		if(lines == 0)
 			return;
-		for(int i = lines; i < HEIGHT + BUFFER + lines; i++) {
+		for(int i = lines; i < HEIGHT + BUFFER; i++) {
 			System.arraycopy(field[i], 0, field[i - lines], 0, field[i].length);
 			System.arraycopy(metadata[i], 0, metadata[i-lines], 0, metadata[i].length);
-			if(i >= HEIGHT + BUFFER)
-				Arrays.fill(field[i-lines], BUFFER, BUFFER + WIDTH, Block.GARBAGE);
 		}
 		for(int i = HEIGHT + BUFFER - lines; i < HEIGHT + BUFFER; i++) {
+			Arrays.fill(field[i], BUFFER, BUFFER + WIDTH, Block.GARBAGE);
 			int x = (int)(WIDTH * Math.random());
 			field[i][x] = null;
 		}
