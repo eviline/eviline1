@@ -17,11 +17,18 @@ public class LandingFitness extends AbstractFitness {
 	public static final int HOLES_PARAM = 9;
 	public static final int WELL_PARAM = 10;
 	public static final int PIT_PARAM = 11;
+	public static final int HORIZONTAL_HOLES_PARAM = 12;
 
 	public LandingFitness() {
 		params = new double[] {
 //				0.02779301043939461, 0.9420139338269574, 0.3751151426471481, 0.13186249481739487, 1.225531289710602, 0.710819777297161, 0.8415507978811427, 2.495147273719192, 1.4071618232569005, 0.27405431576057404, 0.573644020964927, 1.190461320283978
-				0.2631856775205221, 0.8759698216888646, 0.5325937620257688, 0.7663549125268573, 1.2735935787349337, 0.11702156223274929, 0.6180057893684847, 2.6859244803463627, 1.2558738669091565, 0.7361504351528638, 0.5292012819817409, 0.9298931613127354
+				0.2631856775205221, 0.8759698216888646, 0.5325937620257688, 0.7663549125268573, 1.2735935787349337, 0.11702156223274929, 0.6180057893684847, 
+					2.8859244803463627, 
+					1.8558738669091565, 
+					1.9361504351528638, 
+					0.5292012819817409, 
+					0.9298931613127354,
+					6
 /*
 				2.5, 
 				2.5, 
@@ -47,8 +54,8 @@ public class LandingFitness extends AbstractFitness {
 		int S, Z, J, L, O, T, I;
 		S = Z = J = L = O = T = I = 0;
 
-		double height, roughness, holes, well, pit;
-		height = roughness = holes = well = pit = 0;
+		double height, roughness, holes, well, pit, horizontalHoles;
+		height = roughness = holes = well = pit = horizontalHoles = 0;
 		
 		Block[][] f = field.getField();
 		
@@ -82,6 +89,15 @@ public class LandingFitness extends AbstractFitness {
 				int by = y + Field.BUFFER;
 				if(f[by][bx] == null)
 					holes += Field.HEIGHT + (heights[x] - garbageHeight) - hc++;
+			}
+		}
+		
+		for(int y = 0; y < Field.HEIGHT; y++) {
+			int by = y + Field.BUFFER;
+			for(int x = 0; x < Field.WIDTH - 1; x++) {
+				int bx = x + Field.BUFFER;
+				if((f[by][bx] == null) != (f[by][bx + 1] == null))
+					horizontalHoles += 1;
 			}
 		}
 		
@@ -171,6 +187,7 @@ public class LandingFitness extends AbstractFitness {
 				- Math.pow(params[HOLES_PARAM], holes)
 				- Math.pow(params[WELL_PARAM], well)
 				- Math.pow(params[PIT_PARAM], pit)
+				- Math.pow(params[HORIZONTAL_HOLES_PARAM], horizontalHoles)
 				;
 		
 		return -goodness;
