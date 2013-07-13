@@ -3,6 +3,7 @@ package org.eviline.ai;
 import org.eviline.Field;
 import org.eviline.ShapeType;
 import org.eviline.fitness.AbstractFitness;
+import org.eviline.fitness.FitnessUtils;
 
 /**
  * A decision context.  Contains the original {@link Field}, a copy
@@ -44,8 +45,8 @@ public class Context {
 	public Context(AIKernel ai, DecisionModifier decisionModifier, Field original, int remainingDepth) {
 		this.ai = ai;
 		this.decisionModifier = decisionModifier;
-		this.original = original.copy();
-		this.paintedImpossible = ai.getFitness().prepareField(original);
+		this.original = original.clone();
+		this.paintedImpossible = FitnessUtils.paintedImpossible(original);
 		this.remainingDepth = remainingDepth;
 	}
 	

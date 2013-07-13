@@ -48,7 +48,7 @@ import org.eviline.ShapeType;
 		
 		@Override
 		public QueueContext deeper(Field deeperOriginal) {
-			QueueContext deeper = new QueueContext(ai, deeperOriginal.copy(), Arrays.copyOfRange(queue, 1, queue.length));
+			QueueContext deeper = new QueueContext(ai, deeperOriginal.clone(), Arrays.copyOfRange(queue, 1, queue.length));
 //			deeper.original = deeperOriginal.copy();
 //			deeper.paintedImpossible = deeper.original.copy();
 //			fitness.paintImpossibles(deeper.paintedImpossible);

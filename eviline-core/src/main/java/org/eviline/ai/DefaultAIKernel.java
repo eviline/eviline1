@@ -18,8 +18,8 @@ import org.eviline.PlayerActionType;
 import org.eviline.Shape;
 import org.eviline.ShapeType;
 import org.eviline.fitness.AbstractFitness;
+import org.eviline.fitness.DefaultFitness;
 import org.eviline.fitness.Fitness;
-import org.eviline.fitness.WrapperFitness;
 import org.funcish.core.para.ParaExecutors;
 
 /**
@@ -30,18 +30,23 @@ import org.funcish.core.para.ParaExecutors;
  */
 public class DefaultAIKernel implements AIKernel {
 
+	public DefaultAIKernel() {
+		this(new DefaultFitness());
+	}
 	
-	public DefaultAIKernel() {}
+	public DefaultAIKernel(Fitness fitness) {
+		this.fitness = fitness;
+	}
 	
 	protected boolean highGravity = false;
 	protected boolean hardDropOnly = false;
-	protected AbstractFitness fitness = AbstractFitness.getDefaultInstance();
+	protected Fitness fitness;
 	protected ExecutorService pool = ParaExecutors.AVAILABLE_X2;
 
 	protected Map<PlayerActionNode, List<PlayerAction>> allPathsFrom(Field field) {
 		Map<PlayerActionNode, List<PlayerAction>> shortestPaths = new PlayerAction.NodeMap<List<PlayerAction>>();
 		
-		field = field.copy();
+		field = field.clone();
 		
 		PlayerActionNode start = new PlayerActionNode(field.getShape(), field.getShapeX(), field.getShapeY());
 		ArrayDeque<PlayerActionNode> pending = new ArrayDeque<PlayerActionNode>();
@@ -107,8 +112,8 @@ public class DefaultAIKernel implements AIKernel {
 		
 		
 		int minY = Integer.MAX_VALUE;
-		for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
+		for(int x = Field.BUFFER; x < Field.BUFFER + field.getWidth(); x++) {
+			for(int y = Field.BUFFER; y < Field.BUFFER + field.getHeight(); y++) {
 				if(field.getField()[y][x] != null) {
 					minY = Math.min(minY, y);
 					break;
@@ -133,7 +138,7 @@ public class DefaultAIKernel implements AIKernel {
 				if(!pa.isPossible()) {
 					continue;
 				}
-				if((highGravity && !field.getShape().intersects(field.getField(), field.getShapeX(), field.getShapeY() + 1)
+				if((highGravity && !field.getShape().intersects(field, field.getShapeX(), field.getShapeY() + 1)
 						|| field.getShapeY() < minY - 4
 						|| hardDropOnly) 
 						&& t != PlayerActionType.DOWN_ONE)
@@ -164,7 +169,7 @@ public class DefaultAIKernel implements AIKernel {
 	public Decision bestFor(final QueueContext context) {
 		final Decision best = new Decision(context.type, context.original);
 		if(context.remainingDepth == 0) {
-			double score = fitness.score(context.paintedImpossible);
+			double score = fitness.score(context.paintedImpossible, context.paintedImpossible);
 //			if(context.original.lines != context.shallowest().original.lines)
 //				score -= 10000 * Math.pow(context.original.lines - context.shallowest().original.lines, 2.5);
 			best.score = score;
@@ -177,14 +182,14 @@ public class DefaultAIKernel implements AIKernel {
 		List<Shape> orientations = new ArrayList<Shape>(Arrays.asList(context.type.searchOrientations()));
 		if(context.shallower == null) {
 			context.original.setLines(0);
-			Field starter = context.original.copy();
+			Field starter = context.original.clone();
 			if(starter.getShape() == null) {
 				starter.setShape(context.type.starter());
-				starter.setShapeY(context.type.starterY());
-//				starter.shapeX = Field.WIDTH / 2 + Field.BUFFER - 2 + context.type.starterX();
-//				starter.shapeX = (Field.WIDTH + Field.BUFFER * 2 - starter.shape.width()) / 2;
-				starter.setShapeX(context.type.starterX());
-				if(!starter.getShape().intersects(starter.getField(), starter.getShapeX(), starter.getShapeY() + 1))
+				starter.setShapeY(context.type.starterY(starter));
+//				starter.shapeX = field.getWidth() / 2 + Field.BUFFER - 2 + context.type.starterX();
+//				starter.shapeX = (field.getWidth() + Field.BUFFER * 2 - starter.shape.width()) / 2;
+				starter.setShapeX(context.type.starterX(starter));
+				if(!starter.getShape().intersects(starter, starter.getShapeX(), starter.getShapeY() + 1))
 					starter.setShapeY(starter.getShapeY() + 1);
 			} else {
 				orientations.remove(starter.getShape());
@@ -193,26 +198,18 @@ public class DefaultAIKernel implements AIKernel {
 			paths = Collections.synchronizedMap(allPathsFrom(starter));
 		} else
 			paths = null;
-		if(context.type == ShapeType.O) { // Paint the unlikelies as impossible for O pieces
-			fitness.paintUnlikelies(context.paintedImpossible);
-			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
-				for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++)
-					if(context.paintedImpossible.getField()[y][x] == BlockType.G)
-						context.paintedImpossible.getField()[y][x] = BlockType.X;
-			}
-		}
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for(final Shape shape : orientations) {
 			Runnable task = new Runnable() {
 				@Override
 				public void run() {
-					for(int ix = Field.BUFFER - 2; ix < Field.WIDTH + Field.BUFFER + 2; ix++) {
+					for(int ix = Field.BUFFER - 2; ix < context.original.getWidth() + Field.BUFFER + 2; ix++) {
 						final int x = ix;
 						Field possibility = new Field();
-						boolean grounded = shape.intersects(context.paintedImpossible.getField(), x, 0);
-						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
+						boolean grounded = shape.intersects(context.paintedImpossible, x, 0);
+						for(int y = 0; y < context.original.getHeight() + Field.BUFFER + 2; y++) {
 							boolean groundedAbove = grounded;
-							grounded = shape.intersects(paths == null ? context.paintedImpossible.getField() : context.original.getField(), x, y+1);
+							grounded = shape.intersects(paths == null ? context.paintedImpossible : context.original, x, y+1);
 							PlayerActionNode n = new PlayerActionNode(shape, x, y);
 							if(paths != null && !paths.containsKey(n))
 								continue;
@@ -225,7 +222,7 @@ public class DefaultAIKernel implements AIKernel {
 								possibility.setShape(shape);
 								possibility.setShapeX(x);
 								possibility.setShapeY(y);
-								double base = fitness.scoreWithPaint(possibility);
+								double base = fitness.score(context.original, possibility);
 								QueueContext deeper = context.deeper(possibility);
 								Decision option = bestFor(deeper);
 								synchronized(best) {
@@ -238,7 +235,7 @@ public class DefaultAIKernel implements AIKernel {
 											best.bestPath = paths.get(n);
 										best.deeper = option;
 										best.score = option.score + base;
-										best.field = possibility.copy();
+										best.field = possibility.clone();
 									}
 									if(best.worstScore < option.score)
 										best.worstScore = option.score;
@@ -264,16 +261,16 @@ public class DefaultAIKernel implements AIKernel {
 		
 		if(context.shallower == null) {
 			Decision d = best.deeper;
-			Field df = best.field.copy();
+			Field df = best.field.clone();
 			while(d != null) {
 				if(d.type == null)
 					break;
 				df.setShape(d.type.starter());
-				df.setShapeX(d.type.starterX());
-				df.setShapeY(d.type.starterY());
+				df.setShapeX(d.type.starterX(df));
+				df.setShapeY(d.type.starterY(df));
 				Map<PlayerActionNode, List<PlayerAction>> pla = allPathsFrom(df);
 				d.bestPath = pla.get(new PlayerActionNode(d.bestShape, d.bestShapeX, d.bestShapeY));
-				df = d.field.copy();
+				df = d.field.clone();
 				if(d == d.deeper)
 					break;
 				d = d.deeper;
@@ -291,18 +288,18 @@ public class DefaultAIKernel implements AIKernel {
 	 */
 	@Override
 	public Decision bestFor(Context context, ShapeType type) {
-		Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
+		Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.clone());
 		
 		Field possibility = new Field();
 		Field paintedPossibility = new Field();
 		
 		for(Shape shape : type.orientations()) {
 			
-			for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
-				boolean grounded = shape.intersects(context.paintedImpossible.getField(), x, 0);
-				for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
+			for(int x = Field.BUFFER - 2; x < context.original.getWidth() + Field.BUFFER + 2; x++) {
+				boolean grounded = shape.intersects(context.paintedImpossible, x, 0);
+				for(int y = 0; y < context.original.getHeight() + Field.BUFFER + 2; y++) {
 					boolean groundedAbove = grounded;
-					grounded = shape.intersects(context.paintedImpossible.getField(), x, y+1);
+					grounded = shape.intersects(context.paintedImpossible, x, y+1);
 					if(!groundedAbove && grounded) {
 						context.original.copyInto(possibility);
 						possibility.setLines(0);
@@ -314,8 +311,7 @@ public class DefaultAIKernel implements AIKernel {
 						possibility.setShapeX(x);
 						possibility.setShapeY(y);
 						possibility.copyInto(paintedPossibility);
-						fitness.paintImpossibles(paintedPossibility);
-						double score = fitness.score(paintedPossibility);
+						double score = fitness.score(context.original, paintedPossibility);
 						score -= 10000 * Math.pow(possibility.getLines(), 1.5);
 						if(score < best.score) {
 							best.bestShape = shape;
@@ -337,7 +333,7 @@ public class DefaultAIKernel implements AIKernel {
 		final Context context = new Context(this, null, inPlayField, 0);
 		ShapeType type = inPlayField.getShape().type();
 		
-		final Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.copy());
+		final Decision best = new Decision(type, Double.POSITIVE_INFINITY, context.original.clone());
 		
 		Field starter = inPlayField;
 		
@@ -355,11 +351,11 @@ public class DefaultAIKernel implements AIKernel {
 				public void run() {
 					Field possibility = new Field();
 					Field paintedPossibility = new Field();
-					for(int x = Field.BUFFER - 2; x < Field.WIDTH + Field.BUFFER + 2; x++) {
-						boolean grounded = shape.intersects(context.paintedImpossible.getField(), x, 0);
-						for(int y = 0; y < Field.HEIGHT + Field.BUFFER + 2; y++) {
+					for(int x = Field.BUFFER - 2; x < context.original.getWidth() + Field.BUFFER + 2; x++) {
+						boolean grounded = shape.intersects(context.paintedImpossible, x, 0);
+						for(int y = 0; y < context.original.getHeight() + Field.BUFFER + 2; y++) {
 							boolean groundedAbove = grounded;
-							grounded = shape.intersects(context.paintedImpossible.getField(), x, y+1);
+							grounded = shape.intersects(context.paintedImpossible, x, y+1);
 							if(!groundedAbove && grounded) {
 								context.original.copyInto(possibility);
 								possibility.setLines(0);
@@ -371,8 +367,7 @@ public class DefaultAIKernel implements AIKernel {
 								possibility.setShapeX(x);
 								possibility.setShapeY(y);
 								possibility.copyInto(paintedPossibility);
-								fitness.paintImpossibles(paintedPossibility);
-								double score = fitness.score(paintedPossibility);
+								double score = fitness.score(context.original, paintedPossibility);
 								score -= 10000 * Math.pow(possibility.getLines(), 1.5);
 								synchronized(best) {
 									if(score < best.score) {
@@ -416,8 +411,8 @@ public class DefaultAIKernel implements AIKernel {
 	 */
 	@Override
 	public Decision bestFor(Context context) {
-		Decision best = new Decision(null, Double.POSITIVE_INFINITY, context.original.copy());
-		double originalScore = fitness.scoreWithPaint(best.field);
+		Decision best = new Decision(null, Double.POSITIVE_INFINITY, context.original.clone());
+		double originalScore = fitness.score(context.original, best.field);
 		
 		for(ShapeType type : ShapeType.values()) {
 			if(type == context.omit)
@@ -459,7 +454,7 @@ public class DefaultAIKernel implements AIKernel {
 	 */
 	@Override
 	public Decision worstFor(Context context) {
-		Decision worst = new Decision(null, Double.NEGATIVE_INFINITY, context.original.copy());
+		Decision worst = new Decision(null, Double.NEGATIVE_INFINITY, context.original.clone());
 		
 		for(ShapeType type : ShapeType.values()) {
 			if(type == context.omit)
@@ -510,15 +505,12 @@ public class DefaultAIKernel implements AIKernel {
 	}
 
 	@Override
-	public AbstractFitness getFitness() {
+	public Fitness getFitness() {
 		return fitness;
 	}
 
 	@Override
 	public void setFitness(Fitness fitness) {
-		if(fitness instanceof AbstractFitness)
-			this.fitness = (AbstractFitness) fitness;
-		else
-			this.fitness = new WrapperFitness(fitness);
+		this.fitness = fitness;
 	}
 }

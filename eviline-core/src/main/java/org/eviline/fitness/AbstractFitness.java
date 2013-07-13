@@ -30,6 +30,6 @@ public abstract class AbstractFitness implements Fitness {
 	
 	@Override
 	public double score(Field before, Field after) {
-		return score(after) - score(before);
+		return score(after);
 	}
 }
