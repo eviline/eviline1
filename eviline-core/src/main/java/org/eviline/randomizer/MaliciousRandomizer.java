@@ -179,8 +179,8 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 		Context context = new Context(AI.getInstance(), decisionModifier, field, this.depth() - depth);
 		context.omit = omit;
 		Decision defaultDecision = new Decision();
-		defaultDecision.field = field.copy();
-		defaultDecision.score = AI.getInstance().getFitness().score(defaultDecision.field);
+		defaultDecision.field = field.clone();
+		defaultDecision.score = AI.getInstance().getFitness().score(field, defaultDecision.field);
 		Decision decision = AI.getInstance().planWorst(context, defaultDecision);
 		
 		return decision;

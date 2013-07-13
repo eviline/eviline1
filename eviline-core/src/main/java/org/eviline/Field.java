@@ -858,7 +858,6 @@ public class Field implements Serializable, Cloneable {
 			}
 			sb.append("\n");
 		}
-		sb.append("Score " + AbstractFitness.getDefaultInstance().score(this));
 		return sb.toString();
 	}
 
