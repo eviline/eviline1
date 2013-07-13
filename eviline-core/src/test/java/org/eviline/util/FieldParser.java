@@ -44,6 +44,10 @@ public class FieldParser {
 			try {
 				ret[i] = new Block().withType(BlockType.valueOf("" + row.charAt(i)));
 			} catch(IllegalArgumentException iae) {
+				if(row.charAt(i) == 'X')
+					ret[i] = Block.getBorder();
+				else
+					ret[i] = Block.getEmpty();
 			}
 		}
 		return ret;

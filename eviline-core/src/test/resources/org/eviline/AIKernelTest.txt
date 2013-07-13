@@ -6,13 +6,13 @@ sequence:LI
 |IIIIIIIII |
 <<<<body:
 	best = ai.best_for sequence
-	best.deepest.field.copy_into copy
+	best.deepest.field.copy_into clone
 >>>>
 postcondition:lines == 4
 ****
 name:clear a line
 sequence:LIJ
-body:ai.best_for(sequence).deepest.field.copy_into copy
+body:ai.best_for(sequence).deepest.field.copy_into clone
 postcondition:lines == 1
 ****
 
