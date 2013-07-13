@@ -1,5 +1,6 @@
 package org.eviline.fitness;
 
+import org.eviline.Block;
 import org.eviline.BlockType;
 import org.eviline.Field;
 
@@ -20,7 +21,7 @@ public class LandingFitness extends AbstractFitness {
 	public static final int HORIZONTAL_HOLES_PARAM = 12;
 
 	public LandingFitness() {
-		params = new double[] {
+		super(new double[] {
 //				0.02779301043939461, 0.9420139338269574, 0.3751151426471481, 0.13186249481739487, 1.225531289710602, 0.710819777297161, 0.8415507978811427, 2.495147273719192, 1.4071618232569005, 0.27405431576057404, 0.573644020964927, 1.190461320283978
 				0.2631856775205221, 0.8759698216888646, 0.5325937620257688, 0.7663549125268573, 1.2735935787349337, 0.11702156223274929, 0.6180057893684847, 
 					2.8859244803463627, 
@@ -41,12 +42,7 @@ public class LandingFitness extends AbstractFitness {
 				7.817908195934679, 9.42147235655372, 9.741261438133863, 1.6975817931514334,
 				5
 */
-		};
-	}
-	
-	@Override
-	protected double normalize(double score) {
-		return score;
+		});
 	}
 
 	@Override
@@ -57,44 +53,44 @@ public class LandingFitness extends AbstractFitness {
 		double height, roughness, holes, well, pit, horizontalHoles;
 		height = roughness = holes = well = pit = horizontalHoles = 0;
 		
-		BlockType[][] f = field.getField();
+		Block[][] f = field.getField();
 		
-		int garbageY = Field.HEIGHT;
+		int garbageY = field.getHeight();
 		int garbageHeight;
 
-		for(int x = 0; x < Field.WIDTH; x++) {
-			for(int y = Field.HEIGHT - 1; y >= 0; y--) {
+		for(int x = 0; x < field.getWidth(); x++) {
+			for(int y = field.getHeight() - 1; y >= 0; y--) {
 				if(y > garbageY)
 					continue;
-				if(field.getBlock(x+Field.BUFFER, y+Field.BUFFER) == BlockType.GARBAGE)
+				if(field.getBlock(x+Field.BUFFER, y+Field.BUFFER).isGarbage())
 					garbageY = y;
 			}
 		}
 		
-		garbageHeight = Field.HEIGHT - garbageY;
+		garbageHeight = field.getHeight() - garbageY;
 
-		int[] heights = new int[Field.WIDTH];
-		for(int x = 0; x < Field.WIDTH; x++) {
+		int[] heights = new int[field.getWidth()];
+		for(int x = 0; x < field.getWidth(); x++) {
 			int bx = x + Field.BUFFER;
 			int y = -1;
-			for(; y < Field.HEIGHT; y++) {
+			for(; y < field.getHeight(); y++) {
 				int by = y + Field.BUFFER;
 				if(f[by][bx] != null)
 					break;
 			}
-			heights[x] = Field.HEIGHT - y;
+			heights[x] = field.getHeight() - y;
 			int hy = y;
 			int hc = 0;
-			for(; y < Field.HEIGHT; y++) {
+			for(; y < field.getHeight(); y++) {
 				int by = y + Field.BUFFER;
 				if(f[by][bx] == null)
-					holes += Field.HEIGHT + (heights[x] - garbageHeight) - hc++;
+					holes += field.getHeight() + (heights[x] - garbageHeight) - hc++;
 			}
 		}
 		
-		for(int y = 0; y < Field.HEIGHT; y++) {
+		for(int y = 0; y < field.getHeight(); y++) {
 			int by = y + Field.BUFFER;
-			for(int x = 0; x < Field.WIDTH - 1; x++) {
+			for(int x = 0; x < field.getWidth() - 1; x++) {
 				int bx = x + Field.BUFFER;
 				if((f[by][bx] == null) != (f[by][bx + 1] == null))
 					horizontalHoles += 1;
@@ -103,7 +99,7 @@ public class LandingFitness extends AbstractFitness {
 		
 		for(int x = 0; x < heights.length; x++) {
 			I++;
-			height += heights[x] - (Field.HEIGHT - garbageY);
+			height += heights[x] - (field.getHeight() - garbageY);
 		}
 		
 		for(int x = 0; x < heights.length - 1; x++) {
@@ -170,43 +166,27 @@ public class LandingFitness extends AbstractFitness {
 		
 		
 		
-		well += Math.pow(heights[heights.length - 2] + 1 - (Field.HEIGHT - garbageY), 2);
-		well += Math.pow(heights[heights.length - 1] + 1 - (Field.HEIGHT - garbageY), 2);
+		well += Math.pow(heights[heights.length - 2] + 1 - (field.getHeight() - garbageY), 2);
+		well += Math.pow(heights[heights.length - 1] + 1 - (field.getHeight() - garbageY), 2);
 		
 		
 		double goodness = 
-				Math.pow(params[S_PARAM], S)
-				+ Math.pow(params[Z_PARAM], Z)
-				+ Math.pow(params[J_PARAM], J)
-				+ Math.pow(params[L_PARAM], L)
-				+ Math.pow(params[O_PARAM], O)
-				+ Math.pow(params[T_PARAM], T)
-				+ Math.pow(params[I_PARAM], I)
-				- Math.pow(params[HEIGHT_PARAM], height)
-				- Math.pow(params[ROUGHNESS_PARAM], roughness)
-				- Math.pow(params[HOLES_PARAM], holes)
-				- Math.pow(params[WELL_PARAM], well)
-				- Math.pow(params[PIT_PARAM], pit)
-				- Math.pow(params[HORIZONTAL_HOLES_PARAM], horizontalHoles)
+				Math.pow(parameters[S_PARAM], S)
+				+ Math.pow(parameters[Z_PARAM], Z)
+				+ Math.pow(parameters[J_PARAM], J)
+				+ Math.pow(parameters[L_PARAM], L)
+				+ Math.pow(parameters[O_PARAM], O)
+				+ Math.pow(parameters[T_PARAM], T)
+				+ Math.pow(parameters[I_PARAM], I)
+				- Math.pow(parameters[HEIGHT_PARAM], height)
+				- Math.pow(parameters[ROUGHNESS_PARAM], roughness)
+				- Math.pow(parameters[HOLES_PARAM], holes)
+				- Math.pow(parameters[WELL_PARAM], well)
+				- Math.pow(parameters[PIT_PARAM], pit)
+				- Math.pow(parameters[HORIZONTAL_HOLES_PARAM], horizontalHoles)
 				;
 		
 		return -goodness;
-	}
-
-	@Override
-	public void paintImpossibles(Field field) {
-	}
-
-	@Override
-	public void paintUnlikelies(Field field) {
-	}
-
-	@Override
-	public void unpaintUnlikelies(Field field) {
-	}
-
-	@Override
-	public void unpaintImpossibles(Field field) {
 	}
 
 }

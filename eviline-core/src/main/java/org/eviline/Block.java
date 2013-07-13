@@ -7,6 +7,8 @@ public class Block implements Cloneable {
 	private static final Block border = new Block().withTypeAndColor(BlockType.BORDER);
 	private static final Block garbage = new Block().withTypeAndColor(BlockType.GARBAGE);
 	private static final Block ghostInstance = new Block().withTypeAndColor(BlockType.GHOST);
+	private static final Block impossible = new Block().withTypeAndColor(BlockType.IMPOSSIBLE);
+	private static final Block unlikely = new Block().withTypeAndColor(BlockType.UNLIKELY);
 	
 	public static Block getEmpty() {
 		return empty;
@@ -24,9 +26,16 @@ public class Block implements Cloneable {
 		return ghostInstance;
 	}
 	
+	public static Block getImpossible() {
+		return impossible;
+	}
+	
+	public static Block getUnlikely() {
+		return unlikely;
+	}
+	
 	private BlockType type;
 	private Shape shape;
-	private boolean ghost;
 	private boolean active;
 	private int shapeId;
 	private Color color;
@@ -47,6 +56,39 @@ public class Block implements Cloneable {
 		return type.isSolid();
 	}
 	
+	public boolean isBorder() {
+		return type == BlockType.BORDER;
+	}
+	
+	public boolean isEmpty() {
+		return type == BlockType.EMPTY;
+	}
+	
+	public boolean isGarbage() {
+		return type == BlockType.GARBAGE;
+	}
+	
+	public boolean isGhost() {
+		return type == BlockType.GHOST;
+	}
+	
+	public boolean isImpossible() {
+		return type == BlockType.IMPOSSIBLE;
+	}
+	
+	public boolean isUnlikely() {
+		return type == BlockType.UNLIKELY;
+	}
+	
+	public boolean isShape() {
+		switch(type) {
+		case S: case Z: case J: case L: case O: case T: case I:
+			return true;
+		default:
+			return false;
+		}
+	}
+	
 	public Block withType(BlockType type) {
 		setType(type);
 		return this;
@@ -60,11 +102,6 @@ public class Block implements Cloneable {
 	
 	public Block withShape(Shape shape) {
 		setShape(shape);
-		return this;
-	}
-	
-	public Block withGhost(boolean ghost) {
-		setGhost(ghost);
 		return this;
 	}
 	
@@ -91,10 +128,6 @@ public class Block implements Cloneable {
 		return shape;
 	}
 
-	public boolean isGhost() {
-		return ghost;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -113,10 +146,6 @@ public class Block implements Cloneable {
 
 	public void setShape(Shape shape) {
 		this.shape = shape;
-	}
-
-	public void setGhost(boolean ghost) {
-		this.ghost = ghost;
 	}
 
 	public void setActive(boolean active) {

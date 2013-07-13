@@ -1,42 +1,30 @@
 package org.eviline.fitness;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.eviline.Block;
 import org.eviline.Field;
 
 public class DefaultFitness extends AbstractFitness {
 
-	@Override
-	protected double normalize(double score) {
-		return score;
+	public DefaultFitness() {
+		super(new double[0]);
 	}
-
-	@Override
-	public double score(Field field) {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public DefaultFitness(double[] parameters) {
+		super(parameters);
 	}
-
+	
 	@Override
-	public void paintImpossibles(Field field) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void paintUnlikelies(Field field) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void unpaintUnlikelies(Field field) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void unpaintImpossibles(Field field) {
-		// TODO Auto-generated method stub
-
+	protected double score(Field field) {
+		AtomicInteger solidCount = new AtomicInteger(0);
+		for(Block[] row : field.getField()) {
+			for(Block block : row) {
+				if(block.isSolid())
+					solidCount.incrementAndGet();
+			}
+		}
+		return solidCount.get();
 	}
 
 }

@@ -1,45 +1,24 @@
 package org.eviline.fitness;
 
+import java.util.Arrays;
+
 import org.eviline.BlockType;
 import org.eviline.Field;
 
 public abstract class AbstractFitness implements Fitness {
-	private static AbstractFitness defaultInstance;
+	protected double[] parameters = new double[0];
 	
-	public static AbstractFitness getDefaultInstance() {
-		if(defaultInstance == null)
-			defaultInstance = new EvilineFitness();
-		return defaultInstance;
-	}
-	
-	public static void setDefaultInstance(AbstractFitness instance) {
-		AbstractFitness.defaultInstance = instance;
-	}
-	
-	protected double[] params = new double[0];
-	
-	public double[] getParams() {
-		return params;
-	}
-	
-	public void setParams(double[] params) {
-		this.params = params;
-	}
-
-	protected abstract double normalize(double score);
-
-	public double scoreWithPaint(Field field) {
-		paintImpossibles(field);
-		double ret = score(field);
-		unpaintImpossibles(field);
-		return ret;
-	}
-
 	@Override
-	public Field prepareField(Field field) {
-		field = field.copy();
-		paintImpossibles(field);
-		return field;
+	public double[] getParameters() {
+		return Arrays.copyOf(parameters, parameters.length);
+	}
+	
+	public void setParameters(double[] parameters) {
+		this.parameters = Arrays.copyOf(parameters, parameters.length);
+	}
+	
+	protected AbstractFitness(double[] parameters) {
+		setParameters(parameters);
 	}
 	
 	/**
@@ -47,15 +26,10 @@ public abstract class AbstractFitness implements Fitness {
 	 * @param field
 	 * @return
 	 */
+	protected abstract double score(Field field);
+	
 	@Override
-	public abstract double score(Field field);
-
-	public abstract void paintImpossibles(Field field);
-
-	public abstract void paintUnlikelies(Field field);
-
-	public abstract void unpaintUnlikelies(Field field);
-
-	public abstract void unpaintImpossibles(Field field);
-
+	public double score(Field before, Field after) {
+		return score(after) - score(before);
+	}
 }

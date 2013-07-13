@@ -9,8 +9,8 @@ public interface Fitness {
 	 * @param field
 	 * @return
 	 */
-	public double score(Field field);
-	
-	public Field prepareField(Field field);
+	public double score(Field before, Field after);
 
+	public double[] getParameters();
+	public void setParameters(double[] parameters);
 }
