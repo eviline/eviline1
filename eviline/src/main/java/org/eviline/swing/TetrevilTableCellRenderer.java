@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -14,7 +15,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.eviline.Block;
-import org.eviline.BlockMetadata;
+import org.eviline.BlockType;
 import org.eviline.Field;
 import org.eviline.ShapeType;
 import org.eviline.ShapeTypeIcon;
@@ -32,10 +33,9 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 	protected Field field;
 
 	protected TetrevilBorder border;
-	protected Border ghost = BorderFactory.createLineBorder(Block.G.color());
+	protected Border ghost = BorderFactory.createLineBorder(BlockType.GHOST.color());
 
 	protected Block b;
-	protected BlockMetadata m;
 	
 	public TetrevilTableCellRenderer(Field field) {
 		this.field = field;
@@ -66,7 +66,7 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 			int column) {
 
 		b = (Block) value;
-		m = field.getMetadata(column + Field.BUFFER - 1, row + Field.BUFFER);
+//		m = field.getMetadata(column + Field.BUFFER - 1, row + Field.BUFFER);
 		JLabel c = (JLabel) super.getTableCellRendererComponent(table, b, isSelected, hasFocus, row, column);
 		c.setText(" ");
 
@@ -76,14 +76,14 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 		String taunt;
 		if(column == 0 && row < "EVILINE".length())
 			c.setText("EVILINE".substring(row, row+1));
-		else if(row == Field.HEIGHT && column < "     LINES:".length())
+		else if(row == field.getHeight() && column < "     LINES:".length())
 			c.setText("     LINES:".substring(column, column+1));
-		else if(row == Field.HEIGHT && column == "     LINES:".length())
+		else if(row == field.getHeight() && column == "     LINES:".length())
 			c.setText("" + field.getLines());
 		else if(field.getProvider() != null && (taunt = field.getProvider().getTaunt()) != null) {
 			if(taunt.length() > 0)
 				taunt = taunt.substring(1);
-			if(column == Field.WIDTH + 1 && row < taunt.length()) {
+			if(column == field.getWidth() + 1 && row < taunt.length()) {
 //				if(row > 0) {
 					String shape = taunt.substring(row, row+1);
 					ShapeType type = ShapeType.valueOf(shape);
@@ -104,16 +104,16 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 
 		if(b == null)
 			c.setBackground(TRANSPARENT);
-		else if(b == Block.X) {
+		else if(b.isBorder()) {
 			Color xc = colors.provideColor(b);
 			c.setBackground(new Color(xc.getRed(), xc.getGreen(), xc.getBlue(), 128));
-		} else if(b == Block.G) {
+		} else if(b.isGhost()) {
 			Color gb = c.getBackground();
 			c.setBackground(new Color(gb.getRed(), gb.getGreen(), gb.getBlue(), 168));
 		}
 
-		if(field.isPaused() && b != null) {
-			if(!b.isActive() && b != Block.X)
+		if(field.isPaused() && !b.isEmpty()) {
+			if(!b.isActive() && !b.isBorder())
 				c.setBackground(null);
 			else
 				c.setText("P");
@@ -152,12 +152,6 @@ public class TetrevilTableCellRenderer extends DefaultTableCellRenderer {
 
 		Color bg = getBackground();
 		
-		if(m != null && m.ghostClearable) {
-			bg = b.color();
-			if(b != null && b != Block.G)
-				setBackground(Color.WHITE);
-			bg = new Color(bg.getRed(), bg.getGreen(), bg.getBlue(), 64);
-		}
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(bg);

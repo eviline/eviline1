@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Stroke;
 
 import org.eviline.Block;
-import org.eviline.BlockMetadata;
 import org.eviline.Field;
 
 public class TetrevilBorder extends MulticolorLineBorder {
@@ -32,8 +31,7 @@ public class TetrevilBorder extends MulticolorLineBorder {
 	public void set(ColorProvider colors, int x, int y) {
 
 		Block cb = field.getBlock(x, y);
-		BlockMetadata m;
-		int id = ((m = field.getMetadata(x, y)) != null) ? m.shapeId : 0;
+		int id = cb.getShapeId();
 		boolean ca = cb != null && cb.isActive();
 		Color c = colors.provideColor(cb);
 		
@@ -42,10 +40,11 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		Block e = field.getBlock(x+1, y);
 		Block w = field.getBlock(x-1, y);
 		
-		int nid = ((m = field.getMetadata(x, y-1)) != null) ? m.shapeId : 0;
-		int sid = ((m = field.getMetadata(x, y+1)) != null) ? m.shapeId : 0;
-		int eid = ((m = field.getMetadata(x+1, y)) != null) ? m.shapeId : 0;
-		int wid = ((m = field.getMetadata(x-1, y)) != null) ? m.shapeId : 0;
+		Block m;
+		int nid = ((m = field.getBlock(x, y-1)) != null) ? m.getShapeId() : 0;
+		int sid = ((m = field.getBlock(x, y+1)) != null) ? m.getShapeId() : 0;
+		int eid = ((m = field.getBlock(x+1, y)) != null) ? m.getShapeId() : 0;
+		int wid = ((m = field.getBlock(x-1, y)) != null) ? m.getShapeId() : 0;
 		
 //		System.out.println("id:" + id + ", nid:" + nid + ", m:" + m);
 		
@@ -58,15 +57,15 @@ public class TetrevilBorder extends MulticolorLineBorder {
 		east = cb != e ? blend(c, colors.provideColor(e)) : id != eid ? blend(c, idc) : null;
 		west = cb != w ? blend(c, colors.provideColor(w)) : id != wid ? blend(c, idc) : null;
 
-		if(cb == Block.G) {
-			c = field.getShape().type().inactive().active().color();
+		if(cb.isGhost()) {
+			c = field.getShape().type().block().color();
 			if(north != null) north = c;
 			if(south != null) south = c;
 			if(east != null) east = c;
 			if(west != null) west = c;
 		}
 		
-		if(top && n != null && cb == null && (w == null || w == Block.X) && (e == null || e == Block.X)) {
+		if(top && !n.isEmpty() && cb.isEmpty() && (w.isEmpty() || w.isBorder()) && (e.isEmpty() || e.isBorder())) {
 			north = colors.provideColor(n);
 			nstroke = topStroke;
 		} else if(top && n != null && n.isActive() && (cb == null || !cb.isActive())) {

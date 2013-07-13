@@ -47,7 +47,6 @@ import org.eviline.ai.DefaultAIKernel;
 import org.eviline.event.EvilineAdapter;
 import org.eviline.event.EvilineEvent;
 import org.eviline.fitness.AbstractFitness;
-import org.eviline.fitness.WrapperFitness;
 import org.eviline.sounds.TetrevilMusicListener;
 import org.eviline.sounds.TetrevilSoundListener;
 import org.eviline.sounds.TetrevilSounds;

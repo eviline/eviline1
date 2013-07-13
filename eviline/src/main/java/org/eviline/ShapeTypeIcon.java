@@ -21,7 +21,7 @@ public enum ShapeTypeIcon {
 		icon = new ImageIcon(ShapeType.class.getResource("images/" + name() + ".png"));
 		BufferedImage buf = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		buf.getGraphics().drawImage(icon.getImage(), 0, 0, null);
-		Block b = Block.valueOf(name());
+		BlockType b = BlockType.valueOf(name());
 		for(int x = 0; x < buf.getWidth(); x++) {
 			for(int y = 0; y < buf.getHeight(); y++) {
 				int rgb = buf.getRGB(x, y);

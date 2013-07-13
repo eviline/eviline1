@@ -29,12 +29,12 @@ public class TetrevilTableModel extends AbstractTableModel implements EvilineLis
 	
 	@Override
 	public int getRowCount() {
-		return Field.HEIGHT + 1;
+		return field.getHeight() + 1;
 	}
 
 	@Override
 	public int getColumnCount() {
-		return Field.WIDTH + 2;
+		return field.getWidth() + 2;
 	}
 	
 	@Override
