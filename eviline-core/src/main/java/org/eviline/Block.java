@@ -2,161 +2,132 @@ package org.eviline;
 
 import java.awt.Color;
 
-/**
- * A block on the playing {@link Field}.  There are two block types for each {@link ShapeType}: active and inactive.
- * Additionally, there is a block type for the outer border around the field.  Empty areas in the {@link Field}
- * are stored as nulls.<p>
- * 
- * A block is active if it is a part of the currently active {@link Shape} in the field.  Once a {@link Shape} locks
- * on the field its active blocks become inactive blocks and are stored.
- * @author robin
- *
- */
-public enum Block {
-	/*
-	 * Inactive block types
-	 */
-	I,
-	T,
-	S,
-	Z,
-	O,
-	J,
-	L,
-	/*
-	 * Active block types
-	 */
-	IA,
-	TA,
-	SA,
-	ZA,
-	OA,
-	JA,
-	LA,
+public class Block implements Cloneable {
+	private static final Block empty = new Block().withTypeAndColor(BlockType.EMPTY);
+	private static final Block border = new Block().withTypeAndColor(BlockType.BORDER);
+	private static final Block garbage = new Block().withTypeAndColor(BlockType.GARBAGE);
+	private static final Block ghostInstance = new Block().withTypeAndColor(BlockType.GHOST);
 	
-	/**
-	 * Field border
-	 */
-	X,
+	public static Block getEmpty() {
+		return empty;
+	}
 	
-	/**
-	 * Ghost
-	 */
-	G,
+	public static Block getBorder() {
+		return border;
+	}
 	
+	public static Block getGarbage() {
+		return garbage;
+	}
 	
-	/**
-	 * iMpossible block
-	 */
-	M,
-	/**
-	 * Unlikely block
-	 */
-	U,
+	public static Block getGhost() {
+		return ghostInstance;
+	}
 	
-	GARBAGE,
+	private BlockType type;
+	private Shape shape;
+	private boolean ghost;
+	private boolean active;
+	private int shapeId;
+	private Color color;
 	
-	;
+	public Block() {
+	}
 	
-	/**
-	 * Returns whether this is an active or inactive block
-	 * @return
-	 */
+	@Override
+	public Block clone() {
+		try {
+			return (Block) super.clone();
+		} catch(CloneNotSupportedException cnse) {
+			throw new InternalError("Clone not supported?");
+		}
+	}
+	
+	public boolean isSolid() {
+		return type.isSolid();
+	}
+	
+	public Block withType(BlockType type) {
+		setType(type);
+		return this;
+	}
+	
+	public Block withTypeAndColor(BlockType type) {
+		setType(type);
+		setColor(type.color());
+		return this;
+	}
+	
+	public Block withShape(Shape shape) {
+		setShape(shape);
+		return this;
+	}
+	
+	public Block withGhost(boolean ghost) {
+		setGhost(ghost);
+		return this;
+	}
+	
+	public Block withActive(boolean active) {
+		setActive(active);
+		return this;
+	}
+	
+	public Block withShapeId(int shapeId) {
+		setShapeId(shapeId);
+		return this;
+	}
+	
+	public Block withColor(Color color) {
+		setColor(color);
+		return this;
+	}
+
+	public BlockType getType() {
+		return type;
+	}
+
+	public Shape getShape() {
+		return shape;
+	}
+
+	public boolean isGhost() {
+		return ghost;
+	}
+
 	public boolean isActive() {
-		switch(this) {
-		case I: case T: case S: case Z: case O: case J: case L:
-			return false;
-		case IA: case TA: case SA: case ZA: case OA: case JA: case LA:
-			return true;
-		case X: return false; // Field border is considered inactive
-		case G: return true;
-		case M: return false;
-		case U: return false;
-		case GARBAGE: return false;
-		}
-		throw new InternalError("Impossible switch fall-through");
+		return active;
 	}
 
-	/**
-	 * Returns the active version of the current block
-	 * @return The active version of the current block
-	 */
-	public Block active() {
-		switch(this) {
-		case I: case IA: return IA;
-		case T: case TA: return TA;
-		case S: case SA: return SA;
-		case Z: case ZA: return ZA;
-		case O: case OA: return OA;
-		case J: case JA: return JA;
-		case L: case LA: return LA;
-		case X: return X;
-		case G: return G;
-		case M: return M;
-		case U: return U;
-		case GARBAGE: return GARBAGE;
-		}
-		throw new InternalError("Impossible switch fall-through");
+	public int getShapeId() {
+		return shapeId;
 	}
 
-	/**
-	 * Returns the inactive version of the current block
-	 * @return The inactive version of the current block
-	 */
-	public Block inactive() {
-		switch(this) {
-		case I: case IA: return I;
-		case T: case TA: return T;
-		case S: case SA: return S;
-		case Z: case ZA: return Z;
-		case O: case OA: return O;
-		case J: case JA: return J;
-		case L: case LA: return L;
-		case X: return X;
-		case G: return G;
-		case M: return M;
-		case U: return U;
-		case GARBAGE: return GARBAGE;
-		}
-		throw new InternalError("Impossible switch fall-through");
+	public Color getColor() {
+		return color;
 	}
 
-	public Color color() {
-		switch(this) {
-		case I:
-			return IA.color();//.darker();
-		case IA:
-			return new Color(0, 159, 218);
-		case J: 
-			return JA.color();//.darker();
-		case JA:
-			return new Color(0, 101, 189);
-		case L: 
-			return LA.color();//.darker();
-		case LA:
-			return new Color(255, 121, 0);
-		case O: 
-			return OA.color();//.darker();
-		case OA:
-			return new Color(254, 203, 0);
-		case S: 
-			return SA.color();//.darker();
-		case SA:
-			return new Color(105, 190, 40);
-		case T: 
-			return TA.color();//.darker();
-		case TA:
-			return new Color(149, 45, 152);
-		case Z: 
-			return ZA.color();//.darker();
-		case ZA:
-			return new Color(237, 41, 57);
-		case X: return Color.DARK_GRAY;
-		case G: return Color.WHITE;
-		case M: return X.color();
-		case U: return X.color();
-		case GARBAGE: return Color.GRAY;
-		}
-		throw new InternalError("Impossible switch fall-through");
+	public void setType(BlockType type) {
+		this.type = type;
+	}
+
+	public void setShape(Shape shape) {
+		this.shape = shape;
+	}
+
+	public void setGhost(boolean ghost) {
+		this.ghost = ghost;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public void setShapeId(int shapeId) {
+		this.shapeId = shapeId;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

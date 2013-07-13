@@ -1,6 +1,6 @@
 package org.eviline.fitness;
 
-import org.eviline.Block;
+import org.eviline.BlockType;
 import org.eviline.Field;
 
 public class EvilineFitness extends AbstractFitness {
@@ -44,8 +44,8 @@ public class EvilineFitness extends AbstractFitness {
 		return ret;
 	}
 	
-	protected boolean isSolid(Block b) {
-		return b != null && b != Block.G && b != Block.X;
+	protected boolean isSolid(BlockType b) {
+		return b != null && b != BlockType.G && b != BlockType.X;
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class EvilineFitness extends AbstractFitness {
 	public double score(Field field) {
 		if(field.isGameOver())
 			return Double.POSITIVE_INFINITY;
-		Block[][] f = field.getField();
+		BlockType[][] f = field.getField();
 		paintUnlikelies(f);
 		double score = 0;
 		int[] stackHeight = new int[Field.WIDTH];
@@ -71,20 +71,20 @@ public class EvilineFitness extends AbstractFitness {
 		for(int x = Field.BUFFER; x < Field.WIDTH + Field.BUFFER; x++) {
 			for(int y = Field.HEIGHT  + Field.BUFFER - 1; y >= 2; y--) {
 				int h = Field.HEIGHT + Field.BUFFER - y + 1;
-				Block b = f[y][x];
+				BlockType b = f[y][x];
 				if(b != null)
 					stackHeight[x-Field.BUFFER] = h;
 				
 				if(isSolid(f[y][x]) ^ isSolid(f[y+1][x]))
 					columnTransitions += 1;
 				
-				if(b != null && b != Block.X && b != Block.G) {
+				if(b != null && b != BlockType.X && b != BlockType.G) {
 					score += 15 + Math.pow(h * params[Weights.BLOCK_HEIGHT], 1 / (2.6 - h / 10.));
 				}
-				else if(b == Block.X) {
+				else if(b == BlockType.X) {
 					impossibles++;
 				}
-				else if(b == Block.G) {
+				else if(b == BlockType.G) {
 					unlikelies++;
 				}
 			}
@@ -122,18 +122,18 @@ public class EvilineFitness extends AbstractFitness {
 		paintImpossibles(field.getField());
 	}
 	
-	public void paintImpossibles(Block[][] f) {
+	public void paintImpossibles(BlockType[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 				if(f[y][x] == null)
-					f[y][x] = Block.X;
+					f[y][x] = BlockType.X;
 			}
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == Block.X)
+				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == BlockType.X)
 					f[y][x] = null;
 			}
 			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
-				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == Block.X)
+				if((f[y-1][x] == null || f[y][x-1] == null || f[y][x+1] == null) && f[y][x] == BlockType.X)
 					f[y][x] = null;
 			}
 		}
@@ -144,33 +144,33 @@ public class EvilineFitness extends AbstractFitness {
 		paintUnlikelies(field.getField());
 	}
 	
-	public void paintUnlikelies(Block[][] f) {
+	public void paintUnlikelies(BlockType[][] f) {
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 				if(f[y][x] == null && f[y][x-1] != null && f[y][x+1] != null) {
-					f[y][x] = Block.G;
+					f[y][x] = BlockType.G;
 				}
 			}
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
 				if(f[y][x] != null)
 					continue;
-				if(f[y-1][x] == Block.G || f[y][x-1] == Block.G)
-					f[y][x] = Block.G;
+				if(f[y-1][x] == BlockType.G || f[y][x-1] == BlockType.G)
+					f[y][x] = BlockType.G;
 			}
 			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
 				if(f[y][x] != null)
 					continue;
-				if(f[y-1][x] == Block.G || f[y][x+1] == Block.G)
-					f[y][x] = Block.G;
+				if(f[y-1][x] == BlockType.G || f[y][x+1] == BlockType.G)
+					f[y][x] = BlockType.G;
 			}
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if(f[y][x] != Block.G)
+				if(f[y][x] != BlockType.G)
 					continue;
 				if(f[y][x+1] == null || f[y][x-1] == null)
 					f[y][x] = null;
 			}
 			for(int x = Field.BUFFER + Field.WIDTH - 1; x >= Field.BUFFER; x--) {
-				if(f[y][x] != Block.G)
+				if(f[y][x] != BlockType.G)
 					continue;
 				if(f[y][x+1] == null || f[y][x-1] == null)
 					f[y][x] = null;
@@ -180,10 +180,10 @@ public class EvilineFitness extends AbstractFitness {
 	
 	@Override
 	public void unpaintUnlikelies(Field field) {
-		Block[][] f = field.getField();
+		BlockType[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if(f[y][x] == Block.G)
+				if(f[y][x] == BlockType.G)
 					f[y][x] = null;
 			}
 		}
@@ -191,10 +191,10 @@ public class EvilineFitness extends AbstractFitness {
 	
 	@Override
 	public void unpaintImpossibles(Field field) {
-		Block[][] f = field.getField();
+		BlockType[][] f = field.getField();
 		for(int y = 1; y < Field.BUFFER + Field.HEIGHT; y++) {
 			for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++) {
-				if(f[y][x] == Block.X)
+				if(f[y][x] == BlockType.X)
 					f[y][x] = null;
 			}
 		}

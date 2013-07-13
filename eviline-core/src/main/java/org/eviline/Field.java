@@ -10,33 +10,36 @@ import org.eviline.fitness.AbstractFitness;
 import org.eviline.randomizer.Randomizer;
 
 /**
- * Object which keeps track of the tetris matrix itself.  It keeps an array of {@link Block} enums
+ * Object which keeps track of the tetris matrix itself.  It keeps an array of {@link BlockType} enums
  * to store the state of the matrix, using <code>null</code> to store an empty area.<p>
  * 
  * This is the "engine" of tetrevil.
  * @author robin
  *
  */
-public class Field implements Serializable {
+public class Field implements Serializable, Cloneable {
 	private static final long serialVersionUID = -207525838052607892L;
 	/**
 	 * The height of the matrix
 	 */
-	public static final int HEIGHT = 20;
+	private static final int DEFAULT_HEIGHT = 20;
 	/**
 	 * The width of the matrix
 	 */
-	public static final int WIDTH = 10;
+	private static final int DEFAULT_WIDTH = 10;
 	/**
 	 * The size of the buffer area around the matrix in each direction
 	 */
 	public static final int BUFFER = 6;
 	
+	protected int width = DEFAULT_WIDTH;
+	
+	protected int height = DEFAULT_HEIGHT;
+	
 	/**
 	 * The matrix itself
 	 */
-	protected Block[][] field = new Block[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
-	protected transient BlockMetadata[][] metadata = new BlockMetadata[HEIGHT + 2 * BUFFER][WIDTH + 2 * BUFFER];
+	protected Block[][] field;
 	/**
 	 * The source of shapes
 	 */
@@ -109,18 +112,14 @@ public class Field implements Serializable {
 	protected transient EventDispatcher dispatcher = null;
 	
 	public Field() {
-		for(int y = 0; y < BUFFER; y++) {
-			Arrays.fill(field[y], 0, BUFFER, Block.X);
-//			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.G);
-			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
-		}
-		for(int y = BUFFER; y < field.length - BUFFER; y++) {
-			Arrays.fill(field[y], 0, BUFFER, Block.X);
-			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
-		}
-		for(int y = field.length - BUFFER; y < field.length; y++) {
-			Arrays.fill(field[y], Block.X);
-		}
+		this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+	
+	public Field(int width, int height) {
+		this.width = width;
+		this.height = height;
+		field = new Block[height + 2 * BUFFER][width + 2 * BUFFER];
+		reset();
 	}
 	
 	public Field newInstance() {
@@ -135,7 +134,9 @@ public class Field implements Serializable {
 	public Field copyInto(Field target) {
 		if(field != null) {
 			for(int y = 0; y < field.length; y++) {
-				System.arraycopy(field[y], 0, target.field[y], 0, field[y].length);
+				for(int x = 0; x < field[y].length; x++) {
+					target.field[y][x] = field[y][x].clone();
+				}
 			}
 		}
 		target.provider = provider;
@@ -149,8 +150,12 @@ public class Field implements Serializable {
 		return target;
 	}
 	
-	public Field copy() {
-		return copyInto(newInstance());
+	public Field clone() {
+		try {
+			return copyInto((Field) super.clone());
+		} catch(CloneNotSupportedException cnse) {
+			throw new InternalError("Clone not supported?");
+		}
 	}
 	
 	/**
@@ -160,20 +165,13 @@ public class Field implements Serializable {
 		if(unpausable)
 			return;
 		fireGameReset();
-		for(int y = 0; y < BUFFER; y++) {
-			Arrays.fill(field[y], 0, BUFFER, Block.X);
-			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
-			Arrays.fill(metadata[y], BUFFER, metadata[y].length - BUFFER, null);
-			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
-		}
-		for(int y = BUFFER; y < field.length - BUFFER; y++) {
-			Arrays.fill(field[y], 0, BUFFER, Block.X);
-			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, null);
-			Arrays.fill(metadata[y], BUFFER, metadata[y].length - BUFFER, null);
-			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.X);
+		for(int y = 0; y < field.length - BUFFER; y++) {
+			Arrays.fill(field[y], 0, BUFFER, Block.getBorder());
+			Arrays.fill(field[y], BUFFER, field[y].length - BUFFER, Block.getEmpty());
+			Arrays.fill(field[y], field[y].length - BUFFER, field[y].length, Block.getBorder());
 		}
 		for(int y = field.length - BUFFER; y < field.length; y++) {
-			Arrays.fill(field[y], Block.X);
+			Arrays.fill(field[y], Block.getBorder());
 		}
 		shape = null;
 		gameOver = false;
@@ -200,15 +198,15 @@ public class Field implements Serializable {
 			if(shape == null)
 				return;
 			shape = shape.type().starter();
-			shapeY = shape.type().starterY();
+			shapeY = shape.type().starterY(this);
 //			shapeX = WIDTH / 2 + Field.BUFFER - 2 + shape.type().starterX();
 //			shapeX = (WIDTH + 2 * BUFFER - shape.width()) / 2;
-			shapeX = shape.type().starterX();
-			if(!shape.intersects(field, shapeX, shapeY+1)) // Move the shape down one row if possible
+			shapeX = shape.type().starterX(this);
+			if(!shape.intersects(this, shapeX, shapeY+1)) // Move the shape down one row if possible
 				shapeY++;
 			reghost();
 			fireShapeSpawned();
-		} else if(shape.intersects(field, shapeX, shapeY+1)) { // If the shape can't be moved down a row...
+		} else if(shape.intersects(this, shapeX, shapeY+1)) { // If the shape can't be moved down a row...
 			/*
 			 * Copy this shape to the field, assuming a game over.  If any of the shape
 			 * is within the playable field then un-game-over.
@@ -217,8 +215,7 @@ public class Field implements Serializable {
 			for(int i = 0; i < 4; i++) {
 				int y = shape.y(i);
 				int x = shape.x(i);
-				field[y + shapeY][x + shapeX] = shape.type().inactive();
-				metadata[y + shapeY][x + shapeX] = new BlockMetadata(shape, false, shapeId);
+				field[y + shapeY][x + shapeX].withType(shape.type().block()).withActive(false);
 				if(y + shapeY >= BUFFER)
 					gameOver = false;
 			}
@@ -232,7 +229,7 @@ public class Field implements Serializable {
 			autoshift();
 		}
 		fireClockTicked(); // Fire a clock tick event
-		if(shape != null && shape.intersects(field, shapeX, shapeY)) {
+		if(shape != null && shape.intersects(this, shapeX, shapeY)) {
 			// If we have an active shape and the shape intersects the field then game over
 			gameOver = true;
 		}
@@ -254,13 +251,12 @@ public class Field implements Serializable {
 //						System.arraycopy(field[z], 0, field[z+1], 0, field[z].length);
 //						System.arraycopy(metadata[z], 0, metadata[z+1], 0, metadata[z].length);
 						field[z+1] = field[z];
-						metadata[z+1] = metadata[z];
 					}
-					field[0] = new Block[WIDTH + 2 * BUFFER];
-					metadata[0] = new BlockMetadata[WIDTH + 2 * BUFFER];
+					field[0] = new Block[width + 2 * BUFFER];
 					// Fill in the top row with nulls
-					Arrays.fill(field[0], 0, BUFFER, Block.X);
-					Arrays.fill(field[0], WIDTH + BUFFER, WIDTH + 2*BUFFER, Block.X);
+					Arrays.fill(field[0], 0, BUFFER, Block.getBorder());
+					Arrays.fill(field[0], BUFFER, width + BUFFER, Block.getEmpty());
+					Arrays.fill(field[0], width + BUFFER, width + 2*BUFFER, Block.getBorder());
 					y = field.length - BUFFER;
 				}
 			}
@@ -282,7 +278,7 @@ public class Field implements Serializable {
 	public synchronized boolean isGrounded() {
 		if(shape == null)
 			return false;
-		return shape.intersects(field, shapeX, shapeY+1);
+		return shape.intersects(this, shapeX, shapeY+1);
 	}
 	
 	/**
@@ -291,7 +287,7 @@ public class Field implements Serializable {
 	public synchronized void shiftLeft() {
 		if(paused)
 			return;
-		if(shape == null || shape.intersects(field, shapeX-1, shapeY))
+		if(shape == null || shape.intersects(this, shapeX-1, shapeY))
 			return;
 		shapeX--;
 		reghost();
@@ -304,7 +300,7 @@ public class Field implements Serializable {
 	public synchronized void shiftRight() {
 		if(paused)
 			return;
-		if(shape == null || shape.intersects(field, shapeX+1, shapeY))
+		if(shape == null || shape.intersects(this, shapeX+1, shapeY))
 			return;
 		shapeX++;
 		reghost();
@@ -323,7 +319,7 @@ public class Field implements Serializable {
 			return;
 		if(shape == null)
 			return;
-		while(!shape.intersects(field, shapeX, shapeY + 1)) {
+		while(!shape.intersects(this, shapeX, shapeY + 1)) {
 			score += 2 * scoreFactor;
 			clockTick();
 		}
@@ -334,7 +330,7 @@ public class Field implements Serializable {
 			return;
 		if(shape == null)
 			return;
-		while(!shape.intersects(field, shapeX, shapeY + 1)) {
+		while(!shape.intersects(this, shapeX, shapeY + 1)) {
 			score += 3 * scoreFactor;
 			clockTick();
 		}
@@ -350,12 +346,12 @@ public class Field implements Serializable {
 			return;
 		switch(autoShift) {
 		case LEFT:
-			for(int i = 0; i < Field.WIDTH; i++)
+			for(int i = 0; i < width; i++)
 				shiftLeft();
 			reghost();
 			break;
 		case RIGHT:
-			for(int i = 0; i < Field.WIDTH; i++)
+			for(int i = 0; i < width; i++)
 				shiftRight();
 			reghost();
 			break;
@@ -368,32 +364,11 @@ public class Field implements Serializable {
 	public synchronized void reghost() {
 		if(!ghosting)
 			return;
-		for(int y = 0; y < HEIGHT + 2 * BUFFER; y++) {
-			for(int x = 0; x < WIDTH + 2 * BUFFER; x++) {
-				if(metadata[y][x] == null)
-					continue;
-				metadata[y][x].ghostClearable = false;
-			}
-		}
 		ghostY = shapeY;
 		if(shape == null)
 			return;
-		while(!shape.intersects(field, shapeX, ghostY + 1))
+		while(!shape.intersects(this, shapeX, ghostY + 1))
 			ghostY++;
-		for(int i = 0; i < 4; i++) {
-			int by = ghostY + shape.y(i);
-			boolean ghostClear = true;
-			for(int x = BUFFER; x < WIDTH + BUFFER; x++)
-				if(getBlock(x, by) == null)
-					ghostClear = false;
-			if(ghostClear) {
-				for(int x = BUFFER; x < WIDTH + BUFFER; x++) {
-					if(metadata[by][x] == null)
-						continue;
-					metadata[by][x].ghostClearable = true;
-				}
-			}
-		}
 	}
 	
 	/**
@@ -411,7 +386,7 @@ public class Field implements Serializable {
 		for(int[] kick : table) {
 			int x = shapeX + kick[0];
 			int y = shapeY + kick[1];
-			if(!rotated.intersects(field, x, y)) {
+			if(!rotated.intersects(this, x, y)) {
 				shapeX = x;
 				shapeY = y;
 				shape = rotated;
@@ -434,7 +409,7 @@ public class Field implements Serializable {
 			int[] kick = table[i];
 			int x = shapeX - kick[0];
 			int y = shapeY - kick[1];
-			if(!rotated.intersects(field, x, y)) {
+			if(!rotated.intersects(this, x, y)) {
 				kickI = i;
 			}
 		}
@@ -462,7 +437,7 @@ public class Field implements Serializable {
 		for(int[] kick : table) {
 			int x = shapeX + kick[0];
 			int y = shapeY + kick[1];
-			if(!rotated.intersects(field, x, y)) {
+			if(!rotated.intersects(this, x, y)) {
 				shapeX = x;
 				shapeY = y;
 				shape = rotated;
@@ -485,7 +460,7 @@ public class Field implements Serializable {
 			int[] kick = table[i];
 			int x = shapeX - kick[0];
 			int y = shapeY - kick[1];
-			if(!rotated.intersects(field, x, y)) {
+			if(!rotated.intersects(this, x, y)) {
 				kickI = i;
 			}
 		}
@@ -506,14 +481,13 @@ public class Field implements Serializable {
 		int lines = this.garbage;
 		if(lines == 0)
 			return;
-		for(int i = lines; i < HEIGHT + BUFFER; i++) {
+		for(int i = lines; i < height + BUFFER; i++) {
 			System.arraycopy(field[i], 0, field[i - lines], 0, field[i].length);
-			System.arraycopy(metadata[i], 0, metadata[i-lines], 0, metadata[i].length);
 		}
-		for(int i = HEIGHT + BUFFER - lines; i < HEIGHT + BUFFER; i++) {
-			Arrays.fill(field[i], BUFFER, BUFFER + WIDTH, Block.GARBAGE);
-			int x = (int)(WIDTH * Math.random());
-			field[i][x] = null;
+		for(int i = height + BUFFER - lines; i < height + BUFFER; i++) {
+			Arrays.fill(field[i], BUFFER, BUFFER + width, Block.getGarbage());
+			int x = (int)(width * Math.random());
+			field[i][x] = Block.getEmpty();
 		}
 		fireGarbageReceived(lines);
 		this.garbage = 0;
@@ -528,15 +502,15 @@ public class Field implements Serializable {
 	 */
 	public synchronized Block getBlock(int x, int y) {
 		if(shape != null && x >= shapeX && y >= shapeY) {
-			Block[][] s = shape.shape();
+			BlockType[][] s = shape.shape();
 			if(x - shapeX < s[0].length && y - shapeY < s.length) {
-				Block b;
+				BlockType b;
 				if((b = s[y - shapeY][x - shapeX]) != null)
-					return b;
+					return field[y][x];
 			}
 			if(x - shapeX < s[0].length && y >= ghostY && y - ghostY < s.length) {
 				if(s[y - ghostY][x - shapeX] != null)
-					return Block.G;
+					return Block.getGhost();
 			}
 		}
 //		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
@@ -546,24 +520,6 @@ public class Field implements Serializable {
 	
 	public synchronized Block getFieldBlock(int x, int y) {
 		return getBlock(x + Field.BUFFER, y + Field.BUFFER);
-	}
-	
-	public synchronized BlockMetadata getMetadata(int x, int y) {
-		if(shape != null && x >= shapeX && y >= shapeY) {
-			Block[][] s = shape.shape();
-			if(x - shapeX < s[0].length && y - shapeY < s.length) {
-				Block b;
-				if((b = s[y - shapeY][x - shapeX]) != null)
-					return new BlockMetadata(shape, false, -1);
-			}
-			if(x - shapeX < s[0].length && y >= ghostY && y - ghostY < s.length) {
-				if(s[y - ghostY][x - shapeX] != null)
-					return new BlockMetadata(shape, true, -1);
-			}
-		}
-//		if(x >= BUFFER && x < WIDTH + BUFFER && y < BUFFER)
-//			return Block.G;
-		return metadata[y][x];
 	}
 	
 	/**
@@ -932,5 +888,13 @@ public class Field implements Serializable {
 
 	public int getShapeId() {
 		return shapeId;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 }

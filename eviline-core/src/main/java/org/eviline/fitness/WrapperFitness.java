@@ -1,6 +1,6 @@
 package org.eviline.fitness;
 
-import org.eviline.Block;
+import org.eviline.BlockType;
 import org.eviline.Field;
 
 public class WrapperFitness extends AbstractFitness {

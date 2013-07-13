@@ -1,12 +1,12 @@
 package org.eviline;
 
-import static org.eviline.Block.IA;
-import static org.eviline.Block.JA;
-import static org.eviline.Block.LA;
-import static org.eviline.Block.OA;
-import static org.eviline.Block.SA;
-import static org.eviline.Block.TA;
-import static org.eviline.Block.ZA;
+import static org.eviline.BlockType.I;
+import static org.eviline.BlockType.J;
+import static org.eviline.BlockType.L;
+import static org.eviline.BlockType.O;
+import static org.eviline.BlockType.S;
+import static org.eviline.BlockType.T;
+import static org.eviline.BlockType.Z;
 
 /**
  * A tetrimino.  Stored as both an array of blocks and as arrays of (x,y) pairs for speed efficiency.
@@ -14,116 +14,116 @@ import static org.eviline.Block.ZA;
  *
  */
 public enum Shape {
-	O_UP(new Block[][] {
-					{OA,	 OA},
-					{OA,	 OA}}),
-	O_RIGHT(new Block[][] {{OA,	 OA},{OA,	 OA}}),
-	O_DOWN(new Block[][] {{OA,	 OA},{OA,	 OA}}),
-	O_LEFT(new Block[][] {{OA,	 OA},{OA,	 OA}}),
+	O_UP(new BlockType[][] {
+					{O,	 O},
+					{O,	 O}}),
+	O_RIGHT(new BlockType[][] {{O,	 O},{O,	 O}}),
+	O_DOWN(new BlockType[][] {{O,	 O},{O,	 O}}),
+	O_LEFT(new BlockType[][] {{O,	 O},{O,	 O}}),
 
-	I_UP(new Block[][] {
+	I_UP(new BlockType[][] {
 					{null,	null,	null,	null},
-					{IA,	IA,		IA,		IA	},
+					{I,	I,		I,		I	},
 					{null,	null,	null,	null},
 					{null,	null,	null,	null}}),
-	I_RIGHT(new Block[][] {
-					{null,	null, IA,	 null},
-					{null,	null, IA,	 null},
-					{null,	null, IA,	 null},
-					{null,	null, IA,	 null}}),
-	I_DOWN(new Block[][] {
+	I_RIGHT(new BlockType[][] {
+					{null,	null, I,	 null},
+					{null,	null, I,	 null},
+					{null,	null, I,	 null},
+					{null,	null, I,	 null}}),
+	I_DOWN(new BlockType[][] {
 					{null,	null,	null,	null},
 					{null,	null,	null,	null},
-					{IA,	IA,		IA,		IA	},
+					{I,	I,		I,		I	},
 					{null,	null,	null,	null}}),
-	I_LEFT(new Block[][] {
-					{null, IA,	 null,	null},
-					{null, IA,	 null,	null},
-					{null, IA,	 null,	null},
-					{null, IA,	 null,	null}}),
-	S_LEFT(new Block[][] {
-					{SA,	null,	null},
-					{SA,	SA,		null},
-					{null,	SA,		null}}),
-	S_UP(new Block[][] {
-					{null,	SA,		SA	},
-					{SA,	SA,		null},
+	I_LEFT(new BlockType[][] {
+					{null, I,	 null,	null},
+					{null, I,	 null,	null},
+					{null, I,	 null,	null},
+					{null, I,	 null,	null}}),
+	S_LEFT(new BlockType[][] {
+					{S,	null,	null},
+					{S,	S,		null},
+					{null,	S,		null}}),
+	S_UP(new BlockType[][] {
+					{null,	S,		S	},
+					{S,	S,		null},
 					{null,	null,	null}}),
-	S_RIGHT(new Block[][] {
-					{null,	SA,		null},
-					{null,	SA,		SA},
-					{null,	null,	SA}}),
-	S_DOWN(new Block[][] {
+	S_RIGHT(new BlockType[][] {
+					{null,	S,		null},
+					{null,	S,		S},
+					{null,	null,	S}}),
+	S_DOWN(new BlockType[][] {
 					{null,	null,	null},
-					{null,	SA,		SA	},
-					{SA,	SA,		null}}),
-	Z_RIGHT(new Block[][] {
-					{null,	null,	ZA},
-					{null,	ZA,		ZA},
-					{null,	ZA,		null}}),
-	Z_DOWN(new Block[][] {
+					{null,	S,		S	},
+					{S,	S,		null}}),
+	Z_RIGHT(new BlockType[][] {
+					{null,	null,	Z},
+					{null,	Z,		Z},
+					{null,	Z,		null}}),
+	Z_DOWN(new BlockType[][] {
 					{null,	null,	null},
-					{ZA,	ZA,		null},
-					{null,	ZA,		ZA	}}),
-	Z_LEFT(new Block[][] {
-					{null,	ZA,		null},
-					{ZA,	ZA,		null},
-					{ZA,	null,	null}}),
-	Z_UP(new Block[][] {
-					{ZA,	ZA,		null},
-					{null,	ZA,		ZA	},
+					{Z,	Z,		null},
+					{null,	Z,		Z	}}),
+	Z_LEFT(new BlockType[][] {
+					{null,	Z,		null},
+					{Z,	Z,		null},
+					{Z,	null,	null}}),
+	Z_UP(new BlockType[][] {
+					{Z,	Z,		null},
+					{null,	Z,		Z	},
 					{null,	null,	null}}),
-	T_UP(new Block[][] {
-					{null,	TA,		null},
-					{TA,	TA,		TA	},
+	T_UP(new BlockType[][] {
+					{null,	T,		null},
+					{T,	T,		T	},
 					{null,	null,	null}}),
-	T_RIGHT(new Block[][] {
-					{null,	TA,		null},
-					{null,	TA,		TA	},
-					{null,	TA,		null}}),
-	T_DOWN(new Block[][] {
+	T_RIGHT(new BlockType[][] {
+					{null,	T,		null},
+					{null,	T,		T	},
+					{null,	T,		null}}),
+	T_DOWN(new BlockType[][] {
 					{null,	null,	null},
-					{TA,	TA,		TA	},
-					{null,	TA,		null}}),
-	T_LEFT(new Block[][] {
-					{null,	TA,		null},
-					{TA,	TA,		null},
-					{null,	TA,		null}}),
-	J_LEFT(new Block[][] {
-					{null,	JA,		null},
-					{null,	JA,		null},
-					{JA,	JA,		null}}),
-	J_UP(new Block[][] {
-					{JA,	null,	null},
-					{JA,	JA,		JA},
+					{T,	T,		T	},
+					{null,	T,		null}}),
+	T_LEFT(new BlockType[][] {
+					{null,	T,		null},
+					{T,	T,		null},
+					{null,	T,		null}}),
+	J_LEFT(new BlockType[][] {
+					{null,	J,		null},
+					{null,	J,		null},
+					{J,	J,		null}}),
+	J_UP(new BlockType[][] {
+					{J,	null,	null},
+					{J,	J,		J},
 					{null,	null,	null}}),
-	J_RIGHT(new Block[][] {
-					{null,	JA,		JA},
-					{null,	JA,		null},
-					{null,	JA,		null}}),
-	J_DOWN(new Block[][] {
+	J_RIGHT(new BlockType[][] {
+					{null,	J,		J},
+					{null,	J,		null},
+					{null,	J,		null}}),
+	J_DOWN(new BlockType[][] {
 					{null,	null,	null},
-					{JA,	JA,		JA},
-					{null,	null,	JA}}),
-	L_RIGHT(new Block[][] {
-					{null,	LA,		null},
-					{null,	LA,		null},
-					{null,	LA,		LA}}),
-	L_DOWN(new Block[][] {
+					{J,	J,		J},
+					{null,	null,	J}}),
+	L_RIGHT(new BlockType[][] {
+					{null,	L,		null},
+					{null,	L,		null},
+					{null,	L,		L}}),
+	L_DOWN(new BlockType[][] {
 					{null,	null,	null},
-					{LA,	LA,		LA},
-					{LA,	null,	null}}),
-	L_LEFT(new Block[][] {
-					{LA,	LA,		null},
-					{null,	LA,		null},
-					{null,	LA,		null}}),
-	L_UP(new Block[][] {
-					{null,	null,	LA},
-					{LA,	LA,		LA},
+					{L,	L,		L},
+					{L,	null,	null}}),
+	L_LEFT(new BlockType[][] {
+					{L,	L,		null},
+					{null,	L,		null},
+					{null,	L,		null}}),
+	L_UP(new BlockType[][] {
+					{null,	null,	L},
+					{L,	L,		L},
 					{null,	null,	null}}),
 	;
 
-	private Block[][] shape;
+	private BlockType[][] shape;
 	
 	private ShapeType type;
 	
@@ -132,7 +132,7 @@ public enum Shape {
 	private int width;
 	private int height;
 	
-	private Shape(Block[][] shape) {
+	private Shape(BlockType[][] shape) {
 		this.shape = shape;
 		int b = 0;
 		int xmin = 4, xmax = -1, ymin = 4, ymax = -1;
@@ -154,7 +154,7 @@ public enum Shape {
 		height = ymax - ymin + 1;
 	}
 	
-	public Block[][] shape() {
+	public BlockType[][] shape() {
 		return shape;
 	}
 	
@@ -235,7 +235,7 @@ public enum Shape {
 		throw new InternalError("Fell through to default when all enum cases were covered");
 	}
 	
-	public boolean intersects(Block[][] field, int x, int y) {
+	public boolean intersects(Field f, int x, int y) {
 		/*
 		for(int i = 0; i < 4; i++) {
 			if(y+by[i] < 0)
@@ -246,6 +246,9 @@ public enum Shape {
 		}
 		return false;
 		*/
+		
+		Block[][] field = f.getField();
+		
 		int y0 = y + by[0];
 		int y1 = y + by[1];
 		int y2 = y + by[2];
@@ -261,10 +264,10 @@ public enum Shape {
 		if(x0 < Field.BUFFER || x1 < Field.BUFFER || x2 < Field.BUFFER || x3 < Field.BUFFER)
 			return true;
 		if(
-				x0 >= Field.BUFFER + Field.WIDTH
-				|| x1 >= Field.BUFFER + Field.WIDTH
-				|| x2 >= Field.BUFFER + Field.WIDTH
-				|| x3 >= Field.BUFFER + Field.WIDTH)
+				x0 >= Field.BUFFER + f.getWidth()
+				|| x1 >= Field.BUFFER + f.getWidth()
+				|| x2 >= Field.BUFFER + f.getWidth()
+				|| x3 >= Field.BUFFER + f.getWidth())
 			return true;
 		
 		
@@ -272,12 +275,7 @@ public enum Shape {
 		Block b1 = field[y1][x1];
 		Block b2 = field[y2][x2];
 		Block b3 = field[y3][x3];
-		if(b0 == null && b1 == null && b2 == null && b3 == null)
-			return false;
-		if((b0 == null || b0 == Block.G) && (b1 == null || b1 == Block.G) && (b2 == null || b2 == Block.G) && (b3 == null || b3 == Block.G))
-			return false;
-		else
-			return true;
+		return !b0.isSolid() && !b1.isSolid() && !b2.isSolid() && !b3.isSolid();
 	}
 	
 	public int x(int i) {

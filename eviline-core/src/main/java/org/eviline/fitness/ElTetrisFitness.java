@@ -1,6 +1,6 @@
 package org.eviline.fitness;
 
-import org.eviline.Block;
+import org.eviline.BlockType;
 import org.eviline.Field;
 
 public class ElTetrisFitness extends AbstractFitness {
@@ -26,7 +26,7 @@ public class ElTetrisFitness extends AbstractFitness {
 	@Override
 	public double score(Field field) {
 		field = field.copy();
-		Block[][] f = field.getField();
+		BlockType[][] f = field.getField();
 		
 		int landingHeight;
 		int rowsEliminated;

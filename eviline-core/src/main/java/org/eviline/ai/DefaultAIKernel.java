@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.eviline.Block;
+import org.eviline.BlockType;
 import org.eviline.Field;
 import org.eviline.PlayerAction;
 import org.eviline.PlayerActionNode;
@@ -197,8 +197,8 @@ public class DefaultAIKernel implements AIKernel {
 			fitness.paintUnlikelies(context.paintedImpossible);
 			for(int y = Field.BUFFER; y < Field.BUFFER + Field.HEIGHT; y++) {
 				for(int x = Field.BUFFER; x < Field.BUFFER + Field.WIDTH; x++)
-					if(context.paintedImpossible.getField()[y][x] == Block.G)
-						context.paintedImpossible.getField()[y][x] = Block.X;
+					if(context.paintedImpossible.getField()[y][x] == BlockType.G)
+						context.paintedImpossible.getField()[y][x] = BlockType.X;
 			}
 		}
 		List<Future<?>> futures = new ArrayList<Future<?>>();

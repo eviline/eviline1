@@ -41,11 +41,11 @@ public enum ShapeType {
 	S,
 	;
 	
-	private Block inactive;
+	private BlockType block;
 	
 	private ShapeType() {
-		Block b = Block.valueOf(name());
-		inactive = b;
+		BlockType b = BlockType.valueOf(name());
+		block = b;
 	}
 	
 	
@@ -100,7 +100,7 @@ public enum ShapeType {
 	 * Returns the Y offset of a shape of this type when starting
 	 * @return
 	 */
-	public int starterY() {
+	public int starterY(Field field) {
 		switch(this) {
 		case O: return Field.BUFFER - 2;
 		case S: return Field.BUFFER - 2;
@@ -117,15 +117,15 @@ public enum ShapeType {
 	 * Returns the X offset of a shape of this type when starting
 	 * @return
 	 */
-	public int starterX() {
+	public int starterX(Field field) {
 		switch(this) {
-		case O: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
-		case S: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
-		case Z: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
-		case I: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
-		case T: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
-		case J: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
-		case L: return (Field.WIDTH + 2 * Field.BUFFER - starter().width()) / 2;
+		case O: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
+		case S: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
+		case Z: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
+		case I: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
+		case T: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
+		case J: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
+		case L: return (field.getWidth() + 2 * Field.BUFFER - starter().width()) / 2;
 		}
 		throw new InternalError("Fell through to default when all enums covered");
 	}
@@ -134,8 +134,8 @@ public enum ShapeType {
 	 * Returns the inactive block associated with this shape type
 	 * @return
 	 */
-	public Block inactive() {
-		return inactive;
+	public BlockType block() {
+		return block;
 	}
 	
 	public Shape up() {

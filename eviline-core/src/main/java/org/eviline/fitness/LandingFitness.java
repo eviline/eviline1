@@ -1,6 +1,6 @@
 package org.eviline.fitness;
 
-import org.eviline.Block;
+import org.eviline.BlockType;
 import org.eviline.Field;
 
 public class LandingFitness extends AbstractFitness {
@@ -57,7 +57,7 @@ public class LandingFitness extends AbstractFitness {
 		double height, roughness, holes, well, pit, horizontalHoles;
 		height = roughness = holes = well = pit = horizontalHoles = 0;
 		
-		Block[][] f = field.getField();
+		BlockType[][] f = field.getField();
 		
 		int garbageY = Field.HEIGHT;
 		int garbageHeight;
@@ -66,7 +66,7 @@ public class LandingFitness extends AbstractFitness {
 			for(int y = Field.HEIGHT - 1; y >= 0; y--) {
 				if(y > garbageY)
 					continue;
-				if(field.getBlock(x+Field.BUFFER, y+Field.BUFFER) == Block.GARBAGE)
+				if(field.getBlock(x+Field.BUFFER, y+Field.BUFFER) == BlockType.GARBAGE)
 					garbageY = y;
 			}
 		}

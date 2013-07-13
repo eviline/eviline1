@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eviline.Block;
+import org.eviline.BlockType;
 import org.eviline.Field;
 
 public class FieldParser {
@@ -36,12 +36,12 @@ public class FieldParser {
 	public static String EMPTY_ROW = "|          |";
 	public static List<String> EMPTY_FIELD = Collections.nCopies(20, EMPTY_ROW);
 	
-	private static Block[] createRow(String row) {
+	private static BlockType[] createRow(String row) {
 		row = "XXXXXX" + row.toUpperCase().replace("|", "") + "XXXXXX";
-		Block[] ret = new Block[row.length()];
+		BlockType[] ret = new BlockType[row.length()];
 		for(int i = 0; i < ret.length; i++) {
 			try {
-				ret[i] = Block.valueOf("" + row.charAt(i));
+				ret[i] = BlockType.valueOf("" + row.charAt(i));
 			} catch(IllegalArgumentException iae) {
 			}
 		}
