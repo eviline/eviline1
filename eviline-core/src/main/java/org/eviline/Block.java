@@ -44,6 +44,11 @@ public class Block implements Cloneable {
 	}
 	
 	@Override
+	public String toString() {
+		return String.valueOf(type).substring(0, 1);
+	}
+	
+	@Override
 	public Block clone() {
 		try {
 			return (Block) super.clone();
