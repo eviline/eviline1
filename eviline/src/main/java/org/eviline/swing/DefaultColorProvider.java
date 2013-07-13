@@ -15,7 +15,7 @@ public class DefaultColorProvider implements ColorProvider {
 	public Color provideColor(Block block) {
 		if(block == null)
 			return Color.GRAY.darker();
-		Color ret = block.getColor();
+		Color ret = block.getType().color();
 		return ret;
 	}
 
