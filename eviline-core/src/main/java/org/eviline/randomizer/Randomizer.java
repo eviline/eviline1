@@ -27,4 +27,6 @@ public interface Randomizer {
 	public PropertySource config();
 	
 	public String name();
+	
+	public Randomizer clone();
 }

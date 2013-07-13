@@ -9,6 +9,7 @@ public class Decision2 {
 	private Shape endingShape;
 	private int endingShapeX;
 	private int endingShapeY;
+	private double score;
 	
 	public Decision2() {
 	}
@@ -35,6 +36,11 @@ public class Decision2 {
 	
 	public Decision2 withEndingShapeY(int endingShapeY) {
 		setEndingShapeY(endingShapeY);
+		return this;
+	}
+	
+	public Decision2 withScore(double score) {
+		setScore(score);
 		return this;
 	}
 	
@@ -67,5 +73,13 @@ public class Decision2 {
 	}
 	public void setEndingShapeY(int endingShapeY) {
 		this.endingShapeY = endingShapeY;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
 	}
 }
