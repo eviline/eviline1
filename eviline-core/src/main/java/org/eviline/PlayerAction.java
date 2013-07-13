@@ -85,15 +85,15 @@ public class PlayerAction {
 	
 	private void compute(Field field, PlayerActionType type) {
 		this.type = type;
-		startField = field.copy();
+		startField = field.clone();
 		startX = field.shapeX;
 		startY = field.shapeY;
 		startShape = field.shape;
-		endField = startField.copy();
+		endField = startField.clone();
 		
 		switch(type) {
 		case DOWN_ONE:
-			if(!endField.shape.intersects(endField.field, endField.shapeX, endField.shapeY + 1))
+			if(!endField.shape.intersects(endField, endField.shapeX, endField.shapeY + 1))
 				endField.shapeY += 1;
 			break;
 		case ROTATE_LEFT:
@@ -125,17 +125,17 @@ public class PlayerAction {
 	
 	private void computeReverse(Field field, PlayerActionType type) {
 		this.type = type;
-		endField = field.copy();
+		endField = field.clone();
 		endX = field.shapeX;
 		endY = field.shapeY;
 		endShape = field.shape;
-		startField = endField.copy();
+		startField = endField.clone();
 		
 		switch(type) {
 		case DOWN_ONE:
 			if(startField.shapeY == 0)
 				break;
-			if(!startField.shape.intersects(startField.field, startField.shapeX, startField.shapeY - 1))
+			if(!startField.shape.intersects(startField, startField.shapeX, startField.shapeY - 1))
 				startField.shapeY -= 1;
 			break;
 		case ROTATE_LEFT:
