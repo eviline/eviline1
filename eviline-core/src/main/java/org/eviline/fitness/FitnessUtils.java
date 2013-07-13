@@ -21,11 +21,11 @@ public class FitnessUtils {
 							|| f[y][x-1].isEmpty() 
 							|| f[y][x+1].isEmpty()) 
 						&& f[y][x].isImpossible())
-					f[y][x] = null;
+					f[y][x] = Block.getEmpty();
 			}
 			for(int x = Field.BUFFER + field.getWidth() - 1; x >= Field.BUFFER; x--) {
 				if((f[y-1][x].isEmpty() || f[y][x-1].isEmpty() || f[y][x+1].isEmpty()) && f[y][x].isImpossible())
-					f[y][x] = null;
+					f[y][x] = Block.getEmpty();
 			}
 		}
 		

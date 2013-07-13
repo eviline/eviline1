@@ -215,7 +215,7 @@ public class Field implements Serializable, Cloneable {
 			for(int i = 0; i < 4; i++) {
 				int y = shape.y(i);
 				int x = shape.x(i);
-				field[y + shapeY][x + shapeX].withType(shape.type().block()).withActive(false);
+				field[y + shapeY][x + shapeX].withTypeAndColor(shape.type().block()).withActive(false);
 				if(y + shapeY >= BUFFER)
 					gameOver = false;
 			}
