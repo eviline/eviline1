@@ -28,8 +28,8 @@ public class TestableField extends PropertiedField {
 	}
 	
 	@Override
-	public TestableField copy() {
-		return (TestableField) super.copy();
+	public TestableField clone() {
+		return (TestableField) super.clone();
 	}
 	
 	public Object evalRuby(String s) {

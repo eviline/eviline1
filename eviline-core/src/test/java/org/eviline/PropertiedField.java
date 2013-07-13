@@ -23,8 +23,8 @@ public class PropertiedField extends Field implements PropertySource {
 	}
 	
 	@Override
-	public PropertiedField copy() {
-		return (PropertiedField) super.copy();
+	public PropertiedField clone() {
+		return (PropertiedField) super.clone();
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eviline.Block;
 import org.eviline.BlockType;
 import org.eviline.Field;
 
@@ -36,12 +37,12 @@ public class FieldParser {
 	public static String EMPTY_ROW = "|          |";
 	public static List<String> EMPTY_FIELD = Collections.nCopies(20, EMPTY_ROW);
 	
-	private static BlockType[] createRow(String row) {
+	private static Block[] createRow(String row) {
 		row = "XXXXXX" + row.toUpperCase().replace("|", "") + "XXXXXX";
-		BlockType[] ret = new BlockType[row.length()];
+		Block[] ret = new Block[row.length()];
 		for(int i = 0; i < ret.length; i++) {
 			try {
-				ret[i] = BlockType.valueOf("" + row.charAt(i));
+				ret[i] = new Block().withType(BlockType.valueOf("" + row.charAt(i)));
 			} catch(IllegalArgumentException iae) {
 			}
 		}
@@ -107,7 +108,7 @@ public class FieldParser {
 		while(rows.size() > 20)
 			rows.remove(0);
 		Field ret = newField();
-		for(int y = Field.BUFFER + Field.HEIGHT - rows.size(); y < Field.BUFFER + Field.HEIGHT; y++) {
+		for(int y = Field.BUFFER + ret.getHeight() - rows.size(); y < Field.BUFFER + ret.getHeight(); y++) {
 			ret.getField()[y] = createRow(rows.remove(0));
 		}
 		return ret;
