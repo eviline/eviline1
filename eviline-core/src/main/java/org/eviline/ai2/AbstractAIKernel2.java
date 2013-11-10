@@ -17,6 +17,9 @@ public abstract class AbstractAIKernel2 implements AIKernel2 {
 		for(ShapeType type : searchSpace) {
 			
 		}
+		
+		// FIXME: fix this
+		return null;
 	}
 
 }

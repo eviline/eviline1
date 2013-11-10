@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eviline.ShapeType;
 
-public abstract class AbstractRandomizer implements Randomizer {
+public abstract class AbstractRandomizer implements Cloneable, Randomizer {
 	@Override
 	public List<ShapeType> getNext() {
 		String taunt = getTaunt();
@@ -27,4 +27,12 @@ public abstract class AbstractRandomizer implements Randomizer {
 		return ret;
 	}
 
+	@Override
+	public Randomizer clone() {
+		try {
+			return (Randomizer) super.clone();
+		} catch(CloneNotSupportedException cnse) {
+			throw new InternalError("clone not supported???");
+		}
+	}
 }

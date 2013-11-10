@@ -218,4 +218,13 @@ public class MaliciousRandomizer implements Randomizer, Serializable {
 	public String name() {
 		return getClass().getName();
 	}
+
+	@Override
+	public Randomizer clone() {
+		try {
+			return (Randomizer) super.clone();
+		} catch(CloneNotSupportedException cnse) {
+			throw new InternalError("clone not supported???");
+		}
+	}
 }
