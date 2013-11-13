@@ -18,12 +18,7 @@ public class EvilineFitness extends AbstractFitness {
 	}
 	
 	private double[] params = new double[] {
-			1.4, // block height
-			3.25, // row/col trans
-			2, // impossibles
-			1.75, // unlikelies
-			50, // smoothness
-			1 // line clears
+			1.0492689194779978, 3.1357439505652334, 0.8004044747884504, 0.03373451066795441, 39.08675377185643, 1.6439064776635648
 	};
 	
 	@Override
@@ -82,7 +77,7 @@ public class EvilineFitness extends AbstractFitness {
 					score += 15 + Math.pow(h * params[Weights.BLOCK_HEIGHT], 1 / (2.6 - h / 10.));
 				}
 				else if(b == Block.X) {
-					impossibles++;
+					impossibles += (Field.HEIGHT + Field.BUFFER - (stackHeight[x-Field.BUFFER] - h)) / 3;
 				}
 				else if(b == Block.G) {
 					unlikelies++;
