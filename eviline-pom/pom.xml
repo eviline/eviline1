@@ -30,8 +30,8 @@
 		<module>../eviline-clojure</module>
 		<module>../eviline</module>
 		<module>../eviline-console</module>
-		<module>../eviline-jnlp</module>
-		<module>../eviline-tomcat</module>
+		
+		
 	</modules>
 
 	<build>
