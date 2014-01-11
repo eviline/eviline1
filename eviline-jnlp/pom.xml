@@ -5,7 +5,7 @@
 		<artifactId>eviline-pom</artifactId>
 		<groupId>org.eviline</groupId>
 		<version>1.1.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<relativePath>../eviline-pom</relativePath>
 	</parent>
 	<artifactId>eviline-jnlp</artifactId>
 	<dependencies>

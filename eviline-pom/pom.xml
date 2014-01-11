@@ -26,12 +26,12 @@
 	</licenses>
 
 	<modules>
-		<module>eviline-core</module>
-		<module>eviline-clojure</module>
-		<module>eviline</module>
-		<module>eviline-console</module>
-		<module>eviline-jnlp</module>
-		<module>eviline-tomcat</module>
+		<module>../eviline-core</module>
+		<module>../eviline-clojure</module>
+		<module>../eviline</module>
+		<module>../eviline-console</module>
+		<module>../eviline-jnlp</module>
+		<module>../eviline-tomcat</module>
 	</modules>
 
 	<build>

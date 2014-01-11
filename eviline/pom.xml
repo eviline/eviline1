@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.eviline</groupId>
 		<artifactId>eviline-pom</artifactId>
-		<relativePath>..</relativePath>
+		<relativePath>../eviline-pom</relativePath>
 		<version>1.1.1-SNAPSHOT</version>
 	</parent>
 	<name>eviline</name>
